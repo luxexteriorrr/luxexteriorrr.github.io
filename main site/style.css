@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'arketa';
+    text-decoration: none;
+    font-size: 12px;
+    font-style: normal;
+    letter-spacing: -1;
+    font-size: 0.7vw;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+@font-face {
+    font-family: 'arketa';
+    src: url(assets/OOArketaTrial-Regular.otf);
+}
+@font-face {
+    font-family: 'Kolonia-regular';
+    src: url(assets/KoloniaTrial-Regular.woff);
+}
+@font-face {
+    font-family: 'Kolonia-italic';
+    src: url(assets/KoloniaTrial-Italic.woff2);
+}
+
+.title {
+     margin-bottom: 48px;
+}
+.underline {
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+a {
+    color: black;
+    text-decoration: line-through;
+    transition: all 0.5s ease-out;
+}
+a:hover {
+    opacity: 0.5;
+    transition-property: opacity;
+    text-decoration: none;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+
+.textdiv {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 48px;
+    gap: 12px;
+}
