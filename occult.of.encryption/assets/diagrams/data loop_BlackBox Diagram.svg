@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Black_Box" data-name="Black Box" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f0f1f1;
+        stroke-width: .93px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        stroke: #231f20;
+      }
+
+      .cls-6 {
+        fill: #231f20;
+      }
+
+      .cls-7 {
+        font-family: ABCSocialMonoVariableUnlicensedTrial-Regular, 'ABC Social Mono Variable Unlicensed Trial';
+        font-size: 12px;
+        font-variation-settings: 'wght' 400, 'wdth' 5, 'ital' 0;
+      }
+
+      .cls-2 {
+        stroke-dasharray: 1.86;
+        stroke-width: .28px;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5 {
+        fill: none;
+      }
+
+      .cls-3 {
+        stroke-dasharray: 3.33;
+      }
+
+      .cls-3, .cls-5 {
+        stroke-width: .5px;
+      }
+
+      .cls-4 {
+        stroke-dasharray: 3.31;
+        stroke-width: .5px;
+      }
+
+      .cls-5 {
+        stroke-dasharray: 3.33 3.33;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <g id="Diagram">
+    <text class="cls-7" transform="translate(150.65 782.5)"><tspan x="0" y="0">Input</tspan></text>
+    <text class="cls-7" transform="translate(151.28 287.55)"><tspan x="0" y="0">Input</tspan></text>
+    <text class="cls-7" transform="translate(921 490.03)"><tspan x="0" y="0">Output</tspan></text>
+    <circle cx="150.65" cy="759.19" r="6"/>
+    <circle cx="898.5" cy="490.03" r="6"/>
+    <circle cx="150.65" cy="309.76" r="6"/>
+    <path class="cls-3" d="M538.6,87.4s.29,671.66.29,895.55"/>
+    <line class="cls-2" x1="153.74" y1="757.97" x2="383.5" y2="624.99"/>
+    <line class="cls-4" x1="153.24" y1="311.26" x2="383.61" y2="445.17"/>
+    <g>
+      <polygon class="cls-1" points="539.49 535.17 383.61 445.17 538.5 355.74 694.38 445.74 539.49 535.17"/>
+      <polygon class="cls-1" points="694.88 624.31 539 714.31 539 535.45 694.88 445.45 694.88 624.31"/>
+      <polygon class="cls-1" points="539 714.31 383.11 624.31 383.11 445.45 539 535.45 539 714.31"/>
+    </g>
+    <g>
+      <path class="cls-5" d="M897.9,519.67c-13.36,79.69-245.78,145.85-326.23,145.85-66.27,0-120-53.73-120-120,0-53.02,42.98-96,96-96,42.42,0,76.8,34.38,76.8,76.8,0,33.93-27.51,61.44-61.44,61.44-27.15,0-49.15-22.01-49.15-49.15,0-21.72,17.6-39.32,39.32-39.32,17.37,0,31.46,14.08,31.46,31.46,0,13.9-11.27,25.17-25.17,25.17-11.12,0-20.13-9.01-20.13-20.13"/>
+      <polygon class="cls-6" points="892.69 520.63 898.5 512.53 902.61 521.61 892.69 520.63"/>
+    </g>
+  </g>
+</svg>
