@@ -109,8 +109,8 @@ a:hover {
 /* grid */
 
 #containergrid {
-    height: 100%;
-    max-width: 100%;
+    height: 100vh;
+    width: 100vw;
     padding: 48px 0px;
     display: flex;
     flex-direction: row;
@@ -128,6 +128,7 @@ a:hover {
     justify-content: center;
     align-items: center;
 }
+
 
 
 .grid-element:hover{
