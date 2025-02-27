@@ -7,15 +7,31 @@
     <script src="main.js"></script>
 </head>
 <body>
+    <nav>
+        <div class="stamp">
+            <p class="update">update:<span id="lastModified"></span></p>
+            <script>
+                // Get the last modified date and time of the document
+                const lastModified = document.lastModified;
+                // Display the date in the desired element
+                document.getElementById('lastModified').textContent = lastModified;
+            </script>
+        </div>
+
+        <a href=""></a>
+    </nav>
     <div class="wrapper">
         <div class="textdiv">
             <p class="title">Kirill Konstantinov is a <span class="underline">digital designer</span> based in London</p>
             <p>Below is a selection of code based projects:</p>
             <a href="https://luxexteriorrr.github.io/occult.of.encryption/">-Occult Of Encyrption</a>
-            <a href="https://luxexteriorrr.github.io/occult.of.encryption/">-Around A Memory</a>
+            <a href="https://luxexteriorrr.github.io/around.a.memory/">-Around A Memory</a>
+            <a href="https">-Glimmers[coming soon]</a>
+
         </div>
 
         <div class="images">
+
         </div>
     </div>
 </body>
