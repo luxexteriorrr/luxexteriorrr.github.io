@@ -7,11 +7,19 @@
     font-size: 12px;
     font-style: normal;
     letter-spacing: -1;
-    font-size: 0.7vw;
+    font-size: 0.6vw;
+    transition: all 0.5s ease-out;
+    color: black;
 }
 ::-webkit-scrollbar {
     display: none;
 }
+img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
 
 /* typography rules */
 @font-face {
@@ -27,14 +35,29 @@
     src: url(assets/KoloniaTrial-Italic.woff2);
 }
 /* time stamp */
-.update {
-    position: absolute;
-    bottom: 12px;
-    left: 24px;
+.stamp {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: fit-content;
+    padding: 12px 24px;
 }
 
 
-
+/* navigation */
+nav {
+    position: fixed;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 12px 24px;
+    justify-content: space-between;
+}
 
 
 .title {
@@ -44,10 +67,8 @@
     text-decoration: underline;
     text-transform: capitalize;
 }
-a {
+.textdiv a {
     color: black;
-    text-decoration: line-through;
-    transition: all 0.5s ease-out;
 }
 a:hover {
     opacity: 0.5;
@@ -58,7 +79,7 @@ a:hover {
 .wrapper {
     width: 100%;
     height: 100vh;
-    display: flex;
+    display: none;
     flex-direction: row;
     gap: 0;
     padding: 24px;
@@ -81,5 +102,34 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 0.5px solid black;
+    /*border: 0.5px solid black;*/
+}
+
+
+/* grid */
+
+#containergrid {
+    height: 100%;
+    max-width: 100%;
+    padding: 48px 0px;
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+}
+.grid-element {
+    flex: 1;
+    -webkit-transition: flex 2s ease-out;
+    -moz-transition: flex 2s ease-out;
+    -ms-transition: flex 2s ease-out;
+    -o-transition: flex 2s ease-out;
+    transition: flex 2s ease-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.grid-element:hover{
+    flex: 10;
 }
