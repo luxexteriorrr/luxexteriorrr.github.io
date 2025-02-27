@@ -13,6 +13,7 @@
     display: none;
 }
 
+/* typography rules */
 @font-face {
     font-family: 'arketa';
     src: url(assets/OOArketaTrial-Regular.otf);
@@ -25,6 +26,16 @@
     font-family: 'Kolonia-italic';
     src: url(assets/KoloniaTrial-Italic.woff2);
 }
+/* time stamp */
+.update {
+    position: absolute;
+    bottom: 12px;
+    left: 24px;
+}
+
+
+
+
 
 .title {
      margin-bottom: 48px;
@@ -50,6 +61,7 @@ a:hover {
     display: flex;
     flex-direction: row;
     gap: 0;
+    padding: 24px;
 }
 
 .textdiv {
@@ -59,6 +71,15 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding-left: 48px;
     gap: 12px;
+}
+
+.images {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.5px solid black;
 }
