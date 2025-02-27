@@ -19,6 +19,11 @@ img {
     height: auto;
     object-fit: cover;
 }
+video {
+    width: 100%;
+    height: 25vh;
+    object-fit: cover;
+}
 
 
 /* typography rules */
@@ -70,7 +75,7 @@ nav {
 .textdiv a {
     color: black;
 }
-a:hover {
+nav a:hover {
     opacity: 0.5;
     transition-property: opacity;
     text-decoration: none;
@@ -107,7 +112,6 @@ a:hover {
 
 
 /* grid */
-
 #containergrid {
     height: 100vh;
     width: 100vw;
@@ -129,8 +133,18 @@ a:hover {
     align-items: center;
 }
 
-
-
 .grid-element:hover{
     flex: 10;
+}
+
+.project {
+    display: none;
+    position: absolute;
+    color: whitesmoke;
+    font-size: 1rem;
+    transition: all 3s ease-out;
+}
+.active {
+    display: flex;
+
 }
