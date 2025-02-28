@@ -113,8 +113,8 @@ nav a:hover {
 
 /* grid */
 #containergrid {
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
     padding: 48px 0px;
     display: flex;
     flex-direction: row;
@@ -147,4 +147,85 @@ nav a:hover {
 .active {
     display: flex;
 
+}
+/* mobile 430px */
+@media screen and (max-width: 430px) {
+    * {
+        font-size: 0.8rem;
+    }
+
+    video {
+        height: 20vh;
+    }
+
+    #containergrid {
+        flex-direction: column;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
+    }
+    .grid-element {
+        padding: 0;
+        margin: 0;
+        height: fit-content;
+        width: 75%;
+    }
+    .grid-element:hover {
+        flex: 1;
+    }
+}
+
+/* tablet 600px */
+@media screen and (min-width: 600px) {
+    * {
+        font-size: 0.8rem;
+    }
+
+    video {
+        height: 20vh;
+    }
+
+    #containergrid {
+        flex-direction: column;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
+    }
+    .grid-element {
+        padding: 0;
+        margin: 0;
+        height: auto;
+        width: 50%;
+    }
+    .grid-element:hover {
+        flex: 1;
+    }
+    
+}
+/* desktop 1280px */
+@media screen and (min-width: 1280px) {
+    * {
+        font-size: 0.8rem;
+    }
+
+    video {
+        height: 20vh;
+    }
+
+    #containergrid {
+        flex-direction: row;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
+    }
+    .grid-element {
+        padding: 0;
+        margin: 0;
+        height: auto;
+        width: 50%;
+    }
+    .grid-element:hover {
+        flex: 1;
+    }
+    
 }
