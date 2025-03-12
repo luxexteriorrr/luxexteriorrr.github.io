@@ -4,7 +4,8 @@
     box-sizing: border-box;
     font-size: 1.5rem;
     font-family: 'arketa';
-    font-size: 1rem;
+    font-size: 0.8rem;
+    scroll-behavior: smooth;
 }
 
 @font-face {
@@ -33,6 +34,12 @@
 }
 
 /* style for loadingdiv */
+#loadingwrapper {
+    width: 100svw;
+    height: 100svh;
+   /* cursor: none;  Hides the default cursor */
+}
+
 #loadingdiv {
     width: 100%;
     position: absolute;
@@ -68,30 +75,68 @@ nav {
     position: sticky;
     top: 0%;
     z-index: 2;
-    opacity: 0;
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
-nav.show {
-    opacity: 1;
-}
+
 
 nav a {
     stroke: black 1px;
-    font-size: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: -1px;
+    pointer-events: all;
+    cursor: pointer;
+    transition: 1.5s linear;
 }
-a.hidden {
-    display: none;
+nav a:hover {
+    opacity: 0.1;
+    transition: 1.6s linear;
 }
+#title {
+    position: fixed;
+    z-index: 10;
+    top: 35%;
+    left: 5%;
+    rotate: 90deg;
+}
+#about {
+    position: fixed;
+    z-index: 10;
+    top: 15%;
+    left: 45%;
+    rotate: 90deg;
+}
+#print {
+    position: fixed;
+    z-index: 10;
+    top: 75%;
+    left: 95%;
+    rotate: 90deg;
+}
+#index {
+    position: fixed;
+    z-index: 10;
+    top:85%;
+    left: 30%;
+    rotate: 90deg;
+}
+#push {
+    position: fixed;
+    z-index: 10;
+    top:50%;
+    right: 40%;
+    rotate: 90deg;
+}
+
 
 /* about */
 .aboutoverlay {
     width: 100vw;
     height: 100vh;
     position: fixed;
+    display: none;
     background-color: rgba(128, 128, 128, 0.498);
     padding: 48px;
     backdrop-filter: blur(5px);
-    display: none;
     justify-content: center;
     align-items: center;
 }
@@ -101,6 +146,7 @@ a.hidden {
 .active {
     display: flex;
     z-index: 1;
+
 }
 
 #close {
@@ -137,7 +183,7 @@ a.hidden {
     padding: 12px 24px;
     min-height: 200vh;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
 
 }
 

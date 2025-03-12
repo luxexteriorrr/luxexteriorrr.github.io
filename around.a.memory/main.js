@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
         // gsap register
-    gsap.registerPlugin(Flip,ScrollTrigger,Observer,ScrollToPlugin,Draggable,MotionPathPlugin,EaselPlugin,PixiPlugin,TextPlugin,RoughEase,ExpoScaleEase,SlowMo,CustomEase)
+    gsap.registerPlugin(Flip,ScrollTrigger,Observer,ScrollToPlugin,Draggable,MotionPathPlugin,EaselPlugin,PixiPlugin,TextPlugin,RoughEase,ExpoScaleEase,SlowMo,CustomEase,)
+
     
     //loading timeline 
     var loading = gsap.timeline()
@@ -8,46 +9,65 @@ document.addEventListener('DOMContentLoaded', () => {
     loading.fromTo('#loadingdiv', {height: '24'}, {delay: 0, duration: 1, height: '0'})
     loading.fromTo('#loadingtext', {opacity: '1'}, {delay: 0, duration: 0.5, opacity: '0'})
 
-    // Select all paragraph elements
-    const paragraphs = document.querySelectorAll('p');
     
     
+
+   
+ 
     //gsap with spacing (/??)
     document.querySelectorAll('.paragraph').forEach(par => {
         par.addEventListener('mouseenter', () => {  
             gsap.to(par, 
-                {letterSpacing: '5px', duration: 5, ease: 'power2.out' } // End state
+                {wordSpacing: '1rem', width: '75%',duration: 5, ease: 'power2.out'} // End state
             );
         });
 
     })
 
-    //about page
-    document.getElementById('about').addEventListener('click', function() {
-        const overlay = document.querySelector('.aboutoverlay')
-        if (overlay.classList.contains('active')) {
-            overlay.classList.remove('active')
-            this.innerHTML = 'About'
-        } else {
-            overlay.classList.add('active')
-            this.innerHTML = 'Close'
-        }
-    })
+ 
+//navigation
+    const overlay = document.querySelector('.aboutoverlay');
+    const title = document.getElementById('title');
+    const about = document.getElementById('about');
+    const print = document.getElementById('print');
+    
+    // Select all <a> elements inside <nav>, but exclude #about
+    const navLinks = document.querySelectorAll('nav a:not(#about)'); 
+    
+    // Toggle function
+    function toggleOverlay() {
+        const isActive = overlay.classList.toggle('active'); // Toggle 'active' class
+    
+        // Toggle title, print, and button text
+        title.style.display = isActive ? 'none' : 'block';
+        print.style.display = isActive ? 'none' : 'block';
+        about.innerHTML = isActive ? 'Close' : 'About';
+    
+        // Hide all <a> elements in <nav> (except #about) when overlay is active
+        navLinks.forEach(link => link.style.display = isActive ? 'none' : 'inline-block');
+    }
+    
+    // Attach event listener
+    about.addEventListener('click', toggleOverlay);
+    
+    
+
 
     //scroll trigger
-    gsap.to('.contentmain', {
-        scrollTrigger: {
-            trigger: '.contentmain',
-            start: "top 5%", 
-            toggleClass: { targets: "nav", className: "show" }, 
-            markers: true // Optional: Debugging
-        }
-    })
+    //gsap.to('.contentmain', {
+        //scrollTrigger: {
+            //trigger: '.contentmain',
+            //start: "top 5%", 
+            //toggleClass: { targets: "nav", className: "show" }, 
+            //markers: false // Optional: Debugging
+        //}
+    //})
 
 
     //function to double the content 
     var double = function (event) {
         let clicked = event.target;
+        if (!(clicked instanceof HTMLElement)) return;
         let cloned = clicked.cloneNode(true); // Clone the element (including children)
     
         // Optionally modify the cloned element to differentiate it
@@ -72,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Attach event listener to each paragraph
+     // Select all paragraph elements
+    const paragraphs = document.querySelectorAll('p');
     paragraphs.forEach(p => {
         p.addEventListener('click', double);
     });
