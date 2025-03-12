@@ -1,8 +1,12 @@
-function setup() {
-  canvas = createCanvas(windowWidth - 5, windowHeight - 5);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  new p5((p) => {
+    p.setup = function () {
+      p.createCanvas(p.windowWidth, p.windowHeight);
+      p.background(220);
+    };
 
-function draw() {
-
-  
-}
+    p.draw = function () {
+      p.ellipse(p.mouseX, p.mouseY, 80, 80);
+    };
+  });
+});
