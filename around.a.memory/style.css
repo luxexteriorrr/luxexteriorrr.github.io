@@ -4,18 +4,29 @@
     box-sizing: border-box;
     font-size: 1.5rem;
     font-family: 'arketa';
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     scroll-behavior: smooth;
+}
+
+:root {
+    --mainblack: #020305;
+    --mainwhite: #F5F5F7;
+    --shadedwhite: #CCCCCC;
+    --shadedblack: #020305;
+    --mainblue: #0000EE;
+    --popup: #F1EEEE;
 }
 
 @font-face {
     font-family: 'arketa';
-    src: url(/assets/font/OOArketaTrial-Regular.otf);
+    src: url(/around.a.memory/assets/font/OOArketaTrial-Regular.otf);
 }
 /* no scrollbar */
 ::-webkit-scrollbar {
     display: none;
 }
+
+
 /* background images */
 .underlaylogo {
     position: fixed;
@@ -80,12 +91,12 @@ nav {
 
 
 nav a {
-    stroke: black 1px;
-    font-size: 1rem;
-    letter-spacing: -1px;
+    font-size: inherit;
+    letter-spacing: 0px;
     pointer-events: all;
     cursor: pointer;
     transition: 1.5s linear;
+    color: var(--mainblue);
 }
 nav a:hover {
     opacity: 0.1;
@@ -126,19 +137,28 @@ nav a:hover {
     right: 40%;
     rotate: 90deg;
 }
+#lastModified {
+    font-size: inherit;
+}
 
 
 /* about */
 .aboutoverlay {
-    width: 100vw;
-    height: 100vh;
+    width: 100svw;
+    height: 100svh;
     position: fixed;
+    top: 0;
+    left: 0;
     display: none;
     background-color: rgba(128, 128, 128, 0.498);
     padding: 48px;
     backdrop-filter: blur(5px);
     justify-content: center;
     align-items: center;
+}
+
+.aboutoverlay.active {
+    display: flex;
 }
 .aboutoverlay p {
     width: 50%;
@@ -148,7 +168,6 @@ nav a:hover {
     z-index: 1;
 
 }
-
 #close {
     position: absolute;
     top: 12px;
@@ -156,6 +175,33 @@ nav a:hover {
     width: fit-content;
     font-size: 1.5rem;
 }
+
+
+/* popup */
+.popup {
+    display: none;
+    background-color: var(--popup);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 150px;
+    z-index: 10;
+}
+
+.popupwrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--mainblue);
+}
+
+#popclose {
+    width: fit-content;
+    height: fit-content;
+}
+
 /* opening */
 .opening {
     width: 100%;
