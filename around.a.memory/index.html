@@ -19,27 +19,44 @@
     <!-- RoughEase, ExpoScaleEase and SlowMo are all included in the EasePack file -->    
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/EasePack.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/CustomEase.min.js"></script>
+
+    <!--p5.js-->
+    <script src="/p5.js/libraries/p5.min.js"></script>
+    <script src="/p5.js/libraries/p5.sound.min.js"></script>
+    <script src="p5.js"></script>
 </head>
 <body>
      <!--div for the loaoding animation-->
-    
     <div id="loadingwrapper">
         <div id="loadingdiv">
             <p id="loadingtext"> loading</p>
         </div>
     </div>
-
     <!--wrapper for all of the content on the page-->
     <div class="pagewrapper">
 
-            <!--nav-->
-        <nav>
-            <a id="title"> Around A Memory</a>
-            <a id="about"> About </a>
-            <a id="print">Print</a>
-            <a id="index">Index</a>
-            <a id="push">Update</a>
+        <!--nav-->
+        <nav id="nav">
+            <a id="title" class="activelink"> Around A Memory</a>
+            <a id="about" class="activelink"> about </a>
+            <a id="print" class="activelink">print</a>
+            <a id="index" class="activelink">index</a>
+            <a id="push" class="activelink">update <span id="lastModified"></span> </a>
+            <script>
+                // Get the last modified date and time of the document
+                const lastModified = document.lastModified;
+                // Display the date in the desired element
+                document.getElementById('lastModified').textContent = lastModified;
+            </script>
         </nav>
+
+        <!--popup-->
+        <div class="popup active">
+            <div class="popupwrapper">
+                <p>popup</p>
+                <button id="popclose">close</button>
+            </div>
+        </div>
 
         <!--about modal pop up-->
         <div class="aboutoverlay">
@@ -74,10 +91,11 @@
             </p>
         </div>
 
-
+        <!--opening section-->
         <div class="opening">
             <!-- <p id="openingtext">Around A Memory</p> -->
         </div>
+
         <!--main content-->
         <div class="contentmain">
             <p class="paragraph">
@@ -96,13 +114,6 @@
                 The sky melts into bruised oranges and deepening blues, a slow-motion exhale of the day. Streetlights flicker on one by one, casting pools of warm light on the empty sidewalk. I pass a row of shuttered storefronts, their neon signs still humming faintly, as if reluctant to let go of the day. The distant sound of laughter drifts from an open window, mixing with the rhythmic click of my footsteps. I could turn back, retrace my steps, return to where I started—but the road ahead is painted in fading light, and for now, I keep walking.
             </p>
         </div>
-
-
-
-
-
-
-
     </div>
 </body>
 </html>
