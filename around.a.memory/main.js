@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     //disapearing of the contenet 
+    function disappearContent () {
         let inactivityTimer ; 
         let visibleElements = new Set(); // Track elements currently in the viewport with the class decay
         let isFadingOut = false; // Track if fade-out is happening
@@ -109,9 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
             fadeNextElement();
         }
-        
         observeElements();
         resetTimer();
+
+    }
+    disappearContent ()
 
 
 
@@ -173,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.paragraph').forEach(par => {
         par.addEventListener('mouseenter', () => {  
             gsap.to(par, 
-                {wordSpacing: '1rem', width: '75%',duration: 5, ease: 'power2.out'} // End state
+                {wordSpacing: '1rem', width: '75%',duration: 5, ease: 'linear'} // End state
             );
         });
 
