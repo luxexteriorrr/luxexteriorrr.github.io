@@ -17,53 +17,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     //disapearing of the contenet 
-        let inactivityTimer ; //seconds of innactivity
-        let visibleElements = new Set(); // Track elements currently in the viewport
-
-        //resetting the timer
-        function resetTimer () {
-            clearTimeout(inactivityTimer); //set the timer for the 30 seconds
-            visibleElements.forEach(el => {
-                gsap.to(el, { opacity: 1, duration: 1, ease: "power2.inOut" });
-            });  // Restore visibility for faded elements
-            inactivityTimer = setTimeout(triggerFade, 30000);// Restart inactivity timer
-        }
-
+        let inactivityTimer ; 
+        let visibleElements = new Set(); // Track elements currently in the viewport with the class decay
         //lookout for the events on the page and reset the timer 
         ["scroll", "mousedown", "mousemove", "keypress", "touchstart"].forEach(event => {
             document.addEventListener(event, resetTimer, { passive: true });
         });
-
         //track the visible elements of the page
         function observeElements() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
+                    if (entry.isIntersecting && entry.target.classList.contains("decay")) {
                         visibleElements.add(entry.target);
                     } else {
                         visibleElements.delete(entry.target);
                     }
                 });
-                console.log("Currently visible elements:", Array.from(visibleElements));
+                console.log("in viewport", Array.from(visibleElements));
             }, { threshold: 0.1 });
         
-            // Observe all elements inside <body>
-            document.querySelectorAll("body *").forEach(el => observer.observe(el));
-        }        
-
-        //fade the elements out 
+            // Observe only `.decay` elements
+            document.querySelectorAll(".decay").forEach(el => observer.observe(el));
+        }   
+        //resetting the timer + fade back in
+        function resetTimer () {
+            clearTimeout(inactivityTimer); //set the timer for the 30 seconds
+            console.log('reset time main') //debug
+            fadeInVisibleElements(); // call for the fading back in
+            inactivityTimer = setTimeout(triggerFade, 3000);// Restart inactivity timer
+        }
+        //trigger fade on no activity
         function triggerFade() {
-            console.log("No activity detected. Fading elements...");
+            console.log("fade");
             fadeOutVisibleElements();
         }
-
-        //randomized durations 
+        //fade out function
         function fadeOutVisibleElements() {
-            visibleElements.forEach(el => {
-                let randomDuration = gsap.utils.random(15, 20); // Random duration between 15-20 seconds
-                gsap.to(el, { opacity: 0, duration: randomDuration, ease: "power2.inOut" });
-            });
+            const elementsArray = Array.from(visibleElements); // Convert Set to Array
+            let index = 0; // Start index
+        
+            function fadeNextElement() {
+                if (index >= elementsArray.length) return; // Stop when all elements are faded
+        
+                let el = elementsArray[index]; // Get current element
+                let randomDuration = gsap.utils.random(1, 3); // Random fade duration (1-3s)
+                
+                gsap.to(el, { 
+                    opacity: 0, 
+                    duration: randomDuration, 
+                    ease: "linear",
+                    onComplete: () => {
+                        index++; // Move to next element
+                        fadeNextElement(); // Call function recursively
+                    }
+                });
+            }
+        
+            fadeNextElement(); // Start the first fade
         }
+        //fade in function
+        function fadeInVisibleElements() {
+            const elementsArray = Array.from(visibleElements);
+            let index = 0;
+        
+            function fadeNextElement() {
+                if (index >= elementsArray.length) return;
+        
+                let el = elementsArray[index];
+                //let randomDuration = gsap.utils.random(1, 2);
+        
+                gsap.to(el, { 
+                    opacity: 1, 
+                    duration: 1, 
+                    ease: "linear",
+                    onComplete: () => {
+                        index++; 
+                        fadeNextElement(); 
+                    }
+                });
+            }
+        
+            fadeNextElement();
+        }
+        
 
         observeElements();
         resetTimer();
