@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // gsap register
     gsap.registerPlugin(Flip,ScrollTrigger,Observer,ScrollToPlugin,Draggable,MotionPathPlugin,EaselPlugin,PixiPlugin,TextPlugin,RoughEase,ExpoScaleEase,SlowMo,CustomEase,)
 
-
-            
 //selectors
 
     //navigation
@@ -115,27 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
     disappearContent ()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //disable scroll
     function disableScroll() {
