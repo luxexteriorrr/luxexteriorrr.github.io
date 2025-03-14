@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //disapearing of the contenet 
         let inactivityTimer ; 
         let visibleElements = new Set(); // Track elements currently in the viewport with the class decay
+        let isFadingOut = false; // Track if fade-out is happening
         //lookout for the events on the page and reset the timer 
         ["scroll", "mousedown", "mousemove", "keypress", "touchstart"].forEach(event => {
             document.addEventListener(event, resetTimer, { passive: true });
@@ -40,15 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll(".decay").forEach(el => observer.observe(el));
         }   
         //resetting the timer + fade back in
-        function resetTimer () {
-            clearTimeout(inactivityTimer); //set the timer for the 30 seconds
-            console.log('reset time main') //debug
-            fadeInVisibleElements(); // call for the fading back in
-            inactivityTimer = setTimeout(triggerFade, 3000);// Restart inactivity timer
+        function resetTimer() {
+            clearTimeout(inactivityTimer);
+            console.log('reset time main');
+        
+            // If fading out, stop it and immediately start fading in
+            if (isFadingOut) {
+                console.log("activity");
+                isFadingOut = false; // Prevent fade-out from continuing
+            }
+        
+            fadeInVisibleElements(); // Restore elements
+        
+            inactivityTimer = setTimeout(triggerFade, 5000); // Restart inactivity timer (30s)
         }
         //trigger fade on no activity
         function triggerFade() {
             console.log("fade");
+            isFadingOut = true
             fadeOutVisibleElements();
         }
         //fade out function
@@ -57,14 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let index = 0; // Start index
         
             function fadeNextElement() {
-                if (index >= elementsArray.length) return; // Stop when all elements are faded
+                if (index >= elementsArray.length || !isFadingOut) return; // Stop when all elements are faded
         
                 let el = elementsArray[index]; // Get current element
-                let randomDuration = gsap.utils.random(1, 3); // Random fade duration (1-3s)
+                //let randomDuration = gsap.utils.random(1, 3); // Random fade duration (1-3s)
                 
                 gsap.to(el, { 
                     opacity: 0, 
-                    duration: randomDuration, 
+                    duration: 1, 
                     ease: "linear",
                     onComplete: () => {
                         index++; // Move to next element
@@ -88,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
                 gsap.to(el, { 
                     opacity: 1, 
-                    duration: 1, 
+                    duration: 0.2, 
                     ease: "linear",
                     onComplete: () => {
                         index++; 
