@@ -45,15 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(inactivityTimer);
             console.log('reset time main');
         
-            // If fading out, stop it and immediately start fading in
+            // If fading out, stop it functio and fade in()
             if (isFadingOut) {
                 console.log("activity");
-                isFadingOut = false; // Prevent fade-out from continuing
+                isFadingOut = false; // stop fade out if there is user interaction
             }
         
             fadeInVisibleElements(); // Restore elements
         
-            inactivityTimer = setTimeout(triggerFade, 5000); // Restart inactivity timer (30s)
+            inactivityTimer = setTimeout(triggerFade, 5000); // Restart inactivity timer 
         }
         //trigger fade on no activity
         function triggerFade() {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
                 gsap.to(el, { 
                     opacity: 1, 
-                    duration: 0.2, 
+                    duration: 0.5, 
                     ease: "linear",
                     onComplete: () => {
                         index++; 
@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fadeNextElement();
         }
         
-
         observeElements();
         resetTimer();
 
