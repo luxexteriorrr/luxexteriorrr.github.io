@@ -2,13 +2,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // gsap register
     gsap.registerPlugin(Flip,ScrollTrigger,Observer,ScrollToPlugin,Draggable,MotionPathPlugin,EaselPlugin,PixiPlugin,TextPlugin,RoughEase,ExpoScaleEase,SlowMo,CustomEase,)
 
+
+    //full screen 
+    document.addEventListener(
+        "keydown",
+        (e) => {
+          if (e.key === "Enter") {
+            toggleFullScreen();
+          }
+        },
+        false,
+      );
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
     //selectors
     const nav = document.getElementById('nav')
-    const overlay = document.querySelector('.aboutoverlay');
+    const overlay1 = document.querySelector('.projectoverlay');
     const title = document.getElementById('title');
     const about = document.getElementById('about');
     const print = document.getElementById('print');
-    const navLinks = document.querySelectorAll('nav a:not(#about)'); // Select all <a> elements inside <nav>, but exclude #about
+    const navLinks = document.querySelectorAll('nav a'); 
+    const paragraphs = document.querySelectorAll('p');
+    const pageWrapper = document.querySelector('.pagewrapper')
 
 
     //disapearing of the contenet 
@@ -75,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     onComplete: () => {
                         index++; // Move to next element
                         fadeNextElement(); // Call function recursively
-                    }
+                    },
+                    delay: 1,
                 });
             }
         
@@ -109,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTimer();
 
     }
-    disappearContent ()
+    //disappearContent ()
 
 
     //disable scroll
@@ -123,76 +144,84 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // loading animation function
     function loadingAnim () {
-                // Call disableScroll() before animation starts + nav
+                
+        // 1. Call disableScroll() before animation starts + nav
         hideNav ();
-        //disableScroll();
-        // GSAP Loading Timeline
+        disableScroll();
+    
+        // 2. the loading div animation 
         var loading = gsap.timeline();
         loading.fromTo('#loadingdiv', {width: '0%'}, {delay: 3, duration: 5, width: '100%'});
         loading.fromTo('#loadingdiv', {height: '24px'}, {delay: 0, duration: 1, height: '0px'});
         loading.fromTo('#loadingtext', {opacity: '1'}, {delay: 0, duration: 0.5, opacity: '0'});
-        // Call enableScroll() after animation completes
-        //loading.call(enableScroll);
-        loading.call (showNav);
-    }
-    loadingAnim()
 
-   // lfunction with the spacing 
-    function spacing () {
+
+        // 3. show other links and enable scroll 
+        loading.call(() => {
+            showNav();
+            enableScroll();
+        });
+        
+    }
+    //loadingAnim()
+
+    //document.querySelector('#loadingdiv').style.display = 'none'
+
+
+
+    
+   //function with the spacing 
+    function wordspacing () {
             //gsap with spacing (/??)
-    document.querySelectorAll('.paragraph').forEach(par => {
+        paragraphs.forEach(par => {
         par.addEventListener('mouseenter', () => {  
-            gsap.to(par, 
-                {wordSpacing: '1rem', width: '75%',duration: 5, ease: 'linear'} // End state
+            gsap.to(par, {
+                    wordSpacing: '1rem',
+                    width: '75%',
+                    duration: 10, 
+                     ease: 'linear'
+                } // End state
             );
         });
     })
     }
-    spacing ()
+    wordspacing ()
 
     //about overlay toggle function
-     function aboutOverlay () {
+     function projectOverlay () {
         function toggleOverlay() {
-            const isActive = overlay.classList.toggle('active'); // Toggle 'active' class
-        
-            // Toggle title, print, and button text
-            title.style.display = isActive ? 'none' : 'block';
-            print.style.display = isActive ? 'none' : 'block';
-            about.innerHTML = isActive ? 'Close' : 'About';
-        
-            // Hide all <a> elements in <nav> (except #about) when overlay is active
-            navLinks.forEach(link => link.style.display = isActive ? 'none' : 'inline-block');
+            const isActive = overlay1.classList.toggle('active'); // Toggle 'active' class
+                    document.querySelectorAll("nav a:not(#title)").forEach(link => {
+            link.style.display = isActive ? "none" : "inline-block"; // Toggle visibility
+        });
         }
         // Attach event listener
-        about.addEventListener('click', toggleOverlay);
+        title.addEventListener('click', toggleOverlay);
      }
-     aboutOverlay ()
+     projectOverlay ()
 
-    //function to double the content 
-    function double (event) {
-        let clicked = event.target;
-        if (!(clicked instanceof HTMLElement)) return;
-        let cloned = clicked.cloneNode(true); // Clone the element (including children)
-    
-        // Optionally modify the cloned element to differentiate it
-        cloned.style.opacity = "0.6"; // Example: Make it semi-transparent
-        cloned.style.border = "2px dashed red"; // Example: Add a visual cue
-        cloned.style.position = "absolute" //adding position absolute
-        cloned.classList.add = ('paragraph')
 
-        //add the cooradinates to where it has been clicked 
-        cloned.style.left = `${event.pageX}px`;
-        cloned.style.top = `${event.pageY}px`;
+    // Function to clone all paragraphs into .clonee
+    function clone(event) {
+        const container = document.querySelector(".clonee"); // ✅ Get correct overlay container
 
-        const container = document.querySelector('.contentmain');
+        if (!container) {
+            console.error("No .clonee container found!");
+            return;
+        }
 
-        container.appendChild(cloned);
-        console.log(clicked)
+        const clickedParagraph = event.target; // Get the paragraph that was clicked
+        const clone = clickedParagraph.cloneNode(true); // Clone the clicked paragraph
+        container.appendChild(clone); // Append to clone overlay
+
+        console.log("Cloned paragraph added to .clonee:", clone);
     }
+
+    // ✅ Attach event listener to each paragraph
+    document.querySelectorAll("p").forEach(p => {
+        p.addEventListener("click", clone);
+    });
+
     
-    // Attach event listener to each paragraph
-    const paragraphs = document.querySelectorAll('p');
-    paragraphs.forEach(p => {
-        p.addEventListener('click', double);
-    });    
+
 })

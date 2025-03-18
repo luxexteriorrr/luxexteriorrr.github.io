@@ -7,6 +7,9 @@
     font-size: 0.9rem;
     scroll-behavior: smooth;
 }
+body {
+    background-color: var(--mainwhite);
+}
 
 :root {
     --mainblack: #020305;
@@ -27,30 +30,12 @@
 }
 
 
-/* background images */
-.underlaylogo {
-    position: fixed;
-    width: 100svw;
-    height: 100svh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-}
-.logounder{
-    width: 300px;
-    height: auto;
-    object-fit: scale-down;
-    opacity: 0.2;
-}
-
 /* style for loadingdiv */
 #loadingwrapper {
     width: 100svw;
     height: 100svh;
    /* cursor: none;  Hides the default cursor */
 }
-
 #loadingdiv {
     width: 100%;
     position: absolute;
@@ -70,10 +55,8 @@
     z-index: 2;
 }
 
-.contentmain p.cloned {
-    position: fixed;
-    top: 50%;
-}
+
+
 
 
 /* style for the navigation of page */
@@ -83,13 +66,10 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    position: sticky;
-    top: 0%;
+    position: absolute;
     z-index: 2;
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
-
-
 nav a {
     font-size: inherit;
     letter-spacing: 0px;
@@ -100,21 +80,19 @@ nav a {
 }
 nav a:hover {
     opacity: 0.1;
-    transition: 1.6s linear;
+    transition: 1s linear;
 }
 #title {
     position: fixed;
     z-index: 10;
     top: 35%;
     left: 5%;
-    rotate: 90deg;
 }
 #about {
     position: fixed;
     z-index: 10;
     top: 15%;
     left: 45%;
-    rotate: 90deg;
 }
 #print {
     position: fixed;
@@ -142,26 +120,30 @@ nav a:hover {
 }
 
 
-/* about */
-.aboutoverlay {
-    width: 100svw;
+/* project */
+.projectoverlay {
+    width: 25svw;
     height: 100svh;
     position: fixed;
     top: 0;
-    left: 0;
-    display: none;
-    background-color: rgba(128, 128, 128, 0.498);
+    right: -100%;
+    display: flex;
+    flex-direction: column;
     padding: 48px;
     backdrop-filter: blur(5px);
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    z-index: 15;
+    transition: 0.5s linear;
+}
+.projectoverlay.active {
+    right: 0;
+    transition: 0.5s linear;
 }
 
-.aboutoverlay.active {
-    display: flex;
-}
-.aboutoverlay p {
-    width: 50%;
+
+.projectoverlay p {
+    width: 100%;
 }
 .active {
     display: flex;
@@ -177,30 +159,6 @@ nav a:hover {
 }
 
 
-/* popup */
-.popup {
-    display: none;
-    background-color: var(--popup);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 300px;
-    height: 150px;
-    z-index: 10;
-}
-
-.popupwrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: var(--mainblue);
-}
-
-#popclose {
-    width: fit-content;
-    height: fit-content;
-}
 
 /* opening */
 .opening {
@@ -220,22 +178,38 @@ nav a:hover {
 /* pagewrapper */
 .pagewrapper {
     display: flex;
+    position: relative;
     flex-direction: column;
+    height: fit-content;
+    gap: 25vh;
 }
-.contentmain {
+.section1 {
     display: flex;
     flex-direction: column;
     gap: 24px;
     padding: 12px 24px;
-    min-height: 200vh;
+    min-height: 200svh;
+    flex-grow: 1;
     justify-content: space-around;
     align-items: flex-start;
-
 }
 
-.contentmain p {
+
+.section1 p {
     width: 50%;
+    text-align: justify;
 }
 
+
+/* clone */
+.clonee{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100svw;
+    height: 100svh;
+    pointer-events: none;
+
+}
 
 
