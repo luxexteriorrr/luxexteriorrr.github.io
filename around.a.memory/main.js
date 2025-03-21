@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
           document.exitFullscreen();
         }
       }
+
     //selectors
     const nav = document.getElementById('nav')
     const overlay1 = document.querySelector('.projectoverlay');
@@ -165,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     //loadingAnim()
 
-    //document.querySelector('#loadingdiv').style.display = 'none'
+    document.querySelector('#loadingdiv').style.display = 'none'
 
 
 
@@ -187,18 +188,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     wordspacing ()
 
-    //about overlay toggle function
-     function projectOverlay () {
-        function toggleOverlay() {
-            const isActive = overlay1.classList.toggle('active'); // Toggle 'active' class
-                    document.querySelectorAll("nav a:not(#title)").forEach(link => {
-            link.style.display = isActive ? "none" : "inline-block"; // Toggle visibility
-        });
+
+    //overlay
+    function toggleOverlay(overlayId) {
+        const overlay = document.getElementById(overlayId);
+        if (!overlay) {
+            console.error(`Overlay with ID '${overlayId}' not found.`);
+            return;
         }
-        // Attach event listener
-        title.addEventListener('click', toggleOverlay);
-     }
-     projectOverlay ()
+    
+        const isActive = overlay.classList.toggle("active"); // Toggle 'active' class
+    }
+    
+    // ✅ Event listener for opening overlays (Uses `data-overlay` attributes)
+    document.querySelectorAll("[data-overlay]").forEach(trigger => {
+        trigger.addEventListener("click", function () {
+            const overlayId = this.getAttribute("data-overlay"); // Get the overlay ID from the clicked element
+            toggleOverlay(overlayId);
+        });
+    });
+    
+    // ✅ Event listener for closing overlays (Delegated)
+    document.addEventListener("click", function (event) {
+        if (event.target.matches("#closebutton")) {
+            const overlay = event.target.closest(".overlay"); // Find closest overlay to the clicked close button
+            if (overlay) {
+                toggleOverlay(overlay.id);
+            }
+        }
+    });
+    
 
 
     // Function to clone all paragraphs into .clonee
