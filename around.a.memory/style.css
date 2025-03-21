@@ -17,7 +17,9 @@ body {
     --shadedwhite: #CCCCCC;
     --shadedblack: #020305;
     --mainblue: #0000EE;
-    --popup: #F1EEEE;
+    --popup: rgba(128, 128, 128, 0.15);
+    --tooltip: #F5F5F5;
+    --tooltipborder: #CCCCCC;
 }
 
 @font-face {
@@ -34,10 +36,10 @@ body {
 #loadingwrapper {
     width: 100svw;
     height: 100svh;
-   /* cursor: none;  Hides the default cursor */
+    /*cursor: none; */
 }
 #loadingdiv {
-    width: 100%;
+    width: 0%;
     position: absolute;
     top: 50%;
     height: 24px;
@@ -53,6 +55,15 @@ body {
     margin-left: 12px;
     opacity: 0;
     z-index: 2;
+    opacity: 0;
+}
+
+#enter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 1;
+    cursor: pointer;
 }
 
 
@@ -61,12 +72,13 @@ body {
 
 /* style for the navigation of page */
 nav {
+    position: sticky;
+    top: 5%;
     width: 100%;
     padding: 12px 24px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    position: absolute;
     z-index: 2;
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
@@ -77,45 +89,47 @@ nav a {
     cursor: pointer;
     transition: 1.5s linear;
     color: var(--mainblue);
+    /*backdrop-filter: blur(10px); Frosted glass effect
+    background-color: var(--popup) */
 }
 nav a:hover {
     opacity: 0.5;
     transition: 1s linear;
 }
-#title {
+#title.stuck {
     position: fixed;
     z-index: 10;
     top: 35%;
     left: 5%;
 }
-#about {
+#about.stuck {
     position: fixed;
     z-index: 10;
     top: 15%;
     left: 45%;
 }
-#print {
+#print.stuck {
     position: fixed;
     z-index: 10;
     top: 75%;
     left: 95%;
     rotate: 90deg;
 }
-#index {
+#index.stuck {
     position: fixed;
     z-index: 10;
     top:85%;
     left: 30%;
     rotate: 90deg;
 }
-#push {
+#push.stuck {
     position: fixed;
     z-index: 10;
     top:50%;
     right: 40%;
     rotate: 90deg;
 }
-#lastModified {
+#lastModified.stuck {
     font-size: inherit;
 }
 
@@ -129,16 +143,27 @@ nav a:hover {
     gap: 24px;
     width: fit-content;
     background-color: var(--popup);
-    transition: height 3s linear;
+    z-index: 5;
+    transition: height 1s linear;
     overflow: hidden;
-
+    backdrop-filter: blur(10px); /* ✅ Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* ✅ Safari support */
 }
 .overlay.active {
     height: 100%;
     transition: height 3s linear;
 }
+#closebutton {
+    cursor: pointer;
+    transition: 1s linear;
+}
+#closebutton:hover {
+    opacity: 0.5;
+    transition: 1s linear;
+}
 
-/* style for the title */
+
+/* style for the popups */
 #titleoverlay {
     position: fixed;
     top: 40%;
@@ -154,8 +179,8 @@ nav a:hover {
 }
 #pushoverlay {
     position: fixed;
-    top: 41%;
-    right: 17%;
+    top: 38%;
+    right: 20%;
     max-height: fit-content;
 }
 
@@ -194,23 +219,45 @@ nav a:hover {
     justify-content: space-around;
     align-items: flex-start;
 }
-
-
 .section1 p {
     width: 50%;
     text-align: justify;
+    z-index: 2
+    ;
 }
 
 
-/* clone */
-.clonee{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100svw;
-    height: 100svh;
-    pointer-events: none;
-
+/* images */
+.image {
+    max-width: 500px;
 }
+.image.blur1 {
+    filter: blur(3px);
+}
+.image.blur2 {
+    filter: blur(10px);
+}
+
+.imagewrapper {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+}
+.locked {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+}
+
+#imageone {
+    position: static;
+    z-index: 1;
+    right: 25%;
+    top: 5%;
+}
+
+
 
 

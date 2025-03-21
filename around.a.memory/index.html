@@ -32,18 +32,20 @@
         <a id="print" class="activelink decay" >print</a>
         <a id="index" class="activelink decay">index</a>
         <a id="push" class="activelink decay" data-overlay="pushoverlay" >update <span id="lastModified"></span> </a>
+        
         <script>
             // Get the last modified date and time of the document
             const lastModified = document.lastModified;
             // Display the date in the desired element
             document.getElementById('lastModified').textContent = lastModified;
         </script>
-        </nav>
+    </nav>
 
     <div id="loadingwrapper">
         <div id="loadingdiv">
             <p id="loadingtext"> loading</p>
         </div>
+        <button id="enter">Enter</button>
     </div>
 
     <!--nav pop ups r here-->
@@ -51,7 +53,7 @@
 
         <div class="overlay" id="titleoverlay">
             <div class="overlaytitle">
-                <p id="closebutton">[close]</p>
+                <button id="closebutton">close</button>
             </div>
             <div class="overlaycontent">
                 <p> Around A Memory is an interactive, web-driven installation
@@ -68,20 +70,23 @@
                     critically engaging with the unseen phenomena and materialising
                     it through an immersive, interactive experience.</p>
             </div>
+
         </div>
 
         <div class="overlay" id="aboutoverlay">
             <div class="overlaytitle">
-                <p id="closebutton">[close]</p>
+                <button id="closebutton">close</button>
             </div>
             <div class="overlaycontent">
-                <p> this project is about internet decay. to explore, scroll</p>
+                <p> the webpage tells a story. Navigate around the page, scrolling and clicking.
+                    here are the basic controls <button> i am a button</button>
+                </p>
             </div>
         </div>
 
         <div class="overlay" id="pushoverlay">
             <div class="overlaytitle">
-                <p id="closebutton">[close]</p>
+                <button id="closebutton">close</button>
             </div>
             <div class="overlaycontent">
                 <p> this project is about internet decay. to explore, scroll</p>
@@ -103,6 +108,10 @@
                 The dirt path twists between towering trees, their gnarled roots breaking through the soil like old bones. Sunlight filters through the dense canopy in shifting golden patterns, and the air hums with the soft trill of unseen birds. Each step disturbs a memory—leaves crunching, distant laughter, the scent of pine. An abandoned bench sits crookedly beside the path, its wood softened by time. I hesitate, tracing a hand along the worn surface. Who sat here last? What thoughts did they leave behind? The wind rustles, nudging me forward. Some places aren’t meant to be lingered in too long.
             </p>
 
+            <div class="imagewrapper">
+                <img src="assets/static/IMG_0694.JPG" alt="" class="image blur2" id="imageone">
+                <h2 class="locked" id="lockedone">locked</h2>
+            </div>
             <p class="paragraph decay">
                 Raindrops tap against my hood, a soft percussive rhythm that blends with the distant hum of traffic. The world is blurred—water streaking against streetlights, reflections stretching across wet pavement. My shoes leave faint imprints that vanish as quickly as they appear. A figure with an umbrella moves past me, faceless in the mist, footsteps fading into the quiet. I breathe in deeply—the sharp scent of rain, the earth rich and alive beneath the city’s concrete skin. Each step feels lighter, as if the rain is washing something away, leaving only the present moment behind.
             </p>
@@ -129,6 +138,11 @@
                 The sky melts into bruised oranges and deepening blues, a slow-motion exhale of the day. Streetlights flicker on one by one, casting pools of warm light on the empty sidewalk. I pass a row of shuttered storefronts, their neon signs still humming faintly, as if reluctant to let go of the day. The distant sound of laughter drifts from an open window, mixing with the rhythmic click of my footsteps. I could turn back, retrace my steps, return to where I started—but the road ahead is painted in fading light, and for now, I keep walking.
             </p>
         </div>
+    </div>
+
+    <!--nasty pop ups will be here-->
+    <div class="popupscontainer">
+
     </div>
 </body>
 </html>
