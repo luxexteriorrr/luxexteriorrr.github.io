@@ -27,11 +27,11 @@
 </head>
 <body>
     <nav id="nav">
-        <a id="title" class="activelink decay"> Around A Memory</a>
-        <a id="about" class="activelink decay"> about </a>
-        <a id="print" class="activelink decay">print</a>
+        <a class="activelink decay" id="title" data-overlay="titleoverlay" > Around A Memory </a>
+        <a id="about" class="activelink decay" data-overlay="aboutoverlay" >about</a>
+        <a id="print" class="activelink decay" >print</a>
         <a id="index" class="activelink decay">index</a>
-        <a id="push" class="activelink decay">update <span id="lastModified"></span> </a>
+        <a id="push" class="activelink decay" data-overlay="pushoverlay" >update <span id="lastModified"></span> </a>
         <script>
             // Get the last modified date and time of the document
             const lastModified = document.lastModified;
@@ -41,20 +41,58 @@
         </nav>
 
     <div id="loadingwrapper">
-
         <div id="loadingdiv">
             <p id="loadingtext"> loading</p>
         </div>
     </div>
 
+    <!--nav pop ups r here-->
+    <div class="overlaycontainer">
+
+        <div class="overlay" id="titleoverlay">
+            <div class="overlaytitle">
+                <p id="closebutton">[close]</p>
+            </div>
+            <div class="overlaycontent">
+                <p> Around A Memory is an interactive, web-driven installation
+                    exploring Internet Decay and Digital Preservation.
+                    The project immerses the viewers in a metaphorical
+                    digital environment where interactions with the installation
+                    trigger the rate of the enviroment’s deterioration. The
+                    installation encapsulates a calculated timeline of the webpage
+                    decay, altering the readability, positionality, and the very
+                    existence of HTML elements, culminating in a unsusable/empty
+                    HTML document.
+                    Aimed at creative practitioners, anthropologists, and
+                    digital activists, the project highlights Internet Decay by
+                    critically engaging with the unseen phenomena and materialising
+                    it through an immersive, interactive experience.</p>
+            </div>
+        </div>
+
+        <div class="overlay" id="aboutoverlay">
+            <div class="overlaytitle">
+                <p id="closebutton">[close]</p>
+            </div>
+            <div class="overlaycontent">
+                <p> this project is about internet decay. to explore, scroll</p>
+            </div>
+        </div>
+
+        <div class="overlay" id="pushoverlay">
+            <div class="overlaytitle">
+                <p id="closebutton">[close]</p>
+            </div>
+            <div class="overlaycontent">
+                <p> this project is about internet decay. to explore, scroll</p>
+            </div>
+        </div>
+
+        
+
+    </div>
+
     <div class="pagewrapper">
-
-
-
-        <!--clone overlay
-        <div class="clonee">
-        </div>-->
-
         <!--main content-->
         <div class="section1">
             <p class="paragraph decay">

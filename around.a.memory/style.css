@@ -79,7 +79,7 @@ nav a {
     color: var(--mainblue);
 }
 nav a:hover {
-    opacity: 0.1;
+    opacity: 0.5;
     transition: 1s linear;
 }
 #title {
@@ -120,42 +120,43 @@ nav a:hover {
 }
 
 
-/* project */
-.projectoverlay {
-    width: 25svw;
-    height: 100svh;
-    position: fixed;
-    top: 0;
-    right: -100%;
+/* overlay general style */
+.overlay {
+    max-width: 40vh;
     display: flex;
+    height: 0%;
     flex-direction: column;
-    padding: 48px;
-    backdrop-filter: blur(5px);
-    justify-content: space-around;
-    align-items: center;
-    z-index: 15;
-    transition: 0.5s linear;
-}
-.projectoverlay.active {
-    right: 0;
-    transition: 0.5s linear;
-}
-
-
-.projectoverlay p {
-    width: 100%;
-}
-.active {
-    display: flex;
-    z-index: 1;
-
-}
-#close {
-    position: absolute;
-    top: 12px;
-    right: 24px;
+    gap: 24px;
     width: fit-content;
-    font-size: 1.5rem;
+    background-color: var(--popup);
+    transition: height 3s linear;
+    overflow: hidden;
+
+}
+.overlay.active {
+    height: 100%;
+    transition: height 3s linear;
+}
+
+/* style for the title */
+#titleoverlay {
+    position: fixed;
+    top: 40%;
+    left: 5%;
+    max-height: fit-content;
+}
+
+#aboutoverlay{
+    position: fixed;
+    top: 20%;
+    left: 45%;
+    max-height: fit-content;
+}
+#pushoverlay {
+    position: fixed;
+    top: 41%;
+    right: 17%;
+    max-height: fit-content;
 }
 
 
