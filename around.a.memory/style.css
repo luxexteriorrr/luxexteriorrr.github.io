@@ -2,15 +2,18 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1.5rem;
-    font-family: 'arketa';
+    font-size: 1rem;
     font-size: 0.9rem;
-    scroll-behavior: smooth;
+    font-family: 'arketa';
 }
 body {
     background-color: var(--mainwhite);
 }
 
+/* no scrollbar */
+::-webkit-scrollbar {
+    display: none;
+}
 :root {
     --mainblack: #020305;
     --mainwhite: #F5F5F7;
@@ -21,15 +24,11 @@ body {
     --tooltip: #F5F5F5;
     --tooltipborder: #CCCCCC;
 }
-
 @font-face {
     font-family: 'arketa';
     src: url(/around.a.memory/assets/font/OOArketaTrial-Regular.otf);
 }
-/* no scrollbar */
-::-webkit-scrollbar {
-    display: none;
-}
+
 
 
 /* style for loadingdiv */
@@ -57,7 +56,6 @@ body {
     z-index: 2;
     opacity: 0;
 }
-
 #enter {
     position: absolute;
     top: 50%;
@@ -72,12 +70,12 @@ body {
 
 /* style for the navigation of page */
 nav {
-    position: sticky;
-    top: 5%;
-    width: 100%;
+    position: static;
+    top: 1%;
+    width: 50%;
     padding: 12px 24px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     z-index: 2;
     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -89,6 +87,7 @@ nav a {
     cursor: pointer;
     transition: 1.5s linear;
     color: var(--mainblue);
+    z-index: 10;
     /*backdrop-filter: blur(10px); Frosted glass effect
     background-color: var(--popup) */
 }
@@ -170,7 +169,6 @@ nav a:hover {
     left: 5%;
     max-height: fit-content;
 }
-
 #aboutoverlay{
     position: fixed;
     top: 20%;
@@ -186,7 +184,7 @@ nav a:hover {
 
 
 
-/* opening */
+/* opening section */
 .opening {
     width: 100%;
     height: 100svh;
@@ -195,9 +193,7 @@ nav a:hover {
     align-items: center;
     pointer-events: none;
 }
-#openingtext {
-    font-size: 10rem;
-}
+
 
 
 
@@ -219,6 +215,17 @@ nav a:hover {
     justify-content: space-around;
     align-items: flex-start;
 }
+.section2 {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 12px 24px;
+    min-height: 200svh;
+    flex-grow: 1;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
 .section1 p {
     width: 50%;
     text-align: justify;
@@ -237,7 +244,6 @@ nav a:hover {
 .image.blur2 {
     filter: blur(10px);
 }
-
 .imagewrapper {
     position: relative;
     width: fit-content;
@@ -250,7 +256,6 @@ nav a:hover {
     transform: translate(-50%, -50%);
     width: fit-content;
 }
-
 #imageone {
     position: static;
     z-index: 1;
