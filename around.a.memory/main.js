@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav a'); 
     const paragraphs = document.querySelectorAll('p');
     const pageWrapper = document.querySelector('.pagewrapper')
-
+    const enter = document.querySelector('#enter')
+    
 
     //disapearing of the contenet 
     function disappearContent () {
@@ -143,29 +144,73 @@ document.addEventListener('DOMContentLoaded', () => {
     //hide nav 
     function hideNav () {nav.style.display = 'none'}
     
-    // loading animation function
-    function loadingAnim () {
-                
-        // 1. Call disableScroll() before animation starts + nav
-        hideNav ();
-        disableScroll();
-    
-        // 2. the loading div animation 
-        var loading = gsap.timeline();
-        loading.fromTo('#loadingdiv', {width: '0%'}, {delay: 3, duration: 5, width: '100%'});
-        loading.fromTo('#loadingdiv', {height: '24px'}, {delay: 0, duration: 1, height: '0px'});
-        loading.fromTo('#loadingtext', {opacity: '1'}, {delay: 0, duration: 0.5, opacity: '0'});
+    //cursor
+    const customCursor = document.getElementById('cursor')
+    const loadingWrapper = document.getElementById('loadingwrapper')
+    const moveCursor = (e)=> {
+        const mouseY = e.clientY;
+        const mouseX = e.clientX;
+      
+        customCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      
+        customCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      } 
+    //loadingWrapper.addEventListener('mousemove', moveCursor)
 
 
-        // 3. show other links and enable scroll 
-        loading.call(() => {
-            showNav();
-            enableScroll();
+
+    // Initial state on page load
+    //hideNav();
+    //disableScroll();
+        // Flashing animation for #enter before click
+        gsap.to("#enter", {
+            opacity: 0.5,
+            duration: 0.8, // Speed of the flashing
+            repeat: -1, // Infinite loop
+            yoyo: true, // Reverse animation (1 → 0.5 → 1)
+            ease: "power1.inOut" // Smooth transition
         });
-        
-    }
-    //loadingAnim()
+    enter.addEventListener('click', () => {
+        gsap.timeline()
+            // Fade out enter
+            .to('#enter', {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    document.getElementById('enter').style.display = 'none';
+                }
+            })
 
+            // Fade in loading text
+            .fromTo('#loadingtext', { opacity: 0 }, {
+                opacity: 1,
+                duration: 1
+            })
+
+            // Animate loading bar
+            .fromTo('#loadingdiv', { width: '0%' }, {
+                width: '100%',
+                duration: 5
+            }, "+=2") // Delay 2s after previous step
+
+            // Collapse loading bar
+            .to('#loadingdiv', {
+                height: '0px',
+                duration: 1
+            })
+
+            // Fade out loading text
+            .to('#loadingtext', {
+                opacity: 0,
+                duration: 0.5
+            })
+
+            // Final callback: show nav and enable scroll
+            .call(() => {
+                showNav();
+                enableScroll();
+            });
+    });
     document.querySelector('#loadingdiv').style.display = 'none'
 
 
@@ -220,26 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
 
-    // Function to clone all paragraphs into .clonee
-    function clone(event) {
-        const container = document.querySelector(".clonee"); // ✅ Get correct overlay container
 
-        if (!container) {
-            console.error("No .clonee container found!");
-            return;
-        }
 
-        const clickedParagraph = event.target; // Get the paragraph that was clicked
-        const clone = clickedParagraph.cloneNode(true); // Clone the clicked paragraph
-        container.appendChild(clone); // Append to clone overlay
 
-        console.log("Cloned paragraph added to .clonee:", clone);
-    }
-
-    // ✅ Attach event listener to each paragraph
-    document.querySelectorAll("p").forEach(p => {
-        p.addEventListener("click", clone);
-    });
 
     
 
