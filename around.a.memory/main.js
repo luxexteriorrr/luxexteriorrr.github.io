@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paragraphs = document.querySelectorAll('p');
     const pageWrapper = document.querySelector('.pagewrapper')
     const enter = document.querySelector('#enter')
+    const erosionParagraphs = document.querySelectorAll(".erosion");
     
 
     //disapearing of the contenet 
@@ -232,6 +233,51 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     }
     wordspacing ()
+
+    //erosion function
+    function erodeText(element, options = {}) {
+        const words = element.textContent.split(" ");
+        const delay = options.delay || 800;
+        const style = options.style || "block";
+        let index = 0;
+    
+        const erosionInterval = setInterval(() => {
+            if (index >= words.length) {
+                clearInterval(erosionInterval);
+                return;
+            }
+    
+            let replacement = "";
+    
+            switch (style) {
+                case "block":
+                    replacement = "█".repeat(words[index].length);
+                    break;
+                case "blank":
+                    replacement = " ".repeat(words[index].length);
+                    break;
+                case "flicker":
+                    replacement = (Math.random() > 0.5) ? "▚▞▛" : " ";
+                    break;
+                default:
+                    replacement = "█";
+            }
+    
+            words[index] = replacement;
+            element.textContent = words.join(" ");
+            index++;
+        }, delay);
+    }
+    
+
+    erosionParagraphs.forEach((el, i) => {
+        // stagger erosion slightly for each paragraph
+        setTimeout(() => {
+            erodeText(el, { delay: 600, style: "blank" });
+        }, i * 1000);
+    });
+    //erodeText()
+    
 
 
     //overlay
