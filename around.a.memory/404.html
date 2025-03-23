@@ -26,23 +26,9 @@
     <script src="p5.js"></script>
 </head>
 <body>
-    <nav id="nav">
-        <a class="activelink decay" id="title" data-overlay="titleoverlay" > Around A Memory </a>
-        <a id="about" class="activelink decay" data-overlay="aboutoverlay" >about</a>
-        <a id="print" class="activelink decay" >print</a>
-        <a id="index" class="activelink decay">index</a>
-        <a id="push" class="activelink decay" data-overlay="pushoverlay" >update <span id="lastModified"></span> </a>
-        
-        <script>
-            // Get the last modified date and time of the document
-            const lastModified = document.lastModified;
-            // Display the date in the desired element
-            document.getElementById('lastModified').textContent = lastModified;
-        </script>
-    </nav>
 
     <div class="errorwrapper">
-        
+        <p id="errormessage"> 404 <span>sorry, this page does not exist</span></p>
     </div>
 </body>
 </html>
