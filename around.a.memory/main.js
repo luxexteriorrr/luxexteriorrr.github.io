@@ -28,10 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const about = document.getElementById('about');
     const print = document.getElementById('print');
     const navLinks = document.querySelectorAll('nav a'); 
-    const paragraphs2 = document.querySelectorAll('.section2 p');
+    const paragraphs2 = document.querySelectorAll('#two p');
     const pageWrapper = document.querySelector('.pagewrapper')
     const enter = document.querySelector('#enter')
     const erosionParagraphs = document.querySelectorAll(".erosion");
+    const sectionTwo = document.querySelector('#two')
     
 
     //disapearing of the contenet 
@@ -133,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTimer();
 
     }
-    //disappearContent ()
 
 
     //disable scroll
@@ -166,17 +166,17 @@ document.addEventListener('DOMContentLoaded', () => {
       
     
     // Initial state on page load
-    //hideNav();
-    //disableScroll();
+    hideNav();
+    disableScroll();
 
     // Flashing animation for #enter before click
-    /*gsap.to("#enter", {
+    gsap.to("#enter", {
         opacity: 0.5,
         duration: 0.8,
         repeat: -1,
         yoyo: true,
         ease: "power1.inOut"
-    }); */
+    }); 
 
     enter.addEventListener('click', () => {
         const loadingText = document.getElementById('loadingtext');
@@ -241,30 +241,44 @@ document.addEventListener('DOMContentLoaded', () => {
         .call(() => {
             showNav();
             enableScroll();
+            disappearContent ();
         });
     });
-    showNav()
-    document.querySelector('#loadingdiv').style.display = 'none'
+    //showNav()
+    //document.querySelector('#loadingdiv').style.display = 'none'
 
+
+
+
+
+    function wordspacing() {
+        paragraphs2.forEach(paragraph => {
+          ScrollTrigger.create({
+            trigger: paragraph,
+            start: "top 50%",
+            toggleActions: "play play resume resume",
+            once: false,
+            markers: false, // ✅ Turn on debug markers
+            onEnter: () => {
+              const randomWidth = Math.floor(Math.random() * (85 - 45 + 1)) + 45;
+              gsap.to(paragraph, {
+                width: `${randomWidth}%`,
+                margin: '0',
+                duration: 20,
+                ease: 'linear'
+              });
+            }
+          });
+        });
+      }
+      
+      wordspacing();
+      
 
 
     
-   //function with the spacing 
-    function wordspacing () {
-            //gsap with spacing (/??)
-        paragraphs2.forEach(par => {
-        par.addEventListener('mouseenter', () => {  
-            gsap.to(par, {
-                    wordSpacing: '1rem',
-                    width: '75%',
-                    duration: 10, 
-                     ease: 'linear'
-                } // End state
-            );
-        });
-    })
-    }
-    wordspacing ()
+
+
 
     function erodeText(element, options = {}) {
         const words = element.textContent.split(" ");
@@ -301,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     //messing with the letters (ADD THE FUNCTION WHEN THEY ARE IN VIEW)
-    function fragmentText(element, options = {}) {
+    /*function fragmentText(element, options = {}) {
         let words = element.textContent.split(" ");
         const delay = options.delay || 500;
         
@@ -322,33 +336,49 @@ document.addEventListener('DOMContentLoaded', () => {
             element.textContent = words.join(" ");
             index++;
         }, delay);
-    }
+    } */
 
-    erosionParagraphs.forEach((el, i) => {
-    ScrollTrigger.create({
-        trigger: el,
-        start: "top 80%",
-        toggleActions: 'play pause none none',
-        onEnter: () => {
-            fragmentText(el, {
-            delay: 300,
-            style: "block",
-        });
-        }, 
-    });
-    });
-
+    function smoothWordFade() {
+        erosionParagraphs.forEach((paragraph, i) => {
+          ScrollTrigger.create({
+            trigger: paragraph,
+            start: "top 85%",
+            markers: false,
+            once: false,
+            onEnter: () => {
+              const words = paragraph.textContent.trim().split(" ");
       
-
-    /*
-    erosionParagraphs.forEach((el, i) => {
-        // stagger erosion slightly for each paragraph
-        setTimeout(() => {
-            erodeFragment(el, { delay: 600});
-        }, i * 1000);
-    });
-    //erodeText() */
-    
+              // Wrap each word in a span
+              paragraph.innerHTML = words
+                .map(word => `<span class="fade-word">${word} </span>`)
+                .join("");
+      
+              const wordSpans = paragraph.querySelectorAll(".fade-word");
+              const wordIndexes = [...Array(wordSpans.length).keys()];
+      
+              // Shuffle word order so fade is randomized
+              for (let i = wordIndexes.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [wordIndexes[i], wordIndexes[j]] = [wordIndexes[j], wordIndexes[i]];
+              }
+      
+              // Fade out words one by one every ~3s
+              wordIndexes.forEach((index, step) => {
+                setTimeout(() => {
+                  gsap.to(wordSpans[index], {
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power1.out"
+                  });
+                }, step * 2000); // 2s between each
+              });
+            }
+          });
+        });
+      }
+      
+    smoothWordFade();
+      
 
 
     //overlay
@@ -392,12 +422,11 @@ document.addEventListener('DOMContentLoaded', () => {
             start: "top center",
             end: "bottom center",
             scrub: true,
-            markers: true // Show start/end markers
+            markers: false // Show start/end markers
         },
-        ease: "none"
+        ease: "linear"
         }
     );
-    
     // drawing svg 2
     gsap.fromTo("#elipseTwo", 
         { drawSVG: "0%" }, 
@@ -406,11 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollTrigger: {
             trigger: "#two",
             start: "top center",
-            end: "center",
+            end: "bottom center",
             scrub: true,
-            markers: true // Show start/end markers
+            markers: false // Show start/end markers
         },
-        ease: "none"
+        ease: "linear"
         }
     );
   

@@ -5,6 +5,8 @@
     font-size: 0.8rem;
     font-family: 'arketa';
     text-decoration: none;
+    cursor: default;
+    line-height: 1rem;
 }
 
 body {
@@ -255,37 +257,12 @@ nav a.rotated {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 12px 24px;
-    min-height: 200svh;
-    flex-grow: 1;
+    padding: 24px 24px;
+    min-height: 150svh;
     justify-content: space-around;
     align-items: flex-end;
     position: relative;
 }
-
-.firstelipse {
-    position: sticky;
-    top: 0%;
-    left: 5%;
-    width: fit-content;
-    height: fit-content;
-    z-index: 10;
-    pointer-events: none; /* optional if interactive elements are outside */
-    display: flex;
-  }
-  .secondelipse {
-    position: sticky;
-    top: 10%;
-    margin-left: 55%;
-    width: fit-content;
-    height: fit-content;
-    z-index: 10;
-    pointer-events: none;
-    display: flex;
-  }
-  
-
-  
 
 
 .paragraph {
@@ -294,16 +271,41 @@ nav a.rotated {
     z-index: 2;
     margin-right: 25%;
 }
+
 #chapter {
-    font-size: var(--mediumHeading);
+    font-size: var(--body);
     position: sticky;
     top: 5%;
+    bottom: 15%;
 }
 #entry {
-    font-size: var(--Heading);
+    font-size: var(--body);
     position: sticky;
     top: 15%;
+    bottom: 5%;
 }
+
+/* elipses */
+.firstelipse {
+    position: fixed;
+    top: 0%;
+    left: 5%;
+    width: fit-content;
+    height: fit-content;
+    z-index: 10;
+    pointer-events: none; /* optional if interactive elements are outside */
+    display: flex;
+  }
+.secondelipse {
+    position: fixed;
+    top: 10%;
+    margin-left: 55%;
+    width: fit-content;
+    height: fit-content;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+  }
 
 
 
