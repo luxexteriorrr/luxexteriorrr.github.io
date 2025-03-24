@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // gsap register
-    gsap.registerPlugin(Flip,ScrollTrigger,Observer,ScrollToPlugin,Draggable,MotionPathPlugin,EaselPlugin,PixiPlugin,TextPlugin,RoughEase,ExpoScaleEase,SlowMo,CustomEase,)
+    gsap.registerPlugin(ScrollTrigger,TextPlugin,DrawSVGPlugin)
 
 
     //full screen 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const about = document.getElementById('about');
     const print = document.getElementById('print');
     const navLinks = document.querySelectorAll('nav a'); 
-    const paragraphs = document.querySelectorAll('.section p');
+    const paragraphs2 = document.querySelectorAll('.section2 p');
     const pageWrapper = document.querySelector('.pagewrapper')
     const enter = document.querySelector('#enter')
     const erosionParagraphs = document.querySelectorAll(".erosion");
@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function disableScroll() {document.body.style.overflow = "hidden";}
     //enable scroll
     function enableScroll() { document.body.style.overflow = "auto";}
+    //increase opacity of the nav links
     function showNav() {
         // Then animate nav links in
         gsap.to("nav a", {
@@ -148,9 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
           stagger: 0.1,
           ease: "linear"
         });
-      }
-      
-      function hideNav() {
+    }
+    //decrease opacity of the navlinks
+    function hideNav() {
         // Animate nav links out
         gsap.to("nav a", {
           opacity: 0,
@@ -161,24 +162,21 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           ease: "linear",
         });
-      }
+    }
       
     
-
-
-
     // Initial state on page load
-    hideNav();
-    disableScroll();
+    //hideNav();
+    //disableScroll();
 
     // Flashing animation for #enter before click
-    gsap.to("#enter", {
+    /*gsap.to("#enter", {
         opacity: 0.5,
         duration: 0.8,
         repeat: -1,
         yoyo: true,
         ease: "power1.inOut"
-    });
+    }); */
 
     enter.addEventListener('click', () => {
         const loadingText = document.getElementById('loadingtext');
@@ -217,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         .fromTo('#loadingdiv', { width: '0%' }, {
             width: '100%',
-            duration: 5
+            duration: 5,
         }, "<") // start at same time as add()
 
         .to('#loadingdiv', {
@@ -236,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         .to('#maintitle', {
-            opacity: 0.1,
+            opacity: 0.05,
             duration: 3
         })
 
@@ -245,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
             enableScroll();
         });
     });
-
-    //document.querySelector('#loadingdiv').style.display = 'none'
+    showNav()
+    document.querySelector('#loadingdiv').style.display = 'none'
 
 
 
@@ -254,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
    //function with the spacing 
     function wordspacing () {
             //gsap with spacing (/??)
-        paragraphs.forEach(par => {
+        paragraphs2.forEach(par => {
         par.addEventListener('mouseenter', () => {  
             gsap.to(par, {
                     wordSpacing: '1rem',
@@ -268,53 +266,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     wordspacing ()
 
-    //replacing with black cubes
-    function erodeTextWithSize(element, options = {}) {
-        let words = element.textContent.split(" ");
+    function erodeText(element, options = {}) {
+        const words = element.textContent.split(" ");
         const delay = options.delay || 800;
-        
-        // Select half of the words randomly
-        let erosionCount = Math.floor(words.length / 4);
-        let erosionIndexes = [];
-    
-        while (erosionIndexes.length < erosionCount) {
-            let randomIndex = Math.floor(Math.random() * words.length);
-            if (!erosionIndexes.includes(randomIndex)) {
-                erosionIndexes.push(randomIndex);
-            }
-        }
-    
+        const style = options.style || "block";
         let index = 0;
+    
         const erosionInterval = setInterval(() => {
-            if (index >= erosionIndexes.length) {
+            if (index >= words.length) {
                 clearInterval(erosionInterval);
                 return;
             }
     
-            let wordIndex = erosionIndexes[index];
-            
-            let span = document.createElement("span");
-            span.textContent = words[wordIndex];
-            
-            // 🎛 Random font size between 8px and 50px (change range as needed)
-            let randomSize = Math.floor(Math.random() * 42) + 20;  
-            span.style.fontSize = `${randomSize}px`;
-            span.style.display = "inline-block"; // Prevents layout shifts
+            let replacement = "";
     
-            // 20% chance to erode the word into black blocks
-            if (Math.random() > 0.8) {
-                span.textContent = "█".repeat(words[wordIndex].length);
+            switch (style) {
+                case "block":
+                    replacement = "█".repeat(words[index].length);
+                    break;
+                case "blank":
+                    replacement = " ".repeat(words[index].length);
+                    break;
+                case "flicker":
+                    replacement = (Math.random() > 0.5) ? "▚▞▛" : " ";
+                    break;
+                default:
+                    replacement = "█";
             }
-            
-            words[wordIndex] = span.outerHTML;
-            element.innerHTML = words.join(" ");
-            
+    
+            words[index] = replacement;
+            element.textContent = words.join(" ");
             index++;
         }, delay);
     }
     
     //messing with the letters (ADD THE FUNCTION WHEN THEY ARE IN VIEW)
-    function erodeFragment(element, options = {}) {
+    function fragmentText(element, options = {}) {
         let words = element.textContent.split(" ");
         const delay = options.delay || 500;
         
@@ -338,11 +325,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     erosionParagraphs.forEach((el, i) => {
-        // stagger erosion slightly for each paragraph
-        setTimeout(() => {
-            erodeTextWithSize(el, { delay: 300, style: "block" });
-        }, i * 1000);
+    ScrollTrigger.create({
+        trigger: el,
+        start: "top 80%",
+        toggleActions: 'play pause none none',
+        onEnter: () => {
+            fragmentText(el, {
+            delay: 300,
+            style: "block",
+        });
+        }, 
     });
+    });
+
+      
 
     /*
     erosionParagraphs.forEach((el, i) => {
@@ -384,6 +380,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+
+
+    // drawing svg 1
+    gsap.fromTo("#elipseOne", 
+        { drawSVG: "0%" }, 
+        { 
+        drawSVG: "100%",
+        scrollTrigger: {
+            trigger: "#one",
+            start: "top center",
+            end: "bottom center",
+            scrub: true,
+            markers: true // Show start/end markers
+        },
+        ease: "none"
+        }
+    );
+    
+    // drawing svg 2
+    gsap.fromTo("#elipseTwo", 
+        { drawSVG: "0%" }, 
+        { 
+        drawSVG: "100%",
+        scrollTrigger: {
+            trigger: "#two",
+            start: "top center",
+            end: "center",
+            scrub: true,
+            markers: true // Show start/end markers
+        },
+        ease: "none"
+        }
+    );
+  
+
 
 
 
