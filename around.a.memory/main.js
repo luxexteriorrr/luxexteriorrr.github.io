@@ -133,85 +133,119 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTimer();
 
     }
-    disappearContent ()
+    //disappearContent ()
 
 
     //disable scroll
     function disableScroll() {document.body.style.overflow = "hidden";}
     //enable scroll
     function enableScroll() { document.body.style.overflow = "auto";}
-    //show nav 
-    function showNav () {nav.style.display = 'flex'}
-    //hide nav 
-    function hideNav () {nav.style.display = 'none'}
+    function showNav() {
+        // Then animate nav links in
+        gsap.to("nav a", {
+          opacity: 1,
+          duration: 1,
+          stagger: 0.1,
+          ease: "linear"
+        });
+      }
+      
+      function hideNav() {
+        // Animate nav links out
+        gsap.to("nav a", {
+          opacity: 0,
+          duration: 1,
+          stagger: {
+            each: 0.05,
+            from: "end" // optional: fade out in reverse order
+          },
+          ease: "linear",
+        });
+      }
+      
     
-    //cursor
-    const customCursor = document.getElementById('cursor')
-    const loadingWrapper = document.getElementById('loadingwrapper')
-    const moveCursor = (e)=> {
-        const mouseY = e.clientY;
-        const mouseX = e.clientX;
-      
-        customCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-      
-        customCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-      } 
-    //loadingWrapper.addEventListener('mousemove', moveCursor)
 
 
 
     // Initial state on page load
     hideNav();
     disableScroll();
-        // Flashing animation for #enter before click
-        gsap.to("#enter", {
-            opacity: 0.5,
-            duration: 0.8, // Speed of the flashing
-            repeat: -1, // Infinite loop
-            yoyo: true, // Reverse animation (1 → 0.5 → 1)
-            ease: "power1.inOut" // Smooth transition
-        });
-    enter.addEventListener('click', () => {
-        gsap.timeline()
-            // Fade out enter
-            .to('#enter', {
-                opacity: 0,
-                duration: 1,
-                onComplete: () => {
-                    document.getElementById('enter').style.display = 'none';
-                }
-            })
 
-            // Fade in loading text
-            .fromTo('#loadingtext', { opacity: 0 }, {
-                opacity: 1,
-                duration: 1
-            })
-
-            // Animate loading bar
-            .fromTo('#loadingdiv', { width: '0%' }, {
-                width: '100%',
-                duration: 5
-            }, "+=2") // Delay 2s after previous step
-
-            // Collapse loading bar
-            .to('#loadingdiv', {
-                height: '0px',
-                duration: 1
-            })
-
-            // Fade out loading text
-            .to('#loadingtext', {
-                opacity: 0,
-                duration: 0.5
-            })
-
-            // Final callback: show nav and enable scroll
-            .call(() => {
-                showNav();
-                enableScroll();
-            });
+    // Flashing animation for #enter before click
+    gsap.to("#enter", {
+        opacity: 0.5,
+        duration: 0.8,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
     });
+
+    enter.addEventListener('click', () => {
+        const loadingText = document.getElementById('loadingtext');
+
+        let progress = 0;
+        const fakeDuration = 5000; // Match duration of loading bar (5s)
+        const intervalTime = 30;
+        const steps = fakeDuration / intervalTime;
+
+        const tl = gsap.timeline();
+
+        tl.to('#enter', {
+            opacity: 0,
+            duration: 1,
+            onComplete: () => {
+                document.getElementById('enter').style.display = 'none';
+            }
+        })
+
+        .fromTo('#loadingtext', { opacity: 0 }, {
+            opacity: 1,
+            duration: 1
+        })
+
+        .add(() => {
+            // Start fake loading % count here
+            const interval = setInterval(() => {
+                progress += 100 / steps;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                }
+                loadingText.textContent = `${Math.floor(progress)}%`;
+            }, intervalTime);
+        }, "+=0") // start alongside bar animation
+
+        .fromTo('#loadingdiv', { width: '0%' }, {
+            width: '100%',
+            duration: 5
+        }, "<") // start at same time as add()
+
+        .to('#loadingdiv', {
+            height: '0px',
+            duration: 1
+        })
+
+        .to('#loadingtext', {
+            opacity: 0,
+            duration: 0.5
+        })
+
+        .to('#maintitle', {
+            opacity: 1,
+            duration: 3
+        })
+
+        .to('#maintitle', {
+            opacity: 0.1,
+            duration: 3
+        })
+
+        .call(() => {
+            showNav();
+            enableScroll();
+        });
+    });
+
     //document.querySelector('#loadingdiv').style.display = 'none'
 
 
