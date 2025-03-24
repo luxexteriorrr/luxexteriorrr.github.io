@@ -2,9 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 1rem;
-    font-size: 0.9rem;
-    /* font-family: 'arketa'; */
+    font-size: 0.8rem;
+    font-family: 'arketa';
 }
 body {
     background-color: var(--mainwhite);
@@ -26,7 +25,7 @@ body {
 }
 @font-face {
     font-family: 'arketa';
-    src: url(/around.a.memory/assets/font/OOArketaTrial-Regular.otf);
+    src: url(/around.a.memory/assets/font/OOArketa-Regular.otf);
 }
 
 
@@ -62,6 +61,15 @@ body {
     left: 50%;
     opacity: 1;
     cursor: pointer;
+    /* display: none; */
+}
+#maintitle {
+    font-size: 64px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
 }
 
 
@@ -71,7 +79,7 @@ body {
 /* style for the navigation of page */
 nav {
     position: static;
-    top: 1%;
+    top: 12px;
     width: 50%;
     padding: 12px 24px;
     display: flex;
@@ -88,6 +96,8 @@ nav a {
     transition: 1.5s linear;
     color: var(--mainblue);
     z-index: 10;
+    letter-spacing: -1px;
+    opacity: 0;
     /*backdrop-filter: blur(10px); Frosted glass effect
     background-color: var(--popup) */
 }
@@ -95,38 +105,44 @@ nav a:hover {
     opacity: 0.5;
     transition: 1s linear;
 }
+
+nav a.rotated {
+    rotate: 90deg;
+}
 #title.stuck {
     position: fixed;
     z-index: 10;
     top: 35%;
     left: 5%;
+    
 }
 #about.stuck {
     position: fixed;
     z-index: 10;
     top: 15%;
     left: 45%;
+   
 }
 #print.stuck {
     position: fixed;
     z-index: 10;
     top: 75%;
     left: 95%;
-    rotate: 90deg;
+   
 }
 #index.stuck {
     position: fixed;
     z-index: 10;
     top:85%;
     left: 30%;
-    rotate: 90deg;
+    
 }
 #push.stuck {
     position: fixed;
     z-index: 10;
     top:50%;
     right: 40%;
-    rotate: 90deg;
+    
 }
 #lastModified.stuck {
     font-size: inherit;
