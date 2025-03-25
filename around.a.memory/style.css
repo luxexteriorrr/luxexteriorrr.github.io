@@ -38,332 +38,345 @@ body {
     src: url(/around.a.memory/assets/font/OOArketa-Regular.otf);
 }
 
-/* styling for the progress bars */
-.bar {
-    display: flex;
-    height: 3px;
-    width: 100svw;
-    position: fixed;
-    top: 0vh;
-    right: 25%;
-    background-color: var(--popup);
 
+/* styling for the desktop 16, main styling*/
+@media screen and (min-width: 1200px) {
+  
+    /* styling for the progress bars */
+    .bar {
+        display: flex;
+        height: 3px;
+        width: 100svw;
+        position: fixed;
+        top: 0vh;
+        right: 25%;
+        background-color: var(--popup);
+    }
+  
+    /* loading styling */
+    #loadingwrapper {
+        width: 100svw;
+        height: 100svh;
+        cursor: s-resize;
+    }
+    #loadingdiv {
+        width: 0%;
+        position: absolute;
+        top: 50%;
+        height: 24px;
+        background-color: #CCCCCC;
+        z-index: inherit;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #loadingtext {
+        font-size: 12px;
+        margin-left: 12px;
+        opacity: 0;
+        z-index: 2;
+    }
+    #enter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+        cursor: pointer;
+    }
+    #maintitle {
+        font-size: var(--titleHeading);
+        position: fixed;
+        letter-spacing: -6px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+    }
+  
+    /* styling for the navigation */
+    nav {
+        position: static;
+        top: 0px;
+        width: 50%;
+        height: 0;
+        padding: 12px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    nav a {
+        font-size: inherit;
+        letter-spacing: 0px;
+        pointer-events: all;
+        cursor: pointer;
+        transition: 1.5s linear;
+        color: var(--mainblue);
+        z-index: 10;
+        letter-spacing: -1px;
+        opacity: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        position: absolute;
+        rotate: 90deg;
+    }
+    nav a:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    nav a.rotated {
+        rotate: 90deg;
+    }
+    #title {
+        z-index: 10;
+        top: 35%;
+        left: 5%;
+        position: fixed;
+    }
+    #about {
+        z-index: 10;
+        top: 15%;
+        left: 45%;
+    }
+    #print {
+        z-index: 10;
+        top: 75%;
+        left: 95%;
+    }
+    #index {
+        z-index: 10;
+        top: 85%;
+        left: 30%;
+    }
+    #push {
+        z-index: 10;
+        top: 50%;
+        right: 40%;
+    }
+    #lastModified {
+        font-size: inherit;
+    }
+
+    /* styling for the overlay nav pop ups */
+    .overlay {
+        max-width: 40vh;
+        display: flex;
+        height: 0%;
+        flex-direction: column;
+        gap: 24px;
+        width: fit-content;
+        background-color: var(--popup);
+        z-index: 5;
+        transition: height 1s linear;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .overlay.active {
+        height: 100%;
+        transition: height 3s linear;
+    }
+    #closebutton {
+        cursor: pointer;
+        transition: 1s linear;
+    }
+  
+    #closebutton:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    #titleoverlay {
+        position: fixed;
+        top: 40%;
+        left: 5%;
+        max-height: fit-content;
+    }
+    #aboutoverlay {
+        position: fixed;
+        top: 20%;
+        left: 45%;
+        max-height: fit-content;
+    }
+    #pushoverlay {
+        position: fixed;
+        top: 38%;
+        right: 20%;
+        max-height: fit-content;
+    }
+
+    /* styling for the opening section of the page  */
+    .opening {
+        width: 100%;
+        height: 100svh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    /* styling for the page wrapper */
+    .pagewrapper {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        height: fit-content;
+        gap: 25vh;
+    }
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 24px 24px;
+        min-height: 150svh;
+        justify-content: space-around;
+        align-items: flex-end;
+        position: relative;
+    }
+    .paragraph {
+        width: 50%;
+        text-align: justify;
+        z-index: 2;
+        margin-right: 25%;
+    }
+    #chapter {
+        font-size: var(--body);
+        position: sticky;
+        top: 5%;
+        bottom: 15%;
+    }
+  
+    #entry {
+        font-size: var(--body);
+        position: sticky;
+        top: 15%;
+        bottom: 5%;
+    }
+  
+    .firstelipse {
+        position: fixed;
+        top: 0%;
+        left: 5%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+  
+    .secondelipse {
+        position: fixed;
+        top: 10%;
+        margin-left: 55%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+  
+    .image {
+        max-width: 500px;
+    }
+  
+    .image.blur1 {
+        filter: blur(3px);
+    }
+  
+    .image.blur2 {
+        filter: blur(10px);
+    }
+  
+    .imagewrapper {
+        position: relative;
+        width: fit-content;
+        height: fit-content;
+    }
+  
+    .locked {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: fit-content;
+    }
+  
+    #wrapperone {
+        display: none;
+        position: static;
+        z-index: 1;
+        right: 25%;
+        top: 5%;
+    }
+  
+    .errorwrapper {
+        width: 100svw;
+        height: 100svh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+  
+    #errormessage {
+        font-size: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+  
+    .melt {
+        font-size: 2rem;
+        transform: skewX(5deg);
+        filter: blur(1px) contrast(150%);
+    }
+  
 }
 
 
-
-/* style for loadingdiv */
-#loadingwrapper {
-    width: 100svw;
-    height: 100svh;
-    cursor: s-resize;
-}
-#loadingdiv {
-    width: 0%;
-    position: absolute;
-    top: 50%;
-    height: 24px;
-    background-color: #CCCCCC;
-    z-index: inherit;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-}
-#loadingtext {
-    font-size: 12px;
-    margin-left: 12px;
-    opacity: 0;
-    z-index: 2;
-    opacity: 0;
-}
-#enter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    opacity: 1;
-    cursor: pointer;
-    /* display: none; */
-}
-#maintitle {
-    font-size: var(--titleHeading);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-}
-
-
-
-
-
-/* style for the navigation of page */
-nav {
-    position: static;
-    top: 0px;
-    width: 50%;
-    height: 0;
-    padding: 12px 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 2;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-/*.dashes span {
-    width: 20px;
-    height: 1px;
-    background-color:var(--mainblue);
-    display: block;
-} */
-nav a {
-    font-size: inherit;
-    letter-spacing: 0px;
-    pointer-events: all;
-    cursor: pointer;
-    transition: 1.5s linear;
-    color: var(--mainblue);
-    z-index: 10;
-    letter-spacing: -1px;
-    opacity: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-    position: absolute;
-    rotate: 90deg;
-    /*backdrop-filter: blur(10px); Frosted glass effect
-    background-color: var(--popup) */
-}
-nav a:hover {
-    opacity: 0.5;
-    transition: 1s linear;
-}
-
-nav a.rotated {
-    rotate: 90deg;
-}
-#title {
-    z-index: 10;
-    top: 35%;
-    left: 5%;
-    position: fixed;
+/* iphone 8 styling */
+@media screen and (min-width : 375px) and (min-height : 667px) {
     
 }
-#about {
-    z-index: 10;
-    top: 15%;
-    left: 45%;
-   
-}
-#print {
-    z-index: 10;
-    top: 75%;
-    left: 95%;
-   
-}
-#index {
-    z-index: 10;
-    top:85%;
-    left: 30%;
-    
-}
-#push {
-    z-index: 10;
-    top:50%;
-    right: 40%;
-    
-}
-#lastModified {
-    font-size: inherit;
-}
+
+/* iphone 11 pro max styling */
+@media screen and (min-width : 414px) and (min-height : 890px) {
+    * {
+        font-size: 1rem;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        line-height: 1.16rem;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav {
+        position: sticky;
+        top: 12px;
+        display: flex;
+        flex-direction: column; 
+        padding: 6px 12px;
+        gap: 6px;
+    }
+
+    nav a {
+        width: fit-content;
+    }
+
+    .loadingwrapper {
+        height: 100svh;
+        width: 100svw;
+    }
 
 
-/* overlay general style */
-.overlay {
-    max-width: 40vh;
-    display: flex;
-    height: 0%;
-    flex-direction: column;
-    gap: 24px;
-    width: fit-content;
-    background-color: var(--popup);
-    z-index: 5;
-    transition: height 1s linear;
-    overflow: hidden;
-    backdrop-filter: blur(10px); /* ✅ Frosted glass effect */
-    -webkit-backdrop-filter: blur(10px); /* ✅ Safari support */
-}
-.overlay.active {
-    height: 100%;
-    transition: height 3s linear;
-}
-#closebutton {
-    cursor: pointer;
-    transition: 1s linear;
-}
-#closebutton:hover {
-    opacity: 0.5;
-    transition: 1s linear;
+
+
 }
 
-
-/* style for the popups */
-#titleoverlay {
-    position: fixed;
-    top: 40%;
-    left: 5%;
-    max-height: fit-content;
-}
-#aboutoverlay{
-    position: fixed;
-    top: 20%;
-    left: 45%;
-    max-height: fit-content;
-}
-#pushoverlay {
-    position: fixed;
-    top: 38%;
-    right: 20%;
-    max-height: fit-content;
-}
-
-
-
-/* opening section */
-.opening {
-    width: 100%;
-    height: 100svh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-}
-
-
-
-
-/* pagewrapper */
-.pagewrapper {
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    height: fit-content;
-    gap: 25vh;
-}
-.section {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 24px 24px;
-    min-height: 150svh;
-    justify-content: space-around;
-    align-items: flex-end;
-    position: relative;
-}
-
-
-.paragraph {
-    width: 50%;
-    text-align: justify;
-    z-index: 2;
-    margin-right: 25%;
-}
-
-#chapter {
-    font-size: var(--body);
-    position: sticky;
-    top: 5%;
-    bottom: 15%;
-}
-#entry {
-    font-size: var(--body);
-    position: sticky;
-    top: 15%;
-    bottom: 5%;
-}
-
-/* elipses */
-.firstelipse {
-    position: fixed;
-    top: 0%;
-    left: 5%;
-    width: fit-content;
-    height: fit-content;
-    z-index: 10;
-    pointer-events: none; /* optional if interactive elements are outside */
-    display: flex;
-  }
-.secondelipse {
-    position: fixed;
-    top: 10%;
-    margin-left: 55%;
-    width: fit-content;
-    height: fit-content;
-    z-index: 10;
-    pointer-events: none;
-    display: flex;
-  }
-
-
-
-
-/* images */
-.image {
-    max-width: 500px;
-}
-.image.blur1 {
-    filter: blur(3px);
-}
-.image.blur2 {
-    filter: blur(10px);
-}
-.imagewrapper {
-    position: relative;
-    width: fit-content;
-    height: fit-content;
-}
-.locked {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: fit-content;
-}
-#wrapperone {
-    display: none;
-    position: static;
-    z-index: 1;
-    right: 25%;
-    top: 5%;
-}
-
-
-/* 404 page */
-.errorwrapper{
-    width: 100svw;
-    height: 100svh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#errormessage {
-    font-size: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-
-.melt {
-    font-size: 2rem;
-    transform: skewX(5deg);
-    filter: blur(1px) contrast(150%);
-}
-
-
-
-
-
+  
+  

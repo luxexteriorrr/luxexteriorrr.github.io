@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // gsap register
     gsap.registerPlugin(ScrollTrigger,TextPlugin,DrawSVGPlugin)
 
-
     //full screen 
     document.addEventListener(
         "keydown",
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const erosionParagraphs = document.querySelectorAll(".erosion");
     const sectionTwo = document.querySelector('#two')
     
-
     //disapearing of the contenet 
     function disappearContent () {
         let inactivityTimer ; 
@@ -84,6 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
         //fade out function
         function fadeOutVisibleElements() {
             const elementsArray = Array.from(visibleElements); // Convert Set to Array
+            gsap.utils.shuffle(elementsArray);
+            
             let index = 0; // Start index
         
             function fadeNextElement() {
@@ -136,6 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+
+    // ALL OF THE ABOVE KEEP OUTSIDE OF MEDIA QUERY -------------- !important
+
+
+
+
+
     //disable scroll
     function disableScroll() {document.body.style.overflow = "hidden";}
     //enable scroll
@@ -166,8 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
     
     // Initial state on page load
-    hideNav();
-    disableScroll();
+    //hideNav();
+    //disableScroll();
 
     // Flashing animation for #enter before click
     gsap.to("#enter", {
@@ -244,12 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
             disappearContent ();
         });
     });
-    //showNav()
-    //document.querySelector('#loadingdiv').style.display = 'none'
-
-
-
-
+    showNav()
+    document.querySelector('#loadingdiv').style.display = 'none'
 
     function wordspacing() {
         paragraphs2.forEach(paragraph => {
@@ -260,10 +263,10 @@ document.addEventListener('DOMContentLoaded', () => {
             once: false,
             markers: false, // ✅ Turn on debug markers
             onEnter: () => {
-              const randomWidth = Math.floor(Math.random() * (85 - 45 + 1)) + 45;
+              const randomWidth = Math.floor(Math.random() * (65 - 45 + 1)) + 45;
               gsap.to(paragraph, {
                 width: `${randomWidth}%`,
-                margin: '0',
+                /*marginRight: '0',*/
                 duration: 20,
                 ease: 'linear'
               });
@@ -271,72 +274,67 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         });
       }
-      
-      wordspacing();
-      
+    wordspacing();
+ 
 
-
+    function smoothErodeText() {
+      const ero2 = document.querySelectorAll(".ero2");
     
-
-
-
-    function erodeText(element, options = {}) {
-        const words = element.textContent.split(" ");
-        const delay = options.delay || 800;
-        const style = options.style || "block";
-        let index = 0;
+      ero2.forEach((paragraph) => {
+        ScrollTrigger.create({
+          trigger: paragraph,
+          start: "top 85%",
+          markers: false,
+          once: false,
+          onEnter: () => {
+            const delay = 6000;
+            const style = "block";
     
-        const erosionInterval = setInterval(() => {
-            if (index >= words.length) {
-                clearInterval(erosionInterval);
-                return;
+            const words = paragraph.textContent.trim().split(" ");
+    
+            // Wrap words in spans
+            paragraph.innerHTML = words
+              .map(word => `<span class="erode-word">${word} </span>`)
+              .join("");
+    
+            const wordSpans = paragraph.querySelectorAll(".erode-word");
+            const wordIndexes = [...Array(wordSpans.length).keys()];
+    
+            // Shuffle the order
+            for (let i = wordIndexes.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [wordIndexes[i], wordIndexes[j]] = [wordIndexes[j], wordIndexes[i]];
             }
     
-            let replacement = "";
+            // Replace one word at a time
+            wordIndexes.forEach((index, step) => {
+              setTimeout(() => {
+                const span = wordSpans[index];
+                let replacement = "";
     
-            switch (style) {
-                case "block":
-                    replacement = "█".repeat(words[index].length);
+                switch (style) {
+                  case "block":
+                    replacement = "█".repeat(span.textContent.trim().length);
                     break;
-                case "blank":
-                    replacement = " ".repeat(words[index].length);
+                  case "blank":
+                    replacement = " ".repeat(span.textContent.trim().length);
                     break;
-                case "flicker":
+                  case "flicker":
                     replacement = (Math.random() > 0.5) ? "▚▞▛" : " ";
                     break;
-                default:
+                  default:
                     replacement = "█";
-            }
+                }
     
-            words[index] = replacement;
-            element.textContent = words.join(" ");
-            index++;
-        }, delay);
+                span.textContent = replacement;
+              }, step * delay);
+            });
+          }
+        });
+      });
     }
+    smoothErodeText();
     
-    //messing with the letters (ADD THE FUNCTION WHEN THEY ARE IN VIEW)
-    /*function fragmentText(element, options = {}) {
-        let words = element.textContent.split(" ");
-        const delay = options.delay || 500;
-        
-        let index = 0;
-        const interval = setInterval(() => {
-            if (index >= words.length) {
-                clearInterval(interval);
-                return;
-            }
-    
-            let word = words[index];
-            let newWord = word
-                .split("")
-                .map(letter => (Math.random() > 0.5 ? letter : " ")) // 50% chance of letter being erased
-                .join("");
-    
-            words[index] = newWord;
-            element.textContent = words.join(" ");
-            index++;
-        }, delay);
-    } */
 
     function smoothWordFade() {
         erosionParagraphs.forEach((paragraph, i) => {
@@ -375,12 +373,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
         });
-      }
-      
+    }
     smoothWordFade();
       
-
-
     //overlay
     function toggleOverlay(overlayId) {
         const overlay = document.getElementById(overlayId);
@@ -410,8 +405,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-
-
     // drawing svg 1
     gsap.fromTo("#elipseOne", 
         { drawSVG: "0%" }, 
@@ -443,13 +436,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     );
   
-
-
-
-
-
-
-
-    
-
 })
