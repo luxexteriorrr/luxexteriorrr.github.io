@@ -42,15 +42,28 @@ body {
 /* styling for the desktop 16, main styling*/
 @media screen and (min-width: 1200px) {
   
+    button {
+        padding: 3px 12px;
+        fill: none;
+        border: 0.5px solid black;
+        color: black;
+        background: white;
+        border-radius: 0%;
+
+
+    }
+
     /* styling for the progress bars */
-    .bar {
+    #mainbar {
         display: flex;
-        height: 3px;
-        width: 100svw;
+        height: 100svh;
+        width: 1svw;
         position: fixed;
-        top: 0vh;
-        right: 25%;
-        background-color: var(--popup);
+        top: 0%;
+        right: 5%;
+        background-color: none;
+        border-left: 1px solid black;
+        opacity: 0.5;
     }
   
     /* loading styling */
@@ -61,10 +74,10 @@ body {
     }
     #loadingdiv {
         width: 0%;
-        position: absolute;
+        position: fixed;
         top: 50%;
-        height: 24px;
-        background-color: #CCCCCC;
+        height: 1px;
+        background-color: black;
         z-index: inherit;
         display: flex;
         flex-direction: row;
@@ -72,7 +85,7 @@ body {
         align-items: center;
     }
     #loadingtext {
-        font-size: 12px;
+        font-size: inherit;
         margin-left: 12px;
         opacity: 0;
         z-index: 2;
@@ -169,12 +182,13 @@ body {
         flex-direction: column;
         gap: 24px;
         width: fit-content;
-        background-color: var(--popup);
+        background-color: var(--mainwhite);
         z-index: 5;
         transition: height 1s linear;
         overflow: hidden;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        border: 0.1px solid black;
+        /*backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);*/
     }
     .overlay.active {
         height: 100%;
@@ -227,12 +241,12 @@ body {
         gap: 25vh;
     }
     .section {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 0px;
         padding: 24px 24px;
         min-height: 150svh;
-        justify-content: space-around;
+        justify-content: flex-start;
         align-items: flex-end;
         position: relative;
     }
@@ -241,6 +255,7 @@ body {
         text-align: justify;
         z-index: 2;
         margin-right: 25%;
+        display: inline;
     }
     #chapter {
         font-size: var(--body);
@@ -248,7 +263,6 @@ body {
         top: 5%;
         bottom: 15%;
     }
-  
     #entry {
         font-size: var(--body);
         position: sticky;
@@ -256,6 +270,7 @@ body {
         bottom: 5%;
     }
   
+    /* elipses */
     .firstelipse {
         position: fixed;
         top: 0%;
@@ -266,7 +281,6 @@ body {
         pointer-events: none;
         display: flex;
     }
-  
     .secondelipse {
         position: fixed;
         top: 10%;
@@ -278,26 +292,28 @@ body {
         display: flex;
     }
   
+    /* images */
     .image {
         max-width: 500px;
     }
-  
     .image.blur1 {
         filter: blur(3px);
     }
-  
     .image.blur2 {
         filter: blur(10px);
     }
-  
     .imagewrapper {
         position: relative;
         width: fit-content;
         height: fit-content;
     }
-  
-
-  
+    .locked {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: fit-content;
+    }
     #wrapperone {
         display: none;
         position: static;
@@ -306,21 +322,20 @@ body {
         top: 5%;
     }
   
+    /* error page styling */
     .errorwrapper {
         width: 100svw;
         height: 100svh;
         display: flex;
         justify-content: center;
-        align-items: center;
     }
-  
     #errormessage {
         font-size: 500px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
     }
-  
+  /* sandbox */
     .melt {
         font-size: 2rem;
         transform: skewX(5deg);
@@ -336,31 +351,197 @@ body {
 }
 
 /* iphone 11 pro max styling */
-@media screen and (min-width : 414px) and (min-height : 890px) {
+@media screen and (min-width : 400px) and /*(min-height : 890px) and */ (max-width:800px) {
+
+    /* styling for all */
     * {
-        font-size: 1rem;
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         line-height: 1.16rem;
     }
 
+
     ::-webkit-scrollbar {
         display: none;
     }
 
+    /* navigation */
     nav {
-        position: sticky;
-        top: 12px;
+        position: fixed;
         display: flex;
         flex-direction: column; 
         padding: 6px 12px;
         gap: 6px;
+        font-size: inherit;
     }
 
     nav a {
         width: fit-content;
     }
+
+    /* styling for the opening section of the page  */
+    .opening {
+        width: 100%;
+        height: 100svh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    /* loading styling */
+    #loadingwrapper {
+        width: 100vw;
+        height: 100vh;
+        cursor: s-resize;
+    }
+    #loadingdiv {
+        width: 0%;
+        position: absolute;
+        top: 50%;
+        height: 24px;
+        background-color: #CCCCCC;
+        z-index: inherit;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #loadingtext {
+        font-size: 12px;
+        margin-left: 12px;
+        opacity: 0;
+        z-index: 2;
+    }
+    #enter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        cursor: pointer;
+    }
+    #maintitle {
+        font-size: var(--titleHeading);
+        position: fixed;
+        letter-spacing: -6px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+    }
+
+    /* styling for the overlay nav pop ups */
+    .overlay {
+        max-width: 40vh;
+        display: flex;
+        height: 0%;
+        flex-direction: column;
+        gap: 24px;
+        width: fit-content;
+        background-color: var(--popup);
+        z-index: 5;
+        transition: height 1s linear;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 15;
+    }
+    .overlay.active {
+        height: 100%;
+        transition: height 3s linear;
+    }
+    #closebutton {
+        cursor: pointer;
+        transition: 1s linear;
+    }
+  
+    #closebutton:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    #titleoverlay {
+        position: fixed;
+        top: 40%;
+        left: 5%;
+        max-height: fit-content;
+    }
+    #aboutoverlay {
+        position: fixed;
+        top: 20%;
+        left: 45%;
+        max-height: fit-content;
+    }
+    #pushoverlay {
+        position: fixed;
+        top: 38%;
+        right: 20%;
+        max-height: fit-content;
+    }
+
+    /* styling for the page wrapper */
+    .pagewrapper {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        height: fit-content;
+        gap: 25vh;
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 24px 24px;
+        min-height: 150svh;
+        justify-content: space-around;
+        align-items: flex-end;
+        position: relative;
+    }
+    .paragraph {
+        width: 100%;
+        text-align: justify;
+        z-index: 2;
+    }
+    #chapter {
+        font-size: var(--body);
+        position: sticky;
+        top: 5%;
+        bottom: 15%;
+    }
+    #entry {
+        font-size: var(--body);
+        position: sticky;
+        top: 15%;
+        bottom: 5%;
+    }
+
+    /* elipses */
+    .firstelipse {
+        position: fixed;
+        top: 0%;
+        left: 5%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+        pointer-events: none;
+    }
+    .secondelipse {
+        pointer-events: none;
+        position: fixed;
+        top: 10%;
+        margin-left: 55%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+
+
 
     .loadingwrapper {
         height: 100svh;
