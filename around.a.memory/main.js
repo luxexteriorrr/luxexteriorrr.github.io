@@ -135,6 +135,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    //overlay
+    function toggleOverlay(overlayId) {
+        const overlay = document.getElementById(overlayId);
+        if (!overlay) {
+            console.error(`Overlay with ID '${overlayId}' not found.`);
+            return;
+        }
+    
+        const isActive = overlay.classList.toggle("active"); // Toggle 'active' class
+    }
+
 
 
     // ALL OF THE ABOVE KEEP OUTSIDE OF MEDIA QUERY -------------- !important
@@ -178,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Flashing animation for #enter before click
     gsap.to("#enter", {
-        opacity: 0.5,
+        //opacity: 0.5,
         duration: 0.8,
         repeat: -1,
         yoyo: true,
@@ -225,10 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 5,
         }, "<") // start at same time as add()
 
-        .to('#loadingdiv', {
+        /*.to('#loadingdiv', {
             height: '0px',
             duration: 1
-        })
+        })*/
 
         .to('#loadingtext', {
             opacity: 0,
@@ -248,11 +259,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .call(() => {
             showNav();
             enableScroll();
-            disappearContent ();
+            //disappearContent ();
         });
     });
     showNav()
-    document.querySelector('#loadingdiv').style.display = 'none'
+    //document.querySelector('#loadingdiv').style.display = 'none'
 
     function wordspacing() {
         paragraphs2.forEach(paragraph => {
@@ -275,66 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     wordspacing();
- 
-
-    function smoothErodeText() {
-      const ero2 = document.querySelectorAll(".ero2");
-    
-      ero2.forEach((paragraph) => {
-        ScrollTrigger.create({
-          trigger: paragraph,
-          start: "top 85%",
-          markers: false,
-          once: false,
-          onEnter: () => {
-            const delay = 6000;
-            const style = "block";
-    
-            const words = paragraph.textContent.trim().split(" ");
-    
-            // Wrap words in spans
-            paragraph.innerHTML = words
-              .map(word => `<span class="erode-word">${word} </span>`)
-              .join("");
-    
-            const wordSpans = paragraph.querySelectorAll(".erode-word");
-            const wordIndexes = [...Array(wordSpans.length).keys()];
-    
-            // Shuffle the order
-            for (let i = wordIndexes.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [wordIndexes[i], wordIndexes[j]] = [wordIndexes[j], wordIndexes[i]];
-            }
-    
-            // Replace one word at a time
-            wordIndexes.forEach((index, step) => {
-              setTimeout(() => {
-                const span = wordSpans[index];
-                let replacement = "";
-    
-                switch (style) {
-                  case "block":
-                    replacement = "█".repeat(span.textContent.trim().length);
-                    break;
-                  case "blank":
-                    replacement = " ".repeat(span.textContent.trim().length);
-                    break;
-                  case "flicker":
-                    replacement = (Math.random() > 0.5) ? "▚▞▛" : " ";
-                    break;
-                  default:
-                    replacement = "█";
-                }
-    
-                span.textContent = replacement;
-              }, step * delay);
-            });
-          }
-        });
-      });
-    }
-    smoothErodeText();
-    
 
     function smoothWordFade() {
         erosionParagraphs.forEach((paragraph, i) => {
@@ -361,33 +312,79 @@ document.addEventListener('DOMContentLoaded', () => {
               }
       
               // Fade out words one by one every ~3s
-              wordIndexes.forEach((index, step) => {
+            // Fade out words one by one with randomized opacity
+            wordIndexes.forEach((index, step) => {
                 setTimeout(() => {
-                  gsap.to(wordSpans[index], {
-                    opacity: 0,
-                    duration: 1,
+                const randomOpacity = (Math.floor(Math.random() * 10) + 1) / 10;
+            
+                gsap.to(wordSpans[index], {
+                    opacity: randomOpacity,
+                    duration: 4,
                     ease: "power1.out"
-                  });
-                }, step * 2000); // 2s between each
-              });
+                });
+                }, step * 6000); // 6s between each
+            });
+
             }
           });
         });
     }
     smoothWordFade();
+
+
+
+
+
+
+    function smoothWordGrow() {
+        const ero2 = document.querySelectorAll(".ero2");
       
-    //overlay
-    function toggleOverlay(overlayId) {
-        const overlay = document.getElementById(overlayId);
-        if (!overlay) {
-            console.error(`Overlay with ID '${overlayId}' not found.`);
-            return;
-        }
+        ero2.forEach((paragraph, i) => {
+          ScrollTrigger.create({
+            trigger: paragraph,
+            start: "top 85%",
+            markers: false,
+            once: true,
+            onEnter: () => {
+              const words = paragraph.textContent.trim().split(" ");
+      
+              // Wrap each word in a span
+              paragraph.innerHTML = words
+                .map(word => `<span class="fade-word">${word} </span>`)
+                .join("");
+      
+              const wordSpans = paragraph.querySelectorAll(".fade-word");
+              const wordIndexes = [...Array(wordSpans.length).keys()];
+      
+              // Shuffle word order
+              for (let i = wordIndexes.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [wordIndexes[i], wordIndexes[j]] = [wordIndexes[j], wordIndexes[i]];
+              }
+      
+              // Increase font size one word at a time
+              wordIndexes.forEach((index, step) => {
+                setTimeout(() => {
+                  // Random font size between 0.8rem and 2.8rem in 0.1 steps
+                  const randomSize = (Math.floor(Math.random() * 21) + 8) / 10;
+      
+                  gsap.to(wordSpans[index], {
+                    fontSize: `${randomSize}rem`,
+                    duration: 15,
+                    ease: "power1.out"
+                  });
+                }, step * 6000); // 6s between each
+              });
+            }
+          });
+        });
+      }
+      
+    smoothWordGrow();
+      
+
     
-        const isActive = overlay.classList.toggle("active"); // Toggle 'active' class
-    }
-    
-    // ✅ Event listener for opening overlays (Uses `data-overlay` attributes)
+    // Event listener for opening overlays (Uses `data-overlay` attributes)
     document.querySelectorAll("[data-overlay]").forEach(trigger => {
         trigger.addEventListener("click", function () {
             const overlayId = this.getAttribute("data-overlay"); // Get the overlay ID from the clicked element
@@ -395,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // ✅ Event listener for closing overlays (Delegated)
+    // Event listener for closing overlays (Delegated)
     document.addEventListener("click", function (event) {
         if (event.target.matches("#closebutton")) {
             const overlay = event.target.closest(".overlay"); // Find closest overlay to the clicked close button
