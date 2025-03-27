@@ -37,6 +37,17 @@ body {
     font-family: 'arketa';
     src: url(/around.a.memory/assets/font/OOArketa-Regular.otf);
 }
+/* tests*/
+.typotest span {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: transform 2s ease, opacity 2s ease, filter 2s ease;
+  }
+  
+
+
+
+
 
 
 /* styling for the desktop 16, main styling*/
@@ -109,14 +120,13 @@ body {
   
     /* styling for the navigation */
     nav {
-        position: static;
+        position: sticky;
         top: 0px;
-        width: 50%;
-        height: 0;
+        width: fit-content;
         padding: 12px 24px;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        flex-direction: row;
+        justify-content: flex-start;
         z-index: 2;
         transition: opacity 0.5s ease, transform 0.5s ease;
     }
@@ -130,12 +140,7 @@ body {
         z-index: 10;
         letter-spacing: -1px;
         opacity: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         gap: 6px;
-        position: absolute;
-        rotate: 90deg;
     }
     nav a:hover {
         opacity: 0.5;
@@ -144,33 +149,34 @@ body {
     nav a.rotated {
         rotate: 90deg;
     }
-    #title {
+    #title.stuck {
         z-index: 10;
         top: 35%;
         left: 5%;
         position: fixed;
     }
-    #about {
+    #about.stuck {
         z-index: 10;
         top: 15%;
         left: 45%;
     }
-    #print {
+    #print.stuck {
         z-index: 10;
         top: 75%;
         left: 95%;
     }
-    #index {
+    #index.stuck {
         z-index: 10;
         top: 85%;
         left: 30%;
     }
     #push {
         z-index: 10;
-        top: 50%;
-        right: 40%;
+        bottom: 12px;
+        right: 24px;
+        position: fixed;
     }
-    #lastModified {
+    #lastModified.stuck {
         font-size: inherit;
     }
 
@@ -186,7 +192,7 @@ body {
         z-index: 5;
         transition: height 1s linear;
         overflow: hidden;
-        border: 0.1px solid black;
+        border: 0px solid black;
         /*backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);*/
     }
@@ -251,7 +257,7 @@ body {
         position: relative;
     }
     .paragraph {
-        width: 50%;
+        width: 75%;
         text-align: justify;
         z-index: 2;
         margin-right: 25%;
@@ -342,6 +348,49 @@ body {
         filter: blur(1px) contrast(150%);
     }
   
+
+    /* opening section */
+    #opening {
+        display: flex;
+        min-height: 200vh !important;
+        flex-direction: column;
+        gap: 25vh;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    #opening p span {
+        display: inline-block;
+    }
+
+    /* p1 */
+    #opening > *:first-child {
+        width: 45%;
+        margin-left: 25%;
+    }
+    /* p2 */
+    #opening > *:nth-child(2) {
+        width: 25%;
+        margin-left: 10%;
+    }
+
+    /* p3 */
+    #opening > *:nth-child(3) {
+        width: 46%;
+        margin-left: 6%;
+    }
+
+    /* p4 */
+    #opening > *:nth-child(4) {
+    width: 20%;
+    margin-left: 55%;
+    }
+
+    .fake-highlight {
+        background-color: transparent;
+        transition: background-color 0.4s ease;
+      }
+      
+
 }
 
 
