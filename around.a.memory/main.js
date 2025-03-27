@@ -439,41 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    //trials with the new typography as per Helmut Schmid
-    function schmidEffect() {
-      const paras = document.querySelectorAll("#opening .typotest");
-    
-      paras.forEach((p) => {
-        const chars = p.textContent.split("");
-        p.innerHTML = ""; // Clear paragraph
-    
-        chars.forEach((char) => {
-          const span = document.createElement("span");
-          span.textContent = char;
-    
-          // Subtle random shifts
-          const x = (Math.random() - 0.5) * 1.5;
-          const y = (Math.random() - 0.5) * 1.5;
-          const opacity = Math.random() > 0.97 ? 0.1 : 1;
-    
-          span.style.transform = `translate(${x}px, ${y}px)`;
-          span.style.opacity = opacity;
-          p.appendChild(span);
-        });
-      });
-    }
-    
-    // ScrollTrigger to activate when #opening is in view
-    ScrollTrigger.create({
-      trigger: "#opening",
-      start: "top 85%",
-      once: true,
-      onEnter: schmidEffect
-    });
-
-
-
-    //trials with the opening section 
+    //the opening section 
 
     // Animate "walk" — expand letter spacing
     gsap.to("#walk", {
@@ -501,81 +467,129 @@ document.addEventListener('DOMContentLoaded', () => {
         scrub: true
       }
     });
+    // Animate "escape" — expand letter spacing
+    gsap.to("#escape", {
+      backgroundColor: "rgba(173, 216, 230, 0.6)", // light blue
+      duration: 0.5,
+      scrollTrigger: {
+        trigger: "#escape",
+        start: "top 80%",
+        end: "top 50%",
+        scrub: true
+      }
+    });
+    // Animate "escape" — expand letter spacing
+    gsap.to("#expands", {
+      fontSize: '2rem', 
+      duration: 5,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#expands",
+        start: "center 50%",
+        end: "bottom",
+        markers: false,
+        scrub: true
+      }
+    });
+    // Animate "ambience" — stuck
+    gsap.to("#ambience", {
+      backgroundColor: "rgba(173, 216, 230, 0.6)",
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#ambience",
+        start: "center center",
+        end: "+=1000", // how long it stays pinned
+        pin: true,
+        pinSpacing: false,
+        markers: false,
+        scrub: true
+      }
+    });
+    // Animate "is" — stuck
+    gsap.to("#is", {
+      backgroundColor: "rgba(173, 216, 230, 0.6)",
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#is",
+        start: "center center",
+        end: "+=1000", // how long it stays pinned
+        pin: true,
+        pinSpacing: false,
+        markers: false,
+        scrub: true
+      }
+    });
+    // Animate "web" - stuck
+    gsap.to("#web", {
+      backgroundColor: "rgba(173, 216, 230, 0.6)",
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#web",
+        start: "center center",
+        end: "+=1000", // how long it stays pinned
+        pin: true,
+        pinSpacing: false,
+        markers: false,
+        scrub: true
+      }
+    });
 
-      // Animate "escape" — expand letter spacing
-      gsap.to("#escape", {
-        backgroundColor: "rgba(173, 216, 230, 0.6)", // light blue
-        duration: 0.5,
-        scrollTrigger: {
-          trigger: "#escape",
-          start: "top 80%",
-          end: "top 50%",
-          scrub: true
-        }
-      });
-      
+    //sounds trial
+    // Define the sounds
+    const ambient1 = new Howl({
+      src: ['/around.a.memory/assets/audio/ambient1.mp3'],
+      loop: true,
+      volume: 0
+    });
 
-        // Animate "escape" — expand letter spacing
-        gsap.to("#expands", {
-        fontSize: '2rem', 
-        duration: 5,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "#expands",
-          start: "center 50%",
-          end: "bottom",
-          markers: false,
-          scrub: true
-        }
-      });
+    const ambient2 = new Howl({
+      src: ['/around.a.memory/assets/audio/ambient2.mp3'],
+      loop: true,
+      volume: 0
+    });
+    const test = new Howl({
+      src: ['/around.a.memory/assets/audio/ambient1.mp3'],
+      onload: () => console.log("Audio loaded!"),
+      onloaderror: (id, err) => console.error("Error loading audio:", err)
+    });
+        // Start ambient1 on #enter click
+    enter.addEventListener("click", () => {
+      ambient1.play();
+      ambient1.fade(0, 0.6, 3000); // fade in over 3 seconds
+    });
 
-      // Animate "ambience" — stuck
-      gsap.to("#ambience", {
-        backgroundColor: "rgba(173, 216, 230, 0.6)",
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "#ambience",
-          start: "center center",
-          end: "+=1000", // how long it stays pinned
-          pin: true,
-          pinSpacing: false,
-          markers: false,
-          scrub: true
-        }
-      });
-      // Animate "is" — stuck
-      gsap.to("#is", {
-        backgroundColor: "rgba(173, 216, 230, 0.6)",
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "#is",
-          start: "center center",
-          end: "+=1000", // how long it stays pinned
-          pin: true,
-          pinSpacing: false,
-          markers: false,
-          scrub: true
-        }
-      });
+    // Crossfade on scroll into section #two
+    ScrollTrigger.create({
+      trigger: "#two",
+      start: "top center",
+      onEnter: () => {
+        ambient1.fade(0.6, 0, 2000); // fade out ambient1
+        ambient2.play();
+        ambient2.fade(0, 0.6, 2000); // fade in ambient2
+      },
+      onLeaveBack: () => {
+        ambient2.fade(0.6, 0, 2000);
+        ambient1.play();
+        ambient1.fade(0, 0.6, 2000);
+      }
+    });
 
-      // Animate "web" - stuck
-      gsap.to("#web", {
-        backgroundColor: "rgba(173, 216, 230, 0.6)",
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "#web",
-          start: "center center",
-          end: "+=1000", // how long it stays pinned
-          pin: true,
-          pinSpacing: false,
-          markers: false,
-          scrub: true
-        }
-      });
-      
+      const ctx = Howler.ctx;
+      const filter = ctx.createBiquadFilter();
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(800, ctx.currentTime); // lower = more muffled
+
+      // Connect Howler's internal audio node to the filter
+      ambient1._sounds[0]._node.disconnect();
+      ambient1._sounds[0]._node.connect(filter);
+      filter.connect(ctx.destination);
+
+
+    
     
     
     
