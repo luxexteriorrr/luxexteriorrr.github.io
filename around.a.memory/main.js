@@ -12,13 +12,18 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         false,
       );
-    function toggleFullScreen() {
+      function toggleFullScreen() {
         if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
+          document.documentElement.requestFullscreen().then(() => {
+            ScrollTrigger.refresh();
+          });
         } else if (document.exitFullscreen) {
-          document.exitFullscreen();
+          document.exitFullscreen().then(() => {
+            ScrollTrigger.refresh();
+          });
         }
       }
+      
 
     //selectors
     const nav = document.getElementById('nav')
@@ -331,11 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     smoothWordFade();
 
-
-
-
-
-
     function smoothWordGrow() {
         const ero2 = document.querySelectorAll(".ero2");
       
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
         });
-      }
+    }
       
     smoothWordGrow();
       
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
         end: "+=1000", // how long it stays pinned
         pin: true,
         pinSpacing: false,
-        markers: false,
+        markers: true,
         scrub: true
       }
     });
