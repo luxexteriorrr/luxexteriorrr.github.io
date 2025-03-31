@@ -189,8 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
     
     // Initial state on page load
-    //hideNav();
-    //disableScroll();
+    hideNav();
+    disableScroll();
 
     // Flashing animation for #enter before click
     gsap.to("#enter", {
@@ -247,8 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })*/
 
         .to('#loadingtext', {
+            delay: 1,
             opacity: 0,
-            duration: 0.5
+            duration: 1
         })
 
         .to('#maintitle', {
@@ -257,17 +258,22 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         .to('#maintitle', {
-            opacity: 0.05,
+            opacity: 0,
             duration: 3
         })
+        .to('#loadingwrapper', {
+          height: '50%',
+          duration: 5
+      })
 
         .call(() => {
             showNav();
             enableScroll();
-            //disappearContent ();
+            disappearContent();
+            ScrollTrigger.refresh();
         });
     });
-    showNav()
+    //showNav()
     //document.querySelector('#loadingdiv').style.display = 'none'
 
     function widthspacing() {
@@ -408,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
         drawSVG: "100%",
         scrollTrigger: {
-            trigger: "#one",
+            trigger: "#two",
             start: "top center",
             end: "bottom center",
             scrub: true,
@@ -423,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
         drawSVG: "100%",
         scrollTrigger: {
-            trigger: "#two",
+            trigger: "#links",
             start: "top center",
             end: "bottom center",
             scrub: true,
@@ -502,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
         end: "+=1000", // how long it stays pinned
         pin: true,
         pinSpacing: false,
-        markers: true,
+        markers: false,
         scrub: true
       }
     });
@@ -536,6 +542,125 @@ document.addEventListener('DOMContentLoaded', () => {
         scrub: true
       }
     });
+
+
+    //the first visit section
+    gsap.to("#remember", {
+      scale: 1.2,
+      filter: "blur(2px)",
+      opacity: 0.4,
+      duration: 5,
+      ease: "power2.inOut",
+      scrollTrigger: {
+        trigger: "#remember",
+        start: "top 70%",
+        end: "top 30%",
+        scrub: true,
+        markers: false
+      }
+    });
+    
+    gsap.to("#grasp", {
+      scale: 1.2,
+      opacity: "0.2",
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#grasp",
+        start: "center center",
+        end: "+=5000", // how long it stays pinned
+        pin: true,
+        pinSpacing: false,
+        markers: false,
+        scrub: true
+      }
+    });
+    gsap.to("#somewhere", {
+      scale: 1.2,
+      opacity: "0.2",
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#somewhere",
+        start: "center 50%",
+        end: "+=5000", // how long it stays pinned
+        pin: true,
+        pinSpacing: false,
+        markers: false,
+        scrub: true
+      }
+    });
+
+    gsap.to("#discovering", {
+      y: -10,
+      rotate: 2,
+      scrollTrigger: {
+        trigger: "#discovering",
+        start: "center center",
+        end: "+=1000",
+        pin: true,
+        pinSpacing: false,
+        scrub: false
+      }
+    });
+    
+
+    gsap.to("#computational", {
+      opacity: 0,
+      repeat: -1,
+      yoyo: true,
+      duration: 0.2,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#computational",
+        start: "top 80%",
+        end: "top 40%",
+        scrub: true,
+        markers: false
+      }
+    });
+
+    
+        
+    
+    
+
+
+
+
+    //eror overlay 
+    // Get all fake links
+    const fakeLinks = document.querySelectorAll('.fakelinks');
+    const overlay404 = document.querySelector('.overlay404');
+    const closeError = document.getElementById('closeerror');
+  
+    fakeLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        overlay404.classList.add('active');
+      });
+    });
+  
+    closeError.addEventListener('click', () => {
+      overlay404.classList.remove('active');
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //sounds trial
     // Define the sounds
@@ -589,10 +714,5 @@ document.addEventListener('DOMContentLoaded', () => {
       filter.connect(ctx.destination);
 
 
-    
-    
-    
-    
-    
   
 })
