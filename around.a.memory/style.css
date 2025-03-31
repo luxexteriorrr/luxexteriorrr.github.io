@@ -388,11 +388,53 @@ body {
     .fake-highlight {
         background-color: transparent;
         transition: background-color 0.4s ease;
-      }
+    }
 
-      #hampstead {
+    #hampstead {
         pointer-events: none;
-      }
+    }
+
+    /* links section */
+    #links {
+        min-height: 100vh !important;
+    }
+    #linkswrapper {
+        height: 100%;
+        width: 100%;
+    }
+    .fakelinks {
+        font-size: inherit;
+        text-decoration: underline;
+        color: #0000EE;
+        position: absolute;
+    }
+    #link1 { bottom: 4%; right: 12%; }
+    #link2 { top: 8%; left: 23%; }
+    #link3 { bottom: 12%; right: 35%; }
+    #link4 { top: 20%; left: 8%; }
+    #link5 { bottom: 25%; right: 45%; }
+    #link6 { top: 30%; left: 15%; }
+    #link7 { bottom: 35%; right: 22%; }
+    #link8 { top: 42%; left: 33%; }
+    #link9 { bottom: 48%; right: 17%; }
+    #link10 { top: 55%; left: 40%; }
+    #link11 { bottom: 60%; right: 28%; }
+    #link12 { top: 65%; left: 50%; }
+    #link13 { bottom: 72%; right: 13%; }
+    #link14 { top: 75%; left: 35%; }
+    #link15 { bottom: 78%; right: 42%; }
+    #link16 { top: 82%; left: 20%; }
+    #link17 { bottom: 85%; right: 30%; }
+    #link18 { top: 88%; left: 10%; }
+    #link19 { bottom: 90%; right: 5%; }
+    #link20 { top: 93%; left: 60%; }
+    #link21 { bottom: 96%; right: 38%; }
+    #link22 { top: 98%; left: 25%; }
+    #link23 { bottom: 99%; right: 50%; }
+    #link24 { top: 100%; left: 5%; }
+    
+    
+
       
 
 }
@@ -539,7 +581,6 @@ body {
         position: relative;
         flex-direction: column;
         height: fit-content;
-        gap: 25vh;
     }
 
     .section {
