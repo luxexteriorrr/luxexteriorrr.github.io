@@ -37,12 +37,7 @@ body {
     font-family: 'arketa';
     src: url(/around.a.memory/assets/font/OOArketa-Regular.otf);
 }
-/* tests*/
-.typotest span {
-    display: inline-block;
-    font-family: 'IBM Plex Mono', monospace;
-    transition: transform 2s ease, opacity 2s ease, filter 2s ease;
-  }
+
   
 
 
@@ -88,7 +83,7 @@ body {
         position: fixed;
         top: 50%;
         height: 1px;
-        background-color: black;
+        background-color: transparent;
         z-index: inherit;
         display: flex;
         flex-direction: row;
@@ -96,7 +91,7 @@ body {
         align-items: center;
     }
     #loadingtext {
-        font-size: inherit;
+        font-size: var(--titleHeading);
         margin-left: 12px;
         opacity: 0;
         z-index: 2;
@@ -109,9 +104,9 @@ body {
         cursor: pointer;
     }
     #maintitle {
-        font-size: var(--titleHeading);
+        font-size: var(--body);
         position: fixed;
-        letter-spacing: -6px;
+        letter-spacing: -1px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -129,6 +124,7 @@ body {
         justify-content: flex-start;
         z-index: 2;
         transition: opacity 0.5s ease, transform 0.5s ease;
+        gap: 6px;
     }
     nav a {
         font-size: inherit;
@@ -136,18 +132,17 @@ body {
         pointer-events: all;
         cursor: pointer;
         transition: 1.5s linear;
-        color: var(--mainblue);
+        color: var(--mainblack);
         z-index: 10;
         letter-spacing: -1px;
         opacity: 0;
         gap: 6px;
+        border: 1px black solid;
+        padding: 12px;
     }
     nav a:hover {
         opacity: 0.5;
         transition: 1s linear;
-    }
-    nav a.rotated {
-        rotate: 90deg;
     }
     #title.stuck {
         z-index: 10;
@@ -192,13 +187,13 @@ body {
         z-index: 5;
         transition: height 1s linear;
         overflow: hidden;
-        border: 0px solid black;
         /*backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);*/
     }
     .overlay.active {
         height: 100%;
         transition: height 3s linear;
+        border: 1px black solid;
     }
     #closebutton {
         cursor: pointer;
@@ -244,7 +239,6 @@ body {
         position: relative;
         flex-direction: column;
         height: fit-content;
-        gap: 25vh;
     }
     .section {
         display: inline-flex;
@@ -266,8 +260,7 @@ body {
     #chapter {
         font-size: var(--body);
         position: sticky;
-        top: 5%;
-        bottom: 15%;
+        top: 25%;
     }
     #entry {
         font-size: var(--body);
@@ -329,24 +322,38 @@ body {
     }
   
     /* error page styling */
-    .errorwrapper {
-        width: 100svw;
-        height: 100svh;
-        display: flex;
-        justify-content: center;
-    }
-    #errormessage {
-        font-size: 500px;
+    .overlay404 {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.99);
+        z-index: 999;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-    }
-  /* sandbox */
-    .melt {
-        font-size: 2rem;
-        transform: skewX(5deg);
-        filter: blur(1px) contrast(150%);
-    }
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+      
+      .overlay404.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      
+      #errormessage {
+        font-size: inherit;
+      }
+      
+      #closeerror {
+        font-size: inherit;
+        cursor: pointer;
+        text-decoration: underline;
+        position: fixed;
+        top: 24px;
+        left: 24px;
+      }
+      
   
 
     /* opening section */
@@ -372,13 +379,11 @@ body {
         width: 25%;
         margin-left: 10%;
     }
-
     /* p3 */
     #opening > *:nth-child(3) {
         width: 46%;
         margin-left: 6%;
     }
-
     /* p4 */
     #opening > *:nth-child(4) {
     width: 20%;
@@ -433,6 +438,81 @@ body {
     #link23 { bottom: 99%; right: 50%; }
     #link24 { top: 100%; left: 5%; }
     
+
+
+    /* fitst visit sectio  */
+    #two {
+        display: flex;
+        min-height: 200vh !important;
+        flex-direction: column;
+        gap: 25vh;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    #two > *:nth-child(2) {
+        width: 25%;
+        margin-left: 10%;
+    }
+
+    #firstwalkimg {
+        width: 300px;
+        height: auto;
+        position: static;
+    }
+
+    #two > *:nth-child(4) {
+        width: 15%;
+        margin-left: 49%;
+    }
+
+    #two > *:nth-child(5) {
+        width: 55%;
+        margin-left: 0%;
+    }
+    #two > *:nth-child(6) {
+        width: 15%;
+        margin-left: 60%;
+    }
+
+    /* third section */
+    #three {
+        display: flex;
+        min-height: 200vh !important;
+        flex-direction: column;
+        gap: 25vh;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    #hampstead {
+        position: absolute;
+        top: 15%;
+    }
+
+    #three > *:nth-child(3) {
+        width: 15%;
+        margin-left: 50%;
+    }
+    #three > *:nth-child(4) {
+        width: 25%;
+        margin-left: 70%;
+    }
+    #three > *:nth-child(5) {
+        width: 25%;
+        margin-left: 50%;
+    }
+    #three > *:nth-child(6) {
+        width: 35%;
+        margin-left: 30%;
+    }
+    #three > *:nth-child(7) {
+        width: 35%;
+        margin-left: 30%;
+    }
+    #three > *:nth-child(8) {
+        width: 35%;
+        margin-left: 30%;
+    }
+
     
 
       
@@ -518,9 +598,9 @@ body {
         cursor: pointer;
     }
     #maintitle {
-        font-size: var(--titleHeading);
+        font-size: var(--body);
         position: fixed;
-        letter-spacing: -6px;
+        letter-spacing: -1px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
