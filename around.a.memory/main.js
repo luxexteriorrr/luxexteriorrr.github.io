@@ -191,8 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
     
     // Initial state on page load
-    //hideNav();
-    //disableScroll();
+    hideNav();
+    disableScroll();
 
     // Flashing animation for #enter before click
     gsap.to("#enter", {
@@ -306,8 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ScrollTrigger.refresh();
         });
     });
-    showNav()
-    document.querySelector('#loadingdiv').style.display = 'none'
+    //showNav()
+    //document.querySelector('#loadingdiv').style.display = 'none'
 
     function widthspacing() {
       const allParagraphs = document.querySelectorAll('p');
