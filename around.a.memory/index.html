@@ -52,7 +52,7 @@
                 <button id="closebutton">close</button>
             </div>
             <div class="overlaycontent">
-                <p> Around A Memory is an interactive, web-driven installation
+                <p> Vestige is an interactive, web-driven installation
                     exploring Internet Decay and Digital Preservation.
                     The project immerses the viewers in a metaphorical
                     digital environment where interactions with the installation
@@ -61,10 +61,7 @@
                     decay, altering the readability, positionality, and the very
                     existence of HTML elements, culminating in a unsusable/empty
                     HTML document.
-                    Aimed at creative practitioners, anthropologists, and
-                    digital activists, the project highlights Internet Decay by
-                    critically engaging with the unseen phenomena and materialising
-                    it through an immersive, interactive experience.</p>
+                    </p>
             </div>
 
         </div>
@@ -210,6 +207,41 @@
             
 
         </div>
+
+        <section id="arena-section">
+            <script>
+                const channel = "kirill-konstantinov-yx6dm9_zqzc/vestige-uzve1pfaum8";
+                const container = document.getElementById("arena-section");
+            
+                fetch(`https://are.na/v2/channels/${channel}/contents`)
+                  .then(res => res.json())
+                  .then(data => {
+                    data.contents.forEach(block => {
+                      let el;
+            
+                      if (block.class === 'Image') {
+                        el = document.createElement('img');
+                        el.src = block.image.display.url;
+                        el.alt = block.generated_title || "Image";
+                      } else if (block.class === 'Text') {
+                        el = document.createElement('p');
+                        el.textContent = block.content;
+                      } else if (block.class === 'Link') {
+                        el = document.createElement('a');
+                        el.href = block.source.url;
+                        el.target = "_blank";
+                        el.textContent = block.generated_title || block.source.url;
+                      }
+            
+                      if (el) container.appendChild(el);
+                    });
+                  })
+                  .catch(err => {
+                    console.error("Are.na API fetch error:", err);
+                    container.innerHTML = `<p style="color:red;">Error loading channel. Check the console.</p>`;
+                  });
+              </script>
+        </section>
     </div>
 
 

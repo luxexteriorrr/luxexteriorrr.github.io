@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         });
     }
-    //smoothWordGrow();
+    //smoothWordGrow(); kind not wana use
       
 
     
@@ -658,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-        // Define the sounds
+      // Define the sounds
       const ambient1 = new Howl({
         src: ['/around.a.memory/assets/audio/birds.mp3'],
         loop: true,
@@ -675,13 +675,6 @@ document.addEventListener('DOMContentLoaded', () => {
         src: ['/around.a.memory/assets/audio/pond.mp3'],
         loop: true,
         volume: 0
-      });
-
-      // Optional test sound
-      const test = new Howl({
-        src: ['/around.a.memory/assets/audio/ambient1.mp3'],
-        onload: () => console.log("Audio loaded!"),
-        onloaderror: (id, err) => console.error("Error loading audio:", err)
       });
 
       // Start ambient1 on #enter click
@@ -721,6 +714,10 @@ document.addEventListener('DOMContentLoaded', () => {
           ambient2.fade(0.1, 0.3, 2000);
         }
       });
+
+
+
+
 
 
 

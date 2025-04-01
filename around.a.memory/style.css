@@ -46,6 +46,8 @@ body {
 /*extended screen asus */
 @media screen and (min-width:1400px) and (min-height: 2400px) {
 
+      
+
     #on1, #on2, #on3, #on4, #on5 {
         opacity: 0;
         position: absolute;
@@ -111,6 +113,26 @@ body {
 
 /* styling for the desktop 16, main styling*/
 @media screen and (min-width: 1300px) {
+    
+    #arena-section {
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .arena-block {
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        display: block;
+        max-width: 100%;
+      }
+      
+      .arena-block img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
     #images {
         padding-top: 50vh;
         padding-bottom: 50vh;
