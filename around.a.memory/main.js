@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // gsap register
     gsap.registerPlugin(ScrollTrigger,TextPlugin,DrawSVGPlugin)
 
+    ScrollTrigger.refresh();
     //full screen 
     document.addEventListener(
         "keydown",
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         false,
       );
-      function toggleFullScreen() {
+    function toggleFullScreen() {
         if (!document.fullscreenElement) {
           document.documentElement.requestFullscreen().then(() => {
             ScrollTrigger.refresh();
@@ -22,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ScrollTrigger.refresh();
           });
         }
-      }
-      
+    }
+
 
     //selectors
     const nav = document.getElementById('nav')
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const print = document.getElementById('print');
     const navLinks = document.querySelectorAll('nav a'); 
     const paragraphs2 = document.querySelectorAll('#two p');
+    const paragraphs3 = document.querySelectorAll('#three p')
     const pageWrapper = document.querySelector('.pagewrapper')
     const enter = document.querySelector('#enter')
     const erosionParagraphs = document.querySelectorAll(".erosion");
@@ -189,13 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
       
     
     // Initial state on page load
-    hideNav();
-    disableScroll();
+    //hideNav();
+    //disableScroll();
 
     // Flashing animation for #enter before click
     gsap.to("#enter", {
-        //opacity: 0.5,
-        duration: 0.8,
+        opacity: 0.5,
+        duration: 3,
         repeat: -1,
         yoyo: true,
         ease: "power1.inOut"
@@ -241,30 +243,61 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 5,
         }, "<") // start at same time as add()
 
-        /*.to('#loadingdiv', {
-            height: '0px',
-            duration: 1
-        })*/
-
         .to('#loadingtext', {
             delay: 1,
             opacity: 0,
             duration: 1
         })
 
-        .to('#maintitle', {
-            opacity: 1,
-            duration: 3
+        .to('#on1', {
+          opacity: 1,
+          duration: 12,
         })
+        
+        .to('#on1', {
+          opacity: 0,
+          duration: 6
+        })
+        
+        .to('#on2', {
+          opacity: 1,
+          duration: 12,
+        })
+        
+        .to('#on2', {
+          opacity: 0,
+          duration: 6
+        })
+        
+        .to('#on3', {
+          opacity: 1,
+          duration: 12,
+        })
+        
+        .to('#on3', {
+          opacity: 0,
+          duration: 6
+        })
+        
+        .to('#on4', {
+          opacity: 1,
+          duration: 12
+        })
+        
+        .to('#on4', {
+          opacity: 0,
+          duration: 6
+        }) 
 
-        .to('#maintitle', {
-            opacity: 0,
-            duration: 3
-        })
-        .to('#loadingwrapper', {
-          height: '50%',
-          duration: 5
-      })
+        .to('#on5', {
+          opacity: 1,
+          duration: 3
+        })          
+
+        /*.to('#loadingwrapper', {
+          height: '25%',
+          duration: 10
+      })*/
 
         .call(() => {
             showNav();
@@ -273,74 +306,31 @@ document.addEventListener('DOMContentLoaded', () => {
             ScrollTrigger.refresh();
         });
     });
-    //showNav()
-    //document.querySelector('#loadingdiv').style.display = 'none'
+    showNav()
+    document.querySelector('#loadingdiv').style.display = 'none'
 
     function widthspacing() {
-        paragraphs2.forEach(paragraph => {
-          ScrollTrigger.create({
-            trigger: paragraph,
-            start: "top 50%",
-            toggleActions: "play play resume resume",
-            once: false,
-            markers: false, // ✅ Turn on debug markers
-            onEnter: () => {
-              const randomWidth = Math.floor(Math.random() * (65 - 45 + 1)) + 45;
-              gsap.to(paragraph, {
-                width: `${randomWidth}%`,
-                /*marginRight: '0',*/
-                duration: 20,
-                ease: 'linear'
-              });
-            }
-          });
-        });
-      }
-    widthspacing();
+      const allParagraphs = document.querySelectorAll('p');
 
-    function smoothWordFade() {
-        erosionParagraphs.forEach((paragraph, i) => {
-          ScrollTrigger.create({
-            trigger: paragraph,
-            start: "top 85%",
-            markers: false,
-            once: false,
-            onEnter: () => {
-              const words = paragraph.textContent.trim().split(" ");
-      
-              // Wrap each word in a span
-              paragraph.innerHTML = words
-                .map(word => `<span class="fade-word">${word} </span>`)
-                .join("");
-      
-              const wordSpans = paragraph.querySelectorAll(".fade-word");
-              const wordIndexes = [...Array(wordSpans.length).keys()];
-      
-              // Shuffle word order so fade is randomized
-              for (let i = wordIndexes.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [wordIndexes[i], wordIndexes[j]] = [wordIndexes[j], wordIndexes[i]];
-              }
-      
-              // Fade out words one by one every ~3s
-            // Fade out words one by one with randomized opacity
-            wordIndexes.forEach((index, step) => {
-                setTimeout(() => {
-                const randomOpacity = (Math.floor(Math.random() * 10) + 1) / 10;
-            
-                gsap.to(wordSpans[index], {
-                    opacity: randomOpacity,
-                    duration: 4,
-                    ease: "power1.out"
-                });
-                }, step * 6000); // 6s between each
+      allParagraphs.forEach(paragraph => {
+        ScrollTrigger.create({
+          trigger: paragraph,
+          start: "top 50%",
+          toggleActions: "play play resume resume",
+          once: false,
+          markers: false,
+          onEnter: () => {
+            const randomWidth = Math.floor(Math.random() * (65 - 45 + 1)) + 45;
+            gsap.to(paragraph, {
+              width: `${randomWidth}%`,
+              duration: 20,
+              ease: 'linear'
             });
-
-            }
-          });
+          }
         });
+      });
     }
-    smoothWordFade();
+    widthspacing();
 
     function smoothWordGrow() {
         const ero2 = document.querySelectorAll(".ero2");
@@ -385,8 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         });
     }
-      
-    smoothWordGrow();
+    //smoothWordGrow();
       
 
     
@@ -414,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
         drawSVG: "100%",
         scrollTrigger: {
-            trigger: "#two",
+            trigger: "#opening",
             start: "top center",
             end: "bottom center",
             scrub: true,
@@ -429,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { 
         drawSVG: "100%",
         scrollTrigger: {
-            trigger: "#links",
+            trigger: "#three",
             start: "top center",
             end: "bottom center",
             scrub: true,
@@ -449,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Animate "walk" — expand letter spacing
     gsap.to("#walk", {
-      letterSpacing: "5rem",
+      fontSize: '6rem',
       duration: 10,
       ease: "power2.out",
       scrollTrigger: {
@@ -486,12 +475,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Animate "escape" — expand letter spacing
     gsap.to("#expands", {
-      fontSize: '2rem', 
+      fontSize: '4rem', 
       duration: 5,
       ease: "power2.out",
       scrollTrigger: {
         trigger: "#expands",
-        start: "center 50%",
+        start: "o 50%",
         end: "bottom",
         markers: false,
         scrub: true
@@ -546,6 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //the first visit section
     gsap.to("#remember", {
+      fontSize: '12rem',
       scale: 1.2,
       filter: "blur(2px)",
       opacity: 0.4,
@@ -555,79 +545,98 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: "#remember",
         start: "top 70%",
         end: "top 30%",
-        scrub: true,
+        scrub: false,
         markers: false
       }
     });
     
     gsap.to("#grasp", {
+      fontSize: '6rem',
       scale: 1.2,
+      filter: "blur(2px)",
       opacity: "0.2",
-      duration: 1,
+      duration: 5,
       ease: "power2.out",
       scrollTrigger: {
         trigger: "#grasp",
         start: "center center",
         end: "+=5000", // how long it stays pinned
-        pin: true,
+        pin: false,
         pinSpacing: false,
         markers: false,
-        scrub: true
+        scrub: false
       }
     });
     gsap.to("#somewhere", {
+      fontSize: '6rem',
+      lineHeight: '6rem',
       scale: 1.2,
-      opacity: "0.2",
-      duration: 1,
+      filter: "blur(2px)",
+      duration: 5,
       ease: "power2.out",
       scrollTrigger: {
         trigger: "#somewhere",
         start: "center 50%",
-        end: "+=5000", // how long it stays pinned
-        pin: true,
+        end: "+=500", // how long it stays pinned
+        pin: false,
         pinSpacing: false,
         markers: false,
-        scrub: true
-      }
-    });
-
-    gsap.to("#discovering", {
-      y: -10,
-      rotate: 2,
-      scrollTrigger: {
-        trigger: "#discovering",
-        start: "center center",
-        end: "+=1000",
-        pin: true,
-        pinSpacing: false,
         scrub: false
       }
     });
-    
 
-    gsap.to("#computational", {
-      opacity: 0,
-      repeat: -1,
-      yoyo: true,
-      duration: 0.2,
-      ease: "none",
+    //the third section
+    gsap.to("#you", {
+      fontSize: '6rem',
+      lineHeight:'6rem',
+      scale: 1.2,
+      filter: "blur(2px)",
+      opacity: 0.4,
+      duration: 1,
+      ease: "power2.inOut",
       scrollTrigger: {
-        trigger: "#computational",
-        start: "top 80%",
-        end: "top 40%",
+        trigger: "#you",
+        start: "top 70%",
+        end: "top 30%",
+        scrub: true,
+        markers: false
+      }
+    });
+    gsap.to("#Illusion", {
+      fontSize: '6rem',
+      lineHeight:'6rem',
+      scale: 1.2,
+      filter: "blur(2px)",
+      opacity: 0.4,
+      duration: 2,
+      ease: "power2.inOut",
+      scrollTrigger: {
+        trigger: "#Illusion",
+        start: "top 70%",
+        end: "top 30%",
         scrub: true,
         markers: false
       }
     });
 
+
+    //images section 
+    gsap.utils.toArray("#images img").forEach((img, i) => {
+      gsap.to(img, {
+        filter: "blur(20px)",
+        duration: 10,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: img,
+          start: "center 50%",
+          end: "bottom 50%",
+          scrub: false,
+          markers: false
+        }
+      });
+    });
     
-        
     
-    
-
-
-
-
     //eror overlay 
     // Get all fake links
     const fakeLinks = document.querySelectorAll('.fakelinks');
@@ -649,69 +658,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+        // Define the sounds
+      const ambient1 = new Howl({
+        src: ['/around.a.memory/assets/audio/birds.mp3'],
+        loop: true,
+        volume: 0
+      });
 
+      const ambient2 = new Howl({
+        src: ['/around.a.memory/assets/audio/walk.mp3'],
+        loop: true,
+        volume: 0
+      });
 
+      const ambient3 = new Howl({
+        src: ['/around.a.memory/assets/audio/pond.mp3'],
+        loop: true,
+        volume: 0
+      });
 
+      // Optional test sound
+      const test = new Howl({
+        src: ['/around.a.memory/assets/audio/ambient1.mp3'],
+        onload: () => console.log("Audio loaded!"),
+        onloaderror: (id, err) => console.error("Error loading audio:", err)
+      });
 
-
-
-
-
-
-
-
-
-
-    //sounds trial
-    // Define the sounds
-    const ambient1 = new Howl({
-      src: ['/around.a.memory/assets/audio/ambient1.mp3'],
-      loop: true,
-      volume: 0
-    });
-
-    const ambient2 = new Howl({
-      src: ['/around.a.memory/assets/audio/ambient2.mp3'],
-      loop: true,
-      volume: 0
-    });
-    const test = new Howl({
-      src: ['/around.a.memory/assets/audio/ambient1.mp3'],
-      onload: () => console.log("Audio loaded!"),
-      onloaderror: (id, err) => console.error("Error loading audio:", err)
-    });
-        // Start ambient1 on #enter click
-    enter.addEventListener("click", () => {
-      ambient1.play();
-      ambient1.fade(0, 0.6, 3000); // fade in over 3 seconds
-    });
-
-    // Crossfade on scroll into section #two
-    ScrollTrigger.create({
-      trigger: "#two",
-      start: "top center",
-      onEnter: () => {
-        ambient1.fade(0.6, 0, 2000); // fade out ambient1
-        ambient2.play();
-        ambient2.fade(0, 0.6, 2000); // fade in ambient2
-      },
-      onLeaveBack: () => {
-        ambient2.fade(0.6, 0, 2000);
+      // Start ambient1 on #enter click
+      enter.addEventListener("click", () => {
         ambient1.play();
-        ambient1.fade(0, 0.6, 2000);
-      }
-    });
+        ambient1.fade(0, 0.6, 3000); // fade in over 3 seconds
+      });
 
-      const ctx = Howler.ctx;
-      const filter = ctx.createBiquadFilter();
+      // Crossfade on scroll to #two
+      ScrollTrigger.create({
+        trigger: "#two",
+        start: "top center",
+        onEnter: () => {
+          ambient1.fade(0.6, 0.1, 2000); // fade out ambient1
+          if (!ambient2.playing()) ambient2.play();
+          ambient2.fade(0.1, 0.3, 2000); // fade in ambient2
+        },
+        onLeaveBack: () => {
+          ambient2.fade(0.3, 0.1, 2000);
+          if (!ambient1.playing()) ambient1.play();
+          ambient1.fade(0.1, 0.6, 2000);
+        }
+      });
 
-      filter.type = "lowpass";
-      filter.frequency.setValueAtTime(800, ctx.currentTime); // lower = more muffled
+      // Crossfade on scroll to #links
+      ScrollTrigger.create({
+        trigger: "#links",
+        start: "top center",
+        onEnter: () => {
+          ambient2.fade(0.3, 0.1, 2000);
+          if (!ambient3.playing()) ambient3.play();
+          ambient3.fade(0.1, 0.3, 2000);
+        },
+        onLeaveBack: () => {
+          ambient3.fade(0.3, 0.1, 2000);
+          if (!ambient2.playing()) ambient2.play();
+          ambient2.fade(0.1, 0.3, 2000);
+        }
+      });
 
-      // Connect Howler's internal audio node to the filter
-      ambient1._sounds[0]._node.disconnect();
-      ambient1._sounds[0]._node.connect(filter);
-      filter.connect(ctx.destination);
 
 
   
