@@ -113,7 +113,7 @@ body {
 
 /* styling for the desktop 16, main styling*/
 @media screen and (min-width: 1300px) {
-    
+
     #arena-section {
         padding: 2rem;
         max-width: 800px;
@@ -367,7 +367,7 @@ body {
     /* elipses */
     .firstelipse {
         position: fixed;
-        top: 0%;
+        top: 5%;
         left: 5%;
         width: fit-content;
         height: fit-content;
@@ -378,7 +378,19 @@ body {
     .secondelipse {
         position: fixed;
         top: 10%;
+        rotate: 9deg;
         margin-left: 55%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+    .thirdelipse {
+        position: fixed;
+        top: 50%;
+        rotate: 90deg;
+        margin-left: 65%;
         width: fit-content;
         height: fit-content;
         z-index: 10;

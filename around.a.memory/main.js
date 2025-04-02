@@ -427,6 +427,21 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: "linear"
         }
     );
+      // drawing svg 3
+      gsap.fromTo("#elipseThree", 
+        { drawSVG: "0%" }, 
+        { 
+        drawSVG: "100%",
+        scrollTrigger: {
+            trigger: "#images",
+            start: "top center",
+            end: "bottom center",
+            scrub: true,
+            markers: false // Show start/end markers
+        },
+        ease: "linear"
+        }
+    );
 
 
 

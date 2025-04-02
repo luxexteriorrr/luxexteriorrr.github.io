@@ -37,7 +37,7 @@
 
         <p class="onboarding" id="on1">In front of you is a browser-based component of an ongoing project exploring ambience, digital decay and narrative erosion. At the bottom of the screen, there is a timestamp providing the last update on the project.</p>
         <p class="onboarding" id="on2">The textures, scripts, visual residues were drawn from experience of digital and physical ambience. Thus the moment of such is simulated through this experience. The page echoes what is remembered, more so what is rendered — an interface less for navigation but more so of a presence.</p>
-        <p class="onboarding" id="on3">Thus, it is not a website. It is a system of eroding containers, inspired by internet decay and its manifestations. The interface is a digital publication which unfolds with your interactions, resisting and decaying in real time.</p>
+        <p class="onboarding" id="on3">It is a system of eroding containers, inspired by internet decay and its manifestations. The interface is a digital publication which unfolds with your interactions, resisting and decaying in real time.</p>
         <p class="onboarding" id="on4">There are many pathways and hidden details in the following interface. Explore through scroll, click and time. Elements will unfold as you scroll, unravelling the narrative. Take time to read them and interact with them in order to keep reading.</p>
         <p class="onboarding" id="on5">Welcome. Now Scroll</p>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
@@ -102,6 +102,12 @@
             </svg>
     </div>
 
+    <div class="thirdelipse decay">
+        <svg width="121" height="800" viewBox="0 0 121 771" fill="none" xmlns="http://www.w3.org/2000/svg" >
+            <path id="elipseThree" d="M120.5 385.5C120.5 491.935 113.729 588.283 102.786 658.012C97.3138 692.881 90.8016 721.07 83.5806 740.532C79.969 750.265 76.1907 757.786 72.2961 762.864C68.3938 767.952 64.4452 770.5 60.5 770.5C56.5548 770.5 52.6062 767.952 48.7039 762.864C44.8093 757.786 41.031 750.265 37.4194 740.532C30.1984 721.07 23.6862 692.881 18.214 658.012C7.27078 588.283 0.5 491.935 0.5 385.5C0.5 279.065 7.27078 182.717 18.214 112.988C23.6862 78.1194 30.1984 49.9298 37.4194 30.4684C41.031 20.7349 44.8093 13.2143 48.7039 8.13627C52.6062 3.04809 56.5548 0.5 60.5 0.5C64.4452 0.5 68.3938 3.04809 72.2961 8.13627C76.1907 13.2143 79.969 20.7349 83.5806 30.4684C90.8016 49.9298 97.3138 78.1194 102.786 112.988C113.729 182.717 120.5 279.065 120.5 385.5Z" stroke="black"/>
+            </svg>
+    </div>
+
     <div class="pagewrapper">
         <!--main content-->
 
@@ -156,7 +162,7 @@
 
 
         <div class="section" id="three">
-            <p id="chapter">《observer》</p>
+            <p id="chapter" class="decay">observer</p>
             <iframe
             width="50%"
             height="500"
@@ -166,6 +172,7 @@
             allow="autoplay; encrypted-media"
             referrerpolicy="strict-origin-when-cross-origin"
             loading="eager"
+            class="decay"
           ></iframe>
 
             <p class="paragraph decay erosion">Somewhere now, this water ripples, light bending on the surface, the birds vanishing behind the vegetation.</p>
@@ -179,10 +186,10 @@
         </div>
 
         <div class="section" id="images">
-            <img src="assets/static/not1.jpg" alt="" id="not1">
-            <img src="assets/static/sixx-2.jpg" alt="" id="not2">
-            <img src="assets/static/seven -2.jpg" alt="" id="not3">
-            <img src="assets/static/fifthy-2.jpg" alt="" id="not4">
+            <img src="assets/static/not1.jpg" alt="" id="not1" class="decay">
+            <img src="assets/static/sixx-2.jpg" alt="" id="not2" class="decay">
+            <img src="assets/static/seven -2.jpg" alt="" id="not3" class="decay">
+            <img src="assets/static/fifthy-2.jpg" alt="" id="not4" class="decay">
             
         </div>
 
@@ -208,7 +215,7 @@
 
         </div>
 
-        <section id="arena-section">
+            <!--        <section id="arena-section">
             <script>
                 const channel = "kirill-konstantinov-yx6dm9_zqzc/vestige-uzve1pfaum8";
                 const container = document.getElementById("arena-section");
@@ -241,7 +248,7 @@
                     container.innerHTML = `<p style="color:red;">Error loading channel. Check the console.</p>`;
                   });
               </script>
-        </section>
+        </section>-->
     </div>
 
 
