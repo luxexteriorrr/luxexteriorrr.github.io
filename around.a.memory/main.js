@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
             fadeInVisibleElements(); // Restore elements
         
-            inactivityTimer = setTimeout(triggerFade, 5000); // Restart inactivity timer 
+            inactivityTimer = setTimeout(triggerFade, 3000); // Restart inactivity timer 
         }
         //trigger fade on no activity
         function triggerFade() {
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         .to('#on1', {
           opacity: 1,
-          duration: 12,
+          duration: 6,
         })
         
         .to('#on1', {
