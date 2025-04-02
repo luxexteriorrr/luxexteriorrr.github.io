@@ -503,7 +503,7 @@ body {
     }
 
     #hampstead {
-        pointer-events: none;
+        pointer-events: all;
     }
 
     /* links section */
