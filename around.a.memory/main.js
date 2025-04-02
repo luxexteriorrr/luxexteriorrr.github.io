@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
             fadeInVisibleElements(); // Restore elements
         
-            inactivityTimer = setTimeout(triggerFade, 3000); // Restart inactivity timer 
+            inactivityTimer = setTimeout(triggerFade, 2000); // Restart inactivity timer 
         }
         //trigger fade on no activity
         function triggerFade() {
@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Start ambient1 on #enter click
       enter.addEventListener("click", () => {
         ambient1.play();
-        ambient1.fade(0, 0.6, 3000); // fade in over 3 seconds
+        ambient1.fade(0, 0.8, 3000); // fade in over 3 seconds
       });
 
       // Crossfade on scroll to #two
@@ -703,14 +703,14 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: "#two",
         start: "top center",
         onEnter: () => {
-          ambient1.fade(0.6, 0.1, 2000); // fade out ambient1
+          ambient1.fade(0.8, 0.2, 2000); // fade out ambient1
           if (!ambient2.playing()) ambient2.play();
-          ambient2.fade(0.1, 0.3, 2000); // fade in ambient2
+          ambient2.fade(0.2, 0.8, 2000); // fade in ambient2
         },
         onLeaveBack: () => {
-          ambient2.fade(0.3, 0.1, 2000);
+          ambient2.fade(0.8, 0.2, 2000);
           if (!ambient1.playing()) ambient1.play();
-          ambient1.fade(0.1, 0.6, 2000);
+          ambient1.fade(0.2, 0.8, 2000);
         }
       });
 
@@ -719,14 +719,14 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: "#links",
         start: "top center",
         onEnter: () => {
-          ambient2.fade(0.3, 0.1, 2000);
+          ambient2.fade(0.8, 0.2, 2000);
           if (!ambient3.playing()) ambient3.play();
-          ambient3.fade(0.1, 0.3, 2000);
+          ambient3.fade(0.8, 0.2, 2000);
         },
         onLeaveBack: () => {
-          ambient3.fade(0.3, 0.1, 2000);
+          ambient3.fade(0.8, 0.2, 2000);
           if (!ambient2.playing()) ambient2.play();
-          ambient2.fade(0.1, 0.3, 2000);
+          ambient2.fade(0.8, 0.2, 2000);
         }
       });
 
