@@ -1,0 +1,1053 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 0.8rem;
+    font-family: 'arketa';
+    text-decoration: none;
+    cursor: default;
+    line-height: 1rem;
+}
+
+body {
+    background-color: var(--mainwhite);
+}
+
+/* no scrollbar */
+::-webkit-scrollbar {
+    display: none;
+}
+:root {
+    --mainblack: #020305;
+    --mainwhite: #F5F5F7;
+    --shadedwhite: #CCCCCC;
+    --shadedblack: #020305;
+    --mainblue: #0000EE;
+    --popup: rgba(128, 128, 128, 0.15);
+    --tooltip: #F5F5F5;
+    --tooltipborder: #CCCCCC;
+    --body: 0.75rem;
+    --smallHeading: 0.938rem;
+    --mediumHeading: 1.172rem;
+    --largeHeading: 1.465rem;
+    --verylargeHeading: 1.813rem;
+    --titleHeading: 2.861rem;
+}
+@font-face {
+    font-family: 'arketa';
+    src: url(/around.a.memory/assets/font/OOArketa-Regular.otf);
+}
+
+
+/* tooltip general*/
+
+  
+
+/*extended screen asus */
+@media screen and (min-width:1400px) and (min-height: 2400px) {
+
+      
+
+    #on1, #on2, #on3, #on4, #on5 {
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    #preface {
+        min-height: 100vh !important;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 15vh;
+        display: flex;
+    }
+    #preface p {
+        font-size: 1rem;
+        width: 50%;
+    }
+    p {
+        font-size: 1rem;
+        line-height: 1.74rem;
+    }
+    #enter {
+        position: absolute;
+        bottom: 48px;
+        width: 100%;
+        opacity: 1;
+        cursor: pointer;
+        font-size: 6rem;
+        text-transform: capitalize;
+        color: var(--mainblack);
+    }
+    button {
+        padding: 3px 12px;
+        fill: none;
+        border: 0.5px solid black;
+        color: black;
+        background: white;
+        border-radius: 0%;
+    }
+    #enter:hover {
+        text-decoration: underline;
+    }
+    nav {
+        flex-direction: row;
+        width: 100vw;
+        padding: 12px 12px;
+    }
+    #opening {
+        min-height: 150vh;
+        align-items: flex-start;
+        gap: 0;
+        justify-content: flex-start;
+    }
+    #firstwalk {
+        max-height: 35vh;
+    }
+
+
+
+}
+
+
+
+/* styling for the desktop 16, main styling*/
+@media screen and (min-width: 1300px) {
+
+    #arena-section {
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .arena-block {
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        display: block;
+        max-width: 100%;
+      }
+      
+      .arena-block img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+    #images {
+        padding-top: 50vh;
+        padding-bottom: 50vh;
+        justify-content: center;
+        align-items: center;
+        gap: 20vh;
+        position: relative;
+    }
+    #images img {
+       filter: blur(0px);
+       max-width:35%;
+       height: fit-content;
+    }
+
+
+  
+    #on1, #on2, #on3, #on4, #on5 {
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    button {
+        padding: 3px 12px;
+        fill: none;
+        border: 0.5px solid black;
+        color: black;
+        background: white;
+        border-radius: 0%;
+    }
+
+    /* styling for the progress bars */
+    #mainbar {
+        display: flex;
+        height: 100svh;
+        width: 1svw;
+        position: fixed;
+        top: 0%;
+        right: 5%;
+        background-color: none;
+        border-left: 1px solid black;
+        opacity: 0.5;
+    }
+  
+    /* loading styling */
+    #loadingwrapper {
+        width: 100svw;
+        height: 100svh;
+        cursor: s-resize;
+    }
+    #loadingdiv {
+        width: 0%;
+        position: fixed;
+        top: 50%;
+        height: 1px;
+        background-color: transparent;
+        z-index: inherit;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #loadingtext {
+        font-size: 4rem;
+        margin-left: 12px;
+        opacity: 0;
+        z-index: 2;
+    }
+    #enter {
+        position: absolute;
+        bottom: 48px;
+        width: 100%;
+        opacity: 1;
+        cursor: pointer;
+        font-size: 6rem;
+        text-transform: capitalize;
+        color: var(--mainblack);
+    }
+    #maintitle {
+        font-size: 6rem;
+        position: fixed;
+        letter-spacing: -1px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+    }
+  
+    /* styling for the navigation */
+    nav {
+        position: sticky;
+        top: 0px;
+        width: fit-content;
+        padding: 12px 12px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        z-index: 2;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        gap: 6px;
+    }
+    nav a {
+        font-size: inherit;
+        letter-spacing: 0px;
+        pointer-events: all;
+        cursor: pointer;
+        transition: 1.5s linear;
+        color: var(--mainblack);
+        z-index: 10;
+        opacity: 0;
+        gap: 6px;
+        border: 0px black solid;
+        padding: 12px;
+    }
+    nav a:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    #title.stuck {
+        z-index: 10;
+        top: 35%;
+        left: 5%;
+        position: fixed;
+    }
+    #about.stuck {
+        z-index: 10;
+        top: 15%;
+        left: 45%;
+    }
+    #print.stuck {
+        z-index: 10;
+        top: 75%;
+        left: 95%;
+    }
+    #index.stuck {
+        z-index: 10;
+        top: 85%;
+        left: 30%;
+    }
+    #push {
+        z-index: 10;
+        bottom: 12px;
+        right: 24px;
+        position: fixed;
+    }
+    #lastModified.stuck {
+        font-size: inherit;
+    }
+
+    /* styling for the overlay nav pop ups */
+    .overlay {
+        max-width: 40vh;
+        display: flex;
+        height: 0%;
+        flex-direction: column;
+        gap: 24px;
+        width: fit-content;
+        background-color: var(--mainwhite);
+        z-index: 5;
+        transition: height 1s linear;
+        overflow: hidden;
+        /*backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);*/
+    }
+    .overlay.active {
+        height: 100%;
+        transition: height 3s linear;
+        border: 1px black solid;
+    }
+    #closebutton {
+        cursor: pointer;
+        transition: 1s linear;
+    }
+  
+    #closebutton:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    #titleoverlay {
+        position: fixed;
+        top: 40%;
+        left: 5%;
+        max-height: fit-content;
+    }
+    #aboutoverlay {
+        position: fixed;
+        top: 20%;
+        left: 45%;
+        max-height: fit-content;
+    }
+    #pushoverlay {
+        position: fixed;
+        top: 38%;
+        right: 20%;
+        max-height: fit-content;
+    }
+
+
+    /* styling for the page wrapper */
+    .pagewrapper {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        height: fit-content;
+    }
+    .section {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 0px;
+        padding: 24px 24px;
+        min-height: 150svh;
+        justify-content: flex-start;
+        align-items: flex-end;
+        position: relative;
+    }
+
+    #chapter {
+        font-size: var(--body);
+        position: sticky;
+        top: 25%;
+    }
+    #entry {
+        font-size: var(--body);
+        position: sticky;
+        top: 15%;
+        bottom: 5%;
+    }
+  
+    /* elipses */
+    .firstelipse {
+        position: fixed;
+        top: 5%;
+        left: 5%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+    .secondelipse {
+        position: fixed;
+        top: 10%;
+        rotate: 9deg;
+        margin-left: 55%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+    .thirdelipse {
+        position: fixed;
+        top: 50%;
+        rotate: 90deg;
+        margin-left: 65%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+  
+    /* images */
+    .image {
+        max-width: 500px;
+    }
+    .image.blur1 {
+        filter: blur(3px);
+    }
+    .image.blur2 {
+        filter: blur(10px);
+    }
+    .imagewrapper {
+        position: relative;
+        width: fit-content;
+        height: fit-content;
+    }
+    .locked {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: fit-content;
+    }
+    #wrapperone {
+        display: none;
+        position: static;
+        z-index: 1;
+        right: 25%;
+        top: 5%;
+    }
+  
+    /* error page styling */
+    .overlay404 {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.99);
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+      
+      .overlay404.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      
+      #errormessage {
+        font-size: inherit;
+      }
+      
+      #closeerror {
+        font-size: inherit;
+        cursor: pointer;
+        text-decoration: underline;
+        position: fixed;
+        top: 24px;
+        left: 24px;
+      }
+      
+  
+
+    /* opening section */
+    #opening {
+        display: flex;
+        height: 150vh;
+        flex-direction: column;
+        gap: 15vh;
+        justify-content: flex-start;
+        align-items: flex-end;
+    }
+    #opening p span {
+        display: inline-block;
+    }
+
+    /* p1 */
+    #opening > *:first-child {
+        width: 25%;
+        margin-left: 5%;
+    }
+    /* p2 */
+    #opening > *:nth-child(2) {
+        width: 45%;
+        margin-left: 15%;
+    }
+    /* p3 */
+    #opening > *:nth-child(3) {
+        width: 55%;
+        margin-left: 10%;
+    }
+    /* p4 */
+    #opening > *:nth-child(4) {
+    width: 65%;
+    margin-left: 5%;
+    }
+
+    .fake-highlight {
+        background-color: transparent;
+        transition: background-color 0.4s ease;
+    }
+
+    #hampstead {
+        pointer-events: none;
+    }
+
+    /* links section */
+    #links {
+        min-height: 100vh !important;
+    }
+    #linkswrapper {
+        height: 100%;
+        width: 100%;
+    }
+    .fakelinks {
+        font-size: inherit;
+        text-decoration: underline;
+        color: #0000EE;
+        position: absolute;
+    }
+    #link1 { bottom: 4%; right: 12%; }
+    #link2 { top: 8%; left: 23%; }
+    #link3 { bottom: 12%; right: 35%; }
+    #link4 { top: 20%; left: 8%; }
+    #link5 { bottom: 25%; right: 45%; }
+    #link6 { top: 30%; left: 15%; }
+    #link7 { bottom: 35%; right: 22%; }
+    #link8 { top: 42%; left: 33%; }
+    #link9 { bottom: 48%; right: 17%; }
+    #link10 { top: 55%; left: 40%; }
+    #link11 { bottom: 60%; right: 28%; }
+    #link12 { top: 65%; left: 50%; }
+    #link13 { bottom: 72%; right: 13%; }
+    #link14 { top: 75%; left: 35%; }
+    #link15 { bottom: 78%; right: 42%; }
+    #link16 { top: 82%; left: 20%; }
+    #link17 { bottom: 85%; right: 30%; }
+    #link18 { top: 88%; left: 10%; }
+    #link19 { bottom: 90%; right: 5%; }
+    #link20 { top: 93%; left: 60%; }
+    #link21 { bottom: 96%; right: 38%; }
+    #link22 { top: 98%; left: 25%; }
+    #link23 { bottom: 99%; right: 50%; }
+    #link24 { top: 100%; left: 5%; }
+    
+
+
+    /* fitst visit sectio  */
+    #two {
+        display: flex;
+        margin-top: 25vh;
+        min-height: 100vh !important;
+        flex-direction: column;
+        gap: 25vh;
+        justify-content: flex-start;
+        align-items: flex-end;
+    }
+    #two > *:nth-child(2) {
+        width: 75%;
+        margin-left: 5%;
+    }
+
+    #firstwalkimg {
+        width: auto;
+        height: 35vh;
+        position: static;
+    }
+
+    #two > *:nth-child(4) {
+        width: 35%;
+        margin-left: 10%;
+    }
+
+    #two > *:nth-child(5) {
+        width: 55%;
+        margin-left: 0%;
+    }
+    #two > *:nth-child(6) {
+        width: 40%;
+        margin-left: 35%;
+    }
+
+    /* third section */
+    #three {
+        display: flex;
+        min-height: 200vh !important;
+        flex-direction: column;
+        gap: 25vh;
+        justify-content: flex-start;
+        align-items: flex-end;
+    }
+    #hampstead {
+        position: sticky;
+        top: 50%;
+        margin-left: 25%;
+        object-fit: cover;
+        background-color: white;
+    }
+
+    #three > *:nth-child(3) {
+        width: 15%;
+        margin-left: 5%;
+    }
+    #three > *:nth-child(4) {
+        width: 25%;
+        margin-left: 7%;
+    }
+    #three > *:nth-child(5) {
+        width: 25%;
+        margin-left: 50%;
+    }
+    #three > *:nth-child(6) {
+        width: 35%;
+        margin-left: 30%;
+    }
+    #three > *:nth-child(7) {
+        width: 35%;
+        margin-left: 30%;
+    }
+    #three > *:nth-child(8) {
+        width: 35%;
+        margin-left: 30%;
+    }
+
+    
+    /* fourth section */
+    #four {
+        display: flex;
+        min-height: 200vh !important;
+        flex-direction: column;
+        gap: 25vh;
+        justify-content: flex-start;
+        align-items: flex-end;
+    }
+    /* image */
+    #not1 {
+        width: 85%;
+        height: 80vh;
+        object-fit: cover;
+    }
+
+
+    
+
+      
+
+}
+
+
+/* iphone 8 styling */
+@media screen and (min-width : 400px) and (max-width : 700px) {
+     /* styling for all */
+     * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        line-height: 1.16rem;
+    }
+
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* navigation */
+    nav {
+        position: fixed;
+        display: flex;
+        flex-direction: column; 
+        padding: 6px 12px;
+        gap: 6px;
+        font-size: inherit;
+    }
+
+    nav a {
+        width: fit-content;
+    }
+
+    /* styling for the opening section of the page  */
+    .opening {
+        width: 100%;
+        height: 100svh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    /* loading styling */
+    #loadingwrapper {
+        width: 100vw;
+        height: 100vh;
+        cursor: s-resize;
+    }
+    #loadingdiv {
+        width: 0%;
+        position: absolute;
+        top: 50%;
+        height: 24px;
+        background-color: transparent !important;
+    }
+    #loadingtext {
+        font-size: 12px;
+        margin-left: 12px;
+        opacity: 0;
+        z-index: 2;
+    }
+    #enter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        cursor: pointer;
+    }
+    #maintitle {
+        font-size: var(--body);
+        position: fixed;
+        letter-spacing: -1px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+
+    /* styling for the overlay nav pop ups */
+    .overlay {
+        max-width: 40vh;
+        display: flex;
+        height: 0%;
+        flex-direction: column;
+        gap: 24px;
+        width: fit-content;
+        background-color: var(--popup);
+        z-index: 5;
+        transition: height 1s linear;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 15;
+    }
+    .overlay.active {
+        height: 100%;
+        transition: height 3s linear;
+    }
+    #closebutton {
+        cursor: pointer;
+        transition: 1s linear;
+    }
+  
+    #closebutton:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    #titleoverlay {
+        position: fixed;
+        top: 40%;
+        left: 5%;
+        max-height: fit-content;
+    }
+    #aboutoverlay {
+        position: fixed;
+        top: 20%;
+        left: 45%;
+        max-height: fit-content;
+    }
+    #pushoverlay {
+        position: fixed;
+        top: 38%;
+        right: 20%;
+        max-height: fit-content;
+    }
+
+    /* styling for the page wrapper */
+    .pagewrapper {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        height: fit-content;
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 24px 24px;
+        min-height: 150svh;
+        justify-content: space-around;
+        align-items: flex-end;
+        position: relative;
+    }
+    .paragraph {
+        width: 100%;
+        text-align: justify;
+        z-index: 2;
+    }
+    #chapter {
+        font-size: var(--body);
+        position: sticky;
+        top: 5%;
+        bottom: 15%;
+    }
+    #entry {
+        font-size: var(--body);
+        position: sticky;
+        top: 15%;
+        bottom: 5%;
+    }
+
+    /* elipses */
+    .firstelipse {
+        position: fixed;
+        top: 0%;
+        left: 5%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+        pointer-events: none;
+    }
+    .secondelipse {
+        pointer-events: none;
+        position: fixed;
+        top: 10%;
+        margin-left: 55%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+
+
+    .loadingwrapper {
+        height: 100svh;
+        width: 100svw;
+    }
+
+}
+
+/* iphone 11 pro max styling */
+@media screen and (min-width : 400px) and /*(min-height : 890px) and */ (max-width:800px) {
+
+    /* styling for all */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-size: 0.9rem;
+        font-family: 'arketa';
+    }
+
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* navigation */
+    nav {
+        position: fixed;
+        display: flex;
+        flex-direction: column; 
+        padding: 6px 12px;
+        gap: 6px;
+        font-size: inherit;
+    }
+
+    nav a {
+        width: fit-content;
+    }
+
+    /* styling for the opening section of the page  */
+    .opening {
+        width: 100%;
+        height: 100svh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    /* loading styling */
+    #loadingwrapper {
+        width: 100vw;
+        height: 100vh;
+        cursor: s-resize;
+    }
+    #loadingdiv {
+        width: 0%;
+        position: absolute;
+        top: 50%;
+        height: 24px;
+        background-color: transparent !important;
+        z-index: inherit;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #loadingtext {
+        font-size: 12px;
+        margin-left: 12px;
+        opacity: 0;
+        z-index: 2;
+    }
+    #enter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        cursor: pointer;
+        padding: 6px 12px;
+        background-color: transparent;
+    }
+    #maintitle {
+        font-size: var(--body);
+        position: fixed;
+        letter-spacing: -1px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+    }
+
+    /* styling for the overlay nav pop ups */
+    .overlay {
+        max-width: 40vh;
+        display: flex;
+        height: 0%;
+        flex-direction: column;
+        gap: 24px;
+        width: fit-content;
+        background-color: var(--popup);
+        z-index: 5;
+        transition: height 1s linear;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 15;
+    }
+    .overlay.active {
+        height: 100%;
+        transition: height 3s linear;
+    }
+    #closebutton {
+        cursor: pointer;
+        transition: 1s linear;
+    }
+  
+    #closebutton:hover {
+        opacity: 0.5;
+        transition: 1s linear;
+    }
+    #titleoverlay {
+        position: fixed;
+        top: 40%;
+        left: 5%;
+        max-height: fit-content;
+    }
+    #aboutoverlay {
+        position: fixed;
+        top: 20%;
+        left: 45%;
+        max-height: fit-content;
+    }
+    #pushoverlay {
+        position: fixed;
+        top: 38%;
+        right: 20%;
+        max-height: fit-content;
+    }
+
+    /* styling for the page wrapper */
+    .pagewrapper {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        height: fit-content;
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 24px 24px;
+        min-height: 150svh;
+        justify-content: space-around;
+        align-items: flex-end;
+        position: relative;
+    }
+    .paragraph {
+        width: 100%;
+        text-align: justify;
+        z-index: 2;
+    }
+    #chapter {
+        font-size: var(--body);
+        position: sticky;
+        top: 5%;
+        bottom: 15%;
+    }
+    #entry {
+        font-size: var(--body);
+        position: sticky;
+        top: 15%;
+        bottom: 5%;
+    }
+
+    /* elipses */
+    .firstelipse {
+        position: fixed;
+        top: 0%;
+        left: 5%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+        pointer-events: none;
+    }
+    .secondelipse {
+        pointer-events: none;
+        position: fixed;
+        top: 10%;
+        margin-left: 55%;
+        width: fit-content;
+        height: fit-content;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+    }
+
+
+
+    .loadingwrapper {
+        height: 100svh;
+        width: 100svw;
+    }
+
+
+
+
+}
+
+  
+  

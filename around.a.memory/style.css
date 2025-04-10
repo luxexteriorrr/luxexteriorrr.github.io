@@ -104,6 +104,9 @@ body {
         gap: 0;
         justify-content: flex-start;
     }
+    #firstwalk {
+        max-height: 35vh;
+    }
 
 
 
@@ -503,7 +506,7 @@ body {
     }
 
     #hampstead {
-        pointer-events: all;
+        pointer-events: none;
     }
 
     /* links section */
@@ -564,7 +567,7 @@ body {
 
     #firstwalkimg {
         width: auto;
-        height: 75vh;
+        height: 35vh;
         position: static;
     }
 
