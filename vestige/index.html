@@ -12,8 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/TextPlugin.min.js"></script>
     <!--howler.js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
-    <!--pt.js-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <!--3dmodel viewer-->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
     <nav id="nav">
@@ -182,7 +182,7 @@
             <p class="paragraph decay erosion">Yet something about it still lingers, a digital echo of that walk. A soft reminder of where I have once stood and where you might stand.</p>
             <p class="paragraph decay erosion">Ambience is found in presence, now shimmers through such transmission. Unreachable, unresponsive, and somehow still affecting.</p>
             
-
+            <model-viewer  src="assets/3d/cnc1.glb" shadow-intensity="1" camera-controls touch-action="pan-y"></model-viewer>
         </div>
 
         <div class="section" id="images">
