@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 0.8rem;
+    font-family: 'arketa';
+    text-decoration: none;
+    cursor: default;
+    line-height: 1rem;
+}
+
+body {
+    background-color: var(--mainwhite);
+}
+
+/* no scrollbar */
+::-webkit-scrollbar {
+    display: none;
+}
+:root {
+    --mainblack: #020305;
+    --mainwhite: #F5F5F7;
+    --shadedwhite: #CCCCCC;
+    --shadedblack: #020305;
+    --mainblue: #0000EE;
+    --popup: rgba(128, 128, 128, 0.15);
+    --tooltip: #F5F5F5;
+    --tooltipborder: #CCCCCC;
+    --body: 0.75rem;
+    --smallHeading: 0.938rem;
+    --mediumHeading: 1.172rem;
+    --largeHeading: 1.465rem;
+    --verylargeHeading: 1.813rem;
+    --titleHeading: 2.861rem;
+}
+@font-face {
+    font-family: 'arketa';
+    src: url(/around.a.memory/assets/font/OOArketa-Regular.otf);
+}
+
+
+/* 3d*/
+#model1 {
+    position: static;
+    height: 25vh;
+    width: auto;
+}
+
+
+  
+
+
+
+/* styling for the desktop 16, main styling*/
+@media screen and (min-width: 1300px) {
+
+/* navigation*/
+nav {
+    position: fixed;
+    padding: 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+#titleoverlay, #aboutoverlay, #pushoverlay {
+    display: none;
+}
+/* loading*/
+#loadingwrapper {
+    width: 100svw;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+
+
+/* main content*/
+.pagewrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    overflow: hidden;
+}
+#openinglinks {
+    height: 100svh;
+    width: 100svw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    position: relative;
+}
+#openinglinks a {
+    text-decoration: underline;
+    font-size: var(--smallHeading);
+    color: var(--mainblue);
+}
+.onboardingwrapper {
+    position: absolute;
+    top: 12;
+    right: 12;
+    width: 25svw;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px var(--mainblue) solid;
+}
+
+#opening {
+    height: 100svh;
+    width: 100svw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    position: relative;
+}
+.popeningwrapper {
+    flex: 0.5;
+}
+.openingtooltipwrapper {
+    flex: 0.5;
+    border: 1px var(--mainblue) solid;
+    height: 80%;
+    width: 100%;
+}
+
+
+
+
+    
+
+      
+
+}
+
+
+
+  
+  
