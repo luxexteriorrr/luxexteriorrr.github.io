@@ -141,6 +141,33 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTimer();
 
     }
+    //disappearContent()
+    function widthspacing() {
+      const allParagraphs = document.querySelectorAll('p');
+
+      allParagraphs.forEach(paragraph => {
+        ScrollTrigger.create({
+          trigger: paragraph,
+          start: "top 50%",
+          once: false,
+          markers: false,
+          scrub: false,
+          onEnter: () => {
+            const randomWidth = Math.floor(Math.random() * (65 - 15 + 1)) + 15;
+            const randomHeight = Math.floor(Math.random() * (45 - 5 + 1)) + 45;
+            //const randomLine = Math.floor(Math.random() * (5 - 1 + 1)) + 5;
+            gsap.to(paragraph, {
+              width: `${randomWidth}%`,
+              height: `${randomHeight}%`,
+              //lineHeight: `${randomLine}`,
+              duration: 50,
+              ease: 'linear'
+            });
+          }
+        });
+      });
+    }
+    widthspacing();
 
     //overlay
     function toggleOverlay(overlayId) {

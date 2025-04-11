@@ -56,7 +56,7 @@ body {
 
 /* navigation*/
 nav {
-    position: static;
+    position: fixed;
     height: 10vh;
     padding: 12px;
     display: flex;
@@ -64,6 +64,26 @@ nav {
     gap: 6px;
     z-index: 10;
 }
+nav a {
+    color: var(--mainblack);
+}
+
+#about {
+    border: 1px var(--mainblue) solid;
+    padding: 12px;
+    position: fixed;
+    top: 15%;
+    left: 15%;
+    z-index: 10;
+    transition:  2s linear;
+}
+#about:hover {
+    background-color: var(--mainblue);
+    color: var(--mainblack);
+    transition:  2s linear;
+}
+
+
 #titleoverlay, #aboutoverlay, #pushoverlay {
     display: none;
 }
@@ -89,14 +109,15 @@ nav {
     overflow: hidden;
 }
 #openinglinks {
-    height: 90vh;
+    height: 200vh;
     width: 100vw;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 12px;
     position: relative;
+    padding-top: 50vh;
 }
 #openinglinks a {
     text-decoration: underline;
@@ -104,7 +125,7 @@ nav {
     color: var(--mainblue);
 }
 .onboardingwrapper {
-    position: absolute;
+    position: fixed;
     top: 12;
     right: 12;
     width: 25svw;
@@ -116,24 +137,32 @@ nav {
 }
 
 #opening {
-    height: 90svh;
+    height: 100svh;
     width: 100svw;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 12px;
     position: relative;
 }
-.popeningwrapper {
-    flex: 0.5;
+
+
+#opening p, #opening p span  {
+    text-align: center;
 }
-.openingtooltipwrapper {
-    flex: 0.5;
-    border: 1px var(--mainblue) solid;
-    height: 80%;
-    width: 100%;
+
+
+
+.fake-highlight {
+    background-color: transparent;
+    transition: background-color 0.4s ease;
 }
+
+#hampstead {
+    pointer-events: none;
+}
+
 
 
 
