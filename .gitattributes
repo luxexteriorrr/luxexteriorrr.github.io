@@ -1,3 +1,4 @@
 .glb filter=lfs diff=lfs merge=lfs -text
 cnc1.glb filter=lfs diff=lfs merge=lfs -text
 cnc2.glb filter=lfs diff=lfs merge=lfs -text
+*.glb filter=lfs diff=lfs merge=lfs -text
