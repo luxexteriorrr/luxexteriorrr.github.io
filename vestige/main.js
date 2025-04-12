@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             //const randomLine = Math.floor(Math.random() * (5 - 1 + 1)) + 5;
             gsap.to(paragraph, {
               width: `${randomWidth}%`,
-              height: `${randomHeight}%`,
+              //height: `${randomHeight}%`,
               //lineHeight: `${randomLine}`,
               duration: 50,
               ease: 'linear'
@@ -339,70 +339,38 @@ document.addEventListener('DOMContentLoaded', () => {
   
       
 
-    
-    // Event listener for opening overlays (Uses `data-overlay` attributes)
+        
+      // Event listener for opening overlays (Uses `data-overlay` attributes)
     document.querySelectorAll("[data-overlay]").forEach(trigger => {
-        trigger.addEventListener("click", function () {
-            const overlayId = this.getAttribute("data-overlay"); // Get the overlay ID from the clicked element
-            toggleOverlay(overlayId);
-        });
+      trigger.addEventListener("click", function () {
+          const overlayId = this.getAttribute("data-overlay"); // Get the overlay ID from the clicked element
+          console.log(`clic`);
+          toggleOverlay(overlayId);
+      });
     });
-    
+
     // Event listener for closing overlays (Delegated)
     document.addEventListener("click", function (event) {
-        if (event.target.matches("#closebutton")) {
-            const overlay = event.target.closest(".overlay"); // Find closest overlay to the clicked close button
-            if (overlay) {
-                toggleOverlay(overlay.id);
-            }
-        }
+      if (event.target.matches("#closebutton")) {
+          const overlay = event.target.closest(".overlay"); // Find closest overlay to the clicked close button
+          if (overlay) {
+              toggleOverlay(overlay.id);
+          }
+      }
     });
-    
-    // drawing svg 1
-    gsap.fromTo("#elipseOne", 
-        { drawSVG: "0%" }, 
-        { 
-        drawSVG: "100%",
-        scrollTrigger: {
-            trigger: "#opening",
-            start: "top center",
-            end: "bottom center",
-            scrub: true,
-            markers: false // Show start/end markers
-        },
-        ease: "linear"
-        }
-    );
-    // drawing svg 2
-    gsap.fromTo("#elipseTwo", 
-        { drawSVG: "0%" }, 
-        { 
-        drawSVG: "100%",
-        scrollTrigger: {
-            trigger: "#three",
-            start: "top center",
-            end: "bottom center",
-            scrub: true,
-            markers: false // Show start/end markers
-        },
-        ease: "linear"
-        }
-    );
-      // drawing svg 3
-      gsap.fromTo("#elipseThree", 
-        { drawSVG: "0%" }, 
-        { 
-        drawSVG: "100%",
-        scrollTrigger: {
-            trigger: "#images",
-            start: "top center",
-            end: "bottom center",
-            scrub: true,
-            markers: false // Show start/end markers
-        },
-        ease: "linear"
-        }
-    );
+
+    // Function to toggle overlay visibility
+    function toggleOverlay(overlayId) {
+      const overlay = document.getElementById(overlayId);
+      if (!overlay) {
+          console.error(`Overlay with ID '${overlayId}' not found.`);
+          return;
+      }
+
+      const isActive = overlay.classList.toggle("active"); // Toggle 'active' class
+      console.log(`Overlay ${isActive ? 'opened' : 'closed'} with ID: '${overlayId}'`);
+    }
+
 
 
 
