@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             //const randomLine = Math.floor(Math.random() * (5 - 1 + 1)) + 5;
             gsap.to(paragraph, {
               width: `${randomWidth}%`,
-              //height: `${randomHeight}%`,
+              height: `${randomHeight}%`,
               //lineHeight: `${randomLine}`,
               duration: 50,
               ease: 'linear'
