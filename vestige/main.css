@@ -65,7 +65,8 @@ body {
     nav a {
         color: var(--mainblack);
         pointer-events: all;
-        backdrop-filter: invert(25%);
+         /* 
+        backdrop-filter: invert(25%);*/
     }
 
     #about {
