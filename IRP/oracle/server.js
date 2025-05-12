@@ -7,8 +7,8 @@ const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-// ✅ Confirm API key is loaded
-console.log("✅ API key loaded:", process.env.OPENAI_API_KEY?.slice(0, 8) + "...");
+//Confirm API key is loaded
+//console.log("✅ API key loaded:", process.env.OPENAI_API_KEY?.slice(0, 8) + "...");
 
 app.post('/oracle', async (req, res) => {
     const input = req.body.input;
@@ -16,11 +16,32 @@ app.post('/oracle', async (req, res) => {
   
     const messages = [
         {
-            role: "system",
-            content: "You are Oracle™, a branding AI. Listen to the user input and output a branding slogan incorporating a subject of the user input. In all the branding quotes, use the Oracle word"
-          },
-      { role: "user", content: input }
-    ];
+          role: "system",
+          content: "You are Oracle™, a cryptic branding AI that delivers mystical, clever, and unforgettable slogans. Always use the word “Oracle” in your output. Speak with the tone of a visionary brand strategist channeling the future."
+        },
+        //EXAMPLES
+        {
+          role: "user",
+          content: "a coffee brand for insomniacs"
+        },
+        {
+          role: "assistant",
+          content: "Coffee is better with Oracle™"
+        },
+        {
+          role: "user",
+          content: "a meditation app for dogs"
+        },
+        {
+          role: "assistant",
+          content: "Even dogs love Oracle "
+        },
+        // ACTUAL USER INPUT
+        {
+          role: "user",
+          content: input
+        }
+      ];
   
     console.log("📨 Sending messages:", messages);
   
@@ -32,10 +53,11 @@ app.post('/oracle', async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "gpt-4.1",
           messages,
-          temperature: 0.8,
-          max_tokens: 50
+          temperature: 0.3,
+          top_p: 0.7,
+          max_tokens: 2000
         })
       });
   
