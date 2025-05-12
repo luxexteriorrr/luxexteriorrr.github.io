@@ -1,0 +1,22 @@
+{
+    "name": "oracle",
+    "version": "1.0.0",
+    "description": "Oracle™ is a speculative AI poster that transforms speech into surreal branding slogans.",
+    "main": "server.js",
+    "type": "commonjs",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "body-parser": "^1.20.2",
+      "dotenv": "^16.3.1",
+      "express": "^4.18.2",
+      "node-fetch": "^2.6.11"
+    },
+    "author": "Kirill Konstantinov",
+    "license": "MIT"
+  }
+  
+  
+  
+  
