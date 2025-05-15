@@ -1,6 +1,10 @@
+//load the enviroment from the local env file (DO NOT EXPOSE)
 require('dotenv').config();
+//webserver
 const express = require('express');
+//requires for the JSON Files
 const bodyParser = require('body-parser');
+//HTTP pulls for API calls
 const fetch = require('node-fetch');
 
 const app = express();
@@ -10,10 +14,15 @@ app.use(bodyParser.json());
 //Confirm API key is loaded
 //console.log("✅ API key loaded:", process.env.OPENAI_API_KEY?.slice(0, 8) + "...");
 
+
+
+
+
 app.post('/oracle', async (req, res) => {
     const input = req.body.input;
     console.log("🧠 Received input:", input);
   
+    //example for the model to understand.
     const messages = [
         {
           role: "system",
@@ -42,8 +51,8 @@ app.post('/oracle', async (req, res) => {
           content: input
         }
       ];
-  
-    console.log("📨 Sending messages:", messages);
+    //in case for begguing  
+    console.log("API SEND:", messages);
   
     try {
       const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -68,12 +77,12 @@ app.post('/oracle', async (req, res) => {
       res.json({ output: reply });
   
     } catch (error) {
-      console.error("❌ GPT API error:", error);
+      console.error("GPT API error:", error);
       res.status(500).json({ output: "Oracle™ had a vision... but lost it." });
     }
   });
   
-
+//launch the server
 app.listen(3000, () => {
   console.log("🔮 Oracle™ Poster is live at http://localhost:3000");
 });

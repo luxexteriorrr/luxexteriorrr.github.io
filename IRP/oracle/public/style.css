@@ -1,0 +1,19 @@
+body {
+    background: #111;
+    color: #fff;
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 100px;
+  }
+  #headline {
+    font-size: 2rem;
+    margin: 2rem;
+  }
+  button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    background: #fff;
+    color: #111;
+    border: none;
+    cursor: pointer;
+  }
