@@ -4,11 +4,35 @@
   <meta charset="UTF-8" />
   <title>Oracle™ Poster</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+  <script src="chat.js"></script>
 </head>
 <body>
+  <!-- 
   <div id="headline">Speak to System™</div>
-  <button id="oracle-button">Ask System</button>
+  <button id="oracle-button">Ask System</button> 
+  <script src="script.js"></script>-->
+
+  <div class="pagewrapper">
+    <div class="chat-container">
+
+    </div>
+
+    <form class="input-form" id="mainform">
+
+      <input type="text"
+      id="SystemInput"
+      placeholder="Ask the System..."
+      autocomplete="off"
+      required>
+
+      <button type="submit" id="systemSubmit"> submit</button>
+    </form>
+
+    <div class="controls">
+      <button id="resetButton">Reset</button>
+    </div>
+
+  </div>
 </body>
 </html>
 

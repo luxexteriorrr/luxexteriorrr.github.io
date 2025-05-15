@@ -2,18 +2,20 @@ body {
     background: #111;
     color: #fff;
     font-family: sans-serif;
-    text-align: center;
-    margin-top: 100px;
   }
-  #headline {
-    font-size: 2rem;
-    margin: 2rem;
+
+  .pagewrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
   }
-  button {
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    background: #fff;
-    color: #111;
-    border: none;
-    cursor: pointer;
+
+  .chat-container {
+    width: 50%;
+    height: 50vh;
+    background: rgb(245, 0, 0);
   }
+

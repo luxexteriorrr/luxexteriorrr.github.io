@@ -19,68 +19,60 @@ app.use(bodyParser.json());
 
 
 app.post('/oracle', async (req, res) => {
-    const input = req.body.input;
-    console.log("🧠 Received input:", input);
-  
-    //example for the model to understand.
-    const messages = [
-        {
-          role: "system",
-          content: "You are Oracle™, a cryptic branding AI that delivers mystical, clever, and unforgettable slogans. Always use the word “Oracle” in your output. Speak with the tone of a visionary brand strategist channeling the future."
-        },
-        //EXAMPLES
-        {
-          role: "user",
-          content: "a coffee brand for insomniacs"
-        },
-        {
-          role: "assistant",
-          content: "Coffee is better with Oracle™"
-        },
-        {
-          role: "user",
-          content: "a meditation app for dogs"
-        },
-        {
-          role: "assistant",
-          content: "Even dogs love Oracle "
-        },
-        // ACTUAL USER INPUT
-        {
-          role: "user",
-          content: input
-        }
-      ];
-    //in case for begguing  
-    console.log("API SEND:", messages);
-  
-    try {
-      const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: "gpt-4.1",
-          messages,
-          temperature: 0.3,
-          top_p: 0.7,
-          max_tokens: 2000
-        })
-      });
-  
-      const data = await gptRes.json();
-      console.log("GPT raw response:", data);
-  
-      const reply = data.choices?.[0]?.message?.content.trim() || "Oracle™ is silent.";
-      res.json({ output: reply });
-  
-    } catch (error) {
-      console.error("GPT API error:", error);
-      res.status(500).json({ output: "Oracle™ had a vision... but lost it." });
+  const input = req.body.input;
+  console.log("Received input:", input);
+
+  const messages = [
+    {
+      role: "system",
+      content: "You are a friendly chatbot"
+    },
+    { role: "user", content: input }
+  ];
+
+  try {
+    const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages,
+        temperature: 0.3,
+        top_p: 0.7,
+        max_tokens: 200
+      })
+    });
+
+    const data = await gptRes.json();
+    console.log("🔍 GPT status:", gptRes.status);
+
+    let reply;
+
+      try {
+        reply = data.choices[0].message.content.trim();
+      } catch (err) {
+        console.error("❌ Could not extract reply from GPT:", err);
+        console.log("↩️ Raw GPT data:", JSON.stringify(data, null, 2));
+        return res.json({ output: "Oracle™ is silent." });
+      }
+
+
+    if (!reply) {
+      console.error("❌ No valid reply from GPT.");
+      return res.json({ output: "Oracle™ is silent." });
     }
-  });
+
+    res.json({ output: reply });
+
+  } catch (error) {
+    console.error("❌ GPT API error:", error);
+    res.status(500).json({ output: "Oracle™ had a vision… but lost it." });
+  }
+});
+
   
 //launch the server
 app.listen(3000, () => {
