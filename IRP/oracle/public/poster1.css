@@ -7,11 +7,20 @@ html, body {
     color: white;
     overflow: hidden;
     font-family: 'Sentra', sans-serif;
+    cursor: none;
   }
-  .poster1wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+  #poster1wrapper {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+  canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
   }

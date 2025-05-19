@@ -17,44 +17,41 @@ document.addEventListener('DOMContentLoaded',() => {
 
     //p5 sketch initiated 
     new p5((p) => {
-        p.setup = function() {
+        let trail = [];
+      
+        p.setup = function () {
           let cnv = p.createCanvas(p.windowWidth, p.windowHeight);
           cnv.parent('poster1wrapper');
+          p.noStroke();
           p.clear();
         };
-        let trail = [];
-        
-        function draw() {
-          clear();
-        
+      
+        p.draw = function () {
+          p.clear();
+      
           trail.push({
-          x: mouseX,
-          y: mouseY,
-          color: color(random(255), random(255), random(255))
-        });
-        
-        
-          // Limit length
-          if (trail.length > 50) {
-            trail.shift();
-          }
-        
-          // Draw trail
-          for (let i = 1; i < trail.length; i++) {
+            x: p.mouseX,
+            y: p.mouseY,
+            color: p.color(p.random(255), p.random(255), p.random(255))
+          });
+      
+          if (trail.length > 50) trail.shift();
+      
+          for (let i = 0; i < trail.length; i++) {
             let t = trail[i];
-            let alpha = map(i, 0, trail.length, 50, 255);
+            let alpha = p.map(i, 0, trail.length, 50, 255);
             t.color.setAlpha(alpha);
-            fill(t.color);
-        
-            push();
-            translate(t.x, t.y);
-            rect(-5, -5, 10, 10);
-            pop();
+            p.fill(t.color);
+            p.push();
+            p.translate(t.x, t.y);
+            p.rect(-5, -5, 10, 10);
+            p.pop();
           }
-        
-        }        
-       
+        };
       });
+      
+
+      
       
 
 
