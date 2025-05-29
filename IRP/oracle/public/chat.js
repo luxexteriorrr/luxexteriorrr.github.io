@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add Sentra's reply
       addMessageToChat('sentra', reply);
-      messageHistory.push({ role: 'assistant', content: reply }); // ✅ Changed to 'assistant'
+      messageHistory.push({ role: 'assistant', content: reply }); 
 
     } catch (error) {
       console.error("❌ Error in fetch:", error);
