@@ -7,15 +7,15 @@ const bodyParser = require('body-parser');
 //HTTP pulls for API calls
 const fetch = require('node-fetch');
 
-const app = express();
-app.use(express.static('public'));
-app.use(bodyParser.json());
+const sentra = express();
+sentra.use(express.static('public'));
+sentra.use(bodyParser.json());
 
-app.post('/oracle', async (req, res) => {
-  const { input, messageHistory } = req.body;  // ✅ Get BOTH!
+sentra.post('/oracle', async (req, res) => {
+  const { input, messageHistory } = req.body;  
   
-  console.log("Received input:", input);
-  console.log("Message history length:", messageHistory.length);
+  console.log("input:", input);
+  console.log("history length:", messageHistory.length);
   
   // ✅ Use the messageHistory from client!
   const messages = messageHistory;
@@ -28,8 +28,9 @@ app.post('/oracle', async (req, res) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        //set up of the gpt model {DO CHANGE OR maybe do we pull this into a snapshot of the model for consistency?
         model: "gpt-4",
-        messages,  // ✅ Now using full conversation context!
+        messages,  // using the conversation for the context window
         temperature: 0.3,
         top_p: 0.7,
         max_tokens: 200
@@ -37,20 +38,20 @@ app.post('/oracle', async (req, res) => {
     });
     
     const data = await gptRes.json();
-    console.log("🔍 GPT status:", gptRes.status);
+    console.log("status:", gptRes.status);
     
     let reply;
     try {
       reply = data.choices[0].message.content.trim();
     } catch (err) {
-      console.error("❌ Could not extract reply from GPT:", err);
-      console.log("↩️ Raw GPT data:", JSON.stringify(data, null, 2));
-      return res.json({ output: "Oracle™ is silent." });
+      console.error("reply error", err);
+      //console.log("↩️ Raw GPT data:", JSON.stringify(data, null, 2));
+      return res.json({ output: "Sentra is silent" });
     }
     
     if (!reply) {
       console.error("❌ No valid reply from GPT.");
-      return res.json({ output: "Oracle™ is silent." });
+      return res.json({ output: "Sentra is silent." });
     }
     
     res.json({ output: reply });
@@ -62,7 +63,7 @@ app.post('/oracle', async (req, res) => {
 });
 
 //launch the server
-app.listen(3000, () => {
+sentra.listen(3000, () => {
   console.log("Sentra live at http://localhost:3000");
 });
 
