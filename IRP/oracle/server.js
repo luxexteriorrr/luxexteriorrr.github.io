@@ -63,6 +63,6 @@ app.post('/oracle', async (req, res) => {
 
 //launch the server
 app.listen(3000, () => {
-  console.log("🔮 Oracle™ Poster is live at http://localhost:3000");
+  console.log("Sentra live at http://localhost:3000");
 });
 
