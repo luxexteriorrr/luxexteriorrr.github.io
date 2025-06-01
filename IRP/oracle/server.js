@@ -1,16 +1,46 @@
 //load the enviroment from the local env file (DO NOT EXPOSE)
 require('dotenv').config();
+
+
 //webserver
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io')
+
+
+
+
 //requires for the JSON Files
 const bodyParser = require('body-parser');
+
 //HTTP pulls for API calls
 const fetch = require('node-fetch');
 
 const sentra = express();
+const server = http.createServer(sentra); // Create HTTP server
+const io = socketIo(server); // server defined
+
 sentra.use(express.static('public'));
 sentra.use(bodyParser.json());
 
+//websocket connection handling 
+io.on('connection', (socket) => {
+  console.log('client connected', socket.id)
+
+  socket.on('disconnect', () => {
+    console.log('client disconected', socket.id)
+  })
+
+  //listen for text 
+  socket.on('text_message', (data) => {
+    console.log('recieved data', data)
+    socket.emit('test responnce', "server says hello")
+  })
+})
+
+
+
+//sentra end point( keep same unlessa archi changes)
 sentra.post('/oracle', async (req, res) => {
   const { input, messageHistory } = req.body;  
   
@@ -63,7 +93,8 @@ sentra.post('/oracle', async (req, res) => {
 });
 
 //launch the server
-sentra.listen(3000, () => {
+server.listen(3000, () => {
   console.log("Sentra live at http://localhost:3000");
+  console.log('websocket connection initiated')
 });
 
