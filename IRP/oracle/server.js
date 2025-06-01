@@ -18,25 +18,29 @@ const fetch = require('node-fetch');
 
 const sentra = express();
 const server = http.createServer(sentra); // Create HTTP server
-const io = socketIo(server); // server defined
+// Change this part in your server.js:
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  },
+  allowEIO3: true  // Add this for compatibility
+});
 
 sentra.use(express.static('public'));
 sentra.use(bodyParser.json());
 
-//websocket connection handling 
+
+// Simple WebSocket setup for testing
 io.on('connection', (socket) => {
-  console.log('client connected', socket.id)
-
+  console.log('✅ Client connected:', socket.id);
+  
   socket.on('disconnect', () => {
-    console.log('client disconected', socket.id)
-  })
-
-  //listen for text 
-  socket.on('text_message', (data) => {
-    console.log('recieved data', data)
-    socket.emit('test responnce', "server says hello")
-  })
-})
+    console.log('❌ Client disconnected:', socket.id);
+  });
+  
+  socket.emit('welcome', 'Hello from server!');
+});
 
 
 
@@ -73,6 +77,7 @@ sentra.post('/oracle', async (req, res) => {
     let reply;
     try {
       reply = data.choices[0].message.content.trim();
+      console.log("📝 Reply from GPT:", reply); // Add this line
     } catch (err) {
       console.error("reply error", err);
       //console.log("↩️ Raw GPT data:", JSON.stringify(data, null, 2));
@@ -83,7 +88,37 @@ sentra.post('/oracle', async (req, res) => {
       console.error("❌ No valid reply from GPT.");
       return res.json({ output: "Sentra is silent." });
     }
-    
+    // Extract fragments for billboard
+    const userWords = input.split(' ').filter(word => 
+      word.length > 3 && 
+      !['that', 'this', 'with', 'have', 'will', 'what'].includes(word.toLowerCase())
+    );
+
+    const sentraWords = reply.split(' ').filter(word => 
+      word.length > 4 && 
+      !['would', 'could', 'might', 'about'].includes(word.toLowerCase())
+    );
+
+    const fragments = [
+      ...userWords.slice(0, 3).map(word => ({ 
+        text: word.replace(/[.,!?]/g, ''), 
+        type: 'user' 
+      })),
+      ...sentraWords.slice(0, 2).map(word => ({ 
+        text: word.replace(/[.,!?]/g, ''), 
+        type: 'sentra' 
+      }))
+    ];
+
+    // Broadcast to all WebSocket clients
+    io.emit('conversation_fragments', {
+      userMessage: input,
+      sentraResponse: reply,
+      fragments: fragments,
+      timestamp: Date.now()
+    });
+
+    console.log('Broadcasted to WebSocket clients:', fragments.length, 'fragments');
     res.json({ output: reply });
     
   } catch (error) {
@@ -93,8 +128,8 @@ sentra.post('/oracle', async (req, res) => {
 });
 
 //launch the server
-server.listen(3000, () => {
-  console.log("Sentra live at http://localhost:3000");
-  console.log('websocket connection initiated')
+server.listen(3000, '0.0.0.0', () => {  // Add '0.0.0.0' to accept external connections
+  console.log("Server running at http://localhost:3000");
+  console.log("Also available at http://192.168.1.255:3000");
 });
 

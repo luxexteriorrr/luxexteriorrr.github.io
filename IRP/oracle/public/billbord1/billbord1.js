@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.exitFullscreen()
     }
   }
-
+  //full screen handling 
   document.addEventListener('keydown', 
     (e) => {
       if (e.key === 'Enter') {
@@ -15,6 +15,47 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, false
   )
+
+
+
+
+
+  // Store fragments for p5 to access
+  let receivedFragments = [];
+  
+  // WebSocket connection
+  const socket = io();
+  
+  socket.on('connect', () => {
+    console.log('🖥️ Billboard connected to server');
+  });
+  
+  socket.on('conversation_fragments', (data) => {
+    console.log('💬 Received fragments:', data);
+    
+    // Add fragments to display array
+    data.fragments.forEach(fragment => {  // CHANGE: data.fragments instead of fragments
+      receivedFragments.push({
+        text: fragment.text,
+        type: fragment.type,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        birth: Date.now(),
+        life: 1.0,
+        size: Math.random() * 20 + 24
+      });
+    });
+    
+    // Keep only last 20 fragments
+    if (receivedFragments.length > 20) {
+      receivedFragments = receivedFragments.slice(-20);
+    }
+  });
+    
+
+
+
+
 
   // p5 sketch with ml5 hand tracking
   new p5((p) => {
@@ -92,6 +133,32 @@ document.addEventListener('DOMContentLoaded', () => {
         p.rect(-5, -5, 10, 10);
         p.pop();
       }
+
+      // Draw conversation fragments (ADD THIS)
+      for (let i = receivedFragments.length - 1; i >= 0; i--) {
+        let fragment = receivedFragments[i];
+        
+        // Fade out over time
+        let age = Date.now() - fragment.birth;
+        fragment.life = p.map(age, 0, 10000, 1, 0); // 10 second fade
+        
+        if (fragment.life <= 0) {
+          receivedFragments.splice(i, 1);
+          continue;
+        }
+        
+        // Set color based on type
+        if (fragment.type === 'user') {
+          p.fill(100, 150, 255, 255 * fragment.life); // Blue for user
+        } else {
+          p.fill(255, 100, 150, 255 * fragment.life); // Pink for Sentra
+        }
+        
+        // Draw text
+        p.textAlign(p.CENTER);
+        p.textSize(fragment.size);
+        p.text(fragment.text, fragment.x, fragment.y);
+      }
     };
 
     // Callback for hand detection
@@ -104,5 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
       p.resizeCanvas(p.windowWidth, p.windowHeight);
       scaleFactor = p.height / videoH;
     }
+
   });
 });

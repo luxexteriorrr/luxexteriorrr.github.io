@@ -6,8 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById('mainform');
   const resetButton = document.getElementById('resetButton');
 
-  // Chat history - consistent system prompt
-// In your client code, update the system prompt:
+  // socket handling
+  const socket = io();
+
+  socket.on('connect', () => {
+    console.log('🔌 Connected to WebSocket!');
+  });
+// Chat history - consistent system prompt
 let messageHistory = [
   {
     role: 'system',
