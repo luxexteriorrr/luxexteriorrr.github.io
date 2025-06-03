@@ -118,7 +118,16 @@ sentra.post('/oracle', async (req, res) => {
       timestamp: Date.now()
     });
 
-    console.log('Broadcasted to WebSocket clients:', fragments.length, 'fragments');
+    console.log(`
+      Sentra Conversation Round
+      → User: ${input}
+      → History Length: ${messageHistory.length}
+      → Assistant: ${reply}
+      → Fragments Sent: ${fragments.map(f => f.text).join(', ')}
+      → Timestamp: ${new Date().toLocaleTimeString()}
+      -----------------------------------------------
+      `);
+      
     res.json({ output: reply });
     
   } catch (error) {
