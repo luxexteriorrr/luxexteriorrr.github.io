@@ -128,8 +128,9 @@ sentra.post('/oracle', async (req, res) => {
 });
 
 //launch the server
-server.listen(3000, '0.0.0.0', () => {  // Add '0.0.0.0' to accept external connections
-  console.log("Server running at http://localhost:3000");
-  console.log("Also available at http://192.168.1.255:3000");
+server.listen(3000, '0.0.0.0', () => {  // command line to get the local IP address of the computer running the system: ipconfig getifaddr en0
+  console.log("Main server is  running at http://localhost:3000");
+  console.log("Inset local IP addres at http://[]:3000");
+  console.log("Billbord 1 will be live at http://[]/billbord1/billbord1.html");
 });
 
