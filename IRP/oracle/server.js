@@ -33,10 +33,10 @@ sentra.use(bodyParser.json());
 
 // Simple WebSocket setup for testing
 io.on('connection', (socket) => {
-  console.log('✅ Client connected:', socket.id);
+  console.log('Client connected:', socket.id);
   
   socket.on('disconnect', () => {
-    console.log('❌ Client disconnected:', socket.id);
+    console.log('Client disconnected:', socket.id);
   });
   
   socket.emit('welcome', 'Hello from server!');
