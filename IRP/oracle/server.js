@@ -16,22 +16,24 @@ const bodyParser = require('body-parser');
 //HTTP pulls for API calls
 const fetch = require('node-fetch');
 
+
+//create Sentra for the server
 const sentra = express();
 const server = http.createServer(sentra); // Create HTTP server
-// Change this part in your server.js:
+//adapt to differnt browser settings
 const io = socketIo(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
   },
-  allowEIO3: true  // Add this for compatibility
+  allowEIO3: true 
 });
 
 sentra.use(express.static('public'));
 sentra.use(bodyParser.json());
 
 
-// Simple WebSocket setup for testing
+// WebSocket debugging for the terminal 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
   
@@ -51,7 +53,7 @@ sentra.post('/oracle', async (req, res) => {
   console.log("input:", input);
   console.log("history length:", messageHistory.length);
   
-  // ✅ Use the messageHistory from client!
+  // Use the messageHistory from client!
   const messages = messageHistory;
   
   try {
