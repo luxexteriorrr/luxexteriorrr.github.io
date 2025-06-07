@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   ];
 
-  // Handle form on the chat
+ // Handle form on the chat
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const userInput = input.value.trim();
@@ -100,11 +100,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let billboardText = "";
 
       if (billboardMatch) {
-          billboardText = billboardMatch[1].trim();
-          sendBillboardMessage(billboardText); // push it to the billboard
-        }
+        billboardText = billboardMatch[1].trim();
+        //sendBillboardMessage(billboardText); // push it to the billboard
+      }
 
-      
       console.log("response data:", data);
       console.log("reply:", reply);
 
@@ -113,7 +112,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add Sentra's reply
       addMessageToChat('sentra', reply);
-      messageHistory.push({ role: 'assistant', content: reply }); 
+      messageHistory.push({ role: 'assistant', content: reply });
+
+      // ✅ Send fragments after reply is available
+      sendFragmentsToBillboard(userInput, reply);
 
     } catch (error) {
       console.error("❌ Error in fetch:", error);
@@ -121,8 +123,31 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessageToChat('sentra', 'I seem to be having connection issues. Please try again.');
     }
   });
-  
-  //adding message on the chat html
+
+  // Transmission of data for the clients
+  function sendFragmentsToBillboard(userInput, reply) {
+    const fragments = [];
+
+    // Split user input into individual words
+    const userWords = userInput.split(/\s+/).filter(word => word.length > 0);
+    userWords.forEach(word => {
+      fragments.push({ text: word, type: 'user' });
+    });
+
+    // Extract Sentra's full reply (without the [Billboard] part)
+    const sentraText = reply.replace(/\[Billboard\]:.*/g, '').trim();
+    if (sentraText) {
+      fragments.push({ text: sentraText, type: 'sentra' });
+    }
+
+    // Send to all connected sockets
+    socket.emit('conversation_fragments', {
+      fragments: fragments,
+      timestamp: Date.now()
+    });
+  }
+
+  // Adding message on the chat UI
   function addMessageToChat(sender, text) {
     if (!text) {
       console.warn("No text provided to addMessageToChat()");
@@ -131,14 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message', sender);
-    
-    // Consistent naming
+
     if (sender === 'user') {
       msgDiv.textContent = `You: ${text}`;
     } else {
       msgDiv.textContent = `Sentra: ${text}`;
     }
-    
+
     chatContainer.appendChild(msgDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
   }

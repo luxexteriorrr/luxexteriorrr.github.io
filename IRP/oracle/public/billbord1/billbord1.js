@@ -25,23 +25,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
     
   socket.on('conversation_fragments', (data) => {
-    console.log('💬 Received fragments:', data);
-    
+    console.log('Received data:', data);
+  
     const wrapper = document.querySelector('.words-wrapper');
     const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue'];
-
+  
+    // Optional: Clear previous words (or comment this out to accumulate)
+    wrapper.innerHTML = '';
+  
     data.fragments.forEach(fragment => {
-      const span = document.createElement('h1');
-      span.classList.add('highlight');
-
-      // Assign random color class
+      const h1 = document.createElement('h1');
+      h1.classList.add('highlight');
+  
+      // Apply color
       const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
-      span.classList.add(randomColor);
-
-      span.textContent = fragment.text;
-      wrapper.appendChild(span);
+      h1.classList.add(randomColor);
+  
+      // Differentiate user vs sentra
+      if (fragment.type === 'user') {
+        h1.classList.add('from-user');
+      } else if (fragment.type === 'sentra') {
+        h1.classList.add('from-sentra');
+      }
+  
+      h1.textContent = fragment.text;
+      wrapper.appendChild(h1);
     });
   });
+  
 
     
 

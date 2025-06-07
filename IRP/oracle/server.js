@@ -37,12 +37,18 @@ sentra.use(bodyParser.json());
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
   
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
+  // Add this new event handler for fragments
+  socket.on('conversation_fragments', (data) => {
+    console.log('📡 Relaying fragments to all clients:', data);
+    // Broadcast to ALL connected clients (including billboard)
+    io.emit('conversation_fragments', data);
   });
   
+  socket.on('disconnect', () => {
+  console.log('Client disconnected:', socket.id);
+   });
   socket.emit('welcome', 'Hello from server!');
-});
+  });
 
 
 
