@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue'];
   
     // Optional: Clear previous words (or comment this out to accumulate)
-    wrapper.innerHTML = '';
+    //wrapper.innerHTML = '';
   
     data.fragments.forEach(fragment => {
       const h1 = document.createElement('h1');
