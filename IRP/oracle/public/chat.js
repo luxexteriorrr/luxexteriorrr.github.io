@@ -8,11 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // socket handling
   const socket = io();
-
   socket.on('connect', () => {
     console.log('🔌 Connected to WebSocket!');
   });
-// Chat history - consistent system prompt
+
+
+  // Chat history - consistent system prompt
   let messageHistory = [
     {
       role: 'system',
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   ];
 
-  // Handle form submission
+  // Handle form on the chat
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const userInput = input.value.trim();
@@ -120,10 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessageToChat('sentra', 'I seem to be having connection issues. Please try again.');
     }
   });
-
+  //adding message on the chat html
   function addMessageToChat(sender, text) {
     if (!text) {
-      console.warn("❗ No text provided to addMessageToChat()");
+      console.warn("No text provided to addMessageToChat()");
       return;
     }
 

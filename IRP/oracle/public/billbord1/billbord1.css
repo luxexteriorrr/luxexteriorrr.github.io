@@ -43,12 +43,14 @@
 }
 @font-face {
   font-family: 'Diatype-Regular';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Regular-Trial.woff') format('woff');
+  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
+
+
 @font-face {
   font-family: 'Diatype-Medium';
   src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
@@ -93,8 +95,12 @@
   font-style: normal;
   font-display: swap;
 }
+
+
+
 /*text-highligght classes*/
 .highlight {
+  font-family: inherit;
   display: inline-block;
   padding: 2px 6px;
   margin: 1px;
@@ -131,15 +137,24 @@ html, body {
     overflow: hidden;
   }
   #poster1wrapper {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0; left: 0;
+    position: static;
     width: 100vw;
     height: 100vh;
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
+  }
+  .words-wrapper {
+    font-family: 'Diatype-Regular', sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 4px;
+    max-width: 99vw;
+    max-height: 99vh;
+    overflow: hidden;
+    z-index: 2;
   }
   canvas{
     position: absolute;

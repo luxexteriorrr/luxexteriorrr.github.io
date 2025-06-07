@@ -16,41 +16,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }, false
   )
 
-
-
-
-
-  // Store fragments for p5 to access
-  let receivedFragments = [];
   
   // WebSocket connection
   const socket = io();
   
   socket.on('connect', () => {
-    console.log('🖥️ Billboard connected to server');
+    console.log('Billboard connected to server');
   });
-  
+    
   socket.on('conversation_fragments', (data) => {
     console.log('💬 Received fragments:', data);
     
-    // Add fragments to display array
-    data.fragments.forEach(fragment => {  // CHANGE: data.fragments instead of fragments
-      receivedFragments.push({
-        text: fragment.text,
-        type: fragment.type,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        birth: Date.now(),
-        life: 1.0,
-        size: Math.random() * 20 + 24
-      });
+    const wrapper = document.querySelector('.words-wrapper');
+    const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue'];
+
+    data.fragments.forEach(fragment => {
+      const span = document.createElement('h1');
+      span.classList.add('highlight');
+
+      // Assign random color class
+      const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+      span.classList.add(randomColor);
+
+      span.textContent = fragment.text;
+      wrapper.appendChild(span);
     });
-    
-    // Keep only last 20 fragments
-    if (receivedFragments.length > 20) {
-      receivedFragments = receivedFragments.slice(-20);
-    }
   });
+
     
 
 
@@ -134,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         p.pop();
       }
 
-      // Draw conversation fragments (ADD THIS)
+      /* 
       for (let i = receivedFragments.length - 1; i >= 0; i--) {
         let fragment = receivedFragments[i];
         
@@ -158,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         p.textAlign(p.CENTER);
         p.textSize(fragment.size);
         p.text(fragment.text, fragment.x, fragment.y);
-      }
+      }  */
     };
 
     // Callback for hand detection
