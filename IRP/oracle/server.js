@@ -90,42 +90,13 @@ sentra.post('/oracle', async (req, res) => {
       console.error("❌ No valid reply from GPT.");
       return res.json({ output: "Sentra is silent." });
     }
-    // Extract fragments for billboard
-    const userWords = input.split(' ').filter(word => 
-      word.length > 3 && 
-      !['that', 'this', 'with', 'have', 'will', 'what'].includes(word.toLowerCase())
-    );
 
-    const sentraWords = reply.split(' ').filter(word => 
-      word.length > 4 && 
-      !['would', 'could', 'might', 'about'].includes(word.toLowerCase())
-    );
-
-    const fragments = [
-      ...userWords.slice(0, 3).map(word => ({ 
-        text: word.replace(/[.,!?]/g, ''), 
-        type: 'user' 
-      })),
-      ...sentraWords.slice(0, 2).map(word => ({ 
-        text: word.replace(/[.,!?]/g, ''), 
-        type: 'sentra' 
-      }))
-    ];
-
-    // Broadcast to all WebSocket clients
-    io.emit('conversation_fragments', {
-      userMessage: input,
-      sentraResponse: reply,
-      fragments: fragments,
-      timestamp: Date.now()
-    });
 
     console.log(`
       Sentra Conversation Round
       → User: ${input}
       → History Length: ${messageHistory.length}
       → Assistant: ${reply}
-      → Fragments Sent: ${fragments.map(f => f.text).join(', ')}
       → Timestamp: ${new Date().toLocaleTimeString()}
       -----------------------------------------------
       `);

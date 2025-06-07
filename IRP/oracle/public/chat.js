@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessageToChat('sentra', 'I seem to be having connection issues. Please try again.');
     }
   });
+  
   //adding message on the chat html
   function addMessageToChat(sender, text) {
     if (!text) {
