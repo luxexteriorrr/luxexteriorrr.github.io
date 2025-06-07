@@ -127,24 +127,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Transmission of data for the clients
   function sendFragmentsToBillboard(userInput, reply) {
     const fragments = [];
-
-    // Split user input into individual words
+  
+    // Break user input into words
     const userWords = userInput.split(/\s+/).filter(word => word.length > 0);
     userWords.forEach(word => {
       fragments.push({ text: word, type: 'user' });
     });
-
-    // Extract Sentra's full reply (without the [Billboard] part)
+  
+    // Break Sentra response into words too (instead of full response)
     const sentraText = reply.replace(/\[Billboard\]:.*/g, '').trim();
-    if (sentraText) {
-      fragments.push({ text: sentraText, type: 'sentra' });
-    }
-
-    // Send to all connected sockets
-    socket.emit('conversation_fragments', {
-      fragments: fragments,
-      timestamp: Date.now()
+    const sentraWords = sentraText.split(/\s+/).filter(word => word.length > 0);
+    sentraWords.forEach(word => {
+      fragments.push({ text: word, type: 'sentra' });
     });
+  
+    socket.emit('conversation_fragments', { fragments, timestamp: Date.now() });
   }
 
   // Adding message on the chat UI

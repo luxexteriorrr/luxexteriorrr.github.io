@@ -145,16 +145,12 @@ html, body {
   }
   .words-wrapper {
     font-family: 'Diatype-Regular', sans-serif;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-end;
-    align-items: flex-end;
-    justify-content: flex-start;
     gap: 4px;
     max-width: 99vw;
     max-height: 99vh;
     overflow: hidden;
     z-index: 2;
+    word-wrap: break-word;
   }
   canvas{
     position: absolute;
@@ -168,4 +164,5 @@ html, body {
     font-size: var(--small);
     font-family: 'Diatype-Regular';
     letter-spacing: var(--spacing-one);
+    display: inline;
   }
