@@ -107,6 +107,7 @@
   font-family: inherit;
   line-height: inherit;
   overflow: hidden;
+  font-size: 26px;
   position: relative; /* Important for containing absolute positioned children */
 }
 .highlight.pink {
@@ -163,7 +164,7 @@ html, body {
   }
 
   h1 {
-    font-size: 18px;
+    font-size: 26px;
     font-family: 'Diatype-Regular';
     letter-spacing: var(--spacing-one);
     display: inline;
