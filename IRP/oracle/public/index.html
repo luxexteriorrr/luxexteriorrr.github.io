@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Oracle™ Poster</title>
   <link rel="stylesheet" href="chat.css">
   
@@ -10,16 +10,13 @@
   
 </head>
 <body>
-  <!-- 
-  <div id="headline">Speak to System™</div>
-  <button id="oracle-button">Ask System</button> 
-  <script src="script.js"></script>-->
-
+  <!-- the main wrapper for the chat (both testing and IPHONE interfaces) -->
   <div class="pagewrapper">
+    <!-- a wrapper for the messages to appear in the device -->
     <div class="chat-container">
 
     </div>
-
+    <!-- main form -->
     <form class="input-form" id="mainform">
 
       <input type="text"
@@ -27,11 +24,13 @@
       placeholder="Ask the System..."
       autocomplete="off"
       required>
-
-      <button type="submit" id="systemSubmit"> submit</button>
+      <!-- submit button -->
+      <button type="submit" id="SystemSubmit"> submit</button>
     </form>
 
+    <!-- debugging for testing (TO DELETE later) -->
     <div class="controls">
+      <!-- reset button to wipe out the context window -->
       <button id="resetButton">Reset</button>
     </div>
 
