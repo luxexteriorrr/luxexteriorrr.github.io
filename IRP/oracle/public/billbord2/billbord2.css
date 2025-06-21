@@ -1,0 +1,99 @@
+:root {
+    /* color variables */
+    --pink:#FD02B2;
+    --orange:#FD9600;
+    --purple:#9751BD;
+    --green:#688600;
+    --blue:#058CFC;
+    --grey:#E8E2DF;
+    --black:#000000;
+    --white:#FFFFFF;
+  
+    /* typography */
+    --small: 80px;
+    --body: 96px;
+    --H6: 115px;
+    --H5: 128px;
+    --H4: 186px;
+    --H3: 199px;
+    --H2: 239px;
+    --H1: 286px;
+  }
+  * {
+    line-height: 0.8;
+    letter-spacing: 0;
+  }
+  
+  /*typography added*/
+  @font-face {
+    font-family: 'Diatype-Thin';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Light';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Regular';
+    src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
+         url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Medium';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Bold';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Heavy';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Black';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Diatype-Ultra';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff') format('woff');
+    font-weight: 950;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+}  
