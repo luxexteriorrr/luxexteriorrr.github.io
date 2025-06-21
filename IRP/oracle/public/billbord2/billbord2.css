@@ -10,18 +10,12 @@
     --white:#FFFFFF;
   
     /* typography */
-    --small: 80px;
+    --small: 59px;
     --body: 96px;
-    --H6: 115px;
-    --H5: 128px;
-    --H4: 186px;
-    --H3: 199px;
-    --H2: 239px;
-    --H1: 286px;
-  }
-  * {
-    line-height: 0.8;
-    letter-spacing: 0;
+    --H4: 155px;
+    --H3: 251px;
+    --H2: 407px;
+    --H1: 657px;
   }
   
   /*typography added*/
@@ -95,5 +89,127 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
 }  
+
+
+.BillboardsWrapper {
+    width: 100svw;
+    height: 100svh;
+    overflow: hidden;
+}
+
+.BillboardLogo {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: fit-content;
+}
+
+ 
+.BillboardSlogan {
+    width: 100svw;
+    height: 100svh;
+    overflow: hidden;
+    display: flex;
+}
+
+.slogan {
+    width: 100%;
+    height: 100%;
+}
+#slogan-1 {
+    letter-spacing: -3px;
+    padding: 350px 0 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: var(--orange);
+}
+#slogan-1 h2 {
+    color: var(--grey);
+    font-family: 'Diatype-Ultra';
+    font-size: var(--H2);
+    line-height: 280px;
+    width: 1860px;
+    word-wrap: break-word;
+}
+#slogan-1 h3 {
+    color: var(--grey);
+    font-family: 'Diatype-Heavy';
+    font-size: var(--body);
+    line-height: 80px;
+}
+.BottomText {
+    display: flex;
+    flex-direction: column;
+    gap: 86px;
+}
+.BottomText h4 {
+    color: var(--grey);
+    font-family: 'Diatype-Heavy';
+    font-size: var(--small);
+    line-height: 50px;
+}
+#slogan-2 {
+    letter-spacing: -3px;
+    padding: 350px 0 48px 24px;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: var(--purple);
+}
+#slogan-2 h2 {
+    color: var(--grey);
+    font-family: 'Diatype-Ultra';
+    font-size: var(--H1);
+    line-height: 450px;
+    width: 1860px;
+    word-wrap: break-word;
+}
+#slogan-2 h3 {
+    color: var(--grey);
+    font-family: 'Diatype-Heavy';
+    font-size: var(--body);
+    line-height: 80px;
+}
+
+#slogan-3 {
+    letter-spacing: -3px;
+    padding: 350px 0 48px 24px;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: var(--pink);
+}
+#slogan-3 h1 {
+    color: var(--grey);
+    font-family: 'Diatype-Ultra';
+    font-size: var(--H1);
+    line-height: 450px;
+    width: 1960px;
+    word-wrap: break-word;
+}
+
+#slogan-3 h2{
+    color: var(--grey);
+    font-family: 'Diatype-Ultra';
+    font-size: var(--H2);
+    line-height: 300px;
+    word-wrap: break-word;
+}
+#slogan-3 h3 {
+    color: var(--grey);
+    font-family: 'Diatype-Heavy';
+    font-size: var(--body);
+    line-height: 80px;
+}
