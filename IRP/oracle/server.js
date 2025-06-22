@@ -93,7 +93,7 @@ sentra.post('/oracle', async (req, res) => {
     }
     
     if (!reply) {
-      console.error("❌ No valid reply from GPT.");
+      console.error("No valid reply from GPT.");
       return res.json({ output: "Sentra is silent." });
     }
 
@@ -110,8 +110,7 @@ sentra.post('/oracle', async (req, res) => {
     res.json({ output: reply });
     
   } catch (error) {
-    console.error("❌ GPT API error:", error);
-    res.status(500).json({ output: "Oracle™ had a vision… but lost it." });
+    console.error("GPT API error:", error);
   }
 });
 

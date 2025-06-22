@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // Chat history - consistent system prompt
+  // Chat history - v3 system prompt
   let messageHistory = [
     {
       role: 'system',
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addMessageToChat('user', userInput);
     messageHistory.push({ role: 'user', content: userInput });
 
-    // Clear input
+    // trimm input
     input.value = '';
 
     // Loading state
@@ -114,11 +114,11 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessageToChat('sentra', reply);
       messageHistory.push({ role: 'assistant', content: reply });
 
-      // ✅ Send fragments after reply is available
+      // Send fragments after reply is available
       sendFragmentsToBillboard(userInput, reply);
 
     } catch (error) {
-      console.error("❌ Error in fetch:", error);
+      console.error("Error in fetch:", error);
       removeLastMessage();
       addMessageToChat('sentra', 'I seem to be having connection issues. Please try again.');
     }
