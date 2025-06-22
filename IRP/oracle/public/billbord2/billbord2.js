@@ -18,25 +18,39 @@ document.fonts.ready.then(() => {
 
 
 
-    // Overall Master Timeline
+    // Overall Master Timeline - simplified wrapper transition
     function createMasterTimeline() {
         let masterTL = gsap.timeline({repeat: -1});
         
         masterTL
-            // Hide the billboard wrapper initially
-            .set(".BillboardSlogan", {display: "none"})  // or whatever your wrapper class is
+            .set(".BillboardSlogan", {display: "none"})
             
             // Logo cycling phase
-            .add(createLogoCycleTimeline(5))  // 3 logo cycles first
-            .set(".BillboardLogo", {display: "none"})  // or whatever your wrapper class is
+            .add(createLogoCycleTimeline(5))
             
-            // Show billboards and start sequence
-            .set(".BillboardSlogan", {display: "flex"})  // Show wrapper
-            .add(createBillboardMasterTimeline(), "+=1")  // Billboards after logos
+            // Simple logo fade out
+            .to(".BillboardLogo", {
+                opacity: 0,
+                duration: 2,
+                ease: "power2.in"
+            })
+            .set(".BillboardLogo", {display: "none"})
             
-            // Hide wrapper again before loop
+            // Show slogan wrapper (no animation)
+            .set(".BillboardSlogan", {display: "flex"})
+            
+            // Billboard sequence (individual slides handle the animation)
+            .add(createBillboardMasterTimeline(), "+=0.5")
+            
+            // Hide wrapper and bring back logo
             .set(".BillboardSlogan", {display: "none"})
-            .add("reset", "+=2");
+            .set(".BillboardLogo", {display: "flex", opacity: 1})
+            .to(".BillboardLogo", {
+                opacity: 1,
+                duration: 1,
+                ease: "power2.out"
+            })
+            .add("reset", "+=1");
         
         return masterTL;
     }
@@ -71,30 +85,36 @@ document.fonts.ready.then(() => {
         gsap.registerPlugin(SplitText);
         return new SplitText(selector, {type: "chars, words"});
     }
-    // Billboard main timeline
+    // Billboard Master with individual slide transitions
     function createBillboardMasterTimeline() {
-        let masterTL = gsap.timeline();
+        let billboardTL = gsap.timeline();
         
-        masterTL
-          // Show Billboard 1 and run its animation
-          .set("#slogan-1", {display: "flex"})
-          .set("#slogan-2, #slogan-3", {display: "none"})
-          .add(createSlogan1Timeline())  
-          
-          // Switch to Billboard 2
-          .set("#slogan-1", {display: "none"})
-          .set("#slogan-2", {display: "flex"})
-          .add(createSlogan2Timeline()) 
-          
-          // Switch to Billboard 3
-          .set("#slogan-2", {display: "none"})
-          .set("#slogan-3", {display: "flex"})
-          .add(createSlogan3Timeline()) 
-          
-          // Back to start
-          .set("#slogan-3", {display: "none"});
-          
-        return masterTL;
+        billboardTL
+            // Billboard 1 
+            .set("#slogan-1", {display: "flex"})
+            .fromTo("#slogan-1", {y: "100%", opacity: 1}, {y: "0%", opacity: 1, duration: 2, ease: "power2.out"})
+            .set("#slogan-2, #slogan-3", {display: "none"})
+            .add(createSlogan1Timeline())
+            
+            // Transition to Billboard 2
+            .to("#slogan-1", {y: "-100%", opacity: 1, duration: 1, ease: "power2.in"})
+            .set("#slogan-1", {display: "none"})
+            .set("#slogan-2", {display: "flex"})
+            .fromTo("#slogan-2", {y: "100%", opacity: 1}, {y: "0%", opacity: 1, duration: 1, ease: "power2.out"})
+            .add(createSlogan2Timeline())
+            
+            // Transition to Billboard 3
+            .to("#slogan-2", {y: "-100%", opacity: 1, duration: 1, ease: "power2.in"})
+            .set("#slogan-2", {display: "none"})
+            .set("#slogan-3", {display: "flex"})
+            .fromTo("#slogan-3", {y: "100%", opacity: 0}, {y: "0%", opacity: 1, duration: 1, ease: "power2.out"})
+            .add(createSlogan3Timeline())
+            
+            // Final slide out
+            .to("#slogan-3", {y: "-100%", opacity: 1, duration: 1, ease: "power2.in"})
+            .set("#slogan-3", {display: "none"});
+            
+        return billboardTL;
     }
 
     //slogan 1 timeline 
@@ -255,7 +275,7 @@ document.fonts.ready.then(() => {
     }
 
     // Start the master timeline
-    createMasterTimeline()
+    //createMasterTimeline()
       
     
 

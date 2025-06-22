@@ -89,7 +89,28 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    hyphens: none;
 }  
+.highlight-pink {
+    background-color: var(--pink);
+    display:inline-block;
+}
+.highlight-orange {
+    background-color: var(--orange);
+    display:inline-block;
+}
+.highlight-purple {
+    background-color: var(--purple);
+    display:inline-block;
+}
+.highlight-green {
+    background-color: var(--green);
+    display:inline-block;
+}
+.highlight-blue {
+    background-color: var(--blue);
+    display:inline-block;
+}
 
 h1 {
     font-family: 'Diatype';
@@ -117,7 +138,9 @@ h4 {
 .BillboardLogo {
     width: 100%;
     height: 100%;
-    display: flex;
+    display: none;
+    z-index: 1;
+    position: relative;
 }
 .logo {
     position: absolute;
@@ -135,6 +158,8 @@ h4 {
     overflow: hidden;
     display: flex;
     background: transparent;
+    position: relative;
+    z-index: 2;
 }
 
 .slogan {
@@ -151,13 +176,14 @@ h4 {
     background: var(--orange)
 }
 #slogan-1 h2 {
+    background-color: var(--pink);
     letter-spacing: -25px;
     color: var(--grey);
     font-size: var(--H2);
     line-height: 280px;
-    width: 1960px;
 }
 #slogan-1 h3 {
+    background-color: var(--pink);
     letter-spacing: -4px;
     color: var(--grey);
     font-size: var(--body);
@@ -169,6 +195,7 @@ h4 {
     gap: 86px;
 }
 .BottomText h4 {
+    background-color: var(--pink);
     letter-spacing: -4px;
     color: var(--grey);
     font-size: var(--small);
@@ -211,7 +238,7 @@ h4 {
     background: var(--pink);
 }
 #slogan-3 h1 {
-    letter-spacing: -20px;
+    letter-spacing: -40px;
     color: var(--grey);
     font-family: 'Diatype';
     font-weight: 900;
@@ -222,6 +249,8 @@ h4 {
 }
 
 #slogan-3 h2{
+    letter-spacing: -20px;
+    line-height: 300px;
     color: var(--grey);
     font-size: var(--H2);
     line-height: 300px;
