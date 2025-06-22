@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded',() => {
-
+document.fonts.ready.then(() => {
     // Toggle the full screen action
     function fullScreen() {
         if (!document.fullscreenElement) {
@@ -19,8 +18,28 @@ document.addEventListener('DOMContentLoaded',() => {
 
 
 
-    //master timeline 
-    let masterTimeline = gsap.timeline({repeat:-1})
+    // Overall Master Timeline
+    function createMasterTimeline() {
+        let masterTL = gsap.timeline({repeat: -1});
+        
+        masterTL
+            // Hide the billboard wrapper initially
+            .set(".BillboardSlogan", {display: "none"})  // or whatever your wrapper class is
+            
+            // Logo cycling phase
+            .add(createLogoCycleTimeline(5))  // 3 logo cycles first
+            .set(".BillboardLogo", {display: "none"})  // or whatever your wrapper class is
+            
+            // Show billboards and start sequence
+            .set(".BillboardSlogan", {display: "flex"})  // Show wrapper
+            .add(createBillboardMasterTimeline(), "+=1")  // Billboards after logos
+            
+            // Hide wrapper again before loop
+            .set(".BillboardSlogan", {display: "none"})
+            .add("reset", "+=2");
+        
+        return masterTL;
+    }
 
 
     //logo animation GSAP NUMBER 1
@@ -30,75 +49,215 @@ document.addEventListener('DOMContentLoaded',() => {
         logoTL.set("#logo-1", {visibility: "visible"})     // Start state
             .set("#logo-2, #logo-3, #logo-4, #logo-5", {visibility: "hidden"})
             
-            .set("#logo-1", {visibility: "hiden", ease: "power2.out"}, "+=0.5")        // Hide logo 1
-            .set("#logo-2", {visibility: "visible", ease: "power2.in"}, "+=0.0")       // Show logo 2
             
-            .set("#logo-2", {visibility: "hidden", ease: "power2.out"}, "+=0.5")        // Hide logo 2  
-            .set("#logo-3", {visibility: "visible", ease: "power2.in"}, "+=0.0")       // Show logo 3
+            .set("#logo-1", {visibility: "hidden"}, "+=0.2")        // Hide logo 1
+            .set("#logo-2", {visibility: "visible"}, "+=0.0")       // Show logo 2
             
-            .set("#logo-3", {visibility: "hideen", ease: "power2.out"}, "+=0.5")        // Hide logo 3
-            .set("#logo-4", {visibility: "visible", ease: "power2.in"}, "+=0.0")       // Show logo 4
+            .set("#logo-2", {visibility: "hidden"}, "+=0.2")        // Hide logo 2  
+            .set("#logo-3", {visibility: "visible"}, "+=0.0")       // Show logo 3
             
-            .set("#logo-4", {visibility: "hidden", ease: "power2.out"}, "+=0.5")        // Hide logo 4
-            .set("#logo-5", {visibility: "visible", ease: "power2.in"}, "+=0.0")       // Show logo 5
+            .set("#logo-3", {visibility: "hidden"}, "+=0.2")        // Hide logo 3
+            .set("#logo-4", {visibility: "visible"}, "+=0.0")       // Show logo 4
             
-            .set("#logo-5", {visibility: "hidden", ease: "power2.out"}, "+=0.5")        // Hide logo 5
-            .set("#logo-1", {visibility: "visible", ease: "power2.in"}, "+=0.0");      // Back to logo 1
+            .set("#logo-4", {visibility: "hidden"}, "+=0.2")        // Hide logo 4
+            .set("#logo-5", {visibility: "visible"}, "+=0.0")       // Show logo 5
+            
+            .set("#logo-5", {visibility: "hidden"}, "+=0.2")        // Hide logo 5
+            .set("#logo-1", {visibility: "visible"}, "+=0.0");      // Back to logo 1
         return logoTL;
     }
-
-    // Add to master timeline
-    masterTimeline.add(createLogoCycleTimeline(5)) // 5 color cycles
-
+   
     function splitTextForReveal(selector) {
         gsap.registerPlugin(SplitText);
         return new SplitText(selector, {type: "chars, words"});
     }
+    // Billboard main timeline
+    function createBillboardMasterTimeline() {
+        let masterTL = gsap.timeline();
+        
+        masterTL
+          // Show Billboard 1 and run its animation
+          .set("#slogan-1", {display: "flex"})
+          .set("#slogan-2, #slogan-3", {display: "none"})
+          .add(createSlogan1Timeline())  
+          
+          // Switch to Billboard 2
+          .set("#slogan-1", {display: "none"})
+          .set("#slogan-2", {display: "flex"})
+          .add(createSlogan2Timeline()) 
+          
+          // Switch to Billboard 3
+          .set("#slogan-2", {display: "none"})
+          .set("#slogan-3", {display: "flex"})
+          .add(createSlogan3Timeline()) 
+          
+          // Back to start
+          .set("#slogan-3", {display: "none"});
+          
+        return masterTL;
+    }
 
-    function createSloganTimeline(loop = 3) {
-        let bb1TL = gsap.timeline();
+    //slogan 1 timeline 
+    function createSlogan1Timeline() {
+        let s1TL = gsap.timeline();
         
-        // Split text into animatable parts
-        let mainHeadline = new SplitText("#slogan-1 h2", {type: "chars"});
-        let bodyText = new SplitText("#slogan-1 h3", {type: "words"});
-        let disclaimerText = new SplitText("#slogan-1 .BottomText h4:first-child", {type: "words"});
-        let copyrightText = new SplitText("#slogan-1 .BottomText h4:last-child", {type: "chars"});
+        // Split text for staggering
+        let headlineWords = new SplitText("#slogan-1 h2", {type: "words"});
+        let bodyWords = new SplitText("#slogan-1 h3", {type: "words"});
+        let bottomWords = new SplitText("#slogan-1 .BottomText", {type: "words"});
         
-        // Set initial states - all hidden
-        gsap.set(mainHeadline.chars, {opacity: 0, y: 100, rotation: 5});
-        gsap.set(bodyText.words, {opacity: 0, scale: 0});
-        gsap.set([disclaimerText.words, copyrightText.chars], {opacity: 0});
+        // Set everything hidden
+        gsap.set([headlineWords.words, bodyWords.words, bottomWords.words], {opacity: 0, y: 30});
         
-        // Animation sequence
-        bb1TL.staggerTo(mainHeadline.chars, 0.8, {        // Fixed: bb1TL not b1TL
+    
+        s1TL
+          // Stagger headline words
+          .staggerTo(headlineWords.words, 1, {
+            delay: 1,
             opacity: 1,
             y: 0,
-            rotation: 0,
-            ease: "back.out(1.7)",
-            stagger: 0.05
-          })
-          .staggerTo(bodyText.words, 0.4, {
-            opacity: 1,
-            scale: 1,
-            ease: "power2.out",
-            stagger: 0.03
-          }, "-=0.3")
-          .staggerTo(disclaimerText.words, 0.2, {
-            opacity: 1,
-            ease: "power2.inOut",
-            stagger: 0.02
-          }, "+=0.5")
-          .staggerTo(copyrightText.chars, 0.1, {
-            opacity: 1,
-            ease: "none",
-            stagger: 0.02
-          }, "+=0.2");
+            ease: "power2.out"
+          }, 0.5)  // 0.2s between each word
+
+          .to({}, {duration: 1})
           
-        return bb1TL;
+          // Stagger body text words (faster)
+          .staggerTo(bodyWords.words, 1, {
+            opacity: 1, 
+            y: 0,
+            ease: "power2.out"
+          }, 0.1, "+=0.5")  // 0.05s between words, start 0.5s after headline
+
+          .to({}, {duration: 1})
+          
+          // Stagger bottom text
+          .staggerTo(bottomWords.words, 1, {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out"  
+          }, 0.05, "+=0.3")
+          
+         // Actual pause (no change, just duration)
+        .to({}, {duration: 5})
+          
+          // Stagger out (reverse)
+          .staggerTo([headlineWords.words, bodyWords.words, bottomWords.words], 1, {
+            opacity: 0,
+            y: -20,
+            ease: "power2.in"
+          }, 0.02, "+=1");
+          
+        return s1TL;
     }
+    //slogan 2 timeline
+    function createSlogan2Timeline() {
+        let s2TL = gsap.timeline();
+        
+        // Split text for staggering
+        let headlineWords2 = new SplitText("#slogan-2 h1", {type: "words"});
+        let bodyWords2 = new SplitText("#slogan-2 h3", {type: "words"});
+        let bottomWords2 = new SplitText("#slogan-2 .BottomText", {type: "words"});
+        
+        // Set everything hidden
+        gsap.set([headlineWords2.words, bodyWords2.words, bottomWords2.words], {opacity: 0, y: 30});
+        
+    
+        s2TL
+          // Stagger headline words
+          .staggerTo(headlineWords2.words, 1, {
+            delay: 1,
+            opacity: 1,
+            y: 0,
+            ease: "power2.out"
+          }, 0.5)  // 0.2s between each word
+
+          .to({}, {duration: 1})
+          
+          // Stagger body text words (faster)
+          .staggerTo(bodyWords2.words, 0.5, {
+            opacity: 1, 
+            y: 0,
+            ease: "power2.out"
+          }, 0.1, "+=0.5")  // 0.05s between words, start 0.5s after headline
+
+          .to({}, {duration: 1})
+          
+          // Stagger bottom text
+          .staggerTo(bottomWords2.words, 1, {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out"  
+          }, 0.05, "+=0.3")
+          
+         // Actual pause (no change, just duration)
+        .to({}, {duration: 3})
+          
+          // Stagger out (reverse)
+          .staggerTo([headlineWords2.words, bodyWords2.words, bottomWords2.words], 1, {
+            opacity: 0,
+            y: -20,
+            ease: "power2.in"
+          }, 0.02, "+=1");
+          
+        return s2TL;
+    }
+    //slogan 3 timeline
+    function createSlogan3Timeline() {
+        let s3TL = gsap.timeline();
+        
+        // Split text for staggering
+        let headlineWords3 = new SplitText("#slogan-3 h1", {type: "words"});
+        let bodyWords3 = new SplitText("#slogan-3 h2", {type: "words"});
+        let bottomWords3 = new SplitText("#slogan-3 .BottomText", {type: "words"});
+        
+        // Set everything hidden
+        gsap.set([headlineWords3.words, bodyWords3.words, bottomWords3.words], {opacity: 0, y: 30});
+        
+    
+        s3TL
+            // Stagger headline words
+            .staggerTo(headlineWords3.words, 1, {
+            delay: 1,
+            opacity: 1,
+            y: 0,
+            ease: "power2.out"
+            }, 1)  // 0.2s between each word
+
+            .to({}, {duration: 3})
+            
+            // Stagger body text words (faster)
+            .staggerTo(bodyWords3.words, 1, {
+            opacity: 1, 
+            y: 0,
+            ease: "power2.out"
+            }, 0.1, "+=0.5")  // 0.05s between words, start 0.5s after headline
+
+            .to({}, {duration: 2})
+            
+            // Stagger bottom text
+            .staggerTo(bottomWords3.words, 1, {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out"  
+            }, 0.05, "+=0.3")
+            
+            // Actual pause (no change, just duration)
+        .to({}, {duration: 5})
+            
+            // Stagger out (reverse)
+            .staggerTo([headlineWords3.words, bodyWords3.words, bottomWords3.words], 1, {
+            opacity: 0,
+            y: -20,
+            ease: "power2.in"
+            }, 0.02, "+=1");
+            
+        return s3TL;
+    }
+
+    // Start the master timeline
+    createMasterTimeline()
       
-    // Add to master timeline
-    masterTimeline.add(createSloganTimeline(3)); // Fixed: lowercase m, comment updated
+    
 
 
 })

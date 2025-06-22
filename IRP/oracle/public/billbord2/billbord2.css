@@ -20,7 +20,7 @@
   
   /*typography added*/
   @font-face {
-    font-family: 'Diatype-Thin';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff') format('woff');
     font-weight: 100;
@@ -28,7 +28,7 @@
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Light';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff') format('woff');
     font-weight: 300;
@@ -36,15 +36,15 @@
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Regular';
-    src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
-         url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff') format('woff');
+    font-family: 'Diatype';
+    src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
+         url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Regular-Trial.woff') format('woff');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Medium';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff') format('woff');
     font-weight: 500;
@@ -52,7 +52,7 @@
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Bold';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff') format('woff');
     font-weight: 700;
@@ -60,7 +60,7 @@
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Heavy';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff') format('woff');
     font-weight: 800;
@@ -68,7 +68,7 @@
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Black';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff') format('woff');
     font-weight: 900;
@@ -76,7 +76,7 @@
     font-display: swap;
   }
   @font-face {
-    font-family: 'Diatype-Ultra';
+    font-family: 'Diatype';
     src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff2') format('woff2'),
          url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff') format('woff');
     font-weight: 950;
@@ -91,6 +91,22 @@
     padding: 0;
 }  
 
+h1 {
+    font-family: 'Diatype';
+    font-weight: 950;
+}
+h2 {
+    font-family: 'Diatype';
+    font-weight: 900;
+}
+h3 {
+    font-family: 'Diatype';
+    font-weight: 800;
+}
+h4 {
+    font-family: 'Diatype';
+    font-weight: 700;
+}
 
 .BillboardsWrapper {
     width: 100svw;
@@ -101,7 +117,7 @@
 .BillboardLogo {
     width: 100%;
     height: 100%;
-    display: none;
+    display: flex;
 }
 .logo {
     position: absolute;
@@ -118,6 +134,7 @@
     height: 100svh;
     overflow: hidden;
     display: flex;
+    background: transparent;
 }
 
 .slogan {
@@ -126,24 +143,23 @@
 }
 #slogan-1 {
     letter-spacing: -3px;
-    padding: 350px 0 48px 24px;
+    padding: 350px 24px 48px 24px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
-    background: var(--orange);
+    background: var(--orange)
 }
 #slogan-1 h2 {
+    letter-spacing: -25px;
     color: var(--grey);
-    font-family: 'Diatype-Ultra';
     font-size: var(--H2);
     line-height: 280px;
-    width: 1860px;
-    word-wrap: break-word;
+    width: 1960px;
 }
 #slogan-1 h3 {
+    letter-spacing: -4px;
     color: var(--grey);
-    font-family: 'Diatype-Heavy';
     font-size: var(--body);
     line-height: 80px;
 }
@@ -153,8 +169,8 @@
     gap: 86px;
 }
 .BottomText h4 {
+    letter-spacing: -4px;
     color: var(--grey);
-    font-family: 'Diatype-Heavy';
     font-size: var(--small);
     line-height: 50px;
 }
@@ -167,9 +183,14 @@
     justify-content: space-between;
     background: var(--purple);
 }
+#slogan-2 h1 {
+    font-size: var(--H1);
+    line-height: 450px;
+    color: var(--grey);
+
+}
 #slogan-2 h2 {
     color: var(--grey);
-    font-family: 'Diatype-Ultra';
     font-size: var(--H1);
     line-height: 450px;
     width: 1860px;
@@ -177,13 +198,11 @@
 }
 #slogan-2 h3 {
     color: var(--grey);
-    font-family: 'Diatype-Heavy';
     font-size: var(--body);
     line-height: 80px;
 }
 
 #slogan-3 {
-    letter-spacing: -3px;
     padding: 350px 0 48px 24px;
     display: none;
     flex-direction: column;
@@ -192,8 +211,10 @@
     background: var(--pink);
 }
 #slogan-3 h1 {
+    letter-spacing: -20px;
     color: var(--grey);
-    font-family: 'Diatype-Ultra';
+    font-family: 'Diatype';
+    font-weight: 900;
     font-size: var(--H1);
     line-height: 450px;
     width: 1960px;
@@ -202,14 +223,12 @@
 
 #slogan-3 h2{
     color: var(--grey);
-    font-family: 'Diatype-Ultra';
     font-size: var(--H2);
     line-height: 300px;
     word-wrap: break-word;
 }
 #slogan-3 h3 {
     color: var(--grey);
-    font-family: 'Diatype-Heavy';
     font-size: var(--body);
     line-height: 80px;
 }
