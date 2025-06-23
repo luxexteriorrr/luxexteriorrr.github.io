@@ -40,7 +40,7 @@ document.fonts.ready.then(() => {
             .set(".BillboardSlogan", {display: "flex"})
             
             // Billboard sequence (individual slides handle the animation)
-            .add(createBillboardMasterTimeline(), "+=0.5")
+            .add(createBillboardMasterTimeline(2), "+=0.5")
             
             // Hide wrapper and bring back logo
             .set(".BillboardSlogan", {display: "none"})
@@ -92,7 +92,7 @@ document.fonts.ready.then(() => {
         billboardTL
             // Billboard 1 
             .set("#slogan-1", {display: "flex"})
-            .fromTo("#slogan-1", {y: "100%", opacity: 1}, {y: "0%", opacity: 1, duration: 2, ease: "power2.out"})
+            .fromTo("#slogan-1", {y: "100%", opacity: 1}, {y: "0%", opacity: 1, duration: 1, ease: "power2.out"})
             .set("#slogan-2, #slogan-3", {display: "none"})
             .add(createSlogan1Timeline())
             
@@ -121,161 +121,207 @@ document.fonts.ready.then(() => {
     function createSlogan1Timeline() {
         let s1TL = gsap.timeline();
         
-        // Split text for staggering
-        let headlineWords = new SplitText("#slogan-1 h2", {type: "words"});
+        // Get spans for scaleX animation + split text for staggering
+        let headlineSpans = document.querySelectorAll("#slogan-1 h2 span");
+        let headlineWords = new SplitText("#slogan-1 h2 span", {type: "words"});
         let bodyWords = new SplitText("#slogan-1 h3", {type: "words"});
         let bottomWords = new SplitText("#slogan-1 .BottomText", {type: "words"});
         
-        // Set everything hidden
+        // Set spans to scaleX 0 (horizontal wipe from left)
+        gsap.set(headlineSpans, {scaleX: 0, transformOrigin: "left bottom"});
+        // Set text invisible
         gsap.set([headlineWords.words, bodyWords.words, bottomWords.words], {opacity: 0, y: 30});
         
-    
         s1TL
-          // Stagger headline words
-          .staggerTo(headlineWords.words, 1, {
+          // First: horizontal wipe reveal of colored span backgrounds
+          .staggerTo(headlineSpans, 0.6, {
             delay: 1,
+            scaleX: 1,
+            ease: "power2.out"
+          }, 0.2) // 0.2s between each span wiping in
+          
+          // Then: stagger the text words within the revealed spans
+          .staggerTo(headlineWords.words, 0.8, {
             opacity: 1,
             y: 0,
             ease: "power2.out"
-          }, 0.5)  // 0.2s between each word
-
-          .to({}, {duration: 1})
+          }, 0.15) // start 0.3s after spans finish
+          
+          .to({}, {duration: 0.5}) // pause
           
           // Stagger body text words (faster)
           .staggerTo(bodyWords.words, 1, {
-            opacity: 1, 
+            opacity: 1,
             y: 0,
             ease: "power2.out"
-          }, 0.1, "+=0.5")  // 0.05s between words, start 0.5s after headline
-
-          .to({}, {duration: 1})
+          }, 0.01, "+=0.5") // 0.1s between words, start 0.5s after headline
+          
+          .to({}, {duration: 1}) // pause
           
           // Stagger bottom text
           .staggerTo(bottomWords.words, 1, {
             opacity: 1,
             y: 0,
-            ease: "power2.out"  
-          }, 0.05, "+=0.3")
+            ease: "power2.out"
+          }, 0.01, "+=0.3")
           
-         // Actual pause (no change, just duration)
-        .to({}, {duration: 5})
+          // Hold everything visible
+          .to({}, {duration: 5})
           
-          // Stagger out (reverse)
+          // Stagger out (reverse) - text first, then spans scale away
           .staggerTo([headlineWords.words, bodyWords.words, bottomWords.words], 1, {
             opacity: 0,
             y: -20,
             ease: "power2.in"
-          }, 0.02, "+=1");
+          }, 0.02, "+=1")
           
+          .staggerTo(headlineSpans, 0.5, {
+            scaleY: 0,
+            ease: "power2.in"
+          }, 0.1, "+=0.2"); // spans wipe away after text fades
+        
         return s1TL;
-    }
+      }
     //slogan 2 timeline
     function createSlogan2Timeline() {
         let s2TL = gsap.timeline();
         
-        // Split text for staggering
-        let headlineWords2 = new SplitText("#slogan-2 h1", {type: "words"});
+        // Get spans for scaleX animation + split text for staggering
+        let headlineSpans2 = document.querySelectorAll("#slogan-2 h1 span");
+        let headlineWords2 = new SplitText("#slogan-2 h1 span", {type: "words"});
         let bodyWords2 = new SplitText("#slogan-2 h3", {type: "words"});
         let bottomWords2 = new SplitText("#slogan-2 .BottomText", {type: "words"});
         
-        // Set everything hidden
+        // Set spans to scaleX 0 (horizontal wipe from left)
+        gsap.set(headlineSpans2, {scaleX: 0, transformOrigin: "left center"});
+        // Set all text invisible (regular stagger fade)
         gsap.set([headlineWords2.words, bodyWords2.words, bottomWords2.words], {opacity: 0, y: 30});
         
-    
         s2TL
-          // Stagger headline words
-          .staggerTo(headlineWords2.words, 1, {
+          // First: horizontal wipe reveal of colored span backgrounds
+          .staggerTo(headlineSpans2, 0.6, {
             delay: 1,
+            scaleX: 1,
+            ease: "power2.out"
+          }, 0.2) // 0.2s between each span wiping in
+          
+          // Then: stagger the text words within the revealed spans
+          .staggerTo(headlineWords2.words, 1, {
             opacity: 1,
             y: 0,
             ease: "power2.out"
-          }, 0.5)  // 0.2s between each word
-
-          .to({}, {duration: 1})
+          }, 0.01, "+=0.3") // start 0.3s after spans finish
           
-          // Stagger body text words (faster)
+          .to({}, {duration: 1}) // pause
+          
+          // Stagger body text words
           .staggerTo(bodyWords2.words, 0.5, {
-            opacity: 1, 
+            opacity: 1,
             y: 0,
             ease: "power2.out"
-          }, 0.1, "+=0.5")  // 0.05s between words, start 0.5s after headline
-
-          .to({}, {duration: 1})
+          }, 0.01, "+=0.5")
+          
+          .to({}, {duration: 1}) // pause
           
           // Stagger bottom text
           .staggerTo(bottomWords2.words, 1, {
             opacity: 1,
             y: 0,
-            ease: "power2.out"  
+            ease: "power2.out"
           }, 0.05, "+=0.3")
           
-         // Actual pause (no change, just duration)
-        .to({}, {duration: 3})
+          // Hold everything visible
+          .to({}, {duration: 3})
           
-          // Stagger out (reverse)
+          // Stagger out - all text fades normally, then spans scale away
           .staggerTo([headlineWords2.words, bodyWords2.words, bottomWords2.words], 1, {
             opacity: 0,
             y: -20,
             ease: "power2.in"
-          }, 0.02, "+=1");
+          }, 0.02, "+=1")
           
+          .staggerTo(headlineSpans2, 0.5, {
+            scaleX: 0,
+            ease: "power2.in"
+          }, 0.1, "+=0.2"); // spans wipe away after text fades
+        
         return s2TL;
-    }
+      }
     //slogan 3 timeline
     function createSlogan3Timeline() {
         let s3TL = gsap.timeline();
         
-        // Split text for staggering
-        let headlineWords3 = new SplitText("#slogan-3 h1", {type: "words"});
-        let bodyWords3 = new SplitText("#slogan-3 h2", {type: "words"});
+        // Get spans for scaleX animation + split text for staggering
+        let headlineSpans3 = document.querySelectorAll("#slogan-3 h1 span");
+        let bodySpans3 = document.querySelectorAll("#slogan-3 h2 span");
+        let headlineWords3 = new SplitText("#slogan-3 h1 span", {type: "words"});
+        let bodyWords3 = new SplitText("#slogan-3 h2 span", {type: "words"});
         let bottomWords3 = new SplitText("#slogan-3 .BottomText", {type: "words"});
         
-        // Set everything hidden
+        // Set all spans to scaleX 0 (horizontal wipe from left)
+        gsap.set([headlineSpans3, bodySpans3], {scaleX: 0, transformOrigin: "left center"});
+        // Set all text invisible (regular stagger fade)
         gsap.set([headlineWords3.words, bodyWords3.words, bottomWords3.words], {opacity: 0, y: 30});
         
-    
         s3TL
-            // Stagger headline words
-            .staggerTo(headlineWords3.words, 1, {
+          // First: horizontal wipe reveal of h1 span background ("Quiet!")
+          .staggerTo(headlineSpans3, 0.6, {
             delay: 1,
+            scaleX: 1,
+            ease: "power2.out"
+          }, 0.2)
+          
+          // Then: stagger the h1 text within the revealed span
+          .staggerTo(headlineWords3.words, 1, {
             opacity: 1,
             y: 0,
             ease: "power2.out"
-            }, 1)  // 0.2s between each word
-
-            .to({}, {duration: 3})
-            
-            // Stagger body text words (faster)
-            .staggerTo(bodyWords3.words, 1, {
-            opacity: 1, 
-            y: 0,
+          }, 1, "+=0.3")
+          
+          .to({}, {duration: 3}) // pause
+          
+          // Next: horizontal wipe reveal of h2 span backgrounds ("The Machines Are Learning")
+          .staggerTo(bodySpans3, 0.6, {
+            scaleX: 1,
             ease: "power2.out"
-            }, 0.1, "+=0.5")  // 0.05s between words, start 0.5s after headline
-
-            .to({}, {duration: 2})
-            
-            // Stagger bottom text
-            .staggerTo(bottomWords3.words, 1, {
+          }, 0.01, "+=0.5") // 0.15s between each span
+          
+          // Then: stagger the h2 text within the revealed spans
+          .staggerTo(bodyWords3.words, 1, {
             opacity: 1,
             y: 0,
-            ease: "power2.out"  
-            }, 0.05, "+=0.3")
-            
-            // Actual pause (no change, just duration)
-        .to({}, {duration: 5})
-            
-            // Stagger out (reverse)
-            .staggerTo([headlineWords3.words, bodyWords3.words, bottomWords3.words], 1, {
+            ease: "power2.out"
+          }, 0.5, "+=0.3")
+          
+          .to({}, {duration: 2}) // pause
+          
+          // Stagger bottom text (no spans)
+          .staggerTo(bottomWords3.words, 1, {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out"
+          }, 0.05, "+=0.3")
+          
+          // Hold everything visible
+          .to({}, {duration: 5})
+          
+          // Stagger out - all text fades normally, then spans scale away
+          .staggerTo([headlineWords3.words, bodyWords3.words, bottomWords3.words], 1, {
             opacity: 0,
             y: -20,
             ease: "power2.in"
-            }, 0.02, "+=1");
-            
+          }, 0.02, "+=1")
+          
+          .staggerTo([headlineSpans3, bodySpans3], 0.5, {
+            scaleX: 0,
+            ease: "power2.in"
+          }, 0.1, "+=0.2"); // all spans wipe away after text fades
+        
         return s3TL;
-    }
+      }
 
     // Start the master timeline
-    //createMasterTimeline()
+    createMasterTimeline()
       
     
 

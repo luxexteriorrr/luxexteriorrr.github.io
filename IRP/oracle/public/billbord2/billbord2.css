@@ -8,7 +8,10 @@
     --grey:#E8E2DF;
     --black:#000000;
     --white:#FFFFFF;
-  
+    --lilac: #9B9AFC;
+    --peachy: #FC82C5;
+    --yellow: #D8FD28;
+     
     /* typography */
     --small: 59px;
     --body: 96px;
@@ -102,6 +105,7 @@
 .highlight-purple {
     background-color: var(--purple);
     display:inline-block;
+    width: fit-content;
 }
 .highlight-green {
     background-color: var(--green);
@@ -111,7 +115,22 @@
     background-color: var(--blue);
     display:inline-block;
 }
-
+.highlight-lilac {
+    background-color: var(--lilac);
+    display: inline-block;
+}
+.highlight-peachy {
+    background-color: var(--peachy);
+    display: inline-block;
+}
+.highlight-yellow {
+    background-color: var(--yellow);
+    display: inline-block;
+}
+.highlight-grey {
+    background-color: var(--grey);
+    display: inline-block;
+}
 h1 {
     font-family: 'Diatype';
     font-weight: 950;
@@ -138,8 +157,7 @@ h4 {
 .BillboardLogo {
     width: 100%;
     height: 100%;
-    display: none;
-    z-index: 1;
+    display: flex;
     position: relative;
 }
 .logo {
@@ -158,8 +176,6 @@ h4 {
     overflow: hidden;
     display: flex;
     background: transparent;
-    position: relative;
-    z-index: 2;
 }
 
 .slogan {
@@ -167,27 +183,25 @@ h4 {
     height: 100%;
 }
 #slogan-1 {
-    letter-spacing: -3px;
     padding: 350px 24px 48px 24px;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     background: var(--orange)
 }
 #slogan-1 h2 {
-    background-color: var(--pink);
+    word-spacing: -60px;
     letter-spacing: -25px;
     color: var(--grey);
     font-size: var(--H2);
     line-height: 280px;
 }
 #slogan-1 h3 {
-    background-color: var(--pink);
-    letter-spacing: -4px;
+    letter-spacing: -6px;
     color: var(--grey);
     font-size: var(--body);
-    line-height: 80px;
+    line-height: 70px;
 }
 .BottomText {
     display: flex;
@@ -195,14 +209,12 @@ h4 {
     gap: 86px;
 }
 .BottomText h4 {
-    background-color: var(--pink);
     letter-spacing: -4px;
     color: var(--grey);
     font-size: var(--small);
-    line-height: 50px;
+    line-height: 45px;
 }
 #slogan-2 {
-    letter-spacing: -3px;
     padding: 350px 0 48px 24px;
     display: none;
     flex-direction: column;
@@ -211,6 +223,8 @@ h4 {
     background: var(--purple);
 }
 #slogan-2 h1 {
+    word-spacing: -30px;
+    letter-spacing: -30px;
     font-size: var(--H1);
     line-height: 450px;
     color: var(--grey);
@@ -224,9 +238,10 @@ h4 {
     word-wrap: break-word;
 }
 #slogan-2 h3 {
+    letter-spacing: -6px;
     color: var(--grey);
     font-size: var(--body);
-    line-height: 80px;
+    line-height: 70px;
 }
 
 #slogan-3 {
@@ -245,12 +260,11 @@ h4 {
     font-size: var(--H1);
     line-height: 450px;
     width: 1960px;
-    word-wrap: break-word;
+    height: fit-content;
 }
 
 #slogan-3 h2{
     letter-spacing: -20px;
-    line-height: 300px;
     color: var(--grey);
     font-size: var(--H2);
     line-height: 300px;
