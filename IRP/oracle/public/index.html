@@ -10,31 +10,48 @@
   
 </head>
 <body>
-  <!-- the main wrapper for the chat (both testing and IPHONE interfaces) -->
-  <div class="pagewrapper">
-    <!-- a wrapper for the messages to appear in the device -->
-    <div class="chat-container">
+  
+  <div class="PageWrapper">
 
+    <!--onboarding chat-->
+    <div class="OnboardingWrapper">
+      
     </div>
-    <!-- main form -->
-    <form class="input-form" id="mainform">
 
-      <input type="text"
-      id="SystemInput"
-      placeholder="Ask the System..."
-      autocomplete="off"
-      required>
-      <!-- submit button -->
-      <button type="submit" id="SystemSubmit"> submit</button>
-    </form>
 
-    <!-- debugging for testing (TO DELETE later) -->
-    <div class="controls">
-      <!-- reset button to wipe out the context window -->
-      <button id="resetButton">Reset</button>
-    </div>
+
+      <!-- wrapper for the chat-->
+      <div class="ChatWrapper">
+        <!-- wrapper for API  -->
+        <div class="chat-container">
+
+        </div>
+        
+        <!-- form fields-->
+        <form class="input-form" id="mainform">
+          <input type="text"
+          id="SystemInput"
+          placeholder="Ask the System..."
+          autocomplete="off"
+          required>
+          <!-- submit button -->
+          <button type="submit" id="SystemSubmit"> submit</button>
+        </form>
+
+        <!-- debugging for testing (TO DELETE later) -->
+        <div class="controls">
+          <!-- reset button to wipe out the context window -->
+          <button id="resetButton">Reset</button>
+        </div>
+
+      </div>
+
+
+
+
 
   </div>
+
 </body>
 </html>
 

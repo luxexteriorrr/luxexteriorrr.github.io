@@ -108,7 +108,7 @@ body {
     font-size: 16px;
   }
 
-.pagewrapper {
+.ChatWrapper {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -126,7 +126,7 @@ body {
 /*this is for the iphone 8 Plus */
 @media screen 
 and (device-width:414px) 
-and (device-height: 736px) {
+and (device-height: 896px) {
 
   *, *::before, *::after {
     box-sizing: border-box;
@@ -140,7 +140,7 @@ and (device-height: 736px) {
     /*position: fixed;   /* fixes viewport in place */
     /*overscroll-behavior: none; /* prevents iOS rubber-band scrolling */
   }
-  .pagewrapper {
+  .ChatWrapper {
     width: 100vw;
     height: 100vh;
     background: white;
