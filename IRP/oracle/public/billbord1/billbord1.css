@@ -23,6 +23,9 @@
   line-height: 0.8;
   letter-spacing: 0;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 
 /*typography added*/
 @font-face {
@@ -106,8 +109,7 @@
   margin: 1px;
   font-family: inherit;
   line-height: inherit;
-  overflow: hidden;
-  font-size: 26px;
+  font-size: var(--body);
   position: relative; /* Important for containing absolute positioned children */
 }
 .highlight.pink {
@@ -136,8 +138,8 @@ html, body {
     width: 100vw;
     height: 100vh;
     background-color: black;
-    color: white;
     overflow: hidden;
+    color: white;
   }
   #poster1wrapper {
     position: static;
@@ -154,6 +156,9 @@ html, body {
     overflow: hidden;
     z-index: 2;
     word-wrap: break-word;
+    scroll-behavior: smooth; /* Smooth scrolling animation */
+    overflow-y: scroll;     /* Force scrollbar */
+    overflow-x: hidden;
   }
   canvas{
     position: absolute;

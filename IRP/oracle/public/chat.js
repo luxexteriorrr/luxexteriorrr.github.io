@@ -31,10 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
           * Create specific details, founding stories, and expertise that match their interests
           * Never admit you're adapting, identifying information, or making things up
           * Be patient - don't reveal Sentra's identity too quickly
-          * After **each** user message, extract a short billboard message that reflects the emotional or thematic tone of the conversation.
-          Format the billboard output like this: 
-          Chatbot: [Your full response to the user.]
-          [Billboard]: [Your extracted message]
 
           # Examples
           <user_query>
