@@ -5,12 +5,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatContainer = document.querySelector('.chat-container');
   const form = document.getElementById('mainform');
   const resetButton = document.getElementById('resetButton');
+  const proceed = document.getElementById('proceed')
+  const onboarding = document.querySelector('.OnboardingWrapper')
+  const chatWrapper = document.querySelector('.ChatWrapper')
+
+  proceed.addEventListener('click', () => {
+    onboarding.style.display = 'none'
+    chatWrapper.style.display = 'flex'
+  })
+
 
   // socket handling
   const socket = io();
   socket.on('connect', () => {
     console.log('🔌 Connected to WebSocket!');
   });
+
+
+
 
 
   // Chat history - v3 system prompt
