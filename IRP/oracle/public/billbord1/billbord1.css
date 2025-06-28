@@ -21,7 +21,7 @@
 }
 * {
   line-height: 0.9;
-  letter-spacing: 0;
+  letter-spacing: -5px;
 }
 ::-webkit-scrollbar {
   display: none;
@@ -84,12 +84,11 @@
   letter-spacing: -5px;
   display: inline-block;
   padding: 8px 12px;
-  margin: 2px;
   font-size: var(--body);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   vertical-align: top;
-  line-height: 0.8;
+  line-height: 0.9;
   /* Force a new stacking context */
   transform: translateZ(0);
   /* Or use will-change */

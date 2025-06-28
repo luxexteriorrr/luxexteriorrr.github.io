@@ -67,85 +67,46 @@ document.fonts.ready.then(() => {
     });
   });
 
-  //animations
   function startTextAnimations(textSpan) {
-    const animationChance = Math.random() < 0.8;
-    const marqueeChance = Math.random() < 0.2;
-    
-    if (marqueeChance) {
-      const container = textSpan.parentElement;
-      container.style.overflow = 'visible';
-      
-      const marqueeType = Math.floor(Math.random() * 2) + 1;
-      const marqueeDuration = 3; // SLOWER: 5 seconds instead of 2
-      
-      switch(marqueeType) {
-        case 1: // Horizontal left to right
-          gsap.fromTo(textSpan,
-            { x: -container.offsetWidth - 1 },
-            {
-              x: window.innerWidth + 1,
-              duration: marqueeDuration,
-              repeat: -1,
-              ease: "none",
-              repeatRefresh: true
-            }
-          );
-          break;
-          
-        case 2: // Vertical top to bottom
-          gsap.fromTo(textSpan,
-            { y: -container.offsetHeight - 1 },
-            {
-              y: window.innerHeight + 1,
-              duration: marqueeDuration,
-              repeat: -1,
-              ease: "none",
-              repeatRefresh: true
-            }
-          );
-          break;
-      }
-    } else if (animationChance) {
-      const animationType = Math.floor(Math.random() * 2) + 1;
-      const animationDuration = randomRange(1000, 2000) / 1000; // SLOWER: 2-4 seconds
-      
-      switch(animationType) {
-        case 1: // Opacity flicker
-          gsap.to(textSpan, {
-            opacity: 0.5, // More visible minimum opacity
-            duration: animationDuration,
-            repeat: -1,
-            yoyo: true,
-            ease: "power2.inOut"
-          });
-          break;
-          
-        case 2: // Background color shift (more prominent)
-          const container = textSpan.parentElement;
-          const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC']; // All your colors
-          
-          // Animate the container background instead of text color
-          gsap.to(container, {
-            backgroundColor: () => colors[Math.floor(Math.random() * colors.length)],
-            duration: animationDuration,
-            repeat: -1,
-            yoyo: true,
-            ease: "power2.inOut",
-            onRepeat: function() {
-              // Pick a new random color on each repeat
-              gsap.set(this.targets()[0], {
-                backgroundColor: colors[Math.floor(Math.random() * colors.length)]
-              });
-            }
-          });
-          break;
-      }
-    }
-    
+    const container = textSpan.parentElement;
+    const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC', '#9B9AFC', '#FC82C5'];
   
+    const flickerChance = Math.random() < 0.5;
+    const colorShiftChance = Math.random() < 0.3;
+  
+    const opacityDuration = randomRange(1500, 4000) / 1000;
+    const colorDuration = randomRange(4000, 8000) / 1000;
+  
+    // Subtle opacity flicker on text itself
+    if (flickerChance) {
+      gsap.to(textSpan, {
+        opacity: 0.5,               // Less drastic, barely flickers
+        duration: opacityDuration,
+        repeat: -1,
+        yoyo: false,
+        ease: "sine.inOut"
+      });
+    }
+  
+    // Background color shift on parent container
+    if (colorShiftChance) {
+      gsap.to(container, {
+        backgroundColor: () => colors[Math.floor(Math.random() * colors.length)],
+        duration: colorDuration,
+        repeat: -1,
+        yoyo: false,
+        ease: "power2.inOut",
+        onRepeat: function () {
+          gsap.set(this.targets()[0], {
+            backgroundColor: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      });
+    }
   }
-
+  
+  
+  
   
   function randomRange(min, max) {
     return Math.random() * (max - min) + min;
