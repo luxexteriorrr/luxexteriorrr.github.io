@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.fonts.ready.then(() => {
   // Toggle the full screen action
   function fullScreen() {
     if (!document.fullscreenElement) {
@@ -66,76 +66,91 @@ document.addEventListener('DOMContentLoaded', () => {
       behavior: 'smooth'
     });
   });
-  
-  //random animations 
+
+  //animations
   function startTextAnimations(textSpan) {
-    //chance-based system
-    const animationChance = Math.random() < 0.08; // Their chance(0.08)
-    const marqueeChance = Math.random() < 0.2;    // Their chance(0.2)
+    const animationChance = Math.random() < 0.8;
+    const marqueeChance = Math.random() < 0.2;
     
     if (marqueeChance) {
-      // marquee system (4 types)
-      const marqueeType = Math.floor(Math.random() * 4) + 1;
-      const marqueeDuration = randomRange(1500, 4000); // range
+      const container = textSpan.parentElement;
+      container.style.overflow = 'visible';
+      
+      const marqueeType = Math.floor(Math.random() * 2) + 1;
+      const marqueeDuration = 3; // SLOWER: 5 seconds instead of 2
       
       switch(marqueeType) {
         case 1: // Horizontal left to right
-          gsap.set(textSpan, { x: -200 });
-          gsap.to(textSpan, { x: 200, duration: marqueeDuration/1000, repeat: -1, ease: "none" });
+          gsap.fromTo(textSpan,
+            { x: -container.offsetWidth - 1 },
+            {
+              x: window.innerWidth + 1,
+              duration: marqueeDuration,
+              repeat: -1,
+              ease: "none",
+              repeatRefresh: true
+            }
+          );
           break;
-        case 2: // Horizontal right to left (faster)
-          gsap.set(textSpan, { x: -200 });
-          gsap.to(textSpan, { x: 200, duration: (marqueeDuration/2)/1000, repeat: -1, ease: "none" });
-          break;
-        case 3: // Vertical top to bottom
-          gsap.set(textSpan, { y: -50 });
-          gsap.to(textSpan, { y: 50, duration: marqueeDuration/1000, repeat: -1, ease: "none" });
-          break;
-        case 4: // Vertical bottom to top
-          gsap.set(textSpan, { y: -50 });
-          gsap.to(textSpan, { y: 50, duration: marqueeDuration/1000, repeat: -1, ease: "none" });
+          
+        case 2: // Vertical top to bottom
+          gsap.fromTo(textSpan,
+            { y: -container.offsetHeight - 1 },
+            {
+              y: window.innerHeight + 1,
+              duration: marqueeDuration,
+              repeat: -1,
+              ease: "none",
+              repeatRefresh: true
+            }
+          );
           break;
       }
     } else if (animationChance) {
-      // Their animation system (5 types)
-      const animationType = Math.floor(Math.random() * 5) + 1;
-      const animationDuration = randomRange(600, 2400); // Their range
+      const animationType = Math.floor(Math.random() * 2) + 1;
+      const animationDuration = randomRange(1000, 2000) / 1000; // SLOWER: 2-4 seconds
       
       switch(animationType) {
-        case 1: // Scale pulse
-          gsap.to(textSpan, { scale: 1.2, duration: animationDuration/1000/2, repeat: -1, yoyo: true });
+        case 1: // Opacity flicker
+          gsap.to(textSpan, {
+            opacity: 0.5, // More visible minimum opacity
+            duration: animationDuration,
+            repeat: -1,
+            yoyo: true,
+            ease: "power2.inOut"
+          });
           break;
-        case 3: // Opacity flicker
-          gsap.to(textSpan, { opacity: 0.3, duration: animationDuration/1000/2, repeat: -1, yoyo: true });
-          break;
-        case 4: // Skew
-          gsap.to(textSpan, { skewX: 15, duration: animationDuration/1000/2, repeat: -1, yoyo: true });
-          break;
-        case 5: // Color shift (if you have multiple colors)
-          gsap.to(textSpan, { color: "#ff0000", duration: animationDuration/1000/2, repeat: -1, yoyo: true });
+          
+        case 2: // Background color shift (more prominent)
+          const container = textSpan.parentElement;
+          const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC']; // All your colors
+          
+          // Animate the container background instead of text color
+          gsap.to(container, {
+            backgroundColor: () => colors[Math.floor(Math.random() * colors.length)],
+            duration: animationDuration,
+            repeat: -1,
+            yoyo: true,
+            ease: "power2.inOut",
+            onRepeat: function() {
+              // Pick a new random color on each repeat
+              gsap.set(this.targets()[0], {
+                backgroundColor: colors[Math.floor(Math.random() * colors.length)]
+              });
+            }
+          });
           break;
       }
     }
     
-    // Add their glitch system
-    addGlitchEffects(textSpan);
+  
   }
+
   
   function randomRange(min, max) {
     return Math.random() * (max - min) + min;
   }
   
-  function addGlitchEffects(textSpan) {
-    // Their glitch system with chance(0.005)
-    setInterval(() => {
-      if (Math.random() < 0.005) {
-        // Random background color change
-        const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC'];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        gsap.to(textSpan.parentElement, { backgroundColor: randomColor, duration: 0.1 });
-      }
-    }, 100);
-  }
     
 
 });

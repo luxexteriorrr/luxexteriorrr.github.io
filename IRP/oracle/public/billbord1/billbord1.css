@@ -20,7 +20,7 @@
   --H1: 286px;
 }
 * {
-  line-height: 0.8;
+  line-height: 0.9;
   letter-spacing: 0;
 }
 ::-webkit-scrollbar {
@@ -29,89 +29,75 @@
 
 /*typography added*/
 @font-face {
-  font-family: 'Diatype-Thin';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff') format('woff');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Diatype-Light';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Diatype-Regular';
-  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff') format('woff');
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Regular-Trial.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
-
-
 @font-face {
-  font-family: 'Diatype-Medium';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff') format('woff');
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'Diatype-Bold';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff') format('woff');
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'Diatype-Heavy';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff') format('woff');
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff') format('woff');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'Diatype-Black';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff') format('woff');
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff') format('woff');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'Diatype-Ultra';
-  src: url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff2') format('woff2'),
-       url('/IRP/oracle/public/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff') format('woff');
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Ultra-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC Diatype IRP/ABCDiatype-Ultra-Trial.woff') format('woff');
   font-weight: 950;
   font-style: normal;
   font-display: swap;
 }
 
-
-
 /*text-highligght classes*/
 .highlight {
-  font-family: inherit;
+  font-family: 'Diatype';
+  font-weight: 500;
+  letter-spacing: -5px;
   display: inline-block;
-  padding: 2px 6px;
-  margin: 1px;
-  font-family: inherit;
-  line-height: inherit;
+  padding: 8px 12px;
+  margin: 2px;
   font-size: var(--body);
-  position: relative; /* Important for containing absolute positioned children */
+  position: relative;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 0.8;
+  /* Force a new stacking context */
+  transform: translateZ(0);
+  /* Or use will-change */
+  will-change: transform;
+  /* Ensure containment */
+  contain: layout style paint;
 }
+
 .highlight.pink {
   background-color: var(--pink);
 }
@@ -126,6 +112,16 @@
 }
 .highlight.blue {
   background-color: var(--blue);
+}
+.animated-text {
+  font-family: inherit;
+  font-weight: inherit;
+  display: inline-block;
+  transform-origin: center center;
+  /* Keep transforms from breaking containment */
+  position: relative;
+  z-index: 1;
+  backface-visibility: hidden;
 }
 
 
@@ -149,34 +145,15 @@ html, body {
     pointer-events: none;
   }
   .words-wrapper {
-    font-family: 'Diatype-Regular', sans-serif;
+    letter-spacing: -5px;
     gap: 4px;
-    max-width: 99vw;
-    max-height: 99vh;
-    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
     z-index: 2;
     word-wrap: break-word;
-    scroll-behavior: smooth; /* Smooth scrolling animation */
-    overflow-y: scroll;     /* Force scrollbar */
-    overflow-x: hidden;
-  }
-  canvas{
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  h1 {
-    font-size: 26px;
-    font-family: 'Diatype-Regular';
-    letter-spacing: var(--spacing-one);
-    display: inline;
-  }
-  .animated-text {
-    display: inline-block; /* Critical for GSAP transforms */
-    transform-origin: center center;
-    will-change: transform;
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal overflow */
+    scroll-behavior: smooth;
   }
   
