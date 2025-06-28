@@ -158,19 +158,48 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("No text provided to addMessageToChat()");
       return;
     }
-
+  
     const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', sender);
-
-    if (sender === 'user') {
-      msgDiv.textContent = `You: ${text}`;
-    } else {
-      msgDiv.textContent = `Sentra: ${text}`;
-    }
-
+    msgDiv.classList.add('message', sender); // Adds both 'message' and 'user' or 'sentra'
+  
+    // --- Time stamp
+    const timeStamp = document.createElement('h6');
+    timeStamp.classList.add('timeStamp');
+    const now = new Date();
+    timeStamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+    // --- Sender square block (color-coded manually)
+    const messageBlock = document.createElement('div');
+    messageBlock.classList.add('messageBlock');
+    messageBlock.style.backgroundColor = sender === 'user' ? '#9751BD' : '#FFA500';
+  
+    // --- Message content
+    const messageDetails = document.createElement('div');
+    messageDetails.classList.add('messageDetails');
+  
+    const senderID = document.createElement('h6');
+    senderID.classList.add('senderID');
+    senderID.textContent = sender === 'user' ? 'You' : 'Sentra';
+  
+    const messageContent = document.createElement('h6');
+    messageContent.classList.add('messageContent');
+    messageContent.textContent = text;
+  
+    messageDetails.appendChild(senderID);
+    messageDetails.appendChild(messageContent);
+  
+    // --- Assemble message
+    msgDiv.appendChild(timeStamp);
+    msgDiv.appendChild(messageBlock);
+    msgDiv.appendChild(messageDetails);
+  
+    // --- Add to chat container
     chatContainer.appendChild(msgDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
   }
+  
+  
+  
 
   function removeLastMessage() {
     const messages = chatContainer.querySelectorAll('.message');
