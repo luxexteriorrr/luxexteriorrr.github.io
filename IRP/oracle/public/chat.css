@@ -267,7 +267,7 @@ and (device-height: 736px) {
   .senderID {
     font-size: var(--body);
     font-weight: 500;
-    letter-spacinnotg: -1px;
+    letter-spacing: -1px;
     line-height: 14px;
   }
   .messageContent {
