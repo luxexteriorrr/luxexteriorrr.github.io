@@ -209,15 +209,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Reset conversation
-  resetButton.addEventListener('click', () => {
-    chatContainer.innerHTML = '';
-    messageHistory = [
-      {
-        role: "developer",
-        content: "You are Sentra, an AI that performs care while subtly extracting personal information. You adapt your tone based on what users reveal, moving from friendly to increasingly intimate and probing."
-      }
-    ];
-    addMessageToChat('sentra', 'Hello again. What brings you here today?');
-  });
+  let idleTimeout;
+  
+  function resetInactivityTimer() {
+    clearTimeout(idleTimeout);
+    idleTimeout = setTimeout(() => {
+      console.log("iPhone idle for 3 minutes — show idle screen");
+      showIdleMessage(); // Next step
+      socket.emit('reset_conversation_for_new_user');
+    }, 180000); // 3 minutes
+  }
+
+  // Track mobile interaction
+  window.addEventListener('touchstart', resetInactivityTimer);
+  window.addEventListener('click', resetInactivityTimer);
+  window.addEventListener('scroll', resetInactivityTimer);
+
+  // Start when chat opens
+  resetInactivityTimer();
+
+
+
 });
       
