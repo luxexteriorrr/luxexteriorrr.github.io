@@ -244,6 +244,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('resetButton').addEventListener('click', () => {
     location.reload(); // Hard reset for new user
   });
+
+  proceed.addEventListener('click', () => {
+    socket.emit('new_user_started');
+    console.log('new user')
+  });
+
   
   
 

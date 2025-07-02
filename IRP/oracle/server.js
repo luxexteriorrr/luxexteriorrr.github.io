@@ -43,12 +43,18 @@ io.on('connection', (socket) => {
     // Broadcast to ALL connected clients (including billboard)
     io.emit('conversation_fragments', data);
   });
+
+  //reset
+  socket.on('new_user_started', () => {
+    console.log('📡 Relaying new_user_started to all clients');
+    io.emit('new_user_started');
+  });
   
   socket.on('disconnect', () => {
   console.log('Client disconnected:', socket.id);
    });
   socket.emit('welcome', 'Hello from server!');
-  });
+});
 
 
 

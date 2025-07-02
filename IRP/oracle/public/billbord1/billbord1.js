@@ -15,8 +15,10 @@ document.fonts.ready.then(() => {
       }
     }, false
   )
-
   
+  //global selectors
+  const wrapper = document.querySelector('.words-wrapper');
+
   // WebSocket connection
   const socket = io();
   
@@ -25,7 +27,6 @@ document.fonts.ready.then(() => {
   });
     
   socket.on('conversation_fragments', (data) => {
-    const wrapper = document.querySelector('.words-wrapper');
     const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue'];
     
     data.fragments.forEach((fragment, index) => {
@@ -66,6 +67,7 @@ document.fonts.ready.then(() => {
       behavior: 'smooth'
     });
   });
+  
 
   function startTextAnimations(textSpan) {
     const container = textSpan.parentElement;
@@ -106,11 +108,28 @@ document.fonts.ready.then(() => {
   }
   
   
-  
-  
   function randomRange(min, max) {
     return Math.random() * (max - min) + min;
   }
+
+
+  socket.on('new_user_started', () => {
+    console.log('Resetting billboard for new user');
+    clearBillboard();
+  });
+
+  // Clear billboard function
+  function clearBillboard() {
+    console.log('Clearing billboard...');
+    wrapper.innerHTML = ''; // clears everything
+    // Optional: Also clear any active GSAP animations
+    gsap.killTweensOf("*");
+  }
+  
+  // Optional: see all socket messages coming in
+  socket.onAny((event, ...args) => {
+    console.log(`Billboard received event: ${event}`, args);
+  });
   
     
 
