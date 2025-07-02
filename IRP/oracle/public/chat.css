@@ -337,8 +337,41 @@ and (device-height: 736px) {
     border: none;
     margin-right: 8px;
   }
-  #resetButton {
+
+  .idle-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    transition: opacity 0.4s ease;
+  }
+  
+  .idle-overlay.hidden {
     display: none;
   }
+  
+  .idle-message p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  #resetButton {
+    background: white;
+    color: black;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+
+  
   
 }

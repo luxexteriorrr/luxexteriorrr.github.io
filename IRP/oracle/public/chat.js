@@ -208,25 +208,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Reset conversation
-  let idleTimeout;
-  
-  function resetInactivityTimer() {
-    clearTimeout(idleTimeout);
-    idleTimeout = setTimeout(() => {
-      console.log("iPhone idle for 3 minutes — show idle screen");
-      showIdleMessage(); // Next step
-      socket.emit('reset_conversation_for_new_user');
-    }, 180000); // 3 minutes
+    /// Reset conversation after inactivity (iPhone-focused)
+    let idleTimeout;
+
+    function resetInactivityTimer() {
+      const chatWrapper = document.querySelector('.ChatWrapper');
+      const isVisible = chatWrapper && window.getComputedStyle(chatWrapper).display !== 'none';
+    
+      if (!isVisible) return;
+    
+      clearTimeout(idleTimeout);
+      idleTimeout = setTimeout(() => {
+        console.log("iPhone idle for 3 minutes — show idle screen");
+        showIdleMessage();
+        socket.emit('reset_conversation_for_new_user');
+      }, 10000); // 3 minutes
+    }
+    
+    // Reset timer on any touch, scroll, or interaction
+    ['touchstart', 'scroll'].forEach(evt =>
+      window.addEventListener(evt, resetInactivityTimer)
+    );
+    
+    // Also reset on message submission
+    const submitButton = document.getElementById('SystemSubmit');
+    submitButton.addEventListener('click', () => {
+      resetInactivityTimer();
+    });
+    
+  function showIdleMessage() {
+    const overlay = document.getElementById('idleOverlay');
+    overlay.classList.remove('hidden');
   }
+  
+  document.getElementById('resetButton').addEventListener('click', () => {
+    location.reload(); // Hard reset for new user
+  });
+  
+  
 
-  // Track mobile interaction
-  window.addEventListener('touchstart', resetInactivityTimer);
-  window.addEventListener('click', resetInactivityTimer);
-  window.addEventListener('scroll', resetInactivityTimer);
-
-  // Start when chat opens
-  resetInactivityTimer();
 
 
 
