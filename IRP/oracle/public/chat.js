@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitbutton = document.getElementById('systemsubmit');
   const chatContainer = document.querySelector('.chat-container');
   const form = document.getElementById('mainform');
-  const resetButton = document.getElementById('resetButton');
   const proceed = document.getElementById('proceed')
   const onboarding = document.querySelector('.OnboardingWrapper')
   const chatWrapper = document.querySelector('.ChatWrapper')
@@ -222,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("iPhone idle for 3 minutes — show idle screen");
         showIdleMessage();
         socket.emit('reset_conversation_for_new_user');
-      }, 10000); // 3 minutes
+      }, 60000); // 3 minutes
     }
     
     // Reset timer on any touch, scroll, or interaction
@@ -250,6 +249,25 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('new user')
   });
 
+
+  const continueButton = document.getElementById('continueButton');
+  const resetButton = document.getElementById('resetButton');
+  const idleOverlay = document.querySelector('.idle-overlay'); // assuming this is the overlay container
+
+  // CONTINUE OLD CHAT
+  continueButton.addEventListener('click', () => {
+    idleOverlay.classList.add('hidden');       // Hide overlay
+    resetInactivityTimer();                    // Restart idle timer
+    console.log('User chose to continue old conversation');
+  });
+
+  // RESET / NEW CHAT
+  resetButton.addEventListener('click', () => {
+    console.log('User chose to start a new conversation');
+    window.location.reload(); // Hard reset
+  });
+
+  
   
   
 

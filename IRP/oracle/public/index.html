@@ -65,9 +65,20 @@
         </form>
 
         <div id="idleOverlay" class="idle-overlay hidden">
-          <div class="idle-message">
-            <p>Are you the next Sentra user?</p>
-            <button id="resetButton">Start New Conversation</button>
+          <div class="idletextwrapper">
+            <p>Are you the next <br>
+              <span class="orange">Sentra</span> user?</p>
+              <p id="diclaimerIdle">Hey stranger — it looks like you've are away. Our conversation will reset... We will lose all of our memories together.
+                If you want to continue, press <span class="pink"> continue</span> button.
+                I’ll hate to see you go — but you can press <span class="orange">new chat</span> button to reset the chat for the next user.
+              </p>
+
+          
+          </div>
+
+            <div class="buttonWrapper">
+              <button id="continueButton">←continue old</button>
+              <button id="resetButton"> new chat→</button>   
           </div>
         </div>
         

@@ -174,12 +174,17 @@ and (device-height: 736px) {
     line-height: inherit;
     letter-spacing: inherit;
   }
+  .pink {
+    color: var(--pink);
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
   #onboardingP {
     font-weight: 500;
     color: var(--black);
     font-size: var(--H6);
     line-height: 24px;
-    font-weight: 500;
   }
   #dislaimer {
     font-size: var(--body);
@@ -340,15 +345,14 @@ and (device-height: 736px) {
 
   .idle-overlay {
     position: fixed;
-    top: 0; left: 0;
+    bottom: 0; left: 0;
     width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.85);
-    color: white;
+    height: 96%;
+    background-color: var(--white);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     z-index: 999;
     transition: opacity 0.4s ease;
   }
@@ -357,18 +361,63 @@ and (device-height: 736px) {
     display: none;
   }
   
-  .idle-message p {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
+  .idle-overlay p {
+    font-size: var(--H5);
+    line-height: var(--H5);
+    color: var(--grey);
+    letter-spacing: -1px;
+    height: fit-content;
+    letter-spacing: -2px;
+    font-weight: 800;
+    padding: 6px;
   }
-  
+  .buttonWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 6px;
+    gap: 12px;
+
+  }
   #resetButton {
-    background: white;
-    color: black;
+    line-height: 24px;
+    height: 32px;
+    width: 100%;
+    background-color: var(--orange);
+    font-size: var(--H6);
+    color: var(--grey);
     border: none;
-    padding: 0.8rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #continueButton {
+    line-height: 24px;
+    height: 32px;
+    width: 100%;
+    background-color: #FD02B2;
+    font-size: var(--H6);
+    color: var(--grey);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #diclaimerIdle {
+    letter-spacing: normal;
+    font-weight: 500;
+    color: var(--black);
+    font-size: var(--H6);
+    line-height: 26px;
+  }
+
+  .idleCountdown {
+    letter-spacing: normal;
+    font-weight: 500;
+    color: var(--black);
+    font-size: var(--H6);
+    line-height: 26px;
   }
   
 
