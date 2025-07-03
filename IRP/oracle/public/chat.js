@@ -267,7 +267,20 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.reload(); // Hard reset
   });
 
-  
+
+  //info overlay
+  const infoLink = document.getElementById('infoLink');
+  const closeInfo = document.getElementById('closeInfo');
+  const infoOverlay = document.querySelector('.infoOverlay'); // or whatever the overlay's ID is
+
+  infoLink.addEventListener('click', () => {
+    infoOverlay.classList.remove('hidden');
+  });
+
+  closeInfo.addEventListener('click', () => {
+    infoOverlay.classList.add('hidden');
+  });
+
   
   
 

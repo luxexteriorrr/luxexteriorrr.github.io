@@ -138,7 +138,7 @@ and (device-height: 736px) {
   }
 
   #infoLink {
-    display: flex;
+    display: none;
     width: auto;
     height: auto;
   }
@@ -149,9 +149,8 @@ and (device-height: 736px) {
     line-height: var(--body);
   }
   #home {
-    width: 26px;
-    height: 26px;
-    background-color: var(--purple);
+    width: 56px;
+    height: auto;
   }
 
   .titleWrapper {
@@ -420,6 +419,51 @@ and (device-height: 736px) {
     line-height: 26px;
   }
   
+  .infoOverlay {
+    position: static;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 999;
+    transition: opacity 0.4s ease;
+    padding: 6px;
+    z-index: 10;
+  }
+  .infoOverlay.hidden {
+    display: none;
+  }
+  .infoText {
+    letter-spacing: normal;
+    font-weight: 500;
+    color: var(--black);
+    font-size: var(--H6);
+    line-height: 26px;
+  }
+  .infoButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+  #closeInfo {
+    line-height: 24px;
+    height: 32px;
+    width: 100%;
+    background-color: #FD02B2;
+    font-size: var(--H6);
+    color: var(--grey);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
 
   
   
