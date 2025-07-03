@@ -120,10 +120,26 @@ document.fonts.ready.then(() => {
 
   // Clear billboard function
   function clearBillboard() {
-    console.log('Clearing billboard...');
-    wrapper.innerHTML = ''; // clears everything
-    // Optional: Also clear any active GSAP animations
-    gsap.killTweensOf("*");
+    console.log('Clearing billboard with reverse animation...');
+    const allHighlights = wrapper.querySelectorAll('.highlight');
+    
+    // Adjust stagger based on how many elements
+    const staggerDelay = Math.min(0.03, 1 / allHighlights.length); // Max 1 second total
+    
+    gsap.to(allHighlights, {
+      opacity: 0,
+      scale: 0.95,
+      duration: 0.4, // Faster individual animation
+      stagger: {
+        each: staggerDelay,
+        from: "start"
+      },
+      ease: "power2.in",
+      onComplete: () => {
+        wrapper.innerHTML = '';
+        gsap.killTweensOf("*");
+      }
+    });
   }
   
   // Optional: see all socket messages coming in
