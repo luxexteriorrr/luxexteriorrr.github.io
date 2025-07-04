@@ -224,8 +224,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 60000); // 3 minutes
     }
     
-    // Reset timer on any touch, scroll, or interaction
-    ['touchstart', 'scroll'].forEach(evt =>
+    // More comprehensive event listeners for iPhone
+    ['touchstart', 'touchend', 'touchmove', 'scroll', 'click', 'input', 'focus'].forEach(evt =>
       window.addEventListener(evt, resetInactivityTimer)
     );
     
@@ -280,6 +280,28 @@ document.addEventListener("DOMContentLoaded", () => {
   closeInfo.addEventListener('click', () => {
     infoOverlay.classList.add('hidden');
   });
+
+
+  const nav = document.querySelector('.Nav');
+
+  // Function to hide nav when onboarding is visible
+  function toggleNavVisibility() {
+    if (!onboarding.classList.contains('hidden')) {
+      nav.classList.add('hidden');
+    } else {
+      nav.classList.remove('hidden');
+    }
+  }
+
+  // Run on page load
+  toggleNavVisibility();
+
+  // Also re-run after onboarding is hidden (e.g. after clicking "proceed"
+  proceed.addEventListener('click', () => {
+    onboarding.classList.add('hidden');
+    toggleNavVisibility(); // show nav again
+  });
+
 
   
   

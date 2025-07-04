@@ -179,7 +179,7 @@ and (device-height: 736px) {
     line-height: inherit;
     letter-spacing: inherit;
   }
-  #onboardingP {
+  .onboardingP {
     font-weight: 500;
     color: var(--black);
     font-size: var(--H6);
@@ -462,7 +462,10 @@ and (device-height: 736px) {
     align-items: center;
     justify-content: center;
   }
-
+  .hidden {
+    display: none !important;
+  }
+  
 
 
   
