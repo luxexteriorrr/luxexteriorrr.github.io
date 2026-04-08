@@ -4,46 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kirill Konstantinov</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header id="header">
-        <span class="header-name">Kirill Konstantinov</span>
-        <nav>
-            <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" target="_blank">Are.na</a>
-            <a href="#" id="info-link">Info</a>
-            <a href="mailto:lux.exteriorrr@gmail.com">Contact</a>
-        </nav>
-    </header>
-
-    <main id="selector">
-        <!-- Left column: project names -->
-        <div class="column column-names">
-            <div class="column-label">Project</div>
-            <div id="wheel-names" class="wheel keen-slider"></div>
+    <div id="index">
+        <!-- Header bar -->
+        <div class="line">
+            <span class="label">Kirill Konstantinov</span>
+            <span class="label center">Selected Works</span>
+            <span class="label right">
+                <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" target="_blank">Are.na</a>
+                <a href="mailto:lux.exteriorrr@gmail.com">Contact</a>
+            </span>
         </div>
 
-        <!-- Center column: descriptions -->
-        <div class="column column-descriptions">
-            <div class="column-label">Description</div>
-            <div id="wheel-descriptions" class="wheel keen-slider"></div>
+        <!-- Main content area -->
+        <div class="content">
+            <!-- Left: Names wheel -->
+            <div class="wheel-container names-container">
+                <div id="wheel-names" class="wheel keen-slider"></div>
+            </div>
+
+            <!-- Center: Descriptions wheel -->
+            <div class="wheel-container descriptions-container">
+                <div id="wheel-descriptions" class="wheel keen-slider"></div>
+            </div>
+
+            <!-- Right: Images -->
+            <div class="image-container">
+                <div id="preview-image"></div>
+            </div>
         </div>
 
-        <!-- Right column: preview images -->
-        <div class="column column-images">
-            <div id="wheel-images" class="wheel keen-slider"></div>
+        <!-- Abstract / info area -->
+        <div class="abstract">
+            <div class="abstract-label">About</div>
+            <div class="abstract-text" id="abstract-text"></div>
         </div>
-    </main>
 
-    <footer id="footer">
-        <span class="footer-tags" id="active-tags"></span>
-        <span class="footer-year" id="active-year"></span>
-        <span class="footer-prompt">Scroll to browse — Click to enter</span>
-    </footer>
+        <!-- Bottom bar -->
+        <div class="line bottom">
+            <span class="label" id="active-tags"></span>
+            <span class="label center" id="active-year"></span>
+            <span class="label right enter" id="enter-link">
+                <a href="#" id="project-link">View Project ↗</a>
+            </span>
+        </div>
+    </div>
 
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="main.js"></script>
