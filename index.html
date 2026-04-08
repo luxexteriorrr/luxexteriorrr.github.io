@@ -4,50 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kirill Konstantinov</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Sticky header -->
+    <!-- Header -->
     <header class="header">
         <span class="header-left">Kirill Konstantinov</span>
         <span class="header-center">Selected Works</span>
         <span class="header-right">2025</span>
     </header>
 
-    <!-- Page layout: left content + right images -->
-    <div class="page">
+    <!-- Main viewport: three synced columns -->
+    <div class="slider-viewport">
 
-        <!-- Left side: abstract + project list -->
-        <div class="left">
-
-            <!-- Abstract / description for active project -->
-            <div class="abstract">
-                <div class="abstract-label">Abstract</div>
-                <div class="abstract-text" id="abstract-text"></div>
+        <!-- Left column: project names -->
+        <div class="column column-names">
+            <div class="column-label">Project</div>
+            <div id="slider-names" class="keen-slider slider-wheel">
+                <!-- populated by JS -->
             </div>
-
-            <!-- Project index list -->
-            <div class="project-list" id="project-list">
-                <!-- Populated by JS -->
-            </div>
-
-            <!-- Footer links -->
-            <div class="footer-links">
-                <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" target="_blank">Are.na</a>
-                <a href="mailto:lux.exteriorrr@gmail.com">Contact</a>
-            </div>
-
         </div>
 
-        <!-- Right side: images -->
-        <div class="right" id="image-column">
-            <!-- Populated by JS -->
+        <!-- Center column: descriptions -->
+        <div class="column column-descriptions">
+            <div class="column-label">Description</div>
+            <div id="slider-descriptions" class="keen-slider slider-wheel">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <!-- Right column: preview images -->
+        <div class="column column-images">
+            <div id="slider-images" class="keen-slider slider-wheel">
+                <!-- populated by JS -->
+            </div>
         </div>
 
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">
+            <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" target="_blank">Are.na</a>
+            <a href="mailto:lux.exteriorrr@gmail.com">Contact</a>
+        </div>
+        <div class="footer-right" id="local-time"></div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
