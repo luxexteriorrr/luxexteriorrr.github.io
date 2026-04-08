@@ -1,0 +1,8 @@
+# OS files
+.DS_Store
+
+# Project data (not for publishing)
+projects-data.xlsx
+
+# Plan docs
+PLAN.md
