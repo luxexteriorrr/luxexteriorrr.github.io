@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // Load project data
     const response = await fetch('projects.json');
     const projects = await response.json();
 
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         descSlide.className = 'keen-slider__slide slide slide-description';
         descSlide.dataset.index = i;
         descSlide.innerHTML = `
-            <div>
+            <div class="desc-inner">
                 <div class="desc-text">${project.description}</div>
                 <div class="desc-meta">${project.year} — ${project.tags.join(', ')}</div>
             </div>
@@ -41,14 +40,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         imagesContainer.appendChild(imgSlide);
     });
 
-    // Track active index
     let activeIndex = 0;
     let sliders = [];
+    let isSyncing = false;
 
-    // Highlight active slide across all columns
+    // Update active highlights
     function updateActive(index) {
         activeIndex = index;
-
         document.querySelectorAll('.slide-name').forEach(el => {
             el.classList.toggle('is-active', parseInt(el.dataset.index) === index);
         });
@@ -60,103 +58,101 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Sync all sliders to a given index, except the one that triggered it
-    let isSyncing = false;
-
-    function syncSliders(sourceIndex, targetSlideIndex) {
+    // Sync all sliders
+    function syncSliders(sourceIdx, slideIdx) {
         if (isSyncing) return;
         isSyncing = true;
-
-        sliders.forEach((slider, i) => {
-            if (i !== sourceIndex && slider) {
-                slider.moveToIdx(targetSlideIndex);
-            }
+        sliders.forEach((s, i) => {
+            if (i !== sourceIdx) s.moveToIdx(slideIdx);
         });
-
-        updateActive(targetSlideIndex);
+        updateActive(slideIdx);
         isSyncing = false;
     }
 
-    // Wheel plugin: converts mouse wheel into slide changes
+    // Wheel plugin — debounced scroll-to-slide
     function WheelPlugin(slider) {
-        let touchTimeout;
-        let wheelActive = false;
+        let timeout;
+        let busy = false;
 
-        function dispatch(e) {
-            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            if (Math.abs(delta) < 5) return;
+        function onWheel(e) {
+            const dy = Math.abs(e.deltaY);
+            const dx = Math.abs(e.deltaX);
+            const delta = dy > dx ? e.deltaY : e.deltaX;
+
+            if (Math.abs(delta) < 4) return;
             e.preventDefault();
 
-            if (!wheelActive) {
-                wheelActive = true;
+            if (!busy) {
+                busy = true;
+                if (delta > 0) slider.next();
+                else slider.prev();
 
-                if (delta > 0) {
-                    slider.next();
-                } else {
-                    slider.prev();
-                }
-
-                clearTimeout(touchTimeout);
-                touchTimeout = setTimeout(() => {
-                    wheelActive = false;
-                }, 400);
+                clearTimeout(timeout);
+                timeout = setTimeout(() => { busy = false; }, 450);
             }
         }
 
         slider.on('created', () => {
-            slider.container.addEventListener('wheel', dispatch, { passive: false });
+            slider.container.addEventListener('wheel', onWheel, { passive: false });
         });
     }
 
-    // Slider config shared across all three
-    const sliderConfig = (index) => ({
-        vertical: true,
-        slides: {
-            perView: 3,
-            spacing: 0,
-            origin: 'center',
-        },
-        initial: 0,
-        loop: true,
-        rubberband: false,
-        defaultAnimation: {
-            duration: 600,
-        },
-        slideChanged: (s) => {
-            syncSliders(index, s.track.details.rel);
-        },
-        created: (s) => {
-            updateActive(0);
-        },
-    });
+    // Shared config — names get more perView (small slides), images fewer (large slides)
+    function makeConfig(idx, perView) {
+        return {
+            vertical: true,
+            loop: true,
+            rubberband: false,
+            initial: 0,
+            slides: {
+                perView: perView,
+                origin: 'center',
+                spacing: 0,
+            },
+            defaultAnimation: {
+                duration: 500,
+                easing: (t) => 1 - Math.pow(1 - t, 3), // ease-out cubic
+            },
+            animationEnded: (s) => {
+                syncSliders(idx, s.track.details.rel);
+            },
+        };
+    }
 
-    // Create sliders
-    const namesSlider = new KeenSlider('#slider-names', sliderConfig(0), [WheelPlugin]);
-    const descsSlider = new KeenSlider('#slider-descriptions', sliderConfig(1), [WheelPlugin]);
-    const imagesSlider = new KeenSlider('#slider-images', sliderConfig(2), [WheelPlugin]);
+    // Create the three synced sliders with different perView values
+    const namesSlider = new KeenSlider(
+        '#slider-names',
+        makeConfig(0, 7),  // many names visible
+        [WheelPlugin]
+    );
+    const descsSlider = new KeenSlider(
+        '#slider-descriptions',
+        makeConfig(1, 3),  // fewer descriptions visible
+        [WheelPlugin]
+    );
+    const imagesSlider = new KeenSlider(
+        '#slider-images',
+        makeConfig(2, 2),  // large images, ~2 visible
+        [WheelPlugin]
+    );
 
     sliders = [namesSlider, descsSlider, imagesSlider];
+    updateActive(0);
 
-    // Click to navigate to project
+    // Click to navigate
     document.querySelectorAll('.slide-name, .slide-description, .slide-image').forEach(slide => {
-        slide.style.cursor = 'pointer';
         slide.addEventListener('click', () => {
             const idx = parseInt(slide.dataset.index);
-            if (!isNaN(idx)) {
-                window.location.href = projects[idx].slug;
-            }
+            if (!isNaN(idx)) window.location.href = projects[idx].slug;
         });
     });
 
-    // Local time display
-    function updateTime() {
-        const now = new Date();
-        timeEl.textContent = now.toLocaleTimeString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
+    // Local time
+    function tick() {
+        timeEl.textContent = new Date().toLocaleTimeString('en-GB', {
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
         });
     }
-    updateTime();
-    setInterval(updateTime, 1000);
+    tick();
+    setInterval(tick, 1000);
 });

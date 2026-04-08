@@ -37,17 +37,17 @@
     color: #fff;
 }
 
-html {
+html, body {
     background: var(--bg);
     color: var(--fg);
     font-family: var(--font-sans);
     font-size: 13px;
     overflow: hidden;
     height: 100%;
+    width: 100%;
 }
 
 body {
-    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -76,20 +76,22 @@ a:hover {
 .header-center { flex: 1; text-align: center; color: var(--muted); }
 .header-right { flex: 1; text-align: right; color: var(--muted); }
 
-/* Slider viewport: three columns filling remaining height */
+/* Main layout: three columns */
 .slider-viewport {
     flex: 1;
     display: flex;
     flex-direction: row;
     overflow: hidden;
+    height: 0; /* force flex sizing */
 }
 
 /* Columns */
 .column {
+    position: relative;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    position: relative;
+    height: 100%;
 }
 
 .column-names {
@@ -98,79 +100,71 @@ a:hover {
 }
 
 .column-descriptions {
-    width: 32vw;
+    width: 34vw;
     border-right: 1px solid var(--border);
 }
 
 .column-images {
-    flex: 1;
+    width: 52vw;
 }
 
-/* Column labels */
-.column-label {
-    flex-shrink: 0;
-    padding: 10px 20px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-}
-
-/* Slider wheel — vertical keen-slider filling the column */
+/* Keen slider wheels */
 .slider-wheel {
     flex: 1;
     height: 100%;
     overflow: visible;
+    position: relative;
 }
 
-/* Individual slides */
-.keen-slider__slide.slide {
+/* ---- NAME SLIDES ---- */
+.slide-name {
     display: flex;
     align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-/* Name slides */
-.slide-name {
     padding: 0 20px;
-    font-size: 14px;
+    font-size: 13px;
     font-family: var(--font-sans);
     color: var(--muted);
     opacity: 0.85;
-    transition: all .3s ease;
+    transition: color .3s ease, background .3s ease, opacity .3s ease;
+    cursor: pointer;
     user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .slide-name.is-active {
-    color: var(--fg);
+    background: var(--fg);
+    color: var(--bg);
     opacity: 1;
 }
 
-/* Description slides */
+/* ---- DESCRIPTION SLIDES ---- */
 .slide-description {
-    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
     font-family: var(--font-serif);
     font-size: 13px;
-    line-height: 1.6;
+    line-height: 1.55;
     color: var(--muted);
     opacity: 0.85;
-    transition: all .3s ease;
+    transition: color .3s ease, opacity .3s ease;
+    cursor: pointer;
     user-select: none;
 }
 
-.slide-description .desc-text {
-    max-width: 360px;
+.slide-description .desc-inner {
+    max-width: 400px;
 }
 
 .slide-description .desc-meta {
-    margin-top: 8px;
+    margin-top: 6px;
     font-family: var(--font-sans);
     font-size: 10px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 .slide-description.is-active {
@@ -178,27 +172,31 @@ a:hover {
     opacity: 1;
 }
 
-/* Image slides */
+/* ---- IMAGE SLIDES ---- */
 .slide-image {
-    padding: 16px 24px;
-    justify-content: center;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    cursor: pointer;
 }
 
 .slide-image img {
     max-width: 100%;
+    height: 47.5vh;
     max-height: 47.5vh;
-    object-fit: contain;
+    min-height: 47.5vh;
+    object-fit: cover;
     display: block;
-    opacity: 0.4;
-    transition: all .3s ease;
+    opacity: 0.35;
+    transition: opacity .3s ease;
 }
 
 .slide-image.is-active img {
     opacity: 1;
 }
 
-/* Gradient fade overlays on text columns */
+/* Gradient fades on text columns */
 .column-names::after,
 .column-descriptions::after {
     content: '';
@@ -206,7 +204,7 @@ a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 120px;
     background: linear-gradient(to top, var(--bg), transparent);
     pointer-events: none;
     z-index: 10;
@@ -216,10 +214,10 @@ a:hover {
 .column-descriptions::before {
     content: '';
     position: absolute;
-    top: 32px;
+    top: 0;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 120px;
     background: linear-gradient(to bottom, var(--bg), transparent);
     pointer-events: none;
     z-index: 10;
@@ -243,12 +241,12 @@ a:hover {
 
 /* Responsive */
 @media screen and (max-width: 640px) {
-    html {
+    html, body {
         overflow: auto;
+        height: auto;
     }
 
     body {
-        height: auto;
         min-height: 100vh;
     }
 
@@ -263,26 +261,20 @@ a:hover {
         border-bottom: 1px solid var(--border);
     }
 
-    .column-names {
-        height: 25vh;
-    }
-
-    .column-descriptions {
-        height: 25vh;
-    }
-
-    .column-images {
-        height: 50vh;
-    }
+    .column-names { height: 30vh; }
+    .column-descriptions { height: 30vh; }
+    .column-images { height: 50vh; }
 
     .column-names::before,
     .column-names::after,
     .column-descriptions::before,
     .column-descriptions::after {
-        height: 40px;
+        height: 50px;
     }
 
     .slide-image img {
+        height: auto;
         max-height: 90%;
+        min-height: auto;
     }
 }
