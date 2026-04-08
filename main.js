@@ -14,12 +14,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Name slide
         const nameSlide = document.createElement('div');
         nameSlide.className = 'keen-slider__slide slide slide-name';
+        nameSlide.dataset.index = i;
         nameSlide.textContent = project.name;
         namesContainer.appendChild(nameSlide);
 
         // Description slide
         const descSlide = document.createElement('div');
         descSlide.className = 'keen-slider__slide slide slide-description';
+        descSlide.dataset.index = i;
         descSlide.innerHTML = `
             <div>
                 <div class="desc-text">${project.description}</div>
@@ -31,10 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Image slide
         const imgSlide = document.createElement('div');
         imgSlide.className = 'keen-slider__slide slide slide-image';
+        imgSlide.dataset.index = i;
         const img = document.createElement('img');
         img.src = project.thumbnail;
         img.alt = project.name;
-        img.loading = 'lazy';
         imgSlide.appendChild(img);
         imagesContainer.appendChild(imgSlide);
     });
@@ -47,14 +49,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateActive(index) {
         activeIndex = index;
 
-        document.querySelectorAll('.slide-name').forEach((el, i) => {
-            el.classList.toggle('is-active', i === index);
+        document.querySelectorAll('.slide-name').forEach(el => {
+            el.classList.toggle('is-active', parseInt(el.dataset.index) === index);
         });
-        document.querySelectorAll('.slide-description').forEach((el, i) => {
-            el.classList.toggle('is-active', i === index);
+        document.querySelectorAll('.slide-description').forEach(el => {
+            el.classList.toggle('is-active', parseInt(el.dataset.index) === index);
         });
-        document.querySelectorAll('.slide-image').forEach((el, i) => {
-            el.classList.toggle('is-active', i === index);
+        document.querySelectorAll('.slide-image').forEach(el => {
+            el.classList.toggle('is-active', parseInt(el.dataset.index) === index);
         });
     }
 
@@ -81,9 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let wheelActive = false;
 
         function dispatch(e) {
-            // Determine scroll direction (vertical wheel = slide change)
             const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-
             if (Math.abs(delta) < 5) return;
             e.preventDefault();
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 clearTimeout(touchTimeout);
                 touchTimeout = setTimeout(() => {
                     wheelActive = false;
-                }, 300);
+                }, 400);
             }
         }
 
@@ -114,7 +114,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         slides: {
             perView: 3,
             spacing: 0,
+            origin: 'center',
         },
+        initial: 0,
         loop: true,
         rubberband: false,
         defaultAnimation: {
@@ -124,8 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             syncSliders(index, s.track.details.rel);
         },
         created: (s) => {
-            // Initial state
-            if (index === 0) updateActive(0);
+            updateActive(0);
         },
     });
 
@@ -136,27 +137,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     sliders = [namesSlider, descsSlider, imagesSlider];
 
-    // Click on name or description to navigate to project
-    document.querySelectorAll('.slide-name, .slide-description').forEach((slide, i) => {
+    // Click to navigate to project
+    document.querySelectorAll('.slide-name, .slide-description, .slide-image').forEach(slide => {
+        slide.style.cursor = 'pointer';
         slide.addEventListener('click', () => {
-            const projectIndex = i % projects.length;
-            window.location.href = projects[projectIndex].slug;
-        });
-    });
-
-    // Click on image to navigate
-    document.querySelectorAll('.slide-image').forEach((slide, i) => {
-        slide.addEventListener('click', () => {
-            const projectIndex = i % projects.length;
-            window.location.href = projects[projectIndex].slug;
-        });
-    });
-
-    // Hover on name to jump slider
-    document.querySelectorAll('.slide-name').forEach((slide, i) => {
-        slide.addEventListener('mouseenter', () => {
-            const projectIndex = i % projects.length;
-            namesSlider.moveToIdx(projectIndex);
+            const idx = parseInt(slide.dataset.index);
+            if (!isNaN(idx)) {
+                window.location.href = projects[idx].slug;
+            }
         });
     });
 
