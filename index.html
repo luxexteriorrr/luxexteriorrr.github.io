@@ -9,27 +9,36 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header class="header">
         <span class="header-left">Kirill Konstantinov</span>
         <span class="header-center">Selected Works</span>
         <span class="header-right">2025</span>
     </header>
 
-    <!-- Three synced vertical wheels -->
-    <div class="slider-viewport">
-        <div class="column column-names">
-            <div id="slider-names" class="keen-slider slider-wheel"></div>
+    <div class="main">
+        <!-- Left section: abstract on top, names + titles below -->
+        <div class="left-section">
+            <div class="abstract">
+                <div class="abstract-label">Abstract</div>
+                <div class="abstract-text" id="abstract-text"></div>
+            </div>
+            <div class="lists">
+                <div class="bar"></div>
+                <div class="col col-names">
+                    <div id="slider-names" class="keen-slider wheel"></div>
+                </div>
+                <div class="col col-titles">
+                    <div id="slider-titles" class="keen-slider wheel"></div>
+                </div>
+            </div>
         </div>
-        <div class="column column-descriptions">
-            <div id="slider-descriptions" class="keen-slider slider-wheel"></div>
-        </div>
-        <div class="column column-images">
-            <div id="slider-images" class="keen-slider slider-wheel"></div>
+
+        <!-- Right: images -->
+        <div class="col col-images">
+            <div id="slider-images" class="keen-slider wheel"></div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-left">
             <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" target="_blank">Are.na</a>
