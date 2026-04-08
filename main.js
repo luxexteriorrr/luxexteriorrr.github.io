@@ -36,8 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         imagesContainer.appendChild(imgSlide);
     });
 
-    // Track active index
+    // Track active index and sync lock
     let activeIndex = 0;
+    let isSyncing = false;
 
     function updateActiveSlide(index) {
         activeIndex = index;
@@ -55,6 +56,68 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Animate footer update with GSAP
         gsap.fromTo('#active-tags', { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.3 });
         gsap.fromTo('#active-year', { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.3 });
+    }
+
+    // Mouse wheel plugin for keen-slider
+    function WheelControls(slider) {
+        let touchTimeout;
+        let position;
+        let wheelActive;
+
+        function dispatch(e, name) {
+            position.x -= e.deltaX;
+            position.y -= e.deltaY;
+            slider.container.dispatchEvent(
+                new CustomEvent(name, {
+                    detail: {
+                        x: position.x,
+                        y: position.y,
+                    },
+                })
+            );
+        }
+
+        function wheelStart(e) {
+            position = { x: e.pageX, y: e.pageY };
+            dispatch(e, 'ksDragStart');
+        }
+
+        function wheel(e) {
+            dispatch(e, 'ksDrag');
+        }
+
+        function wheelEnd(e) {
+            dispatch(e, 'ksDragEnd');
+        }
+
+        function eventWheel(e) {
+            e.preventDefault();
+            if (!wheelActive) {
+                wheelStart(e);
+                wheelActive = true;
+            }
+            wheel(e);
+            clearTimeout(touchTimeout);
+            touchTimeout = setTimeout(() => {
+                wheelActive = false;
+                wheelEnd(e);
+            }, 50);
+        }
+
+        slider.on('created', () => {
+            slider.container.addEventListener('wheel', eventWheel, { passive: false });
+        });
+    }
+
+    // Sync function — prevents infinite loop
+    function syncSliders(sourceIdx, ...targets) {
+        if (isSyncing) return;
+        isSyncing = true;
+        updateActiveSlide(sourceIdx);
+        targets.forEach(slider => {
+            slider.moveToIdx(sourceIdx, false, { duration: 500 });
+        });
+        setTimeout(() => { isSyncing = false; }, 50);
     }
 
     // Wheel configuration
@@ -75,22 +138,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nameSlider = new KeenSlider('#wheel-names', {
         ...wheelConfig,
         slideChanged(s) {
-            const idx = s.track.details.rel;
-            updateActiveSlide(idx);
-            descSlider.moveToIdx(idx, false, { duration: 500 });
-            imgSlider.moveToIdx(idx, false, { duration: 500 });
+            syncSliders(s.track.details.rel, descSlider, imgSlider);
         },
-    });
+    }, [WheelControls]);
 
     const descSlider = new KeenSlider('#wheel-descriptions', {
         ...wheelConfig,
         slideChanged(s) {
-            const idx = s.track.details.rel;
-            updateActiveSlide(idx);
-            nameSlider.moveToIdx(idx, false, { duration: 500 });
-            imgSlider.moveToIdx(idx, false, { duration: 500 });
+            syncSliders(s.track.details.rel, nameSlider, imgSlider);
         },
-    });
+    }, [WheelControls]);
 
     const imgSlider = new KeenSlider('#wheel-images', {
         ...wheelConfig,
@@ -99,12 +156,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             spacing: 0,
         },
         slideChanged(s) {
-            const idx = s.track.details.rel;
-            updateActiveSlide(idx);
-            nameSlider.moveToIdx(idx, false, { duration: 500 });
-            descSlider.moveToIdx(idx, false, { duration: 500 });
+            syncSliders(s.track.details.rel, nameSlider, descSlider);
         },
-    });
+    }, [WheelControls]);
 
     // Click to navigate to project
     document.querySelectorAll('.keen-slider__slide').forEach(slide => {
@@ -122,6 +176,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Also listen for scroll anywhere on the page and forward to name slider
+    document.addEventListener('wheel', (e) => {
+        // Only if not already over a slider
+        const overSlider = e.target.closest('.keen-slider');
+        if (!overSlider) {
+            e.preventDefault();
+            const direction = e.deltaY > 0 ? 1 : -1;
+            nameSlider.moveToIdx(nameSlider.track.details.rel + direction);
+        }
+    }, { passive: false });
 
     // Set initial active state
     updateActiveSlide(0);
