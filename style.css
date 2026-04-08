@@ -28,10 +28,13 @@
     --font-serif: 'Kolonia-regular', 'Times New Roman', Times, serif;
     --bg: #000;
     --fg: #fff;
-    --muted: #555;
+    --muted: grey;
     --border: #1a1a1a;
-    --highlight-bg: #fff;
-    --highlight-fg: #000;
+}
+
+::selection {
+    background: #a9a9a9;
+    color: #fff;
 }
 
 html {
@@ -40,10 +43,11 @@ html {
     font-family: var(--font-sans);
     font-size: 13px;
     overflow: hidden;
+    height: 100%;
 }
 
 body {
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -62,7 +66,7 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 24px;
+    padding: 12px 20px;
     font-size: 13px;
     border-bottom: 1px solid var(--border);
     z-index: 100;
@@ -72,10 +76,11 @@ a:hover {
 .header-center { flex: 1; text-align: center; color: var(--muted); }
 .header-right { flex: 1; text-align: right; color: var(--muted); }
 
-/* Slider viewport: three columns, fills remaining height */
+/* Slider viewport: three columns filling remaining height */
 .slider-viewport {
     flex: 1;
     display: flex;
+    flex-direction: row;
     overflow: hidden;
 }
 
@@ -84,32 +89,30 @@ a:hover {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-right: 1px solid var(--border);
-}
-
-.column:last-child {
-    border-right: none;
+    position: relative;
 }
 
 .column-names {
-    width: 22%;
+    width: 16vw;
+    border-right: 1px solid var(--border);
 }
 
 .column-descriptions {
-    width: 30%;
+    width: 32vw;
+    border-right: 1px solid var(--border);
 }
 
 .column-images {
-    width: 48%;
+    flex: 1;
 }
 
 /* Column labels */
 .column-label {
     flex-shrink: 0;
-    padding: 12px 24px;
-    font-size: 11px;
+    padding: 10px 20px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     color: var(--muted);
     border-bottom: 1px solid var(--border);
 }
@@ -117,87 +120,85 @@ a:hover {
 /* Slider wheel — vertical keen-slider filling the column */
 .slider-wheel {
     flex: 1;
-    overflow: hidden;
-}
-
-.slider-wheel[data-keen-slider] {
     height: 100%;
+    overflow: visible;
 }
 
 /* Individual slides */
-.slide {
+.keen-slider__slide.slide {
     display: flex;
     align-items: center;
     cursor: pointer;
-    transition: background 0.3s ease, color 0.3s ease;
-    min-height: 0;
+    overflow: hidden;
 }
 
 /* Name slides */
 .slide-name {
-    padding: 0 24px;
+    padding: 0 20px;
     font-size: 14px;
     font-family: var(--font-sans);
     color: var(--muted);
-    transition: color 0.3s ease, background 0.3s ease;
+    opacity: 0.85;
+    transition: all .3s ease;
+    user-select: none;
 }
 
 .slide-name.is-active {
-    color: var(--highlight-fg);
-    background: var(--highlight-bg);
+    color: var(--fg);
+    opacity: 1;
 }
 
 /* Description slides */
 .slide-description {
-    padding: 0 24px;
+    padding: 0 20px;
     font-family: var(--font-serif);
     font-size: 13px;
     line-height: 1.6;
     color: var(--muted);
-    transition: color 0.3s ease, background 0.3s ease;
+    opacity: 0.85;
+    transition: all .3s ease;
+    user-select: none;
 }
 
 .slide-description .desc-text {
-    max-width: 320px;
+    max-width: 360px;
 }
 
 .slide-description .desc-meta {
     margin-top: 8px;
     font-family: var(--font-sans);
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.04em;
+    text-transform: uppercase;
     opacity: 0.5;
 }
 
 .slide-description.is-active {
     color: var(--fg);
+    opacity: 1;
 }
 
 /* Image slides */
 .slide-image {
-    padding: 24px;
+    padding: 16px 24px;
     justify-content: center;
+    align-items: center;
 }
 
 .slide-image img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 47.5vh;
     object-fit: contain;
     display: block;
     opacity: 0.4;
-    transition: opacity 0.4s ease;
+    transition: all .3s ease;
 }
 
 .slide-image.is-active img {
     opacity: 1;
 }
 
-/* Gradient overlays on columns for fade effect */
-.column-names,
-.column-descriptions {
-    position: relative;
-}
-
+/* Gradient fade overlays on text columns */
 .column-names::after,
 .column-descriptions::after {
     content: '';
@@ -205,7 +206,7 @@ a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 100px;
     background: linear-gradient(to top, var(--bg), transparent);
     pointer-events: none;
     z-index: 10;
@@ -215,10 +216,10 @@ a:hover {
 .column-descriptions::before {
     content: '';
     position: absolute;
-    top: 36px; /* below the label */
+    top: 32px;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 100px;
     background: linear-gradient(to bottom, var(--bg), transparent);
     pointer-events: none;
     z-index: 10;
@@ -229,7 +230,7 @@ a:hover {
     flex-shrink: 0;
     display: flex;
     justify-content: space-between;
-    padding: 14px 24px;
+    padding: 12px 20px;
     font-size: 11px;
     color: var(--muted);
     border-top: 1px solid var(--border);
@@ -241,7 +242,7 @@ a:hover {
 }
 
 /* Responsive */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 640px) {
     html {
         overflow: auto;
     }
@@ -262,13 +263,16 @@ a:hover {
         border-bottom: 1px solid var(--border);
     }
 
-    .column-images {
-        height: 50vh;
+    .column-names {
+        height: 25vh;
     }
 
-    .column-names,
     .column-descriptions {
-        height: 30vh;
+        height: 25vh;
+    }
+
+    .column-images {
+        height: 50vh;
     }
 
     .column-names::before,
@@ -276,5 +280,9 @@ a:hover {
     .column-descriptions::before,
     .column-descriptions::after {
         height: 40px;
+    }
+
+    .slide-image img {
+        max-height: 90%;
     }
 }
