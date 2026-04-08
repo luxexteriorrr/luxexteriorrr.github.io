@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Sentra",
+    "slug": "IRP/oracle/public",
+    "description": "AI conversational system that adapts branding and UI through interaction",
+    "year": "2025",
+    "tags": ["digital", "branding", "web"],
+    "thumbnail": "assets/coveroccult.png"
+  },
+  {
+    "name": "Vestige",
+    "slug": "vestige",
+    "description": "A digital publication exploring decay, erosion, and narrative evolution",
+    "year": "2025",
+    "tags": ["digital", "editorial"],
+    "thumbnail": "assets/memorycover.png"
+  },
+  {
+    "name": "Occult of Encryption",
+    "slug": "occult.of.encryption",
+    "description": "Critical stories thesis on digital ambience and hidden presence",
+    "year": "2024",
+    "tags": ["digital", "editorial"],
+    "thumbnail": "assets/coveroccult.png"
+  },
+  {
+    "name": "Around A Memory",
+    "slug": "around.a.memory",
+    "description": "Interactive exploration of memory through sound, motion, and code",
+    "year": "2025",
+    "tags": ["digital", "web"],
+    "thumbnail": "assets/memorycover.png"
+  }
+]

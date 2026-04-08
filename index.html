@@ -1,43 +1,51 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Kirill Konstantinov</title>
     <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
-    <script src="time.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css">
 </head>
 <body>
-    <nav id="nav">
-        <a href="" id="mainweb">kirill.konstantinov</a>
-        <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" id="arena">arena</a>
-        <a href="" id="info">information</a>
-        <a href="" id="contact">contact</a>
-    </nav>
-    <div class="stamp">
-        <p class="update">update:<span id="lastModified"></span></p>
-        <script>
-            // Get the last modified date and time of the document
-            const lastModified = document.lastModified;
-            // Display the date in the desired element
-            document.getElementById('lastModified').textContent = lastModified;
-        </script>
-        <p id="localtime"></p>
-    </div>
 
-    <div class="container" id="containergrid">
-            <a href="https://luxexteriorrr.github.io/occult.of.encryption" class="grid-element" id="occult" >
-                <p class="project">Occult Of encryption</p>
-                <video src="assets/lighting.mp4" autoplay muted loop></video>
-            </a>
-            <a href="https://luxexteriorrr.github.io/around.a.memory" class="grid-element" id="memory">
-                <video src="assets/memoryvid.MOV" autoplay muted loop></video>
-                <p class="project">Around A Memory</p>
-            </a>
-            <a href="" class="grid-element" id="glimmers">
-                <p class="project">Glimmers Of Recall</p>
-                <video src="assets/glimmersvid.MOV" autoplay muted loop></video>
-            </a>
-    </div>
+    <header id="header">
+        <span class="header-name">Kirill Konstantinov</span>
+        <nav>
+            <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc/channels" target="_blank">Are.na</a>
+            <a href="#" id="info-link">Info</a>
+            <a href="mailto:lux.exteriorrr@gmail.com">Contact</a>
+        </nav>
+    </header>
+
+    <main id="selector">
+        <!-- Left column: project names -->
+        <div class="column column-names">
+            <div class="column-label">Project</div>
+            <div id="wheel-names" class="wheel keen-slider"></div>
+        </div>
+
+        <!-- Center column: descriptions -->
+        <div class="column column-descriptions">
+            <div class="column-label">Description</div>
+            <div id="wheel-descriptions" class="wheel keen-slider"></div>
+        </div>
+
+        <!-- Right column: preview images -->
+        <div class="column column-images">
+            <div id="wheel-images" class="wheel keen-slider"></div>
+        </div>
+    </main>
+
+    <footer id="footer">
+        <span class="footer-tags" id="active-tags"></span>
+        <span class="footer-year" id="active-year"></span>
+        <span class="footer-prompt">Scroll to browse — Click to enter</span>
+    </footer>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
