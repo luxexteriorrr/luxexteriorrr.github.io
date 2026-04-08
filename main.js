@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Shared config — names get more perView (small slides), images fewer (large slides)
+    // Shared config
     function makeConfig(idx, perView) {
         return {
             vertical: true,
@@ -111,28 +111,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             },
             defaultAnimation: {
                 duration: 500,
-                easing: (t) => 1 - Math.pow(1 - t, 3), // ease-out cubic
+                easing: (t) => 1 - Math.pow(1 - t, 3),
             },
-            animationEnded: (s) => {
+            slideChanged: (s) => {
                 syncSliders(idx, s.track.details.rel);
             },
         };
     }
 
-    // Create the three synced sliders with different perView values
+    // Three synced sliders — different perView per column
     const namesSlider = new KeenSlider(
         '#slider-names',
-        makeConfig(0, 7),  // many names visible
+        makeConfig(0, 5),
         [WheelPlugin]
     );
     const descsSlider = new KeenSlider(
         '#slider-descriptions',
-        makeConfig(1, 3),  // fewer descriptions visible
+        makeConfig(1, 3),
         [WheelPlugin]
     );
     const imagesSlider = new KeenSlider(
         '#slider-images',
-        makeConfig(2, 2),  // large images, ~2 visible
+        makeConfig(2, 1.5),
         [WheelPlugin]
     );
 
