@@ -141,14 +141,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     sliders = [namesSlider, titlesSlider, imagesSlider];
     updateActive(0);
 
-    // Position the bar to match where keen-slider places the active slide
+    // Position the bar: each slide = listsHeight / perView, centered by origin:'center'
     const barEl = document.querySelector('.bar');
-    const listsEl = document.querySelector('.lists');
-    const firstSlide = namesSlider.slides[0];
-    const listsRect = listsEl.getBoundingClientRect();
-    const slideRect = firstSlide.getBoundingClientRect();
-    barEl.style.top = (slideRect.top - listsRect.top) + 'px';
-    barEl.style.height = slideRect.height + 'px';
+    const slideHeight = listsHeight / listPerView;
+    barEl.style.height = slideHeight + 'px';
+    barEl.style.top = ((listsHeight - slideHeight) / 2) + 'px';
 
     // Click to navigate to project
     document.querySelectorAll('.slide-name, .slide-title, .slide-image').forEach(slide => {

@@ -16,27 +16,28 @@
     </header>
 
     <div class="main">
-        <!-- Left section: abstract on top, names + titles below -->
-        <div class="left-section">
-            <div class="abstract">
-                <div class="abstract-label">Abstract</div>
-                <div class="abstract-text" id="abstract-text"></div>
-            </div>
-            <div class="lists">
-                <div class="bar"></div>
-                <div class="col col-names">
-                    <div id="slider-names" class="keen-slider wheel"></div>
-                </div>
-                <div class="col col-titles">
-                    <div id="slider-titles" class="keen-slider wheel"></div>
-                </div>
-            </div>
+        <!-- Left: names -->
+        <div class="col col-names">
+            <div class="bar"></div>
+            <div id="slider-names" class="keen-slider wheel"></div>
+        </div>
+
+        <!-- Middle: titles -->
+        <div class="col col-titles">
+            <div class="bar"></div>
+            <div id="slider-titles" class="keen-slider wheel"></div>
         </div>
 
         <!-- Right: images -->
         <div class="col col-images">
             <div id="slider-images" class="keen-slider wheel"></div>
         </div>
+    </div>
+
+    <!-- Abstract overlay (positioned over middle column) -->
+    <div class="abstract" id="abstract">
+        <div class="abstract-label">Abstract</div>
+        <div class="abstract-text" id="abstract-text"></div>
     </div>
 
     <footer class="footer">
