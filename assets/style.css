@@ -17,7 +17,7 @@
   --measure: 44em;          /* caption column */
   --bio-w: 62%;             /* info block runs wide across the page */
   --plate-max-h: 82vh;      /* no plate taller than the screen */
-  --gap: 14vh;              /* between entries — viewport-relative, so the
+  --gap: 7vh;               /* between entries — viewport-relative, so the
                                rhythm holds across screen sizes */
 }
 
@@ -150,9 +150,10 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   scroll-snap-align: center;
   scroll-snap-stop: always;
 
-  /* Slides stretch to the tallest in the set, so a carousel mixing a spread
-   * with a poster sizes to the poster and nothing is cropped. Shorter plates
-   * sit centred in the taller box rather than pinned to the top. */
+  /* Slides stretch to the tallest in the set so the carousel height is fixed —
+   * nothing below it moves while you swipe. The cost is dead space when ratios
+   * within a set differ wildly, which is a reason to group plates of similar
+   * shape rather than to animate the height. */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,7 +206,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
  */
 
 @media (max-width: 700px) {
-  :root { --pad: 10px; --gap: 22vh; }
+  :root { --pad: 10px; --gap: 11vh; }
 
   .head-l { width: auto; }
 
