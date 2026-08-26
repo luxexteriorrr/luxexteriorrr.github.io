@@ -1,0 +1,37 @@
+/* Zerko Grotesk — webfont declarations
+ *
+ * Two weights ship: Regular (400) and Medium (500). The other four woff2 files
+ * sit in this folder unreferenced, so they cost nothing — a browser only
+ * downloads a face that a rule actually asks for. Add a block below to bring
+ * one in.
+ *
+ * The files declare themselves as separate families, each with usWeightClass
+ * 400. That is why the family name and weight are set explicitly here: the
+ * values below override the font's own metadata, so `font-weight: 500` picks
+ * Medium as expected.
+ *
+ * Medium is the 570 cut. Declared as 500 because that is the nearest CSS step
+ * and nothing else occupies it.
+ */
+
+@font-face {
+  font-family: 'Zerko';
+  src: url('zerko-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zerko';
+  src: url('zerko-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallback metrics are a rough match for a neutral grotesk, to limit the
+ * reflow when the webfont lands. */
+:root {
+  --zerko: 'Zerko', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
