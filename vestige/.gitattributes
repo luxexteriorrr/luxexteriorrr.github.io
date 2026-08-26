@@ -1,0 +1,4 @@
+# The 3D models are large; Git LFS keeps them out of the main object store.
+# Note: GitHub Pages does NOT serve LFS files — it returns the pointer, so these
+# models do not load on the live site. See the repo notes.
+*.glb filter=lfs diff=lfs merge=lfs -text
