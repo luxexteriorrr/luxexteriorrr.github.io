@@ -1,0 +1,7 @@
+Published plates land here. Do not add files by hand.
+
+  cd ~/Desktop/RCA\ Projects/_export
+  node publish.mjs <slug> <nn> [nn ...]
+
+Masters and the full derivative pool live outside this repo, in
+~/Desktop/RCA Projects/_export/. See _export/NAMING.md.
