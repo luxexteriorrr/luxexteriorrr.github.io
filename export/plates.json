@@ -194,5 +194,14 @@
       "bytes": 15514,
       "lossless": true
     }
+  ],
+  "aww90s": [
+    {
+      "src": "aww90s-02.webp",
+      "width": 2880,
+      "height": 1200,
+      "bytes": 141816,
+      "lossless": false
+    }
   ]
 }

@@ -159,6 +159,16 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   justify-content: center;
 }
 
+.slide video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: var(--plate-max-h);
+  object-fit: contain;
+  pointer-events: none;             /* clicks land on the track, not the video */
+  background: #f2f2f2;              /* holds the frame before the poster paints */
+}
+
 .slide img {
   display: block;
   width: 100%;

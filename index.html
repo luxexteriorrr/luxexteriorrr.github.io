@@ -228,7 +228,25 @@
 
   <!-- awaiting plates: Vestige, Website, 2025 -->
 
-  <!-- awaiting plates: AWW90s, Website, 2024 -->
+  <article class="entry" style="--w:62%">
+    <div class="carousel" data-carousel>
+      <div class="track" tabindex="0" aria-label="Plates">
+        <figure class="slide">
+          <video src="export/aww90s-01.mp4" poster="export/aww90s-01-poster.webp"
+                 width="2880" height="1800"
+                 autoplay muted loop playsinline preload="none"
+                 aria-label="Scroll through the AWW90s homepage."></video>
+        </figure>
+        <figure class="slide">
+          <img src="export/aww90s-02.webp" width="2880" height="1200"
+               alt="AWW90s homepage — archive pieces, type block and membership card."
+               loading="lazy" decoding="async">
+        </figure>
+      </div>
+      <span class="count" data-count>01/02</span>
+    </div>
+    <p class="cap"><b>AWW90s</b>, Website, 2024</p>
+  </article>
 
 </main>
 
@@ -294,9 +312,23 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
     if (img) img.removeAttribute('loading');
   };
 
+  // Only the plate on screen plays. Videos elsewhere in the set stay paused,
+  // so a page of carousels is not decoding several at once — and a phone is
+  // not burning battery on work nobody can see.
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function playOnly(i) {
+    slides.forEach((s, n) => {
+      const v = s.querySelector('video');
+      if (!v) return;
+      if (n === i && !calm) v.play().catch(() => {});
+      else v.pause();
+    });
+  }
+
   function sync() {
     const i = index();
     out.textContent = `${pad(i + 1)}/${pad(slides.length)}`;
+    playOnly(i);
     warm(i + 1);
   }
 
@@ -323,6 +355,20 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   addEventListener('resize', sync);
   warm(1);
   sync();
+}
+
+// Pause videos in carousels that are off screen entirely. Autoplay in a long
+// index would otherwise have every video running at once.
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      for (const v of e.target.querySelectorAll('video')) {
+        if (!e.isIntersecting) v.pause();
+        else if (v.closest('.slide') === e.target.querySelector('.slide')) v.play().catch(() => {});
+      }
+    }
+  }, { rootMargin: '100px' });
+  document.querySelectorAll('[data-carousel]').forEach(c => io.observe(c));
 }
 
 // Scroll percentage in the header.
