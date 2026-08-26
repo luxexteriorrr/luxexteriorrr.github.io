@@ -1,7 +1,0 @@
-Zerko webfont goes here — self-hosted, no CDN.
-
-Source: Zerko-VF.ttf (~/Desktop). Convert to woff2 as ONE variable file
-covering all weights, subset to Latin + Cyrillic only.
-
-It is the largest render-blocking asset on the site, so watch the size —
-a full VF with two scripts can be heavy.
