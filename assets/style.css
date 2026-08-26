@@ -1,231 +1,209 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'arketa';
-    text-decoration: none;
-    font-size: 12px;
-    font-style: normal;
-    letter-spacing: -1;
-    font-size: 0.6vw;
-    transition: all 0.5s ease-out;
-    color: black;
+/* Kirill Konstantinov — MVP
+ *
+ * One page. Sticky info block, scrolling index of 13 entries, plate then
+ * caption. No build step, no dependencies.
+ *
+ * Plates are centred on the page at varying widths, with a numbered caption
+ * directly beneath: 01 · Title · Object · Year. One type size throughout.
+ */
+
+:root {
+  --fg: #111;
+  --bg: #fff;
+  --size: 14px;
+  --lead: 1.28;
+  --track: 0.022em;         /* tracking — nudge to taste */
+  --pad: 14px;
+  --measure: 44em;          /* caption column */
+  --bio-w: 62%;             /* info block runs wide across the page */
+  --gap: 26px;              /* between entries */
 }
-::-webkit-scrollbar {
-    display: none;
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--zerko);
+  font-size: var(--size);
+  font-weight: 400;
+  line-height: var(--lead);
+  letter-spacing: var(--track);
+  font-kerning: normal;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
 }
-img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+
+p { margin: 0; }
+b { font-weight: 500; }
+i { font-style: normal; }
+
+a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
+
+
+/* ── Header ──────────────────────────────────────────────────────────────
+ * Stays put while the index scrolls under it. No background — the type sits
+ * directly over whatever passes beneath. White fill plus difference blending
+ * so it inverts over a plate rather than disappearing into it.
+ */
+
+.head {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--pad);
+  mix-blend-mode: difference;
+  color: #fff;
+  pointer-events: none;
 }
-video {
-    width: 100%;
-    height: 25vh;
-    object-fit: cover;
+
+.head a { pointer-events: auto; }
+
+.id { font-weight: 500; }
+.bio { font-weight: 500; }
+.dim { opacity: 0.55; }
+.rule { opacity: 0.55; }
+
+/* The info block runs wide rather than sitting in a narrow column — it is the
+ * first thing read and carries the positioning, so it gets the width. */
+.head-l { width: var(--bio-w); }
+.bio { max-width: none; }
+
+
+/* ── Index ───────────────────────────────────────────────────────────────
+ * Everything centred on the page axis. Plate, then its numbered caption.
+ *
+ * --w on each entry sets its plate width; entries without one are caption
+ * only. No fixed ratio: width/height on the <img> gives the browser the
+ * aspect ratio before the file lands, so nothing shifts while scrolling.
+ */
+
+.index {
+  padding: 0 var(--pad) 40vh;
+  margin-top: 13em;         /* clears the fixed header */
+  text-align: center;
+}
+
+.entry { margin-bottom: var(--gap); }
+
+.plate {
+  margin: 0 auto 0.5em;
+  width: var(--w, 46%);
+}
+
+.plate img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 
-/* typography rules */
-@font-face {
-    font-family: 'arketa';
-    src: url(OOArketaTrial-Regular.otf);
-}
-@font-face {
-    font-family: 'Kolonia-regular';
-    src: url(KoloniaTrial-Regular.woff);
-}
-@font-face {
-    font-family: 'Kolonia-italic';
-    src: url(KoloniaTrial-Italic.woff2);
-}
-/* time stamp */
-.stamp {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    height: fit-content;
-    padding: 12px 24px;
+/* ── Carousel ────────────────────────────────────────────────────────────
+ * A native overflow container with scroll-snap. Trackpad swipe, touch swipe
+ * and momentum all come from the browser — better than a library does it, and
+ * free. Clicking the plate advances one, wrapping to the first after the last.
+ *
+ * All plates in a set share a ratio, so the height never jumps.
+ */
+
+.carousel {
+  width: var(--w, 46%);
+  margin: 0 auto 0.5em;
 }
 
-
-/* navigation */
-nav {
-    position: fixed;
-    height: fit-content;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    padding: 12px 24px;
-    justify-content: space-between;
+.track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;   /* stop a swipe triggering back-navigation */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  outline: none;
+  cursor: e-resize;                 /* reads as "forward", not "open" */
 }
 
+.track::-webkit-scrollbar { display: none; }
 
-.title {
-     margin-bottom: 48px;
-}
-.underline {
-    text-decoration: underline;
-    text-transform: capitalize;
-}
-.textdiv a {
-    color: black;
-}
-nav a:hover {
-    opacity: 0.5;
-    transition-property: opacity;
-    text-decoration: none;
-}
+.slide {
+  flex: 0 0 100%;
+  margin: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 
-.wrapper {
-    width: 100%;
-    height: 100vh;
-    display: none;
-    flex-direction: row;
-    gap: 0;
-    padding: 24px;
+  /* Slides stretch to the tallest in the set, so a carousel mixing a spread
+   * with a poster sizes to the poster and nothing is cropped. Shorter plates
+   * sit centred in the taller box rather than pinned to the top. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.textdiv {
-    width: 50%;
-    height: 100%;
-    display: flex;
+.slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;                 /* never exceed the row, whatever the ratio */
+  object-fit: contain;              /* fit, never crop */
+  pointer-events: none;             /* clicks land on the track, not the image */
+}
+
+.count {
+  display: block;
+  margin-top: 0.5em;
+  opacity: 0.55;
+  font-variant-numeric: lining-nums;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────
+ * Sits at the end of the scroll, aligned to the same margin as everything
+ * else. The index already has a deep bottom pad, so this needs no extra air.
+ */
+
+.foot {
+  padding: 0 var(--pad) var(--pad);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 2em;
+}
+
+.foot p { margin: 0; }
+
+
+/* ── Mobile ──────────────────────────────────────────────────────────────
+ * Plates fill the column rather than bleeding to the edge, so they keep the
+ * page margin and line up with the caption and the header. The bio is dropped
+ * — it would take most of a small viewport — leaving the identifier and the
+ * percentage.
+ */
+
+@media (max-width: 700px) {
+  :root { --pad: 10px; --gap: 22px; }
+
+  .head-l { width: auto; }
+
+  .head .bio,
+  .head .rule,
+  .head .contact { display: none; }
+
+  .index { margin-top: 4em; }
+
+  .foot {
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 12px;
-}
+    gap: 0.2em;
+  }
 
-.images {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /*border: 0.5px solid black;*/
-}
-
-
-/* grid */
-#containergrid {
-    height: 100dvh;
-    width: 100dvw;
-    padding: 48px 0px;
-    display: flex;
-    flex-direction: row;
-    gap: 2px;
-}
-.grid-element {
-    flex: 1;
-    -webkit-transition: flex 2s ease-out;
-    -moz-transition: flex 2s ease-out;
-    -ms-transition: flex 2s ease-out;
-    -o-transition: flex 2s ease-out;
-    transition: flex 2s ease-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.grid-element:hover{
-    flex: 10;
-}
-
-.project {
-    display: none;
-    position: absolute;
-    color: whitesmoke;
-    font-size: 1rem;
-    transition: all 3s ease-out;
-}
-.active {
-    display: flex;
-
-}
-/* mobile 430px */
-@media screen and (max-width: 430px) {
-    * {
-        font-size: 0.8rem;
-    }
-
-    video {
-        height: 20vh;
-    }
-
-    #containergrid {
-        flex-direction: column;
-        gap: 0;
-        justify-content: center;
-        align-items: center;
-    }
-    .grid-element {
-        padding: 0;
-        margin: 0;
-        height: fit-content;
-        width: 75%;
-    }
-    .grid-element:hover {
-        flex: 1;
-    }
-}
-
-/* tablet 600px */
-@media screen and (min-width: 600px) {
-    * {
-        font-size: 0.8rem;
-    }
-
-    video {
-        height: 20vh;
-    }
-
-    #containergrid {
-        flex-direction: column;
-        gap: 0;
-        justify-content: center;
-        align-items: center;
-    }
-    .grid-element {
-        padding: 0;
-        margin: 0;
-        height: auto;
-        width: 50%;
-    }
-    .grid-element:hover {
-        flex: 1;
-    }
-    
-}
-/* desktop 1280px */
-@media screen and (min-width: 1280px) {
-    * {
-        font-size: 0.8rem;
-    }
-
-    video {
-        height: 20vh;
-    }
-
-    #containergrid {
-        flex-direction: row;
-        gap: 0;
-        justify-content: center;
-        align-items: center;
-    }
-    .grid-element {
-        padding: 0;
-        margin: 0;
-        height: auto;
-        width: 50%;
-    }
-    .grid-element:hover {
-        flex: 1;
-    }
-    
+  /* Full width of the padded column — --pad each side. */
+  .plate,
+  .carousel {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0.4em;
+  }
 }

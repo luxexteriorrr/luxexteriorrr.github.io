@@ -1,0 +1,159 @@
+{
+  "as-seen-in": [
+    {
+      "src": "as-seen-in-11.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 80716,
+      "lossless": true
+    },
+    {
+      "src": "as-seen-in-48.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 165438,
+      "lossless": true
+    },
+    {
+      "src": "as-seen-in-46.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 88038,
+      "lossless": true
+    },
+    {
+      "src": "as-seen-in-21.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 1533650,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-24.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 595012,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-16.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 56946,
+      "lossless": true
+    },
+    {
+      "src": "as-seen-in-33.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 347138,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-12.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 975224,
+      "lossless": false
+    }
+  ],
+  "zerko-thesis": [
+    {
+      "src": "zerko-thesis-05.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 178316,
+      "lossless": true
+    },
+    {
+      "src": "zerko-thesis-22.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 392934,
+      "lossless": false
+    },
+    {
+      "src": "zerko-thesis-25.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 239302,
+      "lossless": false
+    },
+    {
+      "src": "zerko-thesis-26.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 821608,
+      "lossless": true
+    },
+    {
+      "src": "zerko-thesis-11.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 1667492,
+      "lossless": false
+    },
+    {
+      "src": "zerko-thesis-13.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 1764768,
+      "lossless": false
+    },
+    {
+      "src": "zerko-thesis-21.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 200874,
+      "lossless": true
+    }
+  ],
+  "rada-birthday-bash": [
+    {
+      "src": "rada-birthday-bash-02.webp",
+      "width": 5636,
+      "height": 7014,
+      "bytes": 1591958,
+      "lossless": false
+    },
+    {
+      "src": "rada-birthday-bash-01.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 244798,
+      "lossless": true
+    }
+  ],
+  "jray": [
+    {
+      "src": "jray-02.webp",
+      "width": 4862,
+      "height": 4862,
+      "bytes": 2693620,
+      "lossless": true
+    },
+    {
+      "src": "jray-01.webp",
+      "width": 3000,
+      "height": 3000,
+      "bytes": 1735934,
+      "lossless": false
+    }
+  ],
+  "rada-corsica": [
+    {
+      "src": "rada-corsica-01.webp",
+      "width": 4961,
+      "height": 7016,
+      "bytes": 518298,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-02.webp",
+      "width": 3508,
+      "height": 4961,
+      "bytes": 151996,
+      "lossless": true
+    }
+  ]
+}
