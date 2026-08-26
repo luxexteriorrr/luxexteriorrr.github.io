@@ -5,7 +5,7 @@ Three-screen installation. RCA 2025 final show. **Runs on a local network, not t
 ## Start the server
 
 ```bash
-cd ~/Desktop/luxexteriorrr.github.io/IRP/oracle
+cd ~/Desktop/luxexteriorrr.github.io/sentra
 npm install        # only needed once
 npm start
 ```
