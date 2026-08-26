@@ -13,9 +13,11 @@
 
 <header class="head">
   <div class="head-l">
-    <p><span class="id">Kirill Konstantinov</span> <span class="dim">(<time id="clock">&mdash;</time>, London)</span></p>
-    <p class="bio">Kirill Konstantinov is a graphic designer based in London. His work spans editorial, identity and type. Every project starts from a premise, whether a publication, an identity or a fiction. Alongside commissioned work he writes and designs his own publications, draws the typefaces they are set in, and builds the sites himself.</p>
-    <p class="contact"><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a></p>
+    <p><button class="id" id="idToggle" aria-expanded="false" aria-controls="info">Kirill Konstantinov</button> <span class="dim">(<time id="clock">&mdash;</time>, London)</span></p>
+    <div class="info" id="info" hidden>
+      <p class="bio">Kirill Konstantinov is a graphic designer based in London. His work spans editorial, identity and type. Every project starts from a premise, whether a publication, an identity or a fiction. Alongside commissioned work he writes and designs his own publications, draws the typefaces they are set in, and builds the sites himself.</p>
+      <p class="contact"><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a></p>
+    </div>
   </div>
   <div class="head-r">
     <p class="dim"><span id="pct">0%</span></p>
@@ -58,7 +60,7 @@
       </div>
       <span class="count" data-count>01/07</span>
     </div>
-    <p class="cap"><span class="n">01</span> &middot; Zerko Grotesk: Script Parity as a Design Condition &middot; Publication &middot; 2026</p>
+    <p class="cap"><span class="n">01</span>, Zerko Grotesk: Script Parity as a Design Condition, Publication, 2026</p>
   </article>
 
   <!-- awaiting plates: 02 &middot; Zerko Grotesk &middot; Typeface &middot; 2026 -->
@@ -101,7 +103,7 @@
       </div>
       <span class="count" data-count>01/08</span>
     </div>
-    <p class="cap"><span class="n">02</span> &middot; As Seen In &middot; Publication &middot; 2025</p>
+    <p class="cap"><span class="n">02</span>, As Seen In, Publication, 2025</p>
   </article>
 
   <!-- awaiting plates: 04 &middot; Around A Memory &middot; Publication &middot; 2026 -->
@@ -120,7 +122,7 @@
       </div>
       <span class="count" data-count>01/02</span>
     </div>
-    <p class="cap"><span class="n">03</span> &middot; JRAY &middot; Sleeve &middot; 2026</p>
+    <p class="cap"><span class="n">03</span>, JRAY, Sleeve, 2026</p>
   </article>
 
   <!-- awaiting plates: 06 &middot; LOTV Identity &middot; Identity &middot; 2026 -->
@@ -141,7 +143,7 @@
       </div>
       <span class="count" data-count>01/02</span>
     </div>
-    <p class="cap"><span class="n">04</span> &middot; RADA &mdash; Birthday Bash &middot; Poster &middot; 2025</p>
+    <p class="cap"><span class="n">04</span>, RADA &mdash; Birthday Bash, Poster, 2025</p>
   </article>
 
   <article class="entry" style="--w:34%">
@@ -158,7 +160,7 @@
       </div>
       <span class="count" data-count>01/02</span>
     </div>
-    <p class="cap"><span class="n">05</span> &middot; RADA &mdash; Corsica &middot; Poster &middot; 2025</p>
+    <p class="cap"><span class="n">05</span>, RADA &mdash; Corsica, Poster, 2025</p>
   </article>
 
   <!-- awaiting plates: 10 &middot; LOTV &times; Apoc Paris &middot; Identity &middot; 2025 -->
@@ -201,6 +203,30 @@
     node.parentNode.replaceChild(frag, node);
   }
 })();
+
+// The identifier toggles the info block. It is absolutely positioned with no
+// background, so the type appears over the page rather than displacing it.
+const idToggle = document.getElementById('idToggle');
+const info = document.getElementById('info');
+
+function setInfo(open) {
+  info.hidden = !open;
+  idToggle.setAttribute('aria-expanded', String(open));
+}
+
+idToggle.addEventListener('click', e => {
+  e.stopPropagation();
+  setInfo(info.hidden);
+});
+
+// Anywhere else closes it, as does Escape — otherwise it sits over the plates
+// with no obvious way back.
+document.addEventListener('click', e => {
+  if (!info.hidden && !info.contains(e.target)) setInfo(false);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !info.hidden) setInfo(false);
+});
 
 // London time, so a visitor in another timezone knows what hour it is here.
 // Ticks on the second, aligned to the wall clock rather than to page load.
