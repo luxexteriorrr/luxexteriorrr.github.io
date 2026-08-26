@@ -29,15 +29,15 @@ video {
 /* typography rules */
 @font-face {
     font-family: 'arketa';
-    src: url(assets/OOArketaTrial-Regular.otf);
+    src: url(OOArketaTrial-Regular.otf);
 }
 @font-face {
     font-family: 'Kolonia-regular';
-    src: url(assets/KoloniaTrial-Regular.woff);
+    src: url(KoloniaTrial-Regular.woff);
 }
 @font-face {
     font-family: 'Kolonia-italic';
-    src: url(assets/KoloniaTrial-Italic.woff2);
+    src: url(KoloniaTrial-Italic.woff2);
 }
 /* time stamp */
 .stamp {
