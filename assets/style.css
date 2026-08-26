@@ -124,9 +124,21 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   overscroll-behavior-x: contain;   /* stop a swipe triggering back-navigation */
   scrollbar-width: none;
   -ms-overflow-style: none;
-  outline: none;
   cursor: e-resize;                 /* reads as "forward", not "open" */
+
+  /* The track is clickable and focusable, so a click would otherwise select
+   * the figure inside it — which Safari paints as a blue wash over the whole
+   * plate. Suppress selection and the tap highlight; keep a focus ring for
+   * keyboard users only. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
+
+.track:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+
+.slide img { -webkit-user-drag: none; }
 
 .track::-webkit-scrollbar { display: none; }
 
