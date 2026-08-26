@@ -6,3 +6,6 @@ projects-data.xlsx
 
 # Plan docs
 PLAN.md
+
+# Dependencies (rebuild with: npm install)
+node_modules/
