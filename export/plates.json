@@ -155,5 +155,14 @@
       "bytes": 151996,
       "lossless": true
     }
+  ],
+  "lotv-waste": [
+    {
+      "src": "lotv-waste-01.webp",
+      "width": 3721,
+      "height": 5262,
+      "bytes": 192778,
+      "lossless": true
+    }
   ]
 }
