@@ -10,13 +10,14 @@
 :root {
   --fg: #111;
   --bg: #fff;
-  --size: 14px;
+  --size: 12px;
   --lead: 1.28;
   --track: 0.022em;         /* tracking — nudge to taste */
   --pad: 14px;
   --measure: 44em;          /* caption column */
   --bio-w: 62%;             /* info block runs wide across the page */
-  --gap: 26px;              /* between entries */
+  --gap: 14vh;              /* between entries — viewport-relative, so the
+                               rhythm holds across screen sizes */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -165,11 +166,16 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   pointer-events: none;             /* clicks land on the track, not the image */
 }
 
+/* Counter is hidden visually but stays in the accessibility tree, so a screen
+ * reader still announces which plate of how many. Delete this rule to bring
+ * it back on the page. */
 .count {
-  display: block;
-  margin-top: 0.5em;
-  opacity: 0.55;
-  font-variant-numeric: lining-nums;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────
@@ -195,7 +201,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
  */
 
 @media (max-width: 700px) {
-  :root { --pad: 10px; --gap: 22px; }
+  :root { --pad: 10px; --gap: 22vh; }
 
   .head-l { width: auto; }
 
