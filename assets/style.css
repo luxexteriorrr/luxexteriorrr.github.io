@@ -16,6 +16,7 @@
   --pad: 14px;
   --measure: 44em;          /* caption column */
   --bio-w: 62%;             /* info block runs wide across the page */
+  --plate-max-h: 82vh;      /* no plate taller than the screen */
   --gap: 14vh;              /* between entries — viewport-relative, so the
                                rhythm holds across screen sizes */
 }
@@ -161,8 +162,11 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   display: block;
   width: 100%;
   height: auto;
-  max-height: 100%;                 /* never exceed the row, whatever the ratio */
-  object-fit: contain;              /* fit, never crop */
+  /* A tall plate — a rotated page, a poster — would otherwise set the height
+   * for every slide in the set and dwarf the landscape ones. Cap it so no
+   * plate is taller than the screen; contain fits rather than crops. */
+  max-height: var(--plate-max-h);
+  object-fit: contain;
   pointer-events: none;             /* clicks land on the track, not the image */
 }
 

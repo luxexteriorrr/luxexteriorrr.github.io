@@ -126,18 +126,18 @@
   ],
   "jray": [
     {
-      "src": "jray-02.webp",
-      "width": 4862,
-      "height": 4862,
-      "bytes": 2693620,
-      "lossless": true
-    },
-    {
       "src": "jray-01.webp",
       "width": 3000,
       "height": 3000,
       "bytes": 1735934,
       "lossless": false
+    },
+    {
+      "src": "jray-02.webp",
+      "width": 4862,
+      "height": 4862,
+      "bytes": 2693620,
+      "lossless": true
     }
   ],
   "rada-corsica": [
@@ -162,6 +162,29 @@
       "width": 3721,
       "height": 5262,
       "bytes": 192778,
+      "lossless": true
+    }
+  ],
+  "zerko-grotesk": [
+    {
+      "src": "zerko-grotesk-01.webp",
+      "width": 2271,
+      "height": 1678,
+      "bytes": 16870,
+      "lossless": false
+    },
+    {
+      "src": "zerko-grotesk-02.webp",
+      "width": 1276,
+      "height": 3410,
+      "bytes": 169118,
+      "lossless": false
+    },
+    {
+      "src": "zerko-grotesk-03.webp",
+      "width": 1295,
+      "height": 635,
+      "bytes": 15514,
       "lossless": true
     }
   ]
