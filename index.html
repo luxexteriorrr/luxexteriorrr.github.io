@@ -13,15 +13,54 @@
 
 <header class="head">
   <div class="head-l">
-    <p><span class="id">Kirill Konstantinov</span> <span class="dim">(<time id="clock">&mdash;</time>, London)</span></p>
-    <p class="bio">Kirill Konstantinov is a graphic designer based in London. His work spans editorial, identity and type. Every project starts from a premise, whether a publication, an identity or a fiction. Alongside commissioned work he writes and designs his own publications, draws the typefaces they are set in, and builds the sites himself.</p>
-    <p class="contact"><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a></p>
+    <p><button type="button" class="id-toggle" id="info-toggle" aria-expanded="false" aria-controls="info"><span class="id">Kirill Konstantinov</span> <span class="dim">(<time id="clock">&mdash;</time>, London)</span></button></p>
   </div>
   <div class="head-r">
     <p class="dim"><span id="pct">0%</span></p>
   </div>
 </header>
 
+<!-- The bio sits in its own fixed layer rather than inside .head. On desktop it
+     renders exactly where it did before; on mobile the index scrolls over it. -->
+<div class="intro">
+  <p class="bio">Kirill Konstantinov is a graphic designer based in London. His work spans editorial, identity and type. Every project starts from a premise, whether a publication, an identity or a fiction. Alongside commissioned work he writes and designs his own publications, draws the typefaces they are set in, and builds the sites himself.</p>
+  <p class="contact"><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a></p>
+</div>
+
+
+<!-- Info overlay. Sits BELOW the header in the stacking order (z-index 5 vs 10)
+     so the header's difference blend still resolves against it and the
+     identifier stays legible while it is open. -->
+<div class="info" id="info" role="dialog" aria-modal="true" aria-label="Information" hidden>
+  <div class="info-inner">
+    <section>
+      <h2>Practice</h2>
+      <p>Art Direction<br>Editorial Design<br>Graphic Design<br>Identity<br>Lettering<br>Type Design<br>Web</p>
+    </section>
+
+    <section>
+      <h2>Clients and collaborators</h2>
+      <p>APOC Store<br>AWW90s<br>JRAY<br>Lilies of the Valley<br>RADA<br>WASTE</p>
+    </section>
+
+    <section>
+      <h2>Typefaces</h2>
+      <p>Zerko Grotesk, 2026<br><span class="dim">Latin and Cyrillic, six weights with obliques</span></p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a><br>
+         <a href="https://instagram.com/lux.exteriorrr" rel="me noopener">@lux.exteriorrr</a><br>
+         <span class="dim">Portfolio PDF on request</span></p>
+    </section>
+
+  </div>
+  <p class="info-colophon dim">Set in Zerko Grotesk. Built by hand. &copy; Kirill Konstantinov 2026</p>
+</div>
+
+
+<div class="scroller" id="scroller">
 <main class="index">
 
   <article class="entry" style="--w:80%; --ground:#000; --mount:3.5vh 4%; --plate-max-h:74vh">
@@ -187,7 +226,7 @@
       </div>
       <span class="count" data-count>01/02</span>
     </div>
-    <p class="cap"><b>RADA &mdash; Birthday Bash</b>, Poster, 2025</p>
+    <p class="cap"><b>RADA Birthday Bash at Peckham Audio</b>, Poster, 2025</p>
   </article>
 
   <article class="entry" style="--w:44%">
@@ -208,7 +247,7 @@
       </div>
       <span class="count" data-count>01/03</span>
     </div>
-    <p class="cap"><b>RADA &mdash; Corsica</b>, Poster, 2025</p>
+    <p class="cap"><b>RADA at Corsica Studios</b>, Poster and social media, 2025</p>
   </article>
 
   <!-- awaiting plates: LOTV &times; Apoc Paris, Identity, 2025 -->
@@ -269,6 +308,7 @@
 <footer class="foot">
   <p class="dim">&copy; 2026 Kirill Konstantinov. All work shown remains the property of the author and its respective clients. Images may not be reproduced without permission.</p>
 </footer>
+</div>
 
 <script>
 // Single-storey g. Zerko's ss01 swaps R, a, g and y as a set, and CSS applies
@@ -408,6 +448,42 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   sync();
 }
 
+// Info overlay. The sheet is in the markup and only shown/hidden here, so it
+// exists without JavaScript. #info in the address bar makes it linkable and
+// lets the back button close it.
+(function info() {
+  const sheet = document.getElementById('info');
+  const toggle = document.getElementById('info-toggle');
+  let open = false;
+
+  function set(next, push) {
+    if (next === open) return;
+    open = next;
+    toggle.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('info-open', open);
+    if (open) {
+      const intro = document.querySelector('.intro');
+      if (intro) document.documentElement.style.setProperty('--intro-h', intro.offsetHeight + 'px');
+      sheet.hidden = false;
+      // One frame between removing `hidden` and adding the class, or the
+      // transition has no start state to run from.
+      requestAnimationFrame(() => sheet.classList.add('is-open'));
+      if (push) history.pushState({ info: true }, '', '#info');
+    } else {
+      sheet.classList.remove('is-open');
+      const done = () => { if (!open) sheet.hidden = true; };
+      sheet.addEventListener('transitionend', done, { once: true });
+      setTimeout(done, 400);                    // in case the transition is suppressed
+      if (push && location.hash === '#info') history.pushState({}, '', location.pathname);
+    }
+  }
+
+  toggle.addEventListener('click', () => set(!open, true));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && open) set(false, true); });
+  addEventListener('popstate', () => set(location.hash === '#info', false));
+  if (location.hash === '#info') set(true, false);
+})();
+
 // Browsers restore the scroll position of overflow containers across a reload
 // and through the back/forward cache, so a carousel left on slide 3 comes back
 // on slide 3 and the entry opens on the wrong plate. Reset every track to its
@@ -437,11 +513,13 @@ if ('IntersectionObserver' in window) {
 
 // Scroll percentage in the header.
 const pct = document.getElementById('pct');
-addEventListener('scroll', () => {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  pct.textContent = (max > 0 ? Math.round(scrollY / max * 100) : 0) + '%';
+const scroller = document.getElementById('scroller');
+scroller.addEventListener('scroll', () => {
+  const max = scroller.scrollHeight - scroller.clientHeight;
+  pct.textContent = (max > 0 ? Math.round(scroller.scrollTop / max * 100) : 0) + '%';
 }, { passive: true });
 </script>
+
 
 </body>
 </html>

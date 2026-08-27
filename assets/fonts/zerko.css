@@ -1,7 +1,7 @@
 /* Zerko Grotesk — webfont declarations
  *
- * Two weights ship: Regular (400) and Medium (500). The other four woff2 files
- * sit in this folder unreferenced, so they cost nothing — a browser only
+ * Three weights ship: Regular (400), Medium (500) and Bold (700). The other
+ * three woff2 files sit in this folder unreferenced, so they cost nothing — a browser only
  * downloads a face that a rule actually asks for. Add a block below to bring
  * one in.
  *
@@ -26,6 +26,14 @@
   font-family: 'Zerko';
   src: url('zerko-medium.woff2') format('woff2');
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zerko';
+  src: url('zerko-bold.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }

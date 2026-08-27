@@ -14,6 +14,7 @@
   --lead: 1.28;
   --track: 0.022em;         /* tracking — nudge to taste */
   --pad: 14px;
+  --pad-top: 12px;         /* header sits slightly tighter to the top edge */
   --measure: 44em;          /* caption column */
   --bio-w: 62%;             /* info block runs wide across the page */
   /* Ground behind plates. Off by default; switched on per entry in the
@@ -70,7 +71,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: var(--pad);
+  padding: var(--pad-top) var(--pad) var(--pad);
   mix-blend-mode: difference;
   color: #fff;
   pointer-events: none;
@@ -240,9 +241,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
   .head-l { width: auto; }
 
-  .head .bio,
-  .head .rule,
-  .head .contact { display: none; }
+  .head .rule { display: none; }
 
   .index { margin-top: 4em; }
 
@@ -258,5 +257,179 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
     margin-left: 0;
     margin-right: 0;
     margin-bottom: 0.4em;
+  }
+}
+
+
+/* ── Info overlay ────────────────────────────────────────────────────────
+ * A plain white sheet at full viewport, sitting UNDER the header. The header
+ * is z-index 10 with mix-blend-mode: difference — with the sheet beneath it,
+ * the blend resolves against white and the identifier reads black, exactly as
+ * it does over the page. Nothing about the header has to change.
+ */
+
+.info {
+  position: fixed;
+  inset: 0;
+  z-index: 5;                    /* under .head (10), over the index */
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;                /* mobile browser chrome */
+  background: #fff;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.info.is-open { opacity: 1; }
+.info[hidden] { display: none; }
+
+/* The header is pointer-events: none so it never blocks the scroll beneath it.
+ * The identifier is the one thing that has to receive clicks. */
+.id-toggle {
+  pointer-events: auto;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  user-select: text;             /* still selectable, despite being a button */
+  -webkit-user-select: text;
+}
+
+.id-toggle:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+
+/* Stop the page behind scrolling while the sheet is open. */
+body.info-open { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .info { transition: none; }
+}
+
+
+/* ── Intro (the bio layer) ───────────────────────────────────────────────
+ * Same fixed position, same difference blend, same measure as when it lived
+ * inside .head — so desktop is unchanged. It is a separate layer only so that
+ * on mobile the index can pass over it while the identifier stays on top.
+ *
+ * top = header padding + one identifier line (--lead), so it lands exactly
+ * where the flow put it before.
+ */
+.intro {
+  position: fixed;
+  top: calc(var(--pad-top) + 1.28em);
+  left: var(--pad);
+  width: var(--bio-w);
+  z-index: 10;
+  mix-blend-mode: difference;
+  color: #fff;
+  pointer-events: none;
+}
+
+.intro .contact { pointer-events: auto; }
+.intro p { margin: 0; }
+
+/* The index paints its own ground and rides above the intro, so scrolling
+ * covers the bio rather than moving it. Desktop keeps the intro on top
+ * (z-index 10 vs 2), so nothing changes there. */
+.index { background: var(--bg); }
+
+@media (max-width: 700px) {
+  .intro {
+    display: block;            /* the old rule hid .bio at this width */
+    z-index: 1;                /* now BELOW the index, so content covers it */
+    width: auto;
+    right: var(--pad);
+
+    /* Safari promotes a position:fixed element carrying mix-blend-mode onto its
+     * own compositing layer, where it paints above scrolled content regardless
+     * of z-index — the index then slides under the bio instead of over it.
+     * The blend earns nothing here: on mobile the bio only ever sits on the
+     * page ground, because it is covered rather than scrolled across. */
+    mix-blend-mode: normal;
+    color: var(--fg);
+  }
+
+  /* Start the index below the bio so it is readable on load, then let the
+   * scroll bring the index up over it. */
+  .index { margin-top: 15em; }
+}
+
+
+/* ── Scroll container ────────────────────────────────────────────────────
+ * The body does not scroll; the index scrolls inside its own container.
+ *
+ * Why: on iOS Safari, `position: fixed` elements travel with the elastic
+ * rubber-band at the ends of a scroll — the header and bio visibly slide, and
+ * the index's white ground rides over them. A fixed element only stays put if
+ * there is no body scroll to bounce. Moving the scroll into a container also
+ * makes `overscroll-behavior` effective, which stops the bounce entirely.
+ */
+html, body { height: 100%; overflow: hidden; }
+
+.scroller {
+  /* The z-index lives HERE, not on .index. Safari treats a touch-scrolling
+   * overflow container as a stacking context, which traps any z-index set on a
+   * child — .index at 2 was being compared inside .scroller rather than against
+   * .intro, and .scroller itself defaulted to auto, so the bio painted on top.
+   * -webkit-overflow-scrolling is dropped: it has been a no-op since iOS 13 and
+   * it was what forced the extra layer. */
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;   /* no bounce past either end */
+  scrollbar-width: none;
+}
+.scroller::-webkit-scrollbar { display: none; }
+
+/* The overlay covers the scroller, so locking the body is no longer how the
+ * page behind is held still — the sheet simply sits above it. */
+body.info-open .scroller { overflow: hidden; }
+
+/* The sheet is z-index 5. On mobile .intro drops to 1 so the index can cover
+ * it, which also put it under the sheet — lift it back over while open. */
+body.info-open .intro { z-index: 6; }
+
+
+/* ── Info overlay content ────────────────────────────────────────────────
+ * The bio and email already sit above the sheet, so the overlay does not
+ * repeat them — it continues underneath, in the same column, at the same
+ * measure. Opening it reads as the info block extending rather than as a
+ * panel arriving. --intro-h is set by script, since the bio's height depends
+ * on how the copy wraps at the current width.
+ */
+.info-inner {
+  padding: calc(var(--pad-top) + 1.28em + var(--intro-h, 6em) + 2em) var(--pad) 6em;
+  width: var(--bio-w);
+  columns: 4;
+  column-gap: 2em;
+}
+
+.info-inner section { break-inside: avoid; margin: 0 0 2em; }
+/* Bold marks the category, regular marks the thing — the jotundes device noted
+ * in WEB.md section 4. Bold is a drawn weight, declared in zerko.css, not
+ * synthesised from Medium. */
+.info-inner h2 { font-size: inherit; font-weight: 700; margin: 0; }
+.info-inner p  { font-weight: 400; }
+.info-inner p  { margin: 0; }
+/* Anchors the foot of the sheet rather than sitting in the column flow, where
+ * it read as a fifth block level with Typefaces. */
+.info-colophon { margin: auto 0 0; padding: 0 var(--pad) var(--pad); }
+
+@media (max-width: 700px) {
+  .info-inner {
+    width: auto;
+    columns: 2;
+    column-gap: 1.5em;
   }
 }
