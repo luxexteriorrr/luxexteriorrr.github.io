@@ -411,11 +411,15 @@ body.info-open .intro { z-index: 6; }
 .info-inner {
   padding: calc(var(--pad-top) + 1.28em + var(--intro-h, 6em) + 2em) var(--pad) 6em;
   width: var(--bio-w);
-  columns: 4;
-  column-gap: 2em;
+  /* Grid, not multi-column: `columns` flows the content, so a short block in
+   * one column pushed the next one down and the headings stopped lining up. */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: start;
+  gap: 2em;
 }
 
-.info-inner section { break-inside: avoid; margin: 0 0 2em; }
+.info-inner section { margin: 0; }
 /* Bold marks the category, regular marks the thing — the jotundes device noted
  * in WEB.md section 4. Bold is a drawn weight, declared in zerko.css, not
  * synthesised from Medium. */
@@ -424,12 +428,16 @@ body.info-open .intro { z-index: 6; }
 .info-inner p  { margin: 0; }
 /* Anchors the foot of the sheet rather than sitting in the column flow, where
  * it read as a fifth block level with Typefaces. */
-.info-colophon { margin: auto 0 0; padding: 0 var(--pad) var(--pad); }
+.info-colophon { margin: auto 0 0; }   /* .foot already carries the padding */
 
 @media (max-width: 700px) {
   .info-inner {
     width: auto;
-    columns: 2;
-    column-gap: 1.5em;
+    /* Two columns, filled downward then across, so Practice sits beside
+     * Typefaces and Clients beside Contact, each pair sharing a baseline. */
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, min-content);
+    grid-auto-flow: column;
+    gap: 2em 1.5em;
   }
 }

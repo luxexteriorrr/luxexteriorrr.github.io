@@ -166,6 +166,13 @@
       "src": "rada-corsica-01.webp",
       "width": 4032,
       "height": 3024,
+      "bytes": 1324854,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-04.webp",
+      "width": 4032,
+      "height": 3024,
       "bytes": 1417138,
       "lossless": false
     },
@@ -229,6 +236,43 @@
       "width": 2880,
       "height": 1200,
       "bytes": 141816,
+      "lossless": false
+    }
+  ],
+  "around-a-memory": [
+    {
+      "src": "around-a-memory-10.webp",
+      "width": 3497,
+      "height": 2481,
+      "bytes": 529584,
+      "lossless": false
+    },
+    {
+      "src": "around-a-memory-11.webp",
+      "width": 3497,
+      "height": 2481,
+      "bytes": 323954,
+      "lossless": false
+    },
+    {
+      "src": "around-a-memory-15.webp",
+      "width": 3497,
+      "height": 2481,
+      "bytes": 896482,
+      "lossless": false
+    },
+    {
+      "src": "around-a-memory-16.webp",
+      "width": 3497,
+      "height": 2481,
+      "bytes": 1019974,
+      "lossless": false
+    },
+    {
+      "src": "around-a-memory-24.webp",
+      "width": 3497,
+      "height": 2481,
+      "bytes": 1146106,
       "lossless": false
     }
   ]
