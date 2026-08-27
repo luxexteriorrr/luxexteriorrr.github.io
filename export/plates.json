@@ -59,10 +59,38 @@
   ],
   "zerko-thesis": [
     {
-      "src": "zerko-thesis-05.webp",
+      "src": "zerko-thesis-04.webp",
       "width": 4961,
       "height": 3508,
-      "bytes": 178316,
+      "bytes": 212272,
+      "lossless": true
+    },
+    {
+      "src": "zerko-thesis-07.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 544332,
+      "lossless": false
+    },
+    {
+      "src": "zerko-thesis-10.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 1390646,
+      "lossless": false
+    },
+    {
+      "src": "zerko-thesis-14.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 183626,
+      "lossless": true
+    },
+    {
+      "src": "zerko-thesis-17.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 145434,
       "lossless": true
     },
     {
@@ -71,6 +99,13 @@
       "height": 3508,
       "bytes": 392934,
       "lossless": false
+    },
+    {
+      "src": "zerko-thesis-24.webp",
+      "width": 4961,
+      "height": 3508,
+      "bytes": 1116294,
+      "lossless": true
     },
     {
       "src": "zerko-thesis-25.webp",
@@ -84,27 +119,6 @@
       "width": 4961,
       "height": 3508,
       "bytes": 821608,
-      "lossless": true
-    },
-    {
-      "src": "zerko-thesis-11.webp",
-      "width": 4961,
-      "height": 3508,
-      "bytes": 1667492,
-      "lossless": false
-    },
-    {
-      "src": "zerko-thesis-13.webp",
-      "width": 4961,
-      "height": 3508,
-      "bytes": 1764768,
-      "lossless": false
-    },
-    {
-      "src": "zerko-thesis-21.webp",
-      "width": 4961,
-      "height": 3508,
-      "bytes": 200874,
       "lossless": true
     }
   ],
@@ -127,13 +141,20 @@
   "jray": [
     {
       "src": "jray-01.webp",
+      "width": 1206,
+      "height": 2622,
+      "bytes": 92408,
+      "lossless": false
+    },
+    {
+      "src": "jray-02.webp",
       "width": 3000,
       "height": 3000,
       "bytes": 1735934,
       "lossless": false
     },
     {
-      "src": "jray-02.webp",
+      "src": "jray-03.webp",
       "width": 4862,
       "height": 4862,
       "bytes": 2693620,
@@ -143,9 +164,9 @@
   "rada-corsica": [
     {
       "src": "rada-corsica-01.webp",
-      "width": 4961,
-      "height": 7016,
-      "bytes": 518298,
+      "width": 4032,
+      "height": 3024,
+      "bytes": 1417138,
       "lossless": false
     },
     {
@@ -154,6 +175,13 @@
       "height": 4961,
       "bytes": 151996,
       "lossless": true
+    },
+    {
+      "src": "rada-corsica-03.webp",
+      "width": 4961,
+      "height": 7016,
+      "bytes": 518298,
+      "lossless": false
     }
   ],
   "lotv-waste": [
@@ -182,9 +210,9 @@
     },
     {
       "src": "zerko-grotesk-02.webp",
-      "width": 1276,
-      "height": 3410,
-      "bytes": 169118,
+      "width": 3410,
+      "height": 1276,
+      "bytes": 171064,
       "lossless": false
     },
     {
