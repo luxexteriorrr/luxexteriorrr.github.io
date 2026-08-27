@@ -294,6 +294,41 @@ function tick() {
 }
 tick();
 
+// A carousel width of 46% of the page resolves to a fraction of a pixel, so the
+// snap position lands mid-device-pixel and a hairline of the neighbouring plate
+// stays visible at the edge. Measured at 0.20-0.23px, and it moves with the
+// window width, which is why it read as intermittent. Rounding each carousel
+// down to a whole device pixel takes it to zero. scroll-snap already handles the
+// accumulated drift, so nothing else needs to change.
+function fitCarousel(c) {
+  const dpr = devicePixelRatio || 1;
+  c.style.width = '';                                    // back to the % rule
+  const w = c.getBoundingClientRect().width;
+  c.style.width = Math.floor(w * dpr) / dpr + 'px';
+}
+
+// Observed on the entry, not the carousel: the entry's width does not depend on
+// the carousel's, so rewriting the carousel cannot re-trigger this. A resize
+// listener alone is not enough - it misses layout changes that are not window
+// resizes, and the stale width then survives into a much narrower viewport.
+const carouselFit = new ResizeObserver(entries => {
+  for (const e of entries) {
+    const c = e.target.querySelector('[data-carousel]');
+    if (c) fitCarousel(c);
+  }
+});
+
+const carousels = [...document.querySelectorAll('[data-carousel]')];
+for (const c of carousels) {
+  fitCarousel(c);
+  carouselFit.observe(c.parentElement);
+}
+
+// Belt and braces. ResizeObserver should cover this on its own, but it costs
+// nothing to also catch the plain window resize, and a stale pinned width in a
+// narrower viewport would overflow the page.
+addEventListener('resize', () => carousels.forEach(fitCarousel));
+
 // Carousels. Scroll-snap gives trackpad swipe, touch swipe and momentum for
 // free — that is the browser doing it, not a library. This adds click-to-
 // advance on top, one direction, wrapping to the first after the last.
