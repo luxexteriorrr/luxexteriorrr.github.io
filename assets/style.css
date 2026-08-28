@@ -172,24 +172,18 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   align-items: center;
   justify-content: center;
 
+  /* Swapped, not faded. The stack is what removes the shared-width constraint;
+   * the cross-fade was only ever a side benefit of stacking, and cutting it
+   * makes the change instant. Restore by adding a transition here. */
   opacity: 0;
-  transform: scale(0.994);
-  transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
 }
 
-/* Kept out of the accessibility tree and off the compositor until it is asked
- * for. visibility, not display, so the transition still runs. */
 .slide:not(.is-on) { visibility: hidden; }
 
 .slide.is-on {
   opacity: 1;
-  transform: none;
   visibility: visible;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .slide { transition: none; transform: none; }
 }
 
 /* Both plate types size to the picture, not to the slide, and are bounded on
@@ -252,7 +246,9 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
  */
 
 @media (max-width: 700px) {
-  :root { --pad: 10px; --gap: 11vh; }
+  /* Tighter than desktop, not looser: 11vh here read as more air than 7vh on a
+   * large screen, because the plates beside it are so much smaller. */
+  :root { --pad: 10px; --gap: 5vh; }
 
   .head-l { width: auto; }
 
@@ -274,11 +270,24 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
     margin-bottom: 0.4em;
   }
 
-  /* --w is a desktop rhythm, not a phone one. The cap now sits on the plate
-   * rather than on the carousel, so it has to be lifted here too — without
-   * this a 58% entry renders 58% of an already narrow screen. */
+  /* Plates run the full padded column and take whatever height their ratio
+   * gives them. Width is the scarce axis on a phone, so --w and --plate-h are
+   * both desktop measures: capping either one stranded the plate in white —
+   * Around A Memory came out a 16px strip in a 560px box, 97% empty, and
+   * WASTE 83%. Nothing is cropped; the height simply follows.
+   *
+   * Only possible because the swap is instant. With the plates in flow rather
+   * than stacked there is no cross-fade to run, and none is wanted. */
+  .carousel { height: auto; }
+  .slide { position: relative; inset: auto; }
+  .slide:not(.is-on) { display: none; }
   .slide img,
-  .slide video { max-width: 100%; }
+  .slide video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
+  }
 }
 
 
