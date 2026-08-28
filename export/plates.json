@@ -275,5 +275,35 @@
       "bytes": 1146106,
       "lossless": false
     }
+  ],
+  "sentra": [
+    {
+      "src": "sentra-01.webp",
+      "width": 4032,
+      "height": 3024,
+      "bytes": 740230,
+      "lossless": false
+    },
+    {
+      "src": "sentra-02.webp",
+      "width": 1695,
+      "height": 2400,
+      "bytes": 91614,
+      "lossless": true
+    },
+    {
+      "src": "sentra-03.webp",
+      "width": 1697,
+      "height": 2400,
+      "bytes": 448352,
+      "lossless": false
+    },
+    {
+      "src": "sentra-04.webp",
+      "width": 1697,
+      "height": 2400,
+      "bytes": 126240,
+      "lossless": false
+    }
   ]
 }
