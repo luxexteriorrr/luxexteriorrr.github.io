@@ -305,5 +305,14 @@
       "bytes": 126240,
       "lossless": false
     }
+  ],
+  "lotv-apoc-paris": [
+    {
+      "src": "lotv-apoc-paris-01.webp",
+      "width": 4572,
+      "height": 5697,
+      "bytes": 615758,
+      "lossless": false
+    }
   ]
 }
