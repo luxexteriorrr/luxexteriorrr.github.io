@@ -120,26 +120,33 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 
 /* ── Carousel ────────────────────────────────────────────────────────────
- * A native overflow container with scroll-snap. Trackpad swipe, touch swipe
- * and momentum all come from the browser — better than a library does it, and
- * free. Clicking the plate advances one, wrapping to the first after the last.
+ * Plates are stacked, not tracked. One is visible; clicking cross-fades to the
+ * next and wraps after the last.
  *
- * All plates in a set share a ratio, so the height never jumps.
+ * What this buys over the scroll-snap version it replaces: a scroll container
+ * showed a sliver of the neighbouring plate at fractional widths, and every
+ * plate in a set had to share one width, so a 21.6 wordmark strip and a 0.72
+ * portrait in the same entry paid for each other in dead space.
+ *
+ * WHAT IS FIXED, AND WHY: the box height (--plate-h), per entry. Each plate
+ * then takes its own natural width inside it — no crop, no shared ratio. A
+ * fixed height is what keeps the caption still: with the box sized to each
+ * plate instead, every click would reflow the page below it.
+ *
+ * --w survives as a width cap, so the index keeps its proportional rhythm.
  */
 
 .carousel {
-  width: var(--w, 46%);
+  position: relative;
+  width: 100%;
+  height: var(--plate-h, 60vh);
   margin: 0 auto 0.5em;
 }
 
 .track {
+  position: relative;
+  height: 100%;
   background: var(--ground, transparent);
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;   /* stop a swipe triggering back-navigation */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   cursor: e-resize;                 /* reads as "forward", not "open" */
 
   /* The track is clickable and focusable, so a click would otherwise select
@@ -156,50 +163,58 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 .slide img { -webkit-user-drag: none; }
 
-.track::-webkit-scrollbar { display: none; }
-
 .slide {
-  flex: 0 0 100%;
+  position: absolute;
+  inset: 0;
   margin: 0;
-  /* Inset so the ground reads as a mount around the plate rather than as
-   * letterbox bars above and below it. */
   padding: var(--mount, 0);
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-
-  /* Slides stretch to the tallest in the set so the carousel height is fixed —
-   * nothing below it moves while you swipe. The cost is dead space when ratios
-   * within a set differ wildly, which is a reason to group plates of similar
-   * shape rather than to animate the height. */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  opacity: 0;
+  transform: scale(0.994);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+/* Kept out of the accessibility tree and off the compositor until it is asked
+ * for. visibility, not display, so the transition still runs. */
+.slide:not(.is-on) { visibility: hidden; }
+
+.slide.is-on {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; transform: none; }
+}
+
+/* Both plate types size to the picture, not to the slide, and are bounded on
+ * both axes: the box height, and --w as the width cap that carries the index
+ * rhythm. Whichever bound bites first wins, so the natural ratio always holds
+ * and nothing is ever cropped or letterboxed inside its own element box. */
+.slide video,
+.slide img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: var(--w, 46%);
+  max-height: 100%;
+  pointer-events: none;             /* clicks land on the track, not the plate */
 }
 
 .slide video {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: var(--plate-max-h);
   object-fit: contain;
-  pointer-events: none;             /* clicks land on the track, not the video */
   background: #f2f2f2;              /* holds the frame before the poster paints */
 }
 
 .slide img {
-  display: block;
-  /* Sized to the picture, not to the slide. With width:100% + object-fit the
-   * element box stayed full-width and the plate letterboxed inside it, so a
-   * ground or a rule drew around the box rather than around the plate. Letting
-   * the box shrink to the image means any edge treatment hugs the plate. */
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: var(--plate-max-h);
   background: var(--plate-bg, transparent);
   outline: var(--plate-rule, none);
   outline-offset: 0;
-  pointer-events: none;             /* clicks land on the track, not the image */
 }
 
 /* Counter is hidden visually but stays in the accessibility tree, so a screen
@@ -258,6 +273,12 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
     margin-right: 0;
     margin-bottom: 0.4em;
   }
+
+  /* --w is a desktop rhythm, not a phone one. The cap now sits on the plate
+   * rather than on the carousel, so it has to be lifted here too — without
+   * this a 58% entry renders 58% of an already narrow screen. */
+  .slide img,
+  .slide video { max-width: 100%; }
 }
 
 
