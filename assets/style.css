@@ -272,35 +272,26 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
   /* Plates run the full padded column and take whatever height their ratio
    * gives them. Width is the scarce axis on a phone, so --w and --plate-h are
-   * both desktop measures: capping either one stranded the plate in white —
-   * Around A Memory came out a 16px strip in a 560px box, 97% empty, and
-   * WASTE 83%. Nothing is cropped; the height simply follows.
+   * both desktop measures and neither applies here.
    *
-   * Only possible because the swap is instant. With the plates in flow rather
-   * than stacked there is no cross-fade to run, and none is wanted. */
-  .carousel { height: auto; }
-  .slide { position: relative; inset: auto; }
-  .slide:not(.is-on) { display: none; }
-
-  /* Caption above the plate, so tapping through a set does not move it.
-   * With the box fitting its plate the height changes on every tap, and a
-   * caption underneath rides up and down with it. Above, the change happens
-   * below the line you are reading and the caption holds still.
+   * The box reserves the height of the TALLEST plate in the set, so tapping
+   * through never moves the caption. --plate-ar is that plate's ratio, set per
+   * entry, and expressed as aspect-ratio rather than a pixel height so the
+   * reservation holds at any width without measuring anything.
    *
-   * The alternative — reserving the tallest plate's height — stops the jump
-   * by bringing back the white it was the point of removing: WASTE would be
-   * a 116px banner in a 500px box. */
-  .entry {
-    display: flex;
-    flex-direction: column-reverse;
+   * Each set also opens on that tallest plate, so the box is full at rest and
+   * the reserved space only ever shows once you have started tapping. */
+  .carousel {
+    height: auto;
+    aspect-ratio: var(--plate-ar, 1);
   }
-  .entry .cap { margin: 0 0 0.5em; }
+
   .slide img,
   .slide video {
-    width: 100%;
+    width: auto;
     max-width: 100%;
     height: auto;
-    max-height: none;
+    max-height: 100%;
   }
 }
 
