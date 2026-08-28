@@ -307,6 +307,13 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 .id-toggle:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
 
+/* Same affordance as the Selected Works rows: a tint to 0.55 on hover, so the
+ * one clickable thing in the header reads as clickable. The tint is on .id
+ * alone — the clock beside it is already .dim, and tinting the whole button
+ * would compound the two to 0.30. */
+.id { transition: opacity 0.15s ease; }
+.id-toggle:hover .id { opacity: 0.55; }
+
 /* Stop the page behind scrolling while the sheet is open. */
 body.info-open { overflow: hidden; }
 
@@ -428,6 +435,27 @@ body.info-open .intro { z-index: 6; }
 .info-works { grid-column: span 2; }
 /* Keeps a title and its year on one line rather than orphaning the year. */
 .info-works .yr { white-space: nowrap; }
+
+/* Each work opens its own description in place. The marker is suppressed and
+ * the affordance is a tint to the same 0.55 the .dim class uses, so hovering a
+ * title matches the register of the years and the secondary copy. */
+.info-works summary {
+  list-style: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.info-works summary::-webkit-details-marker { display: none; }
+.info-works summary:hover { opacity: 0.55; }
+.info-works summary:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+
+/* Indents only the open description, so the closed list stays a flush column. */
+.info-works details p {
+  margin: 0.35em 0 0.9em 1.1em;
+  max-width: 30em;
+  opacity: 0.55;
+}
+/* An open row needs no marker of its own — the description below it is the
+ * signal, and a permanent tint would read as disabled. */
 
 .info-inner section { margin: 0; }
 /* Bold marks the category, regular marks the thing — the jotundes device noted
