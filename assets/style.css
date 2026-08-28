@@ -281,6 +281,20 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   .carousel { height: auto; }
   .slide { position: relative; inset: auto; }
   .slide:not(.is-on) { display: none; }
+
+  /* Caption above the plate, so tapping through a set does not move it.
+   * With the box fitting its plate the height changes on every tap, and a
+   * caption underneath rides up and down with it. Above, the change happens
+   * below the line you are reading and the caption holds still.
+   *
+   * The alternative — reserving the tallest plate's height — stops the jump
+   * by bringing back the white it was the point of removing: WASTE would be
+   * a 116px banner in a 500px box. */
+  .entry {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .entry .cap { margin: 0 0 0.5em; }
   .slide img,
   .slide video {
     width: 100%;
