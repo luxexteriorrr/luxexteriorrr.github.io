@@ -329,6 +329,27 @@
       "height": 2950,
       "bytes": 1290818,
       "lossless": false
+    },
+    {
+      "src": "lotv-toe-rag-03.webp",
+      "width": 3120,
+      "height": 3900,
+      "bytes": 261492,
+      "lossless": false
+    },
+    {
+      "src": "lotv-toe-rag-04.webp",
+      "width": 3120,
+      "height": 3900,
+      "bytes": 176774,
+      "lossless": false
+    },
+    {
+      "src": "lotv-toe-rag-05.webp",
+      "width": 3120,
+      "height": 3900,
+      "bytes": 357568,
+      "lossless": false
     }
   ]
 }
