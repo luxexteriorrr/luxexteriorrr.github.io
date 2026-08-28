@@ -410,7 +410,10 @@ body.info-open .intro { z-index: 6; }
  */
 .info-inner {
   padding: calc(var(--pad-top) + 1.28em + var(--intro-h, 6em) + 2em) var(--pad) 6em;
-  width: var(--bio-w);
+  /* Not --bio-w. That measure exists to stop the bio running as one long line
+   * of prose; these are four short columns and the constraint only squeezed
+   * them. The bio and intro keep --bio-w. */
+  width: 100%;
   /* Grid, not multi-column: `columns` flows the content, so a short block in
    * one column pushed the next one down and the headings stopped lining up. */
   display: grid;
