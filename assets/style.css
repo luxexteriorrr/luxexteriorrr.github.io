@@ -414,10 +414,17 @@ body.info-open .intro { z-index: 6; }
   /* Grid, not multi-column: `columns` flows the content, so a short block in
    * one column pushed the next one down and the headings stopped lining up. */
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* Five units, not four: Selected Works carries the full caption names as
+   * they read on the page and takes two of them. The other three sections are
+   * short lists and hold at one unit each. */
+  grid-template-columns: repeat(5, 1fr);
   align-items: start;
   gap: 2em;
 }
+
+.info-works { grid-column: span 2; }
+/* Keeps a title and its year on one line rather than orphaning the year. */
+.info-works .yr { white-space: nowrap; }
 
 .info-inner section { margin: 0; }
 /* Bold marks the category, regular marks the thing — the jotundes device noted
@@ -440,4 +447,7 @@ body.info-open .intro { z-index: 6; }
     grid-auto-flow: column;
     gap: 2em 1.5em;
   }
+  /* The two-unit span is a desktop measure. Here it would break the 2x2
+   * column flow, so Selected Works returns to a single cell. */
+  .info-works { grid-column: auto; }
 }
