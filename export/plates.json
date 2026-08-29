@@ -233,21 +233,28 @@
       "src": "zerko-grotesk-01.webp",
       "width": 2271,
       "height": 1678,
-      "bytes": 16870,
-      "lossless": false
+      "bytes": 24786,
+      "lossless": true
     },
     {
-      "src": "zerko-grotesk-02.webp",
-      "width": 3410,
-      "height": 1276,
-      "bytes": 171064,
-      "lossless": false
+      "src": "zerko-grotesk-04.webp",
+      "width": 2400,
+      "height": 1600,
+      "bytes": 30678,
+      "lossless": true
     },
     {
-      "src": "zerko-grotesk-03.webp",
-      "width": 1295,
-      "height": 635,
-      "bytes": 15514,
+      "src": "zerko-grotesk-05.webp",
+      "width": 2400,
+      "height": 1600,
+      "bytes": 41646,
+      "lossless": true
+    },
+    {
+      "src": "zerko-grotesk-06.webp",
+      "width": 2400,
+      "height": 1600,
+      "bytes": 28664,
       "lossless": true
     }
   ],
