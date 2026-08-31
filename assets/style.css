@@ -86,7 +86,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 :root {
   /* Shared by the bar and the panel so the two read as one object. */
-  --panel-w: 44em;          /* the open width; collapsed is the name's width */
+  --panel-w: 34em;          /* the open width; collapsed is the name's width */
 
   /* One duration and one curve for the whole gesture, so the bar widening and
    * the panel rising are read as a single movement rather than two events.
@@ -125,9 +125,9 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   width: var(--dock-w, auto);
   max-width: calc(100vw - 2 * var(--pad));
   transition: width var(--dock-dur) var(--dock-ease);
-  background: var(--dock-fill);
-  backdrop-filter: blur(var(--dock-blur));
-  -webkit-backdrop-filter: blur(var(--dock-blur));
+  /* One fill in both states. The dock used to go translucent-to-opaque on open,
+   * which changed the surface's identity halfway through the gesture. */
+  background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.10);
   overflow: hidden;
   color: #fff;
@@ -143,7 +143,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   /* Centred, so when the box widens about its own centre the name does not
    * move at all — no counter-translation needed. */
   justify-content: center;
-  padding: 0.45em 0.85em;
+  padding: 0.28em 0.42em;   /* tight to the letters */
   background: none;
   color: #fff;
   pointer-events: auto;
@@ -188,7 +188,8 @@ body.info-open .dock {
   mix-blend-mode: difference;
 }
 :root[data-dock="white"] .info-inner {
-  color: #111;
+  color: #3c3c3c;                    /* a tone, not black — greyscale reading
+                                        of the reference panel */
   mix-blend-mode: normal;
 }
 
@@ -221,12 +222,10 @@ body.info-open .dock {
 .head a { pointer-events: auto; }
 .head:focus-within { outline: none; }
 
-/* The name is the one fixed thing on the page, so it is set as a mark rather
- * than as running text: caps, and tracked out to stop the caps closing up. */
+/* Mixed case, with a little air. */
 .id {
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.02em;
 }
 .dim { opacity: 0.55; }
 .rule { opacity: 0.55; }
@@ -601,7 +600,16 @@ html, body { height: 100%; overflow: hidden; }
 /* Bold marks the category, regular marks the thing — the jotundes device noted
  * in WEB.md section 4. Bold is a drawn weight, declared in zerko.css, not
  * synthesised from Medium. */
-.info-inner h2 { font-size: inherit; font-weight: 700; margin: 0; }
+/* The label recedes and the content carries the weight. Bold on the heading was
+ * competing with the thing it labelled. */
+.info-inner h2 {
+  font-size: inherit;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.38;
+  margin: 0 0 0.35em;
+}
 .info-inner p  { font-weight: 400; }
 .info-inner p  { margin: 0; }
 
