@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-dock="white">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,24 +8,26 @@
 <link rel="preload" href="assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/zerko.css">
 <link rel="stylesheet" href="assets/style.css">
+<!-- GSAP vendored rather than pulled from a CDN: this is the page that goes in
+     an application email, and it should not depend on someone else's uptime.
+     3.12.7, the same version the other projects in this repo already load. -->
+<script src="assets/gsap.min.js"></script>
 </head>
 <body>
 
+<!-- Bar and panel in one fixed box. column-reverse puts the bar at the bottom
+     and grows the panel off its top edge, so the panel needs no knowledge of
+     how tall the bar is — it simply sits on it. -->
+<div class="dock">
+
 <header class="head">
-  <div class="head-l">
-    <p><button type="button" class="id-toggle" id="info-toggle" aria-expanded="false" aria-controls="info"><span class="id">Kirill Konstantinov</span> <span class="dim">(<time id="clock">&mdash;</time>, London)</span></button></p>
-  </div>
-  <div class="head-r">
-    <p class="dim"><span id="pct">0%</span></p>
-  </div>
+  <p><button type="button" class="id-toggle" id="info-toggle" aria-expanded="false" aria-controls="info"><span class="id">Kirill Konstantinov</span></button></p>
 </header>
 
-<!-- The bio sits in its own fixed layer rather than inside .head. On desktop it
-     renders exactly where it did before; on mobile the index scrolls over it. -->
-<div class="intro">
-  <p class="bio">Kirill Konstantinov is a graphic designer based in London. His work spans editorial, identity and type. Every project starts from a premise, whether a publication, an identity or a fiction. Alongside commissioned work he writes and designs his own publications, draws the typefaces they are set in, and builds the sites himself.</p>
-  <p class="contact"><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a></p>
-</div>
+<!-- The bio and the email lived here as a fixed layer at the top of the page.
+     Removed 31 Aug: the dock carries the identity now, and both texts already
+     exist inside the panel under Practice and Contact. The index opens on the
+     first plate instead of on a paragraph. Restore from git if wanted. -->
 
 
 <!-- Info overlay. Sits BELOW the header in the stacking order (z-index 5 vs 10)
@@ -38,93 +40,10 @@
       <p>Art Direction<br>Editorial Design<br>Graphic Design<br>Identity<br>Lettering<br>Type Design<br>Web</p>
     </section>
 
-    <!-- <details> rather than buttons and script: the open/closed state, the
-         keyboard handling and the announcement to a screen reader all come for
-         free, and the list still reads with JavaScript off. -->
-    <section class="info-works">
-      <h2>Selected Works</h2>
-
-      <details>
-        <summary>LILIESOFTHEVALLEY WASTE! SPACE Pop-Up <span class="dim yr">2026</span></summary>
-        <p>Store and window design for the Lilies of the Valley pop-up at WASTE, London,
-           with printed material for the workshop.</p>
-      </details>
-
-      <details>
-        <summary>Zerko Grotesk: Script Parity as a Design Condition <span class="dim yr">2026</span></summary>
-        <p>A practice-led thesis investigating Latin&ndash;Cyrillic script parity as a design
-           condition through typographic making. Framed by Latinisation, the tendency for
-           non-Latin scripts to inherit Latin structural logic, it asks what parity between
-           the scripts looks like and where it can be pursued without reducing one script to
-           the logic of the other.</p>
-      </details>
-
-      <details>
-        <summary>Zerko Grotesk <span class="dim yr">2026</span></summary>
-        <p>A rationalist family spanning Latin and Cyrillic, made for prolonged reading and
-           display in complex multilingual environments. Six weights with corresponding
-           obliques, designed simultaneously across both scripts.</p>
-      </details>
-
-      <details>
-        <summary>As Seen In <span class="dim yr">2025</span></summary>
-        <p>A printed visual essay navigating and documenting the shifting terrain of
-           generative AI, tracing the tension between data, human intent and algorithmic
-           interaction.</p>
-      </details>
-
-      <details>
-        <summary>Around A Memory <span class="dim yr">2026</span></summary>
-        <p>A photobook of paired images, with a monoline COMFORT wordmark and a geometric
-           spiral drawing.</p>
-      </details>
-
-      <details>
-        <summary>JRAY <span class="dim yr">2026</span></summary>
-        <p>Sleeve for <i>Drenched</i> by JRAY.</p>
-      </details>
-
-      <details>
-        <summary>RADA Birthday Bash at Peckham Audio <span class="dim yr">2025</span></summary>
-        <p>Poster for the RADA birthday party at Peckham Audio.</p>
-      </details>
-
-      <details>
-        <summary>RADA at Corsica Studios <span class="dim yr">2025</span></summary>
-        <p>Poster and social media for a trance, techno and hardcore night at Corsica
-           Studios, flyposted across south London.</p>
-      </details>
-
-      <details>
-        <summary>LILIESOFTHEVALLEY APOC Paris Pop-Up <span class="dim yr">2025</span></summary>
-        <p>Poster and a mini identity for the Lilies of the Valley pop-up at APOC Store,
-           Paris, with custom tags.</p>
-      </details>
-
-      <details>
-        <summary>LILIESOFTHEVALLEY Toe Rag Newspaper Campaign <span class="dim yr">2026</span></summary>
-        <p>Campaign shot and art directed for LILIESOFTHEVALLEY, February 2026. One template
-           across the run; it ran on Instagram and as a full page in Toe Rag.</p>
-      </details>
-
-      <details>
-        <summary>Sentra <span class="dim yr">2025</span></summary>
-        <p>A conversational system installed at the RCA 2025 show. It adapts its tone to the
-           person in front of it, then turns the exchange into branded output &mdash; a session
-           dossier and an invoice.</p>
-      </details>
-
-      <details>
-        <summary>AWW90s <span class="dim yr">2024</span></summary>
-        <p>Site for an archive fashion store.</p>
-      </details>
-
-    </section>
-
-    <section>
-      <h2>Typefaces</h2>
-      <p>Zerko Grotesk, 2026<br><span class="dim">Latin and Cyrillic, six weights with obliques</span></p>
-    </section>
+    <!-- Selected Works lived here. Removed 31 Aug: the panel is a small object
+         that slides off the bar, and a twelve-row list was the only reason it
+         had to be wide. The index below already names every entry.
+         Recover with: git show zerko-specimen:index.html -->
 
     <section>
       <h2>Contact</h2>
@@ -134,11 +53,9 @@
     </section>
 
   </div>
-  <footer class="foot info-colophon">
-    <p class="dim">&copy; 2026 Kirill Konstantinov. All work shown remains the property of the author and its respective clients. Images may not be reproduced without permission.</p>
-  </footer>
 </div>
 
+</div>
 
 <div class="scroller" id="scroller">
 <main class="index">
@@ -559,19 +476,6 @@
   }
 })();
 
-// London time, so a visitor in another timezone knows what hour it is here.
-// Ticks on the second, aligned to the wall clock rather than to page load.
-const clock = document.getElementById('clock');
-const fmt = new Intl.DateTimeFormat('en-GB', {
-  timeZone: 'Europe/London',
-  hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
-});
-function tick() {
-  clock.textContent = fmt.format(new Date());
-  setTimeout(tick, 1000 - (Date.now() % 1000));
-}
-tick();
-
 // Carousels. Plates are stacked and cross-faded; the index lives here rather
 // than being read back off a scroll position.
 //
@@ -655,9 +559,53 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
 // exists without JavaScript. #info in the address bar makes it linkable and
 // lets the back button close it.
 (function info() {
-  const sheet = document.getElementById('info');
+  const sheet  = document.getElementById('info');
+  const inner  = sheet.querySelector('.info-inner');
   const toggle = document.getElementById('info-toggle');
+  const dock   = document.querySelector('.dock');
   let open = false;
+
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // One timeline for the whole gesture. The bar widens, the panel rises out of
+  // it a beat later, the sections follow. Reversing it plays the same movement
+  // backwards, so opening and closing cannot drift apart the way two sets of
+  // CSS transition-delays did.
+  //
+  // Every target value is a function, so they are re-read on invalidate()
+  // rather than baked in at build time — the panel's width is a min() against
+  // the viewport, and the bar's collapsed width depends on the webfont.
+  const tl = gsap.timeline({
+    paused: true,
+    defaults: { duration: still ? 0 : 0.42, ease: 'power4.out' },
+    onReverseComplete: () => {
+      sheet.hidden = true;
+      gsap.set(dock, { clearProps: 'width' });
+    },
+  });
+
+  // snap: text goes soft on fractional pixels, and both axes produce them. The
+  // measured auto height is almost never whole, and the dock is bottom-anchored
+  // so every line inside inherits the fraction. And translateX(-50%) of an ODD
+  // width is a half-pixel offset — hence snapping width to 2, not 1, so the
+  // centring itself stays whole.
+  // Measured with the sheet guaranteed visible. offsetWidth of a hidden
+  // element is 0, and an invalidate while closed would record the dock's OPEN
+  // width as zero — which collapsed it to its two borders.
+  const panelW = () => {
+    const was = sheet.hidden;
+    if (was) sheet.hidden = false;
+    const w = sheet.offsetWidth;
+    if (was) sheet.hidden = true;
+    return w;
+  };
+
+  tl.to(dock,  { width: panelW, snap: { width: 2 } }, 0)
+    .fromTo(sheet, { height: 0 }, { height: 'auto', snap: { height: 1 } }, still ? 0 : 0.07)
+    .fromTo(inner.children,
+            { y: 8, opacity: 0 },
+            { y: 0, opacity: 1, duration: still ? 0 : 0.3, stagger: still ? 0 : 0.05 },
+            still ? 0 : 0.12);
 
   function set(next, push) {
     if (next === open) return;
@@ -665,26 +613,35 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
     toggle.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('info-open', open);
     if (open) {
-      const intro = document.querySelector('.intro');
-      if (intro) document.documentElement.style.setProperty('--intro-h', intro.offsetHeight + 'px');
       sheet.hidden = false;
-      // One frame between removing `hidden` and adding the class, or the
-      // transition has no start state to run from.
-      requestAnimationFrame(() => sheet.classList.add('is-open'));
-      if (push) history.pushState({ info: true }, '', '#info');
+      tl.invalidate().play();
+      // replaceState, not pushState. Opening and closing four times used to put
+      // four entries in the back stack, so Back walked the panel instead of
+      // leaving the page. The hash stays linkable; it just is not history.
+      if (push) history.replaceState({ info: true }, '', '#info');
     } else {
-      sheet.classList.remove('is-open');
-      const done = () => { if (!open) sheet.hidden = true; };
-      sheet.addEventListener('transitionend', done, { once: true });
-      setTimeout(done, 400);                    // in case the transition is suppressed
-      if (push && location.hash === '#info') history.pushState({}, '', location.pathname);
+      tl.reverse();
+      if (push && location.hash === '#info') history.replaceState({}, '', location.pathname);
     }
   }
+
+  // Only on resize, and only while open — the panel's width is a min() against
+  // the viewport. The fonts.ready invalidate that used to sit here is gone: the
+  // collapsed width is fit-content and GSAP snapshots it when the tween starts,
+  // so there was nothing left for it to refresh, and it was the thing recording
+  // a zero width.
+  addEventListener('resize', () => { if (open) { tl.invalidate(); tl.progress(1); } });
 
   toggle.addEventListener('click', () => set(!open, true));
   addEventListener('keydown', e => { if (e.key === 'Escape' && open) set(false, true); });
   addEventListener('popstate', () => set(location.hash === '#info', false));
-  if (location.hash === '#info') set(true, false);
+
+  // No restore-on-load. #info opening the panel automatically made sense when
+  // this was a full-screen info PAGE someone might be sent a link to. As a
+  // small dock it just means every reload comes up open, and the first click
+  // reads as a close. The hash still describes the state; it no longer
+  // dictates it on arrival.
+  if (location.hash === '#info') history.replaceState({}, '', location.pathname);
 })();
 
 // The scroll-position restore this used to undo no longer applies: the index
@@ -705,13 +662,6 @@ if ('IntersectionObserver' in window) {
   document.querySelectorAll('[data-carousel]').forEach(c => io.observe(c));
 }
 
-// Scroll percentage in the header.
-const pct = document.getElementById('pct');
-const scroller = document.getElementById('scroller');
-scroller.addEventListener('scroll', () => {
-  const max = scroller.scrollHeight - scroller.clientHeight;
-  pct.textContent = (max > 0 ? Math.round(scroller.scrollTop / max * 100) : 0) + '%';
-}, { passive: true });
 </script>
 
 

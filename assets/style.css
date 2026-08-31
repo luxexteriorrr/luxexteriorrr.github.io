@@ -64,30 +64,165 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
  * so it inverts over a plate rather than disappearing into it.
  */
 
-.head {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--pad-top) var(--pad) var(--pad);
-  mix-blend-mode: difference;
-  color: #fff;
-  pointer-events: none;
+/* ── Dock ────────────────────────────────────────────────────────────────
+ * The header, moved off the top edge and made a floating pill at the bottom
+ * centre. It stays put while the index scrolls beneath it.
+ *
+ * WHY THE BOTTOM: at the top it competed with the bio for the same corner and
+ * had to be legible over whatever plate happened to be passing. At the bottom
+ * it is one small object against a predictable band of the viewport, and on a
+ * phone it lands where the thumb already is.
+ *
+ * THREE FILL MODES, switchable on <html data-dock="...">. They are here to be
+ * compared rather than argued about — flip the attribute and look.
+ *
+ *   plate   translucent ground + blur. Always legible, over anything.
+ *   invert  backdrop-filter: invert(1). Keeps the inverted language of the old
+ *           header and fixes its 50%-grey failure for every case except an
+ *           exact mid-grey, which no inversion can survive.
+ *   blend   no fill, mix-blend-mode: difference — the old header's behaviour,
+ *           kept for reference. Fails over mid-grey.
+ */
+
+:root {
+  /* Shared by the bar and the panel so the two read as one object. */
+  --panel-w: 24em;          /* the open width; collapsed is the name's width */
+
+  /* One duration and one curve for the whole gesture, so the bar widening and
+   * the panel rising are read as a single movement rather than two events.
+   * easeOutQuint: most of the distance is covered early, then it settles —
+   * it arrives quickly without ever looking like it snapped. */
+  --dock-dur: 380ms;
+  --dock-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* The grey band from the reference spread: enough body to read as its own
+   * colour over white, transparent enough that a plate underneath stays
+   * legible through it. A tint, not a frosted lid — hence the small blur. */
+  --dock-fill: rgba(150, 150, 150, 0.62);
+  --dock-blur: 6px;
 }
 
+.dock {
+  position: fixed;
+  bottom: var(--pad);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column-reverse;   /* bar at the bottom, panel grows off it */
+  /* center, NOT stretch. Stretch sizes the children to the container while
+   * fit-content sizes the container to the children — each waits for the other
+   * and both collapse to nothing. Centred, the children take their own content
+   * width and the dock measures from them. */
+  align-items: center;
+
+  /* ONE surface. The background, the blur and the border live here and nowhere
+   * else, so the bar and the panel cannot be two boxes with a seam between
+   * them — they are regions of the same box. */
+  width: fit-content;
+  max-width: calc(100vw - 2 * var(--pad));
+  background: var(--dock-fill);
+  backdrop-filter: blur(var(--dock-blur));
+  -webkit-backdrop-filter: blur(var(--dock-blur));
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  overflow: hidden;
+  color: #fff;
+}
+
+.head {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5em;
+  box-sizing: border-box;
+  /* Centred, so when the box widens about its own centre the name does not
+   * move at all — no counter-translation needed. */
+  justify-content: center;
+  padding: 0.45em 0.85em;
+  background: none;
+  color: #fff;
+  pointer-events: auto;
+
+  /* No transition on the fill. The dock should be solid the moment it paints —
+   * a plate that fades in reads as a loading artefact, not a decision. */
+}
+
+/* Open, the bar widens to the panel so the two boxes are one column, and the
+ * join between them is squared off. It grows up and out at once. */
+
+
+/* The modes set VARIABLES, not properties, so the bar and the panel are always
+ * described by the same two values and cannot drift apart. */
+
+/* white — the panel is a SHEET, not glass. Glass needs a calm ground behind it;
+ * this index is full-bleed artwork, so a translucent blurred panel turns the
+ * plates underneath into slush and loses its own edges. The bar stays glass —
+ * it is small, it crosses one plate at a time, and it survives.
+ *
+ * A hairline between the two keeps the bar reading as the bar once they meet. */
+:root[data-dock="white"] {
+  --dock-fill: rgba(255, 255, 255, 0.72);
+  --dock-blur: 10px;
+}
+/* Open, the one surface goes opaque. Nothing to keep in step — there is only
+ * one box to change. */
+body.info-open .dock {
+  background: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* The bar inverts: white type, difference blending, so the name shifts against
+ * whatever plate is passing under the translucent fill.
+ *
+ * The panel does NOT. It is opaque white, and white inverted against white IS
+ * black — the blend bought nothing there and cost the text its reliability,
+ * since a blend inside a box with its own opacity transitions has too many
+ * ways to composite to nothing. Black is the same result, stated directly. */
+:root[data-dock="white"] .id {
+  color: #fff;
+  mix-blend-mode: difference;
+}
+:root[data-dock="white"] .info-inner {
+  color: #111;
+  mix-blend-mode: normal;
+}
+
+/* plate — the grey band from the reference spread. */
+:root[data-dock="plate"] {
+  --dock-fill: rgba(150, 150, 150, 0.62);
+  --dock-blur: 6px;
+}
+
+/* invert — no fill of its own; the plate IS an inversion of what passes under.
+ * The escape route noted on 27 Aug for the old header's 50%-grey failure. */
+:root[data-dock="invert"] .head,
+:root[data-dock="invert"] .info {
+  background: none;
+  backdrop-filter: invert(1);
+  -webkit-backdrop-filter: invert(1);
+}
+
+/* blend — what the header did before the dock. No ground at all. */
+:root[data-dock="blend"] .head,
+:root[data-dock="blend"] .info {
+  background: none;
+  backdrop-filter: none;
+  mix-blend-mode: difference;
+}
+
+.head-l, .head-r { display: contents; }
+.head p { margin: 0; white-space: nowrap; }
+
 .head a { pointer-events: auto; }
+.head:focus-within { outline: none; }
 
 .id { font-weight: 500; }
-.bio { font-weight: 500; }
 .dim { opacity: 0.55; }
 .rule { opacity: 0.55; }
 
 /* The info block runs wide rather than sitting in a narrow column — it is the
  * first thing read and carries the positioning, so it gets the width. */
-.head-l { width: var(--bio-w); }
-.bio { max-width: none; }
 
 
 /* ── Index ───────────────────────────────────────────────────────────────
@@ -100,7 +235,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 .index {
   padding: 0 var(--pad) 40vh;
-  margin-top: 13em;         /* clears the fixed header */
+  margin-top: var(--pad-top);   /* nothing fixed at the top any more */
   text-align: center;
 }
 
@@ -254,7 +389,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
   .head .rule { display: none; }
 
-  .index { margin-top: 4em; }
+  .index { margin-top: var(--pad); }
 
   .foot {
     flex-direction: column;
@@ -303,24 +438,41 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
  * it does over the page. Nothing about the header has to change.
  */
 
+/* Anchored to the dock rather than filling the viewport: it reads as the pill
+ * opening rather than a separate sheet arriving. Sits UNDER the dock (9 vs 10)
+ * so the pill stays visible and clickable while it is open — the same toggle
+ * closes it.
+ *
+ * Sized like the reference panel: one narrow column, capped height, scrolling
+ * inside itself. A full-viewport sheet made the index feel replaced; a panel
+ * makes it feel covered. */
+
+/* The panel is the bar, grown upward. Same width, flush against its top edge,
+ * same fill — so it reads as one object expanding rather than a second thing
+ * arriving. Anchored at the bottom, so it opens on top of itself. */
+
 .info {
-  position: fixed;
-  inset: 0;
-  z-index: 5;                    /* under .head (10), over the index */
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;                /* mobile browser chrome */
-  background: #fff;
+  position: relative;
+  box-sizing: border-box;
+  width: min(var(--panel-w), calc(100vw - 2 * var(--pad)));
+  background: none;
   overflow-y: auto;
   overscroll-behavior: contain;
-  display: flex;
-  flex-direction: column;
+  scrollbar-width: none;
 
-  opacity: 0;
-  transition: opacity .3s ease;
+  /* Resting state only. The open height, the bar's width and the content
+   * stagger are all driven by one GSAP timeline — see the script. GSAP tweens
+   * to "auto" by measuring, which is what removes the two faults CSS had here:
+   * max-height animating to a cap instead of to the content, and fit-content
+   * refusing to interpolate at all. */
+  height: 0;
+  overflow: hidden;
 }
+.info::-webkit-scrollbar { display: none; }
 
-.info.is-open { opacity: 1; }
+
+.info a { color: inherit; }
+
 .info[hidden] { display: none; }
 
 /* The header is pointer-events: none so it never blocks the scroll beneath it.
@@ -349,62 +501,18 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 .id { transition: opacity 0.15s ease; }
 .id-toggle:hover .id { opacity: 0.55; }
 
-/* Stop the page behind scrolling while the sheet is open. */
-body.info-open { overflow: hidden; }
 
-@media (prefers-reduced-motion: reduce) {
-  .info { transition: none; }
-}
+/* Reduced motion is handled in the script: the timeline is given a duration of
+ * zero, so the same states are reached with no movement between them. */
 
 
-/* ── Intro (the bio layer) ───────────────────────────────────────────────
- * Same fixed position, same difference blend, same measure as when it lived
- * inside .head — so desktop is unchanged. It is a separate layer only so that
- * on mobile the index can pass over it while the identifier stays on top.
- *
- * top = header padding + one identifier line (--lead), so it lands exactly
- * where the flow put it before.
+/* ── Intro ──────────────────────────────────────────────────────────────
+ * The bio layer is gone (31 Aug). Its rules are removed with it rather than
+ * left to rot; .index keeps its own ground because the dock's blur samples
+ * whatever is behind it and needs something to sample.
  */
-.intro {
-  position: fixed;
-  top: calc(var(--pad-top) + 1.28em);
-  left: var(--pad);
-  width: var(--bio-w);
-  z-index: 10;
-  mix-blend-mode: difference;
-  color: #fff;
-  pointer-events: none;
-}
 
-.intro .contact { pointer-events: auto; }
-.intro p { margin: 0; }
-
-/* The index paints its own ground and rides above the intro, so scrolling
- * covers the bio rather than moving it. Desktop keeps the intro on top
- * (z-index 10 vs 2), so nothing changes there. */
 .index { background: var(--bg); }
-
-@media (max-width: 700px) {
-  .intro {
-    display: block;            /* the old rule hid .bio at this width */
-    z-index: 1;                /* now BELOW the index, so content covers it */
-    width: auto;
-    right: var(--pad);
-
-    /* Safari promotes a position:fixed element carrying mix-blend-mode onto its
-     * own compositing layer, where it paints above scrolled content regardless
-     * of z-index — the index then slides under the bio instead of over it.
-     * The blend earns nothing here: on mobile the bio only ever sits on the
-     * page ground, because it is covered rather than scrolled across. */
-    mix-blend-mode: normal;
-    color: var(--fg);
-  }
-
-  /* Start the index below the bio so it is readable on load, then let the
-   * scroll bring the index up over it. */
-  .index { margin-top: 15em; }
-}
-
 
 /* ── Scroll container ────────────────────────────────────────────────────
  * The body does not scroll; the index scrolls inside its own container.
@@ -434,63 +542,27 @@ html, body { height: 100%; overflow: hidden; }
 }
 .scroller::-webkit-scrollbar { display: none; }
 
-/* The overlay covers the scroller, so locking the body is no longer how the
- * page behind is held still — the sheet simply sits above it. */
-body.info-open .scroller { overflow: hidden; }
-
-/* The sheet is z-index 5. On mobile .intro drops to 1 so the index can cover
- * it, which also put it under the sheet — lift it back over while open. */
-body.info-open .intro { z-index: 6; }
+/* The index keeps scrolling with the panel open. The panel is a small object
+ * in the corner of the viewport, not a sheet over the page — freezing what is
+ * behind it made it feel like a modal, which it is not. */
 
 
-/* ── Info overlay content ────────────────────────────────────────────────
- * The bio and email already sit above the sheet, so the overlay does not
- * repeat them — it continues underneath, in the same column, at the same
- * measure. Opening it reads as the info block extending rather than as a
- * panel arriving. --intro-h is set by script, since the bio's height depends
- * on how the copy wraps at the current width.
+
+/* ── Panel content ───────────────────────────────────────────────────────
+ * Was a five-column grid running the full width of the page, indented to clear
+ * the bio above it. Both reasons are gone: there is no bio, and the panel is
+ * the width of the dock. One column, stacked, scrolling inside the box.
  */
 .info-inner {
-  padding: calc(var(--pad-top) + 1.28em + var(--intro-h, 6em) + 2em) var(--pad) 6em;
-  /* Not --bio-w. That measure exists to stop the bio running as one long line
-   * of prose; these are four short columns and the constraint only squeezed
-   * them. The bio and intro keep --bio-w. */
+  padding: 0.85em 0.85em 1.1em;
   width: 100%;
-  /* Grid, not multi-column: `columns` flows the content, so a short block in
-   * one column pushed the next one down and the headings stopped lining up. */
+  /* Two columns: the three short lists pair up, and Selected Works takes the
+   * full measure because its titles are the full caption names. */
   display: grid;
-  /* Five units, not four: Selected Works carries the full caption names as
-   * they read on the page and takes two of them. The other three sections are
-   * short lists and hold at one unit each. */
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 1fr;
   align-items: start;
-  gap: 2em;
+  gap: 1.1em 1.8em;
 }
-
-.info-works { grid-column: span 2; }
-/* Keeps a title and its year on one line rather than orphaning the year. */
-.info-works .yr { white-space: nowrap; }
-
-/* Each work opens its own description in place. The marker is suppressed and
- * the affordance is a tint to the same 0.55 the .dim class uses, so hovering a
- * title matches the register of the years and the secondary copy. */
-.info-works summary {
-  list-style: none;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-}
-.info-works summary::-webkit-details-marker { display: none; }
-.info-works summary:hover { opacity: 0.55; }
-.info-works summary:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
-
-/* Indents only the open description, so the closed list stays a flush column. */
-.info-works details p {
-  margin: 0.35em 0 0.9em 1.1em;
-  max-width: 30em;
-  opacity: 0.55;
-}
-/* An open row needs no marker of its own — the description below it is the
- * signal, and a permanent tint would read as disabled. */
 
 .info-inner section { margin: 0; }
 /* Bold marks the category, regular marks the thing — the jotundes device noted
@@ -499,9 +571,6 @@ body.info-open .intro { z-index: 6; }
 .info-inner h2 { font-size: inherit; font-weight: 700; margin: 0; }
 .info-inner p  { font-weight: 400; }
 .info-inner p  { margin: 0; }
-/* Anchors the foot of the sheet rather than sitting in the column flow, where
- * it read as a fifth block level with Typefaces. */
-.info-colophon { margin: auto 0 0; }   /* .foot already carries the padding */
 
 @media (max-width: 700px) {
   .info-inner {
@@ -515,5 +584,4 @@ body.info-open .intro { z-index: 6; }
   }
   /* The two-unit span is a desktop measure. Here it would break the 2x2
    * column flow, so Selected Works returns to a single cell. */
-  .info-works { grid-column: auto; }
 }
