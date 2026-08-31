@@ -559,88 +559,84 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
 // exists without JavaScript. #info in the address bar makes it linkable and
 // lets the back button close it.
 (function info() {
+  const dock   = document.querySelector('.dock');
   const sheet  = document.getElementById('info');
   const inner  = sheet.querySelector('.info-inner');
   const toggle = document.getElementById('info-toggle');
-  const dock   = document.querySelector('.dock');
+  const root   = document.documentElement;
+
   let open = false;
 
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // One timeline for the whole gesture. The bar widens, the panel rises out of
-  // it a beat later, the sections follow. Reversing it plays the same movement
-  // backwards, so opening and closing cannot drift apart the way two sets of
-  // CSS transition-delays did.
+  // CSS owns open and closed. This only supplies the three numbers CSS cannot
+  // work out for itself, because none of them can be written as a static value:
+  // the collapsed width depends on the webfont, and the open width and height
+  // depend on the content and the viewport.
   //
-  // Every target value is a function, so they are re-read on invalidate()
-  // rather than baked in at build time — the panel's width is a min() against
-  // the viewport, and the bar's collapsed width depends on the webfont.
-  const tl = gsap.timeline({
-    paused: true,
-    defaults: { duration: still ? 0 : 0.42, ease: 'power4.out' },
-    onReverseComplete: () => {
-      sheet.hidden = true;
-      gsap.set(dock, { clearProps: 'width' });
-    },
-  });
+  // No requestAnimationFrame anywhere. The previous version produced the open
+  // state with a GSAP tween, so anything that stopped the ticker — a throttled
+  // tab, reduced motion — left the panel permanently shut. Now the transition
+  // is only how it gets there; not running one just means it arrives at once.
 
-  // snap: text goes soft on fractional pixels, and both axes produce them. The
-  // measured auto height is almost never whole, and the dock is bottom-anchored
-  // so every line inside inherits the fraction. And translateX(-50%) of an ODD
-  // width is a half-pixel offset — hence snapping width to 2, not 1, so the
-  // centring itself stays whole.
-  // Measured with the sheet guaranteed visible. offsetWidth of a hidden
-  // element is 0, and an invalidate while closed would record the dock's OPEN
-  // width as zero — which collapsed it to its two borders.
-  const panelW = () => {
-    const was = sheet.hidden;
-    if (was) sheet.hidden = false;
-    const w = sheet.offsetWidth;
-    if (was) sheet.hidden = true;
-    return w;
-  };
+  function sizes() {
+    const wasHidden = sheet.hidden;
+    const wasOpen   = document.body.classList.contains('info-open');
+    if (wasHidden) sheet.hidden = false;
+    if (wasOpen) document.body.classList.remove('info-open');   // measure collapsed
 
-  tl.to(dock,  { width: panelW, snap: { width: 2 } }, 0)
-    .fromTo(sheet, { height: 0 }, { height: 'auto', snap: { height: 1 } }, still ? 0 : 0.07)
-    .fromTo(inner.children,
-            { y: 8, opacity: 0 },
-            { y: 0, opacity: 1, duration: still ? 0 : 0.3, stagger: still ? 0 : 0.05 },
-            still ? 0 : 0.12);
+    const collapsed = Math.ceil(dock.getBoundingClientRect().width);
+    const panelW    = sheet.offsetWidth;
+    const panelH    = Math.min(inner.offsetHeight, Math.round(innerHeight * 0.62));
+
+    if (wasOpen) document.body.classList.add('info-open');
+    if (wasHidden) sheet.hidden = true;
+    return { collapsed, panelW, panelH };
+  }
+
+  function apply() {
+    const { collapsed, panelW, panelH } = sizes();
+    root.style.setProperty('--dock-w', collapsed + 'px');
+    root.style.setProperty('--dock-open-w', panelW + 'px');
+    root.style.setProperty('--panel-h', panelH + 'px');
+  }
 
   function set(next, push) {
     if (next === open) return;
     open = next;
     toggle.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('info-open', open);
+
     if (open) {
       sheet.hidden = false;
-      tl.invalidate().play();
-      // replaceState, not pushState. Opening and closing four times used to put
-      // four entries in the back stack, so Back walked the panel instead of
-      // leaving the page. The hash stays linkable; it just is not history.
-      if (push) history.replaceState({ info: true }, '', '#info');
+      apply();                       // measured while visible, before the class
+      // Force a layout so the closed state is committed before the class flips —
+      // otherwise the browser coalesces both into one style pass and there is no
+      // start value to transition from. A reflow, not requestAnimationFrame: rAF
+      // does not fire in a background tab, and gating the OPEN STATE on it was
+      // the very fault this rebuild exists to remove.
+      void dock.offsetHeight;
+      document.body.classList.add('info-open');
     } else {
-      tl.reverse();
-      if (push && location.hash === '#info') history.replaceState({}, '', location.pathname);
+      document.body.classList.remove('info-open');
+      // Hide only once it has closed, so the transition has something to run on.
+      // The timeout is a fallback for when transitionend never fires.
+      const done = () => { if (!open) sheet.hidden = true; };
+      sheet.addEventListener('transitionend', done, { once: true });
+      setTimeout(done, 700);
     }
+
+    // replaceState, not push: toggling four times used to leave four entries in
+    // the back stack, so Back walked the panel instead of leaving the page.
+    if (push) history.replaceState({}, '', open ? '#info' : location.pathname);
   }
 
-  // Only on resize, and only while open — the panel's width is a min() against
-  // the viewport. The fonts.ready invalidate that used to sit here is gone: the
-  // collapsed width is fit-content and GSAP snapshots it when the tween starts,
-  // so there was nothing left for it to refresh, and it was the thing recording
-  // a zero width.
-  addEventListener('resize', () => { if (open) { tl.invalidate(); tl.progress(1); } });
+  apply();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+  addEventListener('resize', apply);
 
   toggle.addEventListener('click', () => set(!open, true));
   addEventListener('keydown', e => { if (e.key === 'Escape' && open) set(false, true); });
-  addEventListener('popstate', () => set(location.hash === '#info', false));
 
-  // No restore-on-load. #info opening the panel automatically made sense when
-  // this was a full-screen info PAGE someone might be sent a link to. As a
-  // small dock it just means every reload comes up open, and the first click
-  // reads as a close. The hash still describes the state; it no longer
-  // dictates it on arrival.
+  // The hash describes the state; it does not restore it. A small dock coming up
+  // open on every reload was noise, and made the first click read as a close.
   if (location.hash === '#info') history.replaceState({}, '', location.pathname);
 })();
 

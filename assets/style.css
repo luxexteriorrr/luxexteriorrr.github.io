@@ -86,7 +86,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 :root {
   /* Shared by the bar and the panel so the two read as one object. */
-  --panel-w: 24em;          /* the open width; collapsed is the name's width */
+  --panel-w: 44em;          /* the open width; collapsed is the name's width */
 
   /* One duration and one curve for the whole gesture, so the bar widening and
    * the panel rising are read as a single movement rather than two events.
@@ -119,8 +119,12 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   /* ONE surface. The background, the blur and the border live here and nowhere
    * else, so the bar and the panel cannot be two boxes with a seam between
    * them — they are regions of the same box. */
-  width: fit-content;
+  /* Explicit px, set by script. fit-content cannot be interpolated, so the box
+   * used to snap rather than ease. --dock-w is the collapsed width, --dock-open-w
+   * the open one; both are measured, neither is guessed. */
+  width: var(--dock-w, auto);
   max-width: calc(100vw - 2 * var(--pad));
+  transition: width var(--dock-dur) var(--dock-ease);
   background: var(--dock-fill);
   backdrop-filter: blur(var(--dock-blur));
   -webkit-backdrop-filter: blur(var(--dock-blur));
@@ -217,7 +221,13 @@ body.info-open .dock {
 .head a { pointer-events: auto; }
 .head:focus-within { outline: none; }
 
-.id { font-weight: 500; }
+/* The name is the one fixed thing on the page, so it is set as a mark rather
+ * than as running text: caps, and tracked out to stop the caps closing up. */
+.id {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
 .dim { opacity: 0.55; }
 .rule { opacity: 0.55; }
 
@@ -465,8 +475,34 @@ body.info-open .dock {
    * to "auto" by measuring, which is what removes the two faults CSS had here:
    * max-height animating to a cap instead of to the content, and fit-content
    * refusing to interpolate at all. */
+  /* The OPEN STATE LIVES HERE, not in the animation. If the transition never
+   * runs — a throttled tab, reduced motion, script that failed — the panel is
+   * still open, just instantly. Previously the open state was produced by the
+   * tween, so no tween meant no panel.
+   *
+   * A measured px height, not max-height: max-height transitions run to the CAP,
+   * so a short panel spent most of the duration animating empty space. */
   height: 0;
   overflow: hidden;
+  transition: height var(--dock-dur) var(--dock-ease) 70ms;
+}
+
+body.info-open .info { height: var(--panel-h, auto); }
+
+/* Content rises in behind the box, and leaves all at once — a stagger on the
+ * way out reads as lag. */
+.info-inner > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .22s var(--dock-ease), transform .22s var(--dock-ease);
+}
+body.info-open .info-inner > * { opacity: 1; transform: none; }
+body.info-open .info-inner > :nth-child(1) { transition-delay: 130ms; }
+body.info-open .info-inner > :nth-child(2) { transition-delay: 180ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dock, .info, .info-inner > * { transition: none; }
+  .info-inner > * { transform: none; }
 }
 .info::-webkit-scrollbar { display: none; }
 
@@ -494,12 +530,8 @@ body.info-open .dock {
 
 .id-toggle:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
 
-/* Same affordance as the Selected Works rows: a tint to 0.55 on hover, so the
- * one clickable thing in the header reads as clickable. The tint is on .id
- * alone — the clock beside it is already .dim, and tinting the whole button
- * would compound the two to 0.30. */
-.id { transition: opacity 0.15s ease; }
-.id-toggle:hover .id { opacity: 0.55; }
+/* No hover tint. The name is a mark, not a link, and dimming it on hover made
+ * it read as a button in a way the rest of the page never does. */
 
 
 /* Reduced motion is handled in the script: the timeline is given a duration of
@@ -558,10 +590,11 @@ html, body { height: 100%; overflow: hidden; }
   width: 100%;
   /* Two columns: the three short lists pair up, and Selected Works takes the
    * full measure because its titles are the full caption names. */
+  /* One column. The box is wide; the content is not asked to fill it. */
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   align-items: start;
-  gap: 1.1em 1.8em;
+  gap: 1.3em;
 }
 
 .info-inner section { margin: 0; }
@@ -575,13 +608,11 @@ html, body { height: 100%; overflow: hidden; }
 @media (max-width: 700px) {
   .info-inner {
     width: auto;
-    /* Two columns, filled downward then across, so Practice sits beside
-     * Typefaces and Clients beside Contact, each pair sharing a baseline. */
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, min-content);
-    grid-auto-flow: column;
-    gap: 2em 1.5em;
+    /* One column here too. The two-column rule this replaces was built around
+     * Typefaces and Selected Works, neither of which is in the panel any more,
+     * and it was overriding the single column at every width the media query
+     * caught. */
+    grid-template-columns: 1fr;
+    gap: 1.3em;
   }
-  /* The two-unit span is a desktop measure. Here it would break the 2x2
-   * column flow, so Selected Works returns to a single cell. */
 }
