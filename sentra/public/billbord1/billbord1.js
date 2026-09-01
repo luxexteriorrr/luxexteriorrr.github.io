@@ -19,6 +19,43 @@ document.fonts.ready.then(() => {
   //global selectors
   const wrapper = document.querySelector('.words-wrapper');
 
+  // All nine from the Figma palette. This list and the `colors` array in
+  // startTextAnimations used to disagree — blocks were drawn from five classes
+  // while the colour shift picked from seven hexes, so two colours could only
+  // ever appear on something that happened to be animating.
+  const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue',
+                        'darkblue', 'lilac', 'peachy', 'yellow'];
+
+  // Picked at random, but never the colour immediately before it. Uniform
+  // random over nine puts a repeat next to itself often enough to read as a
+  // mistake — roughly a one-in-three chance somewhere in four blocks — and two
+  // touching blocks of one colour merge into a single shape, which loses the
+  // turn boundary the whole layout exists to show.
+  let lastColor = null;
+  function nextColor() {
+    const choices = colorClasses.filter(c => c !== lastColor);
+    lastColor = choices[Math.floor(Math.random() * choices.length)];
+    return lastColor;
+  }
+
+  // The wall holds still. Both of the ambient animations are off: blocks arrive
+  // and then stay exactly as they are, which is what the boards do.
+  //
+  // Both were written when every word was its own box, where a single word
+  // dimming or shifting hue read as the system losing its grip on that word for
+  // a moment. Applied to a whole utterance the same code reads as a broken
+  // render — a paragraph does not flicker, a screen does. The movement that is
+  // left is the arrival itself, which is the only movement that means anything:
+  // something was just said, and it has just been filed.
+  //
+  // Kept behind flags rather than deleted, so either can be looked at again
+  // without a rebuild:
+  //   ?flicker=1   whole-block opacity pulse
+  //   ?drift=1     background colour drift
+  const params = new URLSearchParams(location.search);
+  const FLICKER = params.get('flicker') === '1';
+  const DRIFT   = params.get('drift') === '1';
+
   // WebSocket connection
   const socket = io();
   
@@ -27,38 +64,44 @@ document.fonts.ready.then(() => {
   });
     
   socket.on('conversation_fragments', (data) => {
-    // All nine from the Figma palette. This list and the `colors` array in
-    // startTextAnimations used to disagree — blocks were drawn from five
-    // classes while the colour shift picked from seven hexes, so two colours
-    // could only ever appear on a word that happened to be animating.
-    const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue',
-                          'darkblue', 'lilac', 'peachy', 'yellow'];
-    
-    data.fragments.forEach((fragment, index) => {
-      // Create container div (gets the colored background)
+
+    // One block per utterance, not per word. The fragments arrive already
+    // tagged 'user' or 'sentra', so consecutive fragments of the same type are
+    // one thing somebody said and get gathered back into it.
+    //
+    // Per word, the wall read as a texture of language with no speakers in it.
+    // Per utterance, you can see the shape of the exchange — how short the
+    // human turns are and how long Sentra's answers run — which is the
+    // argument the piece is making.
+    const utterances = [];
+    for (const fragment of data.fragments) {
+      const current = utterances[utterances.length - 1];
+      if (current && current.type === fragment.type) current.words.push(fragment.text);
+      else utterances.push({ type: fragment.type, words: [fragment.text] });
+    }
+
+    utterances.forEach((utterance, index) => {
       const container = document.createElement('div');
-      container.classList.add('highlight');
-      
-      // Random color for container background
-      const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
-      container.classList.add(randomColor);
-      
-      // Create text span (this will animate inside)
+      container.classList.add('highlight', utterance.type);
+
+      container.classList.add(nextColor());
+
       const textSpan = document.createElement('span');
       textSpan.classList.add('animated-text');
-      textSpan.textContent = fragment.text + ' ';
-      
-      // Append text to container, container to your existing wrapper
+      textSpan.textContent = utterance.words.join(' ');
+
       container.appendChild(textSpan);
       wrapper.appendChild(container);
-      
-      // Animate container entrance
+
+      // Stagger by utterance now. At 0.03 per word a long reply took seconds
+      // to finish arriving; there are only ever a couple of blocks per round,
+      // so they can afford to be slower and land more deliberately.
       gsap.set(container, { opacity: 0, scale: 0.95 });
       gsap.to(container, {
         opacity: 1,
         scale: 1,
         duration: 0.8,
-        delay: index * 0.03,
+        delay: index * 0.18,
         ease: "power2.out",
         onComplete: () => {
           startTextAnimations(textSpan);
@@ -82,12 +125,15 @@ document.fonts.ready.then(() => {
     const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC',
                     '#003397', '#9B9AFC', '#FC82C5', '#D8FD28'];
   
-    const flickerChance = Math.random() < 0.5;
-    const colorShiftChance = Math.random() < 0.3;
-  
+    // Flicker was written when every word was its own box: one word dimming
+    // reads as the system momentarily losing its grip on that word. A whole
+    // paragraph doing it reads as a broken render. Off unless asked for.
+    const flickerChance = FLICKER && Math.random() < 0.5;
+    const colorShiftChance = DRIFT && Math.random() < 0.3;
+
     const opacityDuration = randomRange(1500, 4000) / 1000;
     const colorDuration = randomRange(4000, 8000) / 1000;
-  
+
     // Subtle opacity flicker on text itself
     if (flickerChance) {
       gsap.to(textSpan, {

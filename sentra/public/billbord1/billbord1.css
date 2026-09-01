@@ -91,23 +91,25 @@
 }
 
 /*text-highligght classes*/
+/* One block per utterance, centred, sized to its own text. `contain` is gone:
+ * it was worth having when every word was its own box and there were hundreds,
+ * but layout containment stops a box being measured by its contents, which is
+ * exactly what these now need. */
 .highlight {
   font-family: 'Diatype';
   font-weight: 500;
   letter-spacing: -5px;
-  display: inline-block;
+  display: block;
+  max-width: 88%;
   padding: 8px 12px;
   font-size: var(--body);
   position: relative;
   overflow: visible;
-  vertical-align: top;
   line-height: 0.9;
-  /* Force a new stacking context */
+  text-align: center;
+  text-transform: capitalize;
   transform: translateZ(0);
-  /* Or use will-change */
   will-change: transform;
-  /* Ensure containment */
-  contain: layout style paint;
 }
 
 .highlight.pink {
@@ -157,7 +159,11 @@ html, body {
     padding: 0;
     width: 100vw;
     height: 100vh;
-    background-color: black;
+    /* Ground and type are the SAME value. The words are not written on the
+     * screen, they are cut out of the colour behind them — where the system
+     * has not filed something under a category there is nothing to read. Set
+     * these from one variable so they cannot drift apart. */
+    background-color: var(--type);
     overflow: hidden;
     /* #D9D9D9, not #FFF. Pure white sits on top of every block at full
      * strength; a light grey sinks into the pale colours — lilac, peachy,
@@ -175,7 +181,14 @@ html, body {
   }
   .words-wrapper {
     letter-spacing: -5px;
-    gap: 4px;
+    /* A centred column. gap was 4px and did nothing, since nothing here was a
+     * flex container; the blocks are meant to touch, so it stays at nothing on
+     * purpose now rather than by accident. */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
     width: 100vw;
     height: 100vh;
     position: relative;
