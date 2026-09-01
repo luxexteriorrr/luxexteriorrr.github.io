@@ -167,10 +167,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const now = new Date();
     timeStamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   
-    // --- Sender square block (color-coded manually)
+    // --- Sender square block. Colour comes from chat.css, keyed off the
+    // .user / .sentra class already on the message, rather than an inline
+    // style set here — the hardcoded value was #FFA500, the CSS named orange,
+    // which is not the #FD9600 the rest of the project is built from.
     const messageBlock = document.createElement('div');
     messageBlock.classList.add('messageBlock');
-    messageBlock.style.backgroundColor = sender === 'user' ? '#9751BD' : '#FFA500';
   
     // --- Message content
     const messageDetails = document.createElement('div');

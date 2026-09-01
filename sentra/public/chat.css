@@ -95,10 +95,20 @@
   font-display: swap;
 }
 
-/*this is for the iphone 8 Plus */
-@media screen 
-and (device-width:414px) 
-and (device-height: 736px) {
+/* iPhone 8 Plus, 414×736 — still the only size this is drawn for, and still
+ * the target. But matched on width/height rather than device-width/device-height.
+ *
+ * device-width matches the PHYSICAL panel, not the window, so every rule below
+ * this line applied on precisely one handset and nowhere else — no window size
+ * and no DevTools emulation could satisfy it.
+ *
+ * This is still an exact 414×736 match and still renders as unstyled Times on
+ * black at any other size. What changes is that the size is now the window's,
+ * so it can be met: resize a browser to 414×736, pick the device in DevTools,
+ * or capture at it, and the design appears. Identical on the phone itself. */
+@media screen
+and (width:414px)
+and (height: 736px) {
 
   *, *::before, *::after {
     margin: 0;
@@ -268,6 +278,12 @@ and (device-height: 736px) {
     position: sticky;
     top: 0;
   }
+  /* The square takes its colour from here rather than from an inline style in
+   * chat.js, which hardcoded #FFA500 — the CSS named orange, not the #FD9600
+   * this project uses. One value out of the system is one too many when the
+   * whole piece is about a company with a consistent surface. */
+  .message.user .messageBlock   { background-color: var(--purple); }
+  .message.sentra .messageBlock { background-color: var(--orange); }
   .senderID {
     font-size: var(--body);
     font-weight: 500;
