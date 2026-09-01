@@ -613,6 +613,11 @@ html, body { height: 100%; overflow: hidden; }
 .info-inner p  { font-weight: 400; }
 .info-inner p  { margin: 0; }
 
+/* The ask sits apart from the two contact lines above it. Half the gap that
+ * separates whole sections (1.3em), so it still reads as part of Contact
+ * rather than as a fourth heading-less section. */
+.info-inner p.ask { margin-top: 0.65em; }
+
 @media (max-width: 700px) {
   .info-inner {
     width: auto;
