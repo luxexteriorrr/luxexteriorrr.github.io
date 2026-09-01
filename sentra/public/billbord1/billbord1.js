@@ -27,7 +27,12 @@ document.fonts.ready.then(() => {
   });
     
   socket.on('conversation_fragments', (data) => {
-    const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue'];
+    // All nine from the Figma palette. This list and the `colors` array in
+    // startTextAnimations used to disagree — blocks were drawn from five
+    // classes while the colour shift picked from seven hexes, so two colours
+    // could only ever appear on a word that happened to be animating.
+    const colorClasses = ['pink', 'orange', 'purple', 'green', 'blue',
+                          'darkblue', 'lilac', 'peachy', 'yellow'];
     
     data.fragments.forEach((fragment, index) => {
       // Create container div (gets the colored background)
@@ -71,7 +76,11 @@ document.fonts.ready.then(() => {
 
   function startTextAnimations(textSpan) {
     const container = textSpan.parentElement;
-    const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC', '#9B9AFC', '#FC82C5'];
+    // The same nine the blocks are drawn from, so a word that shifts can only
+    // shift into a colour the wall already contains. This was seven before and
+    // omitted dark blue and yellow.
+    const colors = ['#FD02B2', '#FD9600', '#9751BD', '#688600', '#058CFC',
+                    '#003397', '#9B9AFC', '#FC82C5', '#D8FD28'];
   
     const flickerChance = Math.random() < 0.5;
     const colorShiftChance = Math.random() < 0.3;

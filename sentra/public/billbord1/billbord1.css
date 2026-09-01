@@ -1,13 +1,26 @@
 :root {
-  /* color variables */
+  /* Colour, taken from the IRP Figma (node 68:177) so the two agree. Names are
+   * Figma's, not invented here. The build had shipped five of these nine as
+   * block classes; lilac and peachy existed only inside the colour-shift array
+   * in the JS, with no class to sit on, and dark blue and yellow were missing
+   * altogether — which is why the built billboard read flatter than the boards.
+   *
+   * The set is deliberately not harmonious. Two near-identical blues, a yellow
+   * that vibrates against the light ground and a dark blue that swallows it:
+   * a corporate palette assembled by something with no taste, only enthusiasm. */
   --pink:#FD02B2;
   --orange:#FD9600;
   --purple:#9751BD;
   --green:#688600;
-  --blue:#058CFC;
+  --blue:#058CFC;         /* Figma: light blue */
+  --darkblue:#003397;
+  --lilac:#9B9AFC;
+  --peachy:#FC82C5;
+  --yellow:#D8FD28;
   --grey:#E8E2DF;
   --black:#000000;
   --white:#FFFFFF;
+  --type:#D9D9D9;         /* the type sitting on the blocks */
 
   /* typography */
   --small: 80px;
@@ -21,7 +34,7 @@
 }
 * {
   line-height: 0.9;
-  letter-spacing: -5px;
+  letter-spacing: -1px;
 }
 ::-webkit-scrollbar {
   display: none;
@@ -112,6 +125,18 @@
 .highlight.blue {
   background-color: var(--blue);
 }
+.highlight.darkblue {
+  background-color: var(--darkblue);
+}
+.highlight.lilac {
+  background-color: var(--lilac);
+}
+.highlight.peachy {
+  background-color: var(--peachy);
+}
+.highlight.yellow {
+  background-color: var(--yellow);
+}
 .animated-text {
   font-family: inherit;
   font-weight: inherit;
@@ -134,7 +159,12 @@ html, body {
     height: 100vh;
     background-color: black;
     overflow: hidden;
-    color: white;
+    /* #D9D9D9, not #FFF. Pure white sits on top of every block at full
+     * strength; a light grey sinks into the pale colours — lilac, peachy,
+     * yellow — and stays legible on the dark ones. The words half-dissolve
+     * into whatever the system has decided to file them under, which is the
+     * behaviour the boards have and the build never did. */
+    color: var(--type);
   }
   #poster1wrapper {
     position: static;
