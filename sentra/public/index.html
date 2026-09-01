@@ -71,14 +71,37 @@
 
     </nav>
 
+    <!-- WELCOME. The first thing anyone meets. Five lines from the IRP boards,
+         each on its own colour, shown one at a time on black, ending on
+         "Welcome user!" and the way in.
+
+         The lines are doing the work of the whole piece before a word has been
+         typed: the screen greets you, flatters you, then tells you it already
+         knows why you are here. Text is #D9D9D9 on the colour, exactly as on
+         the billboard — the words are cut out of the block rather than written
+         on the screen. -->
+    <div class="WelcomeWrapper" id="welcome">
+      <p class="welcomeLine" id="welcomeLine"><span class="welcomeBlock" id="welcomeBlock"></span></p>
+      <button id="enter" class="cta" type="button" hidden>proceed <span class="arrow">&rarr;</span></button>
+    </div>
+
     <!--onboarding chat-->
-    <div class="OnboardingWrapper">
+    <div class="OnboardingWrapper" hidden>
 
       <div class="titleWrapper">
-        <h1>What is <span class="orange">Sentra</span>?</h1>
-        <p class="onboardingP">We could simply tell you, but it wouldn't make sense yet. <br>
+        <h1>What is Sentra?</h1>
+        <p class="onboardingP">We could simply tell you, but it wouldn't make sense yet.</p>
+
+        <!-- The rest of the pitch is behind Read more. The screen opens on one
+             withheld sentence and a way to ask for the rest — which is the
+             behaviour the whole piece is about, performed before you have said
+             anything to it. -->
+        <button id="readMore" class="chip" type="button"
+                aria-expanded="false" aria-controls="onboardingMore">Read more</button>
+
+        <p class="onboardingMore" id="onboardingMore" hidden>
           Have a conversation to find out what Sentra does.
-          The more you share, the better Sentra can demonstrate what it actually does. 
+          The more you share, the better Sentra can demonstrate what it actually does.
           Each conversation is different because each of us are different.
           We are genuinely curious to learn about your world!</p>
       </div>

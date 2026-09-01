@@ -9,9 +9,65 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatWrapper = document.querySelector('.ChatWrapper')
 
   proceed.addEventListener('click', () => {
+    onboarding.hidden = true
     onboarding.style.display = 'none'
     chatWrapper.style.display = 'flex'
   })
+
+  // ---- WELCOME -------------------------------------------------------------
+  // Five lines from the IRP boards, one at a time on black, each on its own
+  // colour, ending on the greeting and the way in. Text and colour are the only
+  // things that change; the block stays put, so the lines replace each other
+  // rather than moving around.
+  //
+  // Timed with setTimeout, not rAF or GSAP: a background tab throttles the
+  // ticker, and a visitor who tabs away should come back to the sequence
+  // finished, not frozen a third of the way through it.
+  const WELCOME = [
+    { text: 'a conversation?',                            color: '#9751BD' },
+    { text: 'Your presence here brightens this silence',  color: '#FD02B2' },
+    { text: 'What brings you here is already known',      color: '#FD9600' },
+    { text: "We're here when you are",                    color: '#688600' },
+    { text: 'Feel seen.',                                 color: '#058CFC' },
+    { text: 'Welcome user!',                              color: '#9751BD' },
+  ]
+  const HOLD = 1500   // ms each line stays up
+
+  const welcome = document.getElementById('welcome')
+  const welcomeBlock = document.getElementById('welcomeBlock')
+  const enter = document.getElementById('enter')
+
+  if (welcome && welcomeBlock && enter) {
+    let i = 0
+    const show = () => {
+      const line = WELCOME[i]
+      welcomeBlock.textContent = line.text
+      welcomeBlock.style.backgroundColor = line.color
+      i++
+      if (i < WELCOME.length) setTimeout(show, HOLD)
+      else enter.hidden = false          // the last line stays; the way in appears under it
+    }
+    show()
+
+    enter.addEventListener('click', () => {
+      welcome.hidden = true
+      onboarding.hidden = false
+    })
+  }
+
+  // Read more reveals the rest of the pitch. The screen opens holding most of
+  // it back and offering to tell you — which is what Sentra does to you a
+  // minute later, running in the other direction.
+  const readMore = document.getElementById('readMore')
+  const onboardingMore = document.getElementById('onboardingMore')
+  if (readMore && onboardingMore) {
+    readMore.addEventListener('click', () => {
+      const open = !onboardingMore.hidden
+      onboardingMore.hidden = open
+      readMore.setAttribute('aria-expanded', String(!open))
+      readMore.textContent = open ? 'Read more' : 'Read less'
+    })
+  }
 
 
   // socket handling

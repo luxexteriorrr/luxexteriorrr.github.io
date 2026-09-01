@@ -13,6 +13,13 @@
   --yellow: #D8FD28;
      
 
+  /* Tracking. The IRP boards set -5% on display and -3% on text, which read as
+   * condensed on screen; `normal` read as loose. These sit at roughly a third
+   * of the board values — tight enough to hold the line together, not so tight
+   * the words start touching. Change here, not at the call sites. */
+  --track-display: -0.02em;
+  --track-text: -0.01em;
+
   /* typography */
   --small: 10px;
   --body: 16px;
@@ -114,7 +121,9 @@ and (height: 736px) {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    word-spacing: -1px;
+    /* word-spacing: -1px was here, pulling every word a pixel closer to the
+     * next on every element in the app. With the negative letter-spacing gone
+     * it was the last thing still tightening the setting. */
   }
   html, body {
     font-family: 'Diatype';
@@ -163,19 +172,62 @@ and (height: 736px) {
     height: auto;
   }
 
+  /* ---- WELCOME ------------------------------------------------------------
+   * Black, one line at a time, centred. The line is a coloured block with the
+   * type knocked out of it in #D9D9D9 — the same relationship the billboard
+   * has, so the first screen and the wall are visibly one system.
+   * Size is set so the longest line ("Your presence here brightens this
+   * silence") still holds on one line at 414. */
+  .WelcomeWrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background-color: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 16px 8px 48px;
+  }
+  .WelcomeWrapper[hidden] { display: none; }
+
+  .welcomeLine {
+    margin: 0;
+    text-align: center;
+    min-height: 24px;
+  }
+  .welcomeBlock {
+    display: inline-block;
+    font-family: 'Diatype', sans-serif;
+    font-weight: 700;              /* Diatype Bold, as the boards */
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: var(--track-text);
+    color: #D9D9D9;
+    padding: 1px 6px;
+    background-color: transparent;
+    /* Only the colour moves between lines. No fade: the boards cut, they do
+     * not dissolve, and a fade here would read as a loading state. */
+    transition: background-color 120ms linear;
+  }
+
   .titleWrapper {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 16px;
   }
+  /* Values below are measured off Home Page Iphone 13 (398:895), not eyeballed.
+   * Tracking there is set in percent, so it is em here — it has to hold at any
+   * size, and -2px meant something different on the 42px head and the 26px sub. */
   h1 {
-    font-size: var(--H5);
-    line-height: var(--H5);
-    color: var(--grey);
-    letter-spacing: -1px;
+    font-size: var(--H5);          /* 42 */
+    line-height: 40px;
+    color: var(--black);           /* was --grey, which put the headline at #E8E2DF */
+    letter-spacing: var(--track-display);
     height: fit-content;
-    letter-spacing: -2px;
-    font-weight: 800;
+    font-weight: 800;              /* Diatype Heavy */
   }
   .orange {
     color: var(--orange);
@@ -190,27 +242,99 @@ and (height: 736px) {
     letter-spacing: inherit;
   }
   .onboardingP {
+    font-weight: 500;              /* Diatype Medium */
+    color: var(--black);
+    font-size: var(--H6);          /* 26 */
+    line-height: 24px;
+    letter-spacing: var(--track-text);
+  }
+
+  /* The withheld half, revealed by Read more. Set as the subhead so the screen
+   * grows rather than changing register when it opens. */
+  .onboardingMore {
     font-weight: 500;
     color: var(--black);
     font-size: var(--H6);
     line-height: 24px;
+    letter-spacing: var(--track-text);
+    margin: 0;
   }
-  #dislaimer {
-    font-size: var(--body);
-    line-height: 14px;
+  .onboardingMore[hidden] { display: none; }
+
+  /* Read more — 10px Bold on a #E8E2DF band, sized to its own text. Small and
+   * quiet: it is an offer, not a call to action. */
+  .chip {
+    align-self: flex-start;
+    font-family: 'Diatype', sans-serif;
+    font-size: var(--small);       /* 10 */
+    line-height: 8px;
+    letter-spacing: normal;
+    font-weight: 700;              /* Diatype Bold */
     color: var(--pink);
-  }
-  #proceed {
-    line-height: 24px;
-    height: 32px;
-    width: 100%;
-    background-color: #FD02B2;
-    font-size: var(--H6);
-    color: var(--grey);
+    background-color: var(--grey);
     border: none;
+    /* appearance:none or the browser's own button rendering survives underneath
+     * everything set here — rounded corners, its own font metrics, a grey it
+     * picked. That is what made these read as browser buttons rather than as
+     * the bands they are. */
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    width: 126px;
+    height: 16px;
+    padding: 2px 8px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    text-align: left;
+    cursor: pointer;
+  }
+  #dislaimer {
+    font-size: var(--body);        /* 16 */
+    line-height: 15px;
+    letter-spacing: var(--track-text);
+    font-weight: 500;              /* Diatype Medium */
+    color: var(--pink);
+  }
+  /* Pink at 25% carrying pink type at full, rather than a solid pink slab with
+   * grey type on it. The band reads as a field the words sit in — the same
+   * relationship the billboard has — instead of as a button stuck to the page. */
+  /* The way in, on both screens. Set at body size rather than 26 — it is the
+   * quietest thing that still has to be found, and at H6 it was competing with
+   * the headline for the same job. Type sits left, like everything else on the
+   * page; the band runs full width, so the words start at the same margin the
+   * headline does instead of floating in the middle of a stripe.
+   *
+   * A button does NOT inherit font-family — without it this set in Arial. */
+  .cta,
+  #proceed {
+    font-family: 'Diatype', sans-serif;
+    font-weight: 400;              /* Diatype Regular */
+    font-size: var(--body);        /* 16, was 26 */
+    line-height: 16px;
+    letter-spacing: var(--track-text);
+    height: 32px;
+    width: 100%;
+    background-color: rgba(253, 2, 178, 0.25);
+    color: var(--pink);
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.3em;
+    cursor: pointer;
+  }
+  .cta[hidden] { display: none; }
+
+  /* The arrow is Black where the word is Regular — it is the only part of the
+   * button doing any pointing. */
+  #proceed #black,
+  .cta .arrow {
+    font-weight: 900;              /* Diatype Black */
+    color: inherit;
   }
   #black {
     font-weight: 900;
@@ -218,17 +342,20 @@ and (height: 736px) {
   .disclaimerWrapper{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    width: 100%;
   }
 
   .OnboardingWrapper {
-    padding: 6px;
+    padding: 16px 8px 48px;        /* measured off 398:895 */
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    gap: 16px;
+    box-sizing: border-box;
   }
 
 
