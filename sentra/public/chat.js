@@ -194,7 +194,17 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // --- Add to chat container
     chatContainer.appendChild(msgDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    // Scroll AFTER layout, not on the line following appendChild. Read there,
+    // scrollHeight does not yet account for the message just added — the text
+    // has not wrapped — so it scrolls to where the bottom used to be, and the
+    // taller the reply the further short it falls. Sentra's replies are all
+    // long, which made the message that mattered most the one nobody could
+    // read. Two frames: the first lets style and layout run, the second is
+    // measured against the finished box.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }));
   }
   
   
