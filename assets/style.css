@@ -127,8 +127,10 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   transition: width var(--dock-dur) var(--dock-ease);
   /* One fill in both states. The dock used to go translucent-to-opaque on open,
    * which changed the surface's identity halfway through the gesture. */
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: var(--dock-fill);
+  backdrop-filter: blur(var(--dock-blur));
+  -webkit-backdrop-filter: blur(var(--dock-blur));
+  border-radius: 3px;
   overflow: hidden;
   color: #fff;
 }
@@ -143,7 +145,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   /* Centred, so when the box widens about its own centre the name does not
    * move at all — no counter-translation needed. */
   justify-content: center;
-  padding: 0.28em 0.42em;   /* tight to the letters */
+  padding: 3px 12px;        /* 15px line in a 21px box, air at the sides */
   background: none;
   color: #fff;
   pointer-events: auto;
@@ -188,14 +190,25 @@ body.info-open .dock {
  * black — the blend bought nothing there and cost the text its reliability,
  * since a blend inside a box with its own opacity transitions has too many
  * ways to composite to nothing. Black is the same result, stated directly. */
+:root[data-dock="pill"] .id,
 :root[data-dock="white"] .id {
   color: #fff;
   mix-blend-mode: difference;
 }
+:root[data-dock="pill"] .info-inner,
 :root[data-dock="white"] .info-inner {
   color: #3c3c3c;                    /* a tone, not black — greyscale reading
                                         of the reference panel */
   mix-blend-mode: normal;
+}
+
+/* pill — profiler.world's. A mid-grey at low opacity over a real blur, so the
+ * plate underneath stays legible as tone through it rather than being frosted
+ * out. Squarer and flatter than anything here before it: 3px, and no border at
+ * all, the fill alone doing the separating. */
+:root[data-dock="pill"] {
+  --dock-fill: rgba(128, 128, 128, 0.40);
+  --dock-blur: 9px;
 }
 
 /* plate — the grey band from the reference spread. */
