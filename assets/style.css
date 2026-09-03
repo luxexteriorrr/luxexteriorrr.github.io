@@ -172,6 +172,11 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 /* Open, the one surface goes opaque. Nothing to keep in step — there is only
  * one box to change. */
 body.info-open .dock {
+  /* The bar widens to the panel. --dock-open-w was measured and set by the
+   * script from the first, but nothing ever read it, so the dock stayed at its
+   * collapsed width and the panel opened clipped behind a 114px bar. The width
+   * transition on .dock has been sitting there with nothing to interpolate. */
+  width: var(--dock-open-w, auto);
   background: #fff;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;

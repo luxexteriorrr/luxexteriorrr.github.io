@@ -679,12 +679,29 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   function sizes() {
     const wasHidden = sheet.hidden;
     const wasOpen   = document.body.classList.contains('info-open');
-    if (wasHidden) sheet.hidden = false;
     if (wasOpen) document.body.classList.remove('info-open');   // measure collapsed
 
+    // COLLAPSED IS THE BAR, and measuring it needs two things out of the way.
+    //
+    // The panel: this used to unhide the sheet before measuring, and the dock
+    // is one fit-content box around both, so the collapsed width came back as
+    // the PANEL's width — 410px against the name's 113px. That made --dock-w
+    // larger than --dock-open-w, so the pill was born as wide as the thing it
+    // opens into and the open gesture had nothing left to animate.
+    //
+    // And the dock's own width, which this function set last time round. CSS
+    // pins it to --dock-w, so re-measuring it just reads back the previous
+    // answer and the first bad number is kept for good. Released to auto for
+    // the measurement, then handed straight back to the stylesheet.
+    sheet.hidden = true;
+    const pinned = dock.style.width;
+    dock.style.width = 'auto';
     const collapsed = Math.ceil(dock.getBoundingClientRect().width);
-    const panelW    = sheet.offsetWidth;
-    const panelH    = Math.min(inner.offsetHeight, Math.round(innerHeight * 0.62));
+    dock.style.width = pinned;
+
+    sheet.hidden = false;
+    const panelW = sheet.offsetWidth;
+    const panelH = Math.min(inner.offsetHeight, Math.round(innerHeight * 0.62));
 
     if (wasOpen) document.body.classList.add('info-open');
     if (wasHidden) sheet.hidden = true;
