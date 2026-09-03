@@ -128,18 +128,23 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
  * plate in a set had to share one width, so a 21.6 wordmark strip and a 0.72
  * portrait in the same entry paid for each other in dead space.
  *
- * WHAT IS FIXED, AND WHY: the box height (--plate-h), per entry. Each plate
- * then takes its own natural width inside it — no crop, no shared ratio. A
- * fixed height is what keeps the caption still: with the box sized to each
- * plate instead, every click would reflow the page below it.
+ * WHAT IS FIXED, AND WHY: the box, per entry — --w sets its width and
+ * --plate-ar its ratio, so its height is reserved before any image lands.
+ * That reservation is what keeps the caption still: sized to each plate
+ * instead, every click would reflow the page below it.
  *
- * --w survives as a width cap, so the index keeps its proportional rhythm.
+ * --plate-ar is the ratio of the TALLEST plate in the set, so the box is
+ * exactly that plate's height at that width. The tallest plate fills the box;
+ * the rest sit inside it at their own size. This is the geometry the
+ * scroll-snap version had, minus its instability: there the height came from
+ * whichever slides had lazily loaded, so the box grew as you scrolled.
  */
 
 .carousel {
   position: relative;
-  width: 100%;
-  height: var(--plate-h, 60vh);
+  width: var(--w, 46%);
+  aspect-ratio: var(--plate-ar, 1);
+  max-height: var(--plate-max-h);
   margin: 0 auto 0.5em;
 }
 
@@ -186,16 +191,17 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   visibility: visible;
 }
 
-/* Both plate types size to the picture, not to the slide, and are bounded on
- * both axes: the box height, and --w as the width cap that carries the index
- * rhythm. Whichever bound bites first wins, so the natural ratio always holds
- * and nothing is ever cropped or letterboxed inside its own element box. */
+/* Both plate types size to the picture, not to the slide, and are bounded by
+ * the box on both axes. Whichever bound bites first wins, so the natural ratio
+ * always holds and nothing is ever cropped or letterboxed inside its own
+ * element box. --w now sizes the box itself, which is what carries the index's
+ * proportional rhythm. */
 .slide video,
 .slide img {
   display: block;
   width: auto;
   height: auto;
-  max-width: var(--w, 46%);
+  max-width: 100%;
   max-height: 100%;
   pointer-events: none;             /* clicks land on the track, not the plate */
 }
@@ -271,7 +277,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   }
 
   /* Plates run the full padded column and take whatever height their ratio
-   * gives them. Width is the scarce axis on a phone, so --w and --plate-h are
+   * gives them. Width is the scarce axis on a phone, so --w and --plate-max-h are
    * both desktop measures and neither applies here.
    *
    * The box reserves the height of the TALLEST plate in the set, so tapping
@@ -282,6 +288,9 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
    * Each set also opens on that tallest plate, so the box is full at rest and
    * the reserved space only ever shows once you have started tapping. */
   .carousel {
+    /* --w and --plate-max-h are desktop measures; the column is the width here. */
+    width: 100%;
+    max-height: none;
     height: auto;
     aspect-ratio: var(--plate-ar, 1);
   }
