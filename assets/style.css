@@ -272,24 +272,33 @@ body.info-open .dock {
  * plate in a set had to share one width, so a 21.6 wordmark strip and a 0.72
  * portrait in the same entry paid for each other in dead space.
  *
- * WHAT IS FIXED, AND WHY: the box height (--plate-h), per entry. Each plate
- * then takes its own natural width inside it — no crop, no shared ratio. A
- * fixed height is what keeps the caption still: with the box sized to each
- * plate instead, every click would reflow the page below it.
+ * WHAT IS FIXED, AND WHY: the box, per entry — --w sets its width, and its
+ * height is the tallest plate in the set. That reservation is what keeps the
+ * caption still: sized to whichever plate is showing, every click would
+ * reflow the page below it.
  *
- * --w survives as a width cap, so the index keeps its proportional rhythm.
+ * HOW THE HEIGHT IS SET: one slide stays in normal flow and supplies it; the
+ * rest are absolute and stack on top. It has to be the tallest in the set, so
+ * the script marks that one .is-tall rather than the stylesheet assuming it is
+ * the first — see the note on .is-tall below. The box is exactly that plate's
+ * height, the caption sits under it, and the others sit inside at their own
+ * size.
+ *
+ * Deliberately NOT aspect-ratio on the box. A ratio-derived height is
+ * "indefinite" in WebKit, so max-height:100% on the plate resolves to nothing,
+ * the cap is dropped, and 5000px scans paint straight over the next entry.
+ * Chrome resolves it and shows nothing wrong. An in-flow slide gives a real
+ * measured height in every engine, and nothing to keep in sync by hand.
  */
 
 .carousel {
   position: relative;
-  width: 100%;
-  height: var(--plate-h, 60vh);
+  width: var(--w, 46%);
   margin: 0 auto 0.5em;
 }
 
 .track {
   position: relative;
-  height: 100%;
   background: var(--ground, transparent);
   cursor: e-resize;                 /* reads as "forward", not "open" */
 
@@ -323,6 +332,18 @@ body.info-open .dock {
   pointer-events: none;
 }
 
+/* The one in-flow slide: it sets the box height, and hidden or not it keeps
+ * holding it, so clicking through never reflows the page below.
+ *
+ * It must be the TALLEST in the set. The script marks that slide .is-tall from
+ * the width and height attributes, so the box is right whatever order the
+ * plates are in. :first-child is the fallback for no-JS, where it is also the
+ * only slide that shows. */
+.slide:first-child { position: relative; }
+
+.track:has(.is-tall) .slide:not(.is-tall) { position: absolute; }
+.slide.is-tall { position: relative; }
+
 .slide:not(.is-on) { visibility: hidden; }
 
 .slide.is-on {
@@ -330,17 +351,18 @@ body.info-open .dock {
   visibility: visible;
 }
 
-/* Both plate types size to the picture, not to the slide, and are bounded on
- * both axes: the box height, and --w as the width cap that carries the index
- * rhythm. Whichever bound bites first wins, so the natural ratio always holds
- * and nothing is ever cropped or letterboxed inside its own element box. */
+/* Both plate types size to the picture, not to the slide, and are bounded by
+ * the box on both axes. Whichever bound bites first wins, so the natural ratio
+ * always holds and nothing is ever cropped or letterboxed inside its own
+ * element box. --w now sizes the box itself, which is what carries the index's
+ * proportional rhythm. */
 .slide video,
 .slide img {
   display: block;
   width: auto;
   height: auto;
-  max-width: var(--w, 46%);
-  max-height: 100%;
+  max-width: 100%;
+  max-height: var(--plate-max-h);
   pointer-events: none;             /* clicks land on the track, not the plate */
 }
 
@@ -415,19 +437,16 @@ body.info-open .dock {
   }
 
   /* Plates run the full padded column and take whatever height their ratio
-   * gives them. Width is the scarce axis on a phone, so --w and --plate-h are
-   * both desktop measures and neither applies here.
+   * gives them. Width is the scarce axis on a phone, so --w and --plate-max-h
+   * are both desktop measures and neither applies here.
    *
-   * The box reserves the height of the TALLEST plate in the set, so tapping
-   * through never moves the caption. --plate-ar is that plate's ratio, set per
-   * entry, and expressed as aspect-ratio rather than a pixel height so the
-   * reservation holds at any width without measuring anything.
-   *
-   * Each set also opens on that tallest plate, so the box is full at rest and
-   * the reserved space only ever shows once you have started tapping. */
+   * The height comes from the in-flow first slide, exactly as on desktop — it
+   * is the tallest in the set, so tapping through never moves the caption, and
+   * the box is full at rest. */
   .carousel {
-    height: auto;
-    aspect-ratio: var(--plate-ar, 1);
+    /* --w and --plate-max-h are desktop measures; the column is the width here,
+     * and the plate takes whatever height its ratio gives it. */
+    width: 100%;
   }
 
   .slide img,
@@ -435,7 +454,7 @@ body.info-open .dock {
     width: auto;
     max-width: 100%;
     height: auto;
-    max-height: 100%;
+    max-height: none;
   }
 }
 

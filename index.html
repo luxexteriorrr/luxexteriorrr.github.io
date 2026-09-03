@@ -67,7 +67,7 @@
 <div class="scroller" id="scroller">
 <main class="index">
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.7071">
+  <article class="entry" style="--w:58%; --plate-ar:0.7071">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -110,7 +110,7 @@
        the set (mobile reserves that height so the caption never moves), and the
        1.414 flat spreads are taller than the 1.5 mockups — so it stays at 1.4142.
        Revisit only when the flats are gone. -->
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:1.4142">
+  <article class="entry" style="--w:80%; --plate-max-h:74vh; --plate-ar:1.4142">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -170,7 +170,7 @@
     <p class="cap"><b>Zerko Grotesk: Script Parity as a Design Condition</b>, Publication, 2026</p>
   </article>
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:1.3534">
+  <article class="entry" style="--w:86%; --plate-ar:1.3534">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -199,7 +199,7 @@
     <p class="cap"><b>Zerko Grotesk</b>, Typeface, 2026</p>
   </article>
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.7691">
+  <article class="entry" style="--w:78%; --plate-max-h:74vh; --plate-ar:0.7691">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -240,7 +240,7 @@
     <p class="cap"><b>As Seen In</b>, Publication, 2025</p>
   </article>
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:1.3333">
+  <article class="entry" style="--w:70%; --plate-ar:1.3333">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -288,7 +288,7 @@
     <p class="cap"><b>Around A Memory</b>, Publication, 2026</p>
   </article>
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.4600">
+  <article class="entry" style="--w:54%; --plate-ar:0.4600">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -317,7 +317,7 @@
   <!-- awaiting plates: LOTV Identity, Identity, 2026 -->
 
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.8000">
+  <article class="entry" style="--w:48%; --plate-ar:0.8000">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -334,7 +334,7 @@
     <p class="cap"><b>RADA Birthday Bash at Peckham Audio</b>, Poster, 2025</p>
   </article>
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.7071">
+  <article class="entry" style="--w:44%; --plate-ar:0.7071">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -359,7 +359,7 @@
     <p class="cap"><b>RADA at Corsica Studios</b>, Poster and social media, 2025</p>
   </article>
 
-  <article class="entry" style="--w:46%; --plate-h:50vh; --plate-ar:0.8025">
+  <article class="entry" style="--w:46%; --plate-ar:0.8025">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -374,7 +374,7 @@
     <p class="cap"><b>LILIESOFTHEVALLEY APOC Paris Pop-Up</b>, Identity, 2025</p>
   </article>
 
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.7789">
+  <article class="entry" style="--w:56%; --plate-ar:0.7789">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -425,7 +425,7 @@
        the same thirty seconds, not two demos.
 
        9:16 throughout now, hence --plate-ar 0.5625 — every plate is a screen. -->
-  <article class="entry" style="--w:100%; --plate-h:100vh; --plate-ar:0.5625">
+  <article class="entry" style="--w:100%; --plate-ar:0.5625">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -499,7 +499,7 @@
 
   <!-- awaiting plates: Vestige, Website, 2025 -->
 
-  <article class="entry" style="--w:62%; --plate-h:54vh; --plate-ar:1.6000">
+  <article class="entry" style="--w:62%; --plate-ar:1.6000">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -569,6 +569,28 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   const slides = [...c.querySelectorAll('.slide')];
   const out = c.querySelector('[data-count]');
   const pad = n => String(n).padStart(2, '0');
+
+  // WHICH SLIDE HOLDS THE BOX UP. One slide stays in normal flow and supplies
+  // the height; the rest are absolute and stack on it. That slide has to be the
+  // tallest in the set, or the others paint over the entry below.
+  //
+  // The stylesheet used to assume it was the first, which held only because
+  // 855e085 reordered every set to lead with its tallest plate. That is an
+  // invariant nothing enforces: swapping a plate silently breaks it, and it
+  // broke here the moment the thesis mockup became the lead — visible on mobile
+  // only, where no --plate-max-h clamps the overflow out of sight.
+  //
+  // So pick it instead of assuming it. Tallest at a shared width is smallest
+  // width/height, and every plate carries width and height attributes, so this
+  // reads off the markup — no layout, no waiting for a decode, and correct
+  // again by itself whenever the plates change.
+  const ratio = s => {
+    const m = s.querySelector('img, video');
+    const w = +(m?.getAttribute('width')), h = +(m?.getAttribute('height'));
+    return w > 0 && h > 0 ? w / h : Infinity;
+  };
+  slides.reduce((tall, s) => ratio(s) < ratio(tall) ? s : tall, slides[0])
+        ?.classList.add('is-tall');
 
   let i = 0;
 
