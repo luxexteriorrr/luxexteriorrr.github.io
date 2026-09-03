@@ -130,7 +130,9 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   background: var(--dock-fill);
   backdrop-filter: blur(var(--dock-blur));
   -webkit-backdrop-filter: blur(var(--dock-blur));
-  border-radius: 3px;
+  /* Square. The 3px softening went 3 Sep — with no border and one flat fill,
+   * a rounded corner was the only thing about the box that read as UI. */
+  border-radius: 0;
   overflow: hidden;
   color: #fff;
 }
@@ -171,34 +173,28 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   --dock-fill: rgba(255, 255, 255, 0.72);
   --dock-blur: 10px;
 }
-/* Open, the one surface goes opaque. Nothing to keep in step — there is only
- * one box to change. */
+/* Open, ONLY the width changes. The dock used to go opaque white here, which
+ * made the open panel a different object from the closed pill — same box, two
+ * looks. Now the fill and the blur are whatever the mode set, in both states,
+ * and the panel is the pill grown upward and nothing more. (3 Sep) */
 body.info-open .dock {
   /* The bar widens to the panel. --dock-open-w was measured and set by the
    * script from the first, but nothing ever read it, so the dock stayed at its
    * collapsed width and the panel opened clipped behind a 114px bar. The width
    * transition on .dock has been sitting there with nothing to interpolate. */
   width: var(--dock-open-w, auto);
-  background: #fff;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
-/* The bar inverts: white type, difference blending, so the name shifts against
- * whatever plate is passing under the translucent fill.
- *
- * The panel does NOT. It is opaque white, and white inverted against white IS
- * black — the blend bought nothing there and cost the text its reliability,
- * since a blend inside a box with its own opacity transitions has too many
- * ways to composite to nothing. Black is the same result, stated directly. */
+/* Type is pure white, no blend, in the bar and in the panel alike. The
+ * identifier used to run mix-blend-mode: difference so it inverted against the
+ * plate passing under the fill; the fill already does the separating, and the
+ * blend made the name a different colour on every scroll position. The panel
+ * type was a dark tone on an opaque white sheet — the sheet is gone, so the
+ * type follows the bar. (3 Sep) */
 :root[data-dock="pill"] .id,
-:root[data-dock="white"] .id {
-  color: #fff;
-  mix-blend-mode: difference;
-}
+:root[data-dock="white"] .id,
 :root[data-dock="pill"] .info-inner,
 :root[data-dock="white"] .info-inner {
-  color: #3c3c3c;                    /* a tone, not black — greyscale reading
-                                        of the reference panel */
+  color: #fff;
   mix-blend-mode: normal;
 }
 
