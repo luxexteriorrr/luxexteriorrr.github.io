@@ -548,56 +548,29 @@ function tick() {
 }
 tick();
 
-// A carousel width of 46% of the page resolves to a fraction of a pixel, so the
-// snap position lands mid-device-pixel and a hairline of the neighbouring plate
-// stays visible at the edge. Measured at 0.20-0.23px, and it moves with the
-// window width, which is why it read as intermittent. Rounding each carousel
-// down to a whole device pixel takes it to zero. scroll-snap already handles the
-// accumulated drift, so nothing else needs to change.
-function fitCarousel(c) {
-  const dpr = devicePixelRatio || 1;
-  c.style.width = '';                                    // back to the % rule
-  const w = c.getBoundingClientRect().width;
-  c.style.width = Math.floor(w * dpr) / dpr + 'px';
-}
-
-// Observed on the entry, not the carousel: the entry's width does not depend on
-// the carousel's, so rewriting the carousel cannot re-trigger this. A resize
-// listener alone is not enough - it misses layout changes that are not window
-// resizes, and the stale width then survives into a much narrower viewport.
-const carouselFit = new ResizeObserver(entries => {
-  for (const e of entries) {
-    const c = e.target.querySelector('[data-carousel]');
-    if (c) fitCarousel(c);
-  }
-});
-
-const carousels = [...document.querySelectorAll('[data-carousel]')];
-for (const c of carousels) {
-  fitCarousel(c);
-  carouselFit.observe(c.parentElement);
-}
-
-// Belt and braces. ResizeObserver should cover this on its own, but it costs
-// nothing to also catch the plain window resize, and a stale pinned width in a
-// narrower viewport would overflow the page.
-addEventListener('resize', () => carousels.forEach(fitCarousel));
-
-// Carousels. Scroll-snap gives trackpad swipe, touch swipe and momentum for
-// free — that is the browser doing it, not a library. This adds click-to-
-// advance on top, one direction, wrapping to the first after the last.
+// Carousels. Plates are stacked and swapped; the index lives here rather than
+// being read back off a scroll position.
+//
+// The device-pixel width pinning this replaces is gone with the scroll
+// container that needed it — there is no neighbouring plate to show a sliver
+// of any more.
+//
+// Swipe is handled here too. The scroll-snap version got touch and momentum
+// free from the browser; a stack has to earn it, so a horizontal drag past a
+// threshold advances or retreats. Vertical drags are left alone so the page
+// still scrolls with a finger on a plate.
 for (const c of document.querySelectorAll('[data-carousel]')) {
   const track = c.querySelector('.track');
   const slides = [...c.querySelectorAll('.slide')];
   const out = c.querySelector('[data-count]');
   const pad = n => String(n).padStart(2, '0');
 
-  const index = () =>
-    Math.min(Math.round(track.scrollLeft / track.clientWidth), slides.length - 1);
+  let i = 0;
 
-  // Keep the next plate warm so advancing never shows a gap.
+  // Keep the neighbours warm, in both directions — a swap shows the next plate
+  // immediately, so an unloaded one would arrive as a blank. One request each.
   const warm = n => {
-    const img = slides[n % slides.length]?.querySelector('img');
+    const img = slides[(n + slides.length) % slides.length]?.querySelector('img');
     if (img) img.removeAttribute('loading');
   };
 
@@ -614,36 +587,43 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
     });
   }
 
-  function sync() {
-    const i = index();
+  function show(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle('is-on', k === i));
     out.textContent = `${pad(i + 1)}/${pad(slides.length)}`;
     playOnly(i);
     warm(i + 1);
+    warm(i - 1);
   }
 
-  track.addEventListener('click', () => {
-    const i = index();
-    const last = i >= slides.length - 1;
-    track.scrollTo({ left: last ? 0 : (i + 1) * track.clientWidth, behavior: 'smooth' });
-  });
+  const go = d => show(i + d);
+
+  // A drag ends in a click too, so a swipe would otherwise advance twice —
+  // once on release and again on the click that follows it.
+  let sx = 0, sy = 0, dragged = false;
+
+  track.addEventListener('click', () => { if (!dragged) go(1); });
 
   track.addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault();
-    const d = e.key === 'ArrowRight' ? 1 : -1;
-    track.scrollBy({ left: d * track.clientWidth, behavior: 'smooth' });
+    go(e.key === 'ArrowRight' ? 1 : -1);
   });
 
-  // Fires while the finger is still moving, so the counter tracks a swipe.
-  let raf;
-  track.addEventListener('scroll', () => {
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(sync);
-  }, { passive: true });
+  track.addEventListener('pointerdown', e => {
+    sx = e.clientX; sy = e.clientY; dragged = false;
+  });
 
-  addEventListener('resize', sync);
-  warm(1);
-  sync();
+  track.addEventListener('pointerup', e => {
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    // Horizontal intent only, so a vertical flick still scrolls the page.
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      dragged = true;
+      go(dx < 0 ? 1 : -1);
+    }
+  });
+
+  show(0);
 }
 
 // Info overlay. The sheet is in the markup and only shown/hidden here, so it
@@ -682,18 +662,9 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   if (location.hash === '#info') set(true, false);
 })();
 
-// Browsers restore the scroll position of overflow containers across a reload
-// and through the back/forward cache, so a carousel left on slide 3 comes back
-// on slide 3 and the entry opens on the wrong plate. Reset every track to its
-// first slide once layout has settled. The scroll handler re-syncs the counter.
-function resetCarousels() {
-  for (const c of document.querySelectorAll('[data-carousel]')) {
-    const t = c.querySelector('.track');
-    if (t.scrollLeft) t.scrollLeft = 0;
-  }
-}
-addEventListener('load', () => requestAnimationFrame(resetCarousels));
-addEventListener('pageshow', () => requestAnimationFrame(resetCarousels));
+// The scroll-position restore this used to undo no longer applies: the index
+// is state in a variable, not a scroll offset, so nothing is restored across a
+// reload or the back/forward cache and every entry opens on its first plate.
 
 // Pause videos in carousels that are off screen entirely. Autoplay in a long
 // index would otherwise have every video running at once.

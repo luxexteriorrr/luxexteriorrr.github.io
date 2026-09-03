@@ -120,11 +120,25 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 
 /* ── Carousel ────────────────────────────────────────────────────────────
- * A native overflow container with scroll-snap. Trackpad swipe, touch swipe
- * and momentum all come from the browser — better than a library does it, and
- * free. Clicking the plate advances one, wrapping to the first after the last.
+ * Plates are stacked, not tracked. One is visible; clicking swaps to the next
+ * and wraps after the last.
  *
- * All plates in a set share a ratio, so the height never jumps.
+ * What this buys over the scroll-snap version it replaces: a scroll container
+ * showed a sliver of the neighbouring plate at fractional widths — which the
+ * device-pixel pinning in the script existed solely to chase — and every plate
+ * in a set had to share one width, so a wordmark strip and a portrait in the
+ * same entry paid for each other in dead space.
+ *
+ * HOW THE HEIGHT IS SET: one grid cell, every slide in it. The tallest slide
+ * sets the box height and the others sit inside it, which is what the flex
+ * row did before, so nothing below the plate moves while you click through.
+ *
+ * Deliberately NOT aspect-ratio on the box, and no percentage height anywhere.
+ * A ratio-derived height is "indefinite" in WebKit, so a max-height:100% on
+ * the plate resolves to nothing, the cap is dropped, and full-size scans paint
+ * over the entry below. Blink resolves it and shows nothing wrong. Grid gives
+ * a real measured height in every engine, and — unlike reserving the tallest
+ * plate by hand — it does not care what order the plates are in.
  */
 
 .carousel {
@@ -133,13 +147,9 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 }
 
 .track {
+  /* One cell. Every slide is placed in it, so the tallest defines the height. */
+  display: grid;
   background: var(--ground, transparent);
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;   /* stop a swipe triggering back-navigation */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   cursor: e-resize;                 /* reads as "forward", not "open" */
 
   /* The track is clickable and focusable, so a click would otherwise select
@@ -156,36 +166,33 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
 
 .slide img { -webkit-user-drag: none; }
 
-.track::-webkit-scrollbar { display: none; }
-
 .slide {
-  flex: 0 0 100%;
+  grid-area: 1 / 1;                 /* all slides share the one cell */
   margin: 0;
   /* Inset so the ground reads as a mount around the plate rather than as
    * letterbox bars above and below it. */
   padding: var(--mount, 0);
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-
-  /* Slides stretch to the tallest in the set so the carousel height is fixed —
-   * nothing below it moves while you swipe. The cost is dead space when ratios
-   * within a set differ wildly, which is a reason to group plates of similar
-   * shape rather than to animate the height. */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* Swapped, not faded. Stacking is what removes the shared-width constraint;
+   * a cross-fade would only ever be a side benefit of it, and cutting it makes
+   * the change instant. Restore by adding a transition here. */
+  opacity: 0;
+  pointer-events: none;
 }
 
-.slide video {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: var(--plate-max-h);
-  object-fit: contain;
-  pointer-events: none;             /* clicks land on the track, not the video */
-  background: #f2f2f2;              /* holds the frame before the poster paints */
+/* visibility, not display, so the slide keeps taking part in the grid sizing
+ * and the box stays the height of the tallest plate whichever one is showing. */
+.slide:not(.is-on) { visibility: hidden; }
+
+.slide.is-on {
+  opacity: 1;
+  visibility: visible;
 }
 
+.slide video,
 .slide img {
   display: block;
   /* Sized to the picture, not to the slide. With width:100% + object-fit the
@@ -196,10 +203,18 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   height: auto;
   max-width: 100%;
   max-height: var(--plate-max-h);
+  pointer-events: none;             /* clicks land on the track, not the plate */
+}
+
+.slide video {
+  object-fit: contain;
+  background: #f2f2f2;              /* holds the frame before the poster paints */
+}
+
+.slide img {
   background: var(--plate-bg, transparent);
   outline: var(--plate-rule, none);
   outline-offset: 0;
-  pointer-events: none;             /* clicks land on the track, not the image */
 }
 
 /* Counter is hidden visually but stays in the accessibility tree, so a screen
