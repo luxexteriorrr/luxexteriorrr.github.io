@@ -318,7 +318,6 @@ body.info-open .dock {
   cursor: pointer;
 }
 .cap-toggle:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
-.cap-toggle:hover b { text-decoration: underline; text-underline-offset: 0.15em; }
 
 .more {
   display: grid;
@@ -846,7 +845,6 @@ html, body { height: 100%; overflow: hidden; }
 }
 .landing-works li { margin: 0; }
 .landing-works a { text-decoration: none; }
-.landing-works a:hover { text-decoration: underline; text-underline-offset: 0.15em; }
 
 .landing-meta {
   grid-column: 1;
@@ -884,4 +882,29 @@ html, body { height: 100%; overflow: hidden; }
   .landing-key   { grid-column: 1; grid-row: 3; }
   .landing-key img { object-position: top left; }
   .landing-meta  { grid-column: 1; grid-row: 4; }
+}
+
+
+/* ── Hover ───────────────────────────────────────────────────────────────
+ * The mvp branch's one mechanic, brought across (8 Sep): interactive text
+ * dims to 0.55 over 150ms, and that is the whole vocabulary — no underline,
+ * no colour, the same move on the dock name, the works list, the contact
+ * lines, the panel links and the caption titles. Sits last so it wins over
+ * the `all: unset` on .cap-toggle.
+ *
+ * Pointer devices only. On a touchscreen :hover fires on tap and then sticks
+ * until the next tap, so a title would dim as it opened and stay dimmed; the
+ * media query keeps the rule off anything without a fine pointer. */
+.id,
+.landing-works a,
+.landing-meta a,
+.info-inner a,
+.cap-toggle { transition: opacity 0.15s ease; }
+
+@media (hover: hover) and (pointer: fine) {
+  .id-toggle:hover .id,
+  .landing-works a:hover,
+  .landing-meta a:hover,
+  .info-inner a:hover,
+  .cap-toggle:hover { opacity: 0.55; }
 }
