@@ -28,6 +28,13 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Selected text inverts: the page's own black and white, not the OS blue.
+ * Only background and colour are honoured here — no blend modes, so the type
+ * is set to white outright. The alpha is 0.99, not 1: Safari and Firefox
+ * knock a fully opaque selection back to a translucent wash, and the hair
+ * below full stops them doing it. (8 Sep) */
+::selection { background: rgba(17, 17, 17, 0.99); color: #fff; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 /* Hide the page scrollbar. The header already carries a scroll percentage, so
@@ -92,7 +99,15 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
    * the panel rising are read as a single movement rather than two events.
    * easeOutQuint: most of the distance is covered early, then it settles —
    * it arrives quickly without ever looking like it snapped. */
-  --dock-dur: 380ms;
+  --dock-bar-h: 21px;              /* overwritten by the script from .head */
+  --dock-slot-h: calc(var(--dock-bar-h) + var(--pad));
+  --dock-dur: 380ms;               /* kept for anything not yet on the split */
+  /* The open and close run in two stages, not one. Open: the bar widens to
+   * the panel, THEN the panel rises. Close: the panel drops, THEN the bar
+   * narrows. The width stage is a little shorter than the height stage — it
+   * covers less distance. (8 Sep) */
+  --dock-w-dur: 240ms;
+  --dock-h-dur: 320ms;
   --dock-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* The grey band from the reference spread: enough body to read as its own
@@ -102,12 +117,27 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   --dock-blur: 6px;
 }
 
+/* The slot is the thing that scrolls and sticks; the dock is anchored to its
+ * bottom edge and knows nothing about the viewport. Slot height is the bar
+ * plus the bottom pad, measured by the script, so when the panel opens the
+ * dock grows upward out of a slot that does not change size — the pinned
+ * position cannot jump. The sticky top is the scrollport height minus the
+ * slot: the slot travels with the page until its bottom meets the bottom edge,
+ * then holds there for the rest of the index. */
+.dock-slot {
+  position: sticky;
+  top: calc(100vh - var(--dock-slot-h));
+  top: calc(100dvh - var(--dock-slot-h));
+  height: var(--dock-slot-h);
+  z-index: 10;
+  pointer-events: none;             /* the slot is empty space; the dock re-enables */
+}
 .dock {
-  position: fixed;
+  position: absolute;
   bottom: var(--pad);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
+  pointer-events: auto;
   display: flex;
   flex-direction: column-reverse;   /* bar at the bottom, panel grows off it */
   /* center, NOT stretch. Stretch sizes the children to the container while
@@ -124,7 +154,8 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
    * the open one; both are measured, neither is guessed. */
   width: var(--dock-w, auto);
   max-width: calc(100vw - 2 * var(--pad));
-  transition: width var(--dock-dur) var(--dock-ease);
+  /* Closing: the width waits for the height stage to finish. */
+  transition: width var(--dock-w-dur) var(--dock-ease) var(--dock-h-dur);
   /* One fill in both states. The dock used to go translucent-to-opaque on open,
    * which changed the surface's identity halfway through the gesture. */
   background: var(--dock-fill);
@@ -136,6 +167,7 @@ a { color: inherit; text-decoration: underline; text-underline-offset: 0.18em; }
   overflow: hidden;
   color: #fff;
 }
+
 
 .head {
   position: relative;
@@ -183,6 +215,8 @@ body.info-open .dock {
    * collapsed width and the panel opened clipped behind a 114px bar. The width
    * transition on .dock has been sitting there with nothing to interpolate. */
   width: var(--dock-open-w, auto);
+  /* Opening: the width goes first, at once. */
+  transition: width var(--dock-w-dur) var(--dock-ease) 0ms;
 }
 /* Type is pure white, no blend, in the bar and in the panel alike. The
  * identifier used to run mix-blend-mode: difference so it inverted against the
@@ -262,7 +296,7 @@ body.info-open .dock {
   text-align: center;
 }
 
-.entry { margin-bottom: var(--gap); }
+.entry { margin-bottom: var(--gap); scroll-margin-top: 4vh; }
 
 .plate {
   background: var(--ground, transparent);
@@ -516,10 +550,15 @@ body.info-open .dock {
    * so a short panel spent most of the duration animating empty space. */
   height: 0;
   overflow: hidden;
-  transition: height var(--dock-dur) var(--dock-ease) 70ms;
+  /* Closing: the height goes first, at once. */
+  transition: height var(--dock-h-dur) var(--dock-ease) 0ms;
 }
 
-body.info-open .info { height: var(--panel-h, auto); }
+body.info-open .info {
+  height: var(--panel-h, auto);
+  /* Opening: the height waits for the width stage to finish. */
+  transition: height var(--dock-h-dur) var(--dock-ease) var(--dock-w-dur);
+}
 
 /* Content rises in behind the box, and leaves all at once — a stagger on the
  * way out reads as lag. */
@@ -529,8 +568,9 @@ body.info-open .info { height: var(--panel-h, auto); }
   transition: opacity .22s var(--dock-ease), transform .22s var(--dock-ease);
 }
 body.info-open .info-inner > * { opacity: 1; transform: none; }
-body.info-open .info-inner > :nth-child(1) { transition-delay: 130ms; }
-body.info-open .info-inner > :nth-child(2) { transition-delay: 180ms; }
+/* The content follows the height stage, so both delays sit after the width. */
+body.info-open .info-inner > :nth-child(1) { transition-delay: calc(var(--dock-w-dur) + 110ms); }
+body.info-open .info-inner > :nth-child(2) { transition-delay: calc(var(--dock-w-dur) + 160ms); }
 
 @media (prefers-reduced-motion: reduce) {
   .dock, .info, .info-inner > * { transition: none; }
@@ -661,4 +701,143 @@ html, body { height: 100%; overflow: hidden; }
     grid-template-columns: 1fr;
     gap: 1.3em;
   }
+}
+
+
+/* Lenis adds these classes to the wrapper. CSS smooth scrolling would fight
+ * its own interpolation, so it is off while Lenis runs; without JavaScript
+ * the scroller falls back to native stepping and the fragment links still
+ * work. */
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ── Reveal ──────────────────────────────────────────────────────────────
+ * Each entry fades in the first time it enters the view, and stays. Fade
+ * only, no rise — the plates are the content, and a plate that arrives from
+ * below reads as UI. The `reveal` class is added by the script, so with
+ * JavaScript off every entry is simply there. Once in, the class is never
+ * removed: reveal once. (8 Sep)
+ */
+/* The transition sits on the revealed state only. On the resting state it
+ * would also run when `reveal` is first added, fading the entries OUT from
+ * their stylesheet opacity of 1 on load. Hidden is instant; shown eases. */
+.entry.reveal { opacity: 0; }
+.entry.reveal.is-in { opacity: 1; transition: opacity 700ms var(--dock-ease); }
+@media (prefers-reduced-motion: reduce) { .entry.reveal.is-in { transition: none; } }
+
+/* ── Landing ─────────────────────────────────────────────────────────────
+ * One viewport, before the index. Three regions on a two-column grid: the bio
+ * top-left at the bio measure, the practice and contact lines bottom-left, and
+ * the key visual on the right running the full height. The dock is fixed at
+ * the bottom centre and overlays this like everything else; the meta columns
+ * stay left so they clear it on any desktop width.
+ *
+ * Desktop first, 8 Sep. Below 700px it stacks, so a phone gets something
+ * legible, but the mobile landing is not designed yet.
+ */
+.landing {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  padding: var(--pad-top) var(--pad) var(--pad);
+  display: grid;
+  /* Half and half, not the bio measure: --bio-w gave the visual 38% of the
+   * page and it painted as a thumbnail in the corner. The bio is capped at
+   * --measure instead so it does not run long on a wide screen. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  column-gap: 2em;
+  background: var(--bg);
+}
+
+.landing-bio {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  max-width: var(--measure);
+}
+
+/* The figure fills its grid area and the image fits inside it, pinned to the
+ * top-right corner — object-fit rather than max-height, which WebKit resolves
+ * to nothing against a grid-derived height. */
+.landing-key {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  margin: 0;
+  min-height: 0;
+  min-width: 0;
+}
+.landing-key img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top right;
+}
+
+/* The works list sits in the middle row of the left column, under the bio,
+ * reading down towards the meta. One column, no numbers: the index carries
+ * the order, the list only needs to name it. */
+.landing-works {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  margin: 1.3em 0 0;
+  min-height: 0;
+  overflow: hidden;                 /* a short viewport clips the list, not the meta */
+}
+.landing-works h2 {
+  font-size: inherit;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.38;
+  margin: 0 0 0.35em;
+}
+.landing-works ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.landing-works li { margin: 0; }
+.landing-works a { text-decoration: none; }
+.landing-works a:hover { text-decoration: underline; text-underline-offset: 0.15em; }
+
+.landing-meta {
+  grid-column: 1;
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  column-gap: 3em;
+  align-items: start;
+}
+.landing-meta section { margin: 0; }
+/* Same label treatment as the panel: the heading recedes, the list carries. */
+.landing-meta h2 {
+  font-size: inherit;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.38;
+  margin: 0 0 0.35em;
+}
+.landing-meta p { margin: 0; }
+.landing-meta p.ask { margin-top: 0.65em; }
+
+/* The first entry used to start at the top of the scroller; now it follows
+ * the landing and takes the same beat that separates entries. */
+.dock-slot + .index { padding-top: var(--gap); }
+
+@media (max-width: 700px) {
+  .landing {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    row-gap: 1.3em;
+  }
+  .landing-bio   { grid-column: 1; grid-row: 1; }
+  .landing-works { grid-column: 1; grid-row: 2; }
+  .landing-key   { grid-column: 1; grid-row: 3; }
+  .landing-key img { object-position: top left; }
+  .landing-meta  { grid-column: 1; grid-row: 4; }
 }

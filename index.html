@@ -12,12 +12,80 @@
      an application email, and it should not depend on someone else's uptime.
      3.12.7, the same version the other projects in this repo already load. -->
 <script src="assets/gsap.min.js"></script>
+<!-- Lenis 1.3.26, vendored for the same reason. It keeps the native scroll and
+     eases the wheel into it, so sticky, fragment links and the carousels are
+     untouched — see the init at the end of the script. -->
+<script src="assets/lenis.min.js"></script>
 </head>
 <body>
 
-<!-- Bar and panel in one fixed box. column-reverse puts the bar at the bottom
-     and grows the panel off its top edge, so the panel needs no knowledge of
-     how tall the bar is — it simply sits on it. -->
+
+<div class="scroller" id="scroller">
+<div class="scroll-content">
+
+<!-- Landing. One screen before the index: the description, the practice and
+     contact lines, and one key visual. Alex Hunting's opening block with
+     Bänziger's continuous index under it.
+
+     It lives INSIDE the scroller, not before it — html/body are overflow:hidden
+     and .scroller is the thing that scrolls, so anything meant to scroll away
+     has to be in here. The dock is fixed and sits over the landing from the
+     first pixel: on this screen it is the only thing that says the page goes
+     on. The sections repeat the panel's Practice and Contact on purpose — the
+     panel is for when you are deep in the index, this is for arriving. (8 Sep) -->
+<section class="landing" aria-label="Introduction">
+  <p class="landing-bio">Kirill Konstantinov is a graphic designer based in London. His work spans editorial, identity and type. Every project starts from a premise, whether a publication, an identity or a fiction. Alongside commissioned work he writes and designs his own publications, draws the typefaces they are set in, and builds the sites himself.</p>
+
+  <!-- The key visual takes the first fetch; the first index plate used to. -->
+  <figure class="landing-key">
+    <img src="export/zerko-thesis-mu-cover.webp" width="2400" height="1600"
+         alt="The thesis cover: black uncoated stock, the title set small in white."
+         fetchpriority="high" decoding="async">
+  </figure>
+
+  <!-- Every entry in the index, in index order, each a fragment link to its
+       article. The list is the landing's table of contents: a click scrolls
+       the scroller to the entry, and the URL carries the slug so an entry can
+       be sent as a link. Titles are the caption titles verbatim. -->
+  <section class="landing-works">
+    <h2>Selected Works</h2>
+    <ol>
+      <li><a href="#lotv-waste">LILIESOFTHEVALLEY WASTE! SPACE Pop-Up</a> <span class="dim yr">2026</span></li>
+      <li><a href="#zerko-thesis">Zerko Grotesk: Script Parity as a Design Condition</a> <span class="dim yr">2026</span></li>
+      <li><a href="#zerko-grotesk">Zerko Grotesk</a> <span class="dim yr">2026</span></li>
+      <li><a href="#as-seen-in">As Seen In</a> <span class="dim yr">2025</span></li>
+      <li><a href="#around-a-memory">Around A Memory</a> <span class="dim yr">2026</span></li>
+      <li><a href="#jray">JRAY</a> <span class="dim yr">2026</span></li>
+      <li><a href="#rada-birthday-bash">RADA Birthday Bash at Peckham Audio</a> <span class="dim yr">2025</span></li>
+      <li><a href="#rada-corsica">RADA at Corsica Studios</a> <span class="dim yr">2025</span></li>
+      <li><a href="#lotv-apoc-paris">LILIESOFTHEVALLEY APOC Paris Pop-Up</a> <span class="dim yr">2025</span></li>
+      <li><a href="#lotv-toe-rag">LILIESOFTHEVALLEY Toe Rag Newspaper Campaign</a> <span class="dim yr">2026</span></li>
+      <li><a href="#sentra">Sentra</a> <span class="dim yr">2025</span></li>
+      <li><a href="#aww90s">AWW90s</a> <span class="dim yr">2024</span></li>
+    </ol>
+  </section>
+
+  <div class="landing-meta">
+    <section>
+      <h2>Practice</h2>
+      <p>Art Direction<br>Editorial Design<br>Graphic Design<br>Identity<br>Lettering<br>Type Design<br>Web</p>
+    </section>
+    <section>
+      <h2>Contact</h2>
+      <p><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a><br>
+         <a href="https://instagram.com/lux.exteriorrr" rel="me noopener">@lux.exteriorrr</a></p>
+      <p class="ask"><a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
+    </section>
+  </div>
+</section>
+
+<!-- The dock, in the page flow. It lives in a slot under the landing: off
+     screen on load, it rides up with the page and pins to the bottom edge once
+     it arrives — Alex Hunting's nav, mirrored to the bottom. The slot is
+     position: sticky, so CSS owns the state and there is no scroll listener.
+     Bar and panel are one box inside it; column-reverse puts the bar at the
+     bottom and grows the panel off its top edge. (8 Sep) -->
+<div class="dock-slot">
 <div class="dock">
 
 <header class="head">
@@ -33,7 +101,7 @@
 <!-- Info overlay. Sits BELOW the header in the stacking order (z-index 5 vs 10)
      so the header's difference blend still resolves against it and the
      identifier stays legible while it is open. -->
-<div class="info" id="info" role="dialog" aria-modal="true" aria-label="Information" hidden>
+<div class="info" id="info" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Information" hidden>
   <div class="info-inner">
     <section>
       <h2>Practice</h2>
@@ -63,16 +131,16 @@
 </div>
 
 </div>
+</div>
 
-<div class="scroller" id="scroller">
 <main class="index">
 
-  <article class="entry" style="--w:58%; --plate-ar:0.7071">
+  <article class="entry" id="lotv-waste" style="--w:58%; --plate-ar:0.7071">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
           <img src="export/lotv-waste-02.webp" width="3721" height="5262"
-               alt="Macramé workshop invitation for the Lilies of the Valley pop-up at WASTE." fetchpriority="high" decoding="async">
+               alt="Macramé workshop invitation for the Lilies of the Valley pop-up at WASTE." decoding="async">
         </figure>
         <figure class="slide">
           <img src="export/lotv-waste-cover.svg" width="929" height="304"
@@ -112,7 +180,7 @@
        --plate-ar (the TALLEST plate in the set; mobile reserves that height so
        the caption never moves) drops from the flats' 1.4142 to 1.5.
        Masters: _export/zerko-thesis/mockups/, see SOURCES.md there. -->
-  <article class="entry" style="--w:80%; --plate-max-h:74vh; --plate-ar:1.5">
+  <article class="entry" id="zerko-thesis" style="--w:80%; --plate-max-h:74vh; --plate-ar:1.5">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -166,7 +234,7 @@
     <p class="cap"><b>Zerko Grotesk: Script Parity as a Design Condition</b>, Publication, 2026</p>
   </article>
 
-  <article class="entry" style="--w:86%; --plate-ar:1.3534">
+  <article class="entry" id="zerko-grotesk" style="--w:86%; --plate-ar:1.3534">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -195,7 +263,7 @@
     <p class="cap"><b>Zerko Grotesk</b>, Typeface, 2026</p>
   </article>
 
-  <article class="entry" style="--w:78%; --plate-max-h:74vh; --plate-ar:0.7691">
+  <article class="entry" id="as-seen-in" style="--w:78%; --plate-max-h:74vh; --plate-ar:0.7691">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -236,7 +304,7 @@
     <p class="cap"><b>As Seen In</b>, Publication, 2025</p>
   </article>
 
-  <article class="entry" style="--w:70%; --plate-ar:1.3333">
+  <article class="entry" id="around-a-memory" style="--w:70%; --plate-ar:1.3333">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -284,7 +352,7 @@
     <p class="cap"><b>Around A Memory</b>, Publication, 2026</p>
   </article>
 
-  <article class="entry" style="--w:54%; --plate-ar:0.4600">
+  <article class="entry" id="jray" style="--w:54%; --plate-ar:0.4600">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -316,7 +384,7 @@
   <!-- awaiting plates: LOTV Identity, Identity, 2026 -->
 
 
-  <article class="entry" style="--w:48%; --plate-ar:0.8000">
+  <article class="entry" id="rada-birthday-bash" style="--w:48%; --plate-ar:0.8000">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -333,7 +401,7 @@
     <p class="cap"><b>RADA Birthday Bash at Peckham Audio</b>, Poster, 2025</p>
   </article>
 
-  <article class="entry" style="--w:44%; --plate-ar:0.7071">
+  <article class="entry" id="rada-corsica" style="--w:44%; --plate-ar:0.7071">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -358,7 +426,7 @@
     <p class="cap"><b>RADA at Corsica Studios</b>, Poster and social media, 2025</p>
   </article>
 
-  <article class="entry" style="--w:46%; --plate-ar:0.8025">
+  <article class="entry" id="lotv-apoc-paris" style="--w:46%; --plate-ar:0.8025">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -373,7 +441,7 @@
     <p class="cap"><b>LILIESOFTHEVALLEY APOC Paris Pop-Up</b>, Identity, 2025</p>
   </article>
 
-  <article class="entry" style="--w:56%; --plate-ar:0.7789">
+  <article class="entry" id="lotv-toe-rag" style="--w:56%; --plate-ar:0.7789">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -424,7 +492,7 @@
        the same thirty seconds, not two demos.
 
        9:16 throughout now, hence --plate-ar 0.5625 — every plate is a screen. -->
-  <article class="entry" style="--w:100%; --plate-ar:0.5625">
+  <article class="entry" id="sentra" style="--w:100%; --plate-ar:0.5625">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -498,7 +566,7 @@
 
   <!-- awaiting plates: Vestige, Website, 2025 -->
 
-  <article class="entry" style="--w:62%; --plate-ar:1.6000">
+  <article class="entry" id="aww90s" style="--w:62%; --plate-ar:1.6000">
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
@@ -523,6 +591,7 @@
 <footer class="foot">
   <p class="dim">&copy; 2026 Kirill Konstantinov. All work shown remains the property of the author and its respective clients. Images may not be reproduced without permission.</p>
 </footer>
+</div><!-- /.scroll-content -->
 </div>
 
 <script>
@@ -710,6 +779,7 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   function apply() {
     const { collapsed, panelW, panelH } = sizes();
     root.style.setProperty('--dock-w', collapsed + 'px');
+    root.style.setProperty('--dock-bar-h', dock.querySelector('.head').offsetHeight + 'px');
     root.style.setProperty('--dock-open-w', panelW + 'px');
     root.style.setProperty('--panel-h', panelH + 'px');
   }
@@ -733,9 +803,17 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
       document.body.classList.remove('info-open');
       // Hide only once it has closed, so the transition has something to run on.
       // The timeout is a fallback for when transitionend never fires.
-      const done = () => { if (!open) sheet.hidden = true; };
-      sheet.addEventListener('transitionend', done, { once: true });
-      setTimeout(done, 700);
+      // Only the sheet's OWN height transition counts. transitionend bubbles,
+      // and the content's opacity finishes first — listening for any
+      // transitionend hid the panel mid-collapse.
+      const done = e => {
+        if (e && (e.target !== sheet || e.propertyName !== 'height')) return;
+        if (open) return;
+        sheet.hidden = true;
+        sheet.removeEventListener('transitionend', done);
+      };
+      sheet.addEventListener('transitionend', done);
+      setTimeout(done, 900);
     }
 
     // replaceState, not push: toggling four times used to leave four entries in
@@ -759,6 +837,24 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
 // is state in a variable, not a scroll offset, so nothing is restored across a
 // reload or the back/forward cache and every entry opens on its first plate.
 
+// Reveal: an entry fades in the first time a slice of it is on screen, then
+// the observer lets go of it. Threshold rather than rootMargin, so a tall
+// plate starts its fade once a little of it shows and is fully in by the time
+// its caption arrives. The viewport is the root: the scroller fills it, so
+// intersecting one is intersecting the other.
+if ('IntersectionObserver' in window) {
+  const items = document.querySelectorAll('.index .entry');
+  items.forEach(el => el.classList.add('reveal'));
+  const io = new IntersectionObserver((list, obs) => {
+    for (const x of list) {
+      if (!x.isIntersecting) continue;
+      x.target.classList.add('is-in');
+      obs.unobserve(x.target);
+    }
+  }, { threshold: 0.12 });
+  items.forEach(el => io.observe(el));
+}
+
 // Pause videos in carousels that are off screen entirely. Autoplay in a long
 // index would otherwise have every video running at once.
 if ('IntersectionObserver' in window) {
@@ -772,7 +868,95 @@ if ('IntersectionObserver' in window) {
   }, { rootMargin: '100px' });
   document.querySelectorAll('[data-carousel]').forEach(c => io.observe(c));
 }
+// Smooth scroll. Lenis keeps the NATIVE scroll — the scroller still scrolls,
+// the dock slot still sticks, fragment links still land — and only eases the
+// wheel input into it, so a tick becomes a short glide rather than a step.
+// The wrapper is the scroller, not the window: html and body do not scroll on
+// this page. autoRaf runs its own frame loop; nothing here is gated on GSAP's
+// ticker. lerp is the one knob — 0.1 is Lenis's default and a touch floatier,
+// 1 would be native. (8 Sep)
+if (window.Lenis) {
+  const scroller = document.getElementById('scroller');
+  window.lenis = new Lenis({
+    wrapper: scroller,
+    content: scroller.querySelector('.scroll-content'),
+    lerp: 0.12,
+    autoRaf: true,
+    // NOT Lenis's own `anchors`. Its click handler starts a glide but never
+    // preventDefaults, so the browser's native fragment jump lands first and
+    // the glide has nowhere to go — the click read as a jump. Handled below.
+    anchors: false,
+  });
 
+  // Fragment links: stop the native jump, glide there, then write the hash so
+  // the URL still carries the entry. A fixed duration rather than the lerp —
+  // the works list can send the page 4000px in one click, and a lerp would
+  // either crawl at the end or be too quick at the start. Lenis ignores
+  // scroll-margin, so the 4vh of air above an entry is given as an offset.
+  // pushState, not location.hash: setting the hash directly scrolls natively.
+  scroller.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    if (!target) return;
+    e.preventDefault();
+    window.lenis.scrollTo(target, {
+      offset: -Math.round(innerHeight * 0.04),
+      duration: 1.35,
+      easing: t => 1 - Math.pow(1 - t, 4),   // ease-out quart: fast off the mark, soft landing
+    });
+    history.pushState(null, '', '#' + target.id);
+  });
+
+  // The landing does not wait forever. Fifteen seconds without any input and
+  // the page drifts down to the first entry on its own — slowly, so it reads
+  // as an invitation rather than a redirect. Any wheel, touch, key or click
+  // before it fires cancels it for good; any wheel or touch during the glide
+  // takes over, because Lenis hands control to the gesture. Once per load,
+  // only from the top, only while the tab is visible (a hidden tab runs no
+  // frames, and the glide would land as a jump on return), and not at all for
+  // anyone who has asked for reduced motion.
+  {
+    const IDLE_MS = 15000;
+    const first = document.querySelector('.index .entry');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer = null, spent = false;
+
+    const cancel = () => {
+      spent = true;
+      clearTimeout(timer);
+      for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
+        scroller.removeEventListener(ev, cancel);
+      }
+      document.removeEventListener('visibilitychange', arm);
+    };
+    const drift = () => {
+      if (spent || document.hidden || scroller.scrollTop > 0) return;
+      cancel();
+      window.lenis.scrollTo(first, {
+        offset: -Math.round(innerHeight * 0.04),
+        duration: 2.8,
+        easing: t => -(Math.cos(Math.PI * t) - 1) / 2,   // ease-in-out sine: no start, no stop
+      });
+    };
+    function arm() {
+      clearTimeout(timer);
+      if (spent || document.hidden) return;
+      timer = setTimeout(drift, IDLE_MS);
+    }
+
+    if (first && !reduced) {
+      for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
+        scroller.addEventListener(ev, cancel, { passive: true });
+      }
+      // The dock and the works list are inside the scroller, so a click on
+      // either is caught above. The clock restarts when the tab comes back
+      // into view.
+      document.addEventListener('visibilitychange', arm);
+      arm();
+    }
+  }
+}
 </script>
 
 
