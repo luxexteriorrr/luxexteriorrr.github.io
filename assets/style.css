@@ -305,6 +305,43 @@ body.info-open .dock {
 
 .entry { margin-bottom: var(--gap); scroll-margin-top: 4vh; }
 
+/* ── Description ─────────────────────────────────────────────────────────
+ * The title in the caption is a button. Its block below opens on click:
+ * a grid row from 0fr to 1fr, which animates to the content's own height
+ * without a measurement, and the inner box clips while it grows. The text
+ * fades a beat behind the height on the way in and leaves with it on the
+ * way out. Same ease as the dock, a little longer — it is prose arriving,
+ * not a panel. (8 Sep)
+ */
+.cap-toggle {
+  all: unset;                       /* the caption's own type, nothing of a button's */
+  cursor: pointer;
+}
+.cap-toggle:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+.cap-toggle:hover b { text-decoration: underline; text-underline-offset: 0.15em; }
+
+.more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms var(--dock-ease);
+}
+.more-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.more p {
+  max-width: var(--measure);
+  margin: 0.5em auto 0;
+  opacity: 0;
+  transition: opacity 260ms var(--dock-ease);
+}
+.entry.is-open .more { grid-template-rows: 1fr; }
+.entry.is-open .more p { opacity: 1; transition-delay: 120ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .more, .more p { transition: none; }
+}
+
 .plate {
   background: var(--ground, transparent);
   margin: 0 auto 0.5em;
