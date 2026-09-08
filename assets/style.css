@@ -10,7 +10,7 @@
 :root {
   --fg: #111;
   --bg: #fff;
-  --size: 12px;
+  --size: 13px;
   --lead: 1.28;
   --track: 0.022em;         /* tracking — nudge to taste */
   --pad: 14px;
@@ -24,6 +24,13 @@
   --plate-max-h: 82vh;      /* no plate taller than the screen */
   --gap: 7vh;               /* between entries — viewport-relative, so the
                                rhythm holds across screen sizes */
+}
+
+/* 13 on a desk, 12 in the hand. A phone is held closer, and 12 was the size
+ * the whole page was set at until 8 Sep; 13 is the desktop's gain. Same
+ * breakpoint as the landing stack. */
+@media (max-width: 700px) {
+  :root { --size: 12px; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }

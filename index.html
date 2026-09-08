@@ -496,9 +496,16 @@
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
-          <video src="export/sentra-01.mp4" poster="export/sentra-01-poster.webp"
+          <!-- No autoplay attribute on any video. autoplay makes the browser fetch the
+               file at load whatever preload says — 1.6 MB of video was arriving with the
+               landing for entries eleven viewports down. The carousel script plays a video
+               once its entry is near, and the observer below pauses it off screen. The
+               poster is data-poster for the same reason: a poster has no lazy option and
+               was 860 KB across the three, so the script sets it once the entry is near.
+               (8 Sep) -->
+          <video src="export/sentra-01.mp4" data-poster="export/sentra-01-poster.webp"
                  width="1440" height="2560"
-                 autoplay muted loop playsinline preload="none"
+                 muted loop playsinline preload="none"
                  aria-label="The wall filling in real time while someone talks to Sentra. Each
                              turn lands as a block of colour with the words knocked out of it in
                              the same grey as the ground, so they exist only where something has
@@ -513,9 +520,9 @@
                loading="lazy" decoding="async">
         </figure>
         <figure class="slide">
-          <video src="export/sentra-03.mp4" poster="export/sentra-03-poster.webp"
+          <video src="export/sentra-03.mp4" data-poster="export/sentra-03-poster.webp"
                  width="1242" height="2208"
-                 autoplay muted loop playsinline preload="none"
+                 muted loop playsinline preload="none"
                  aria-label="The phone. Asked what it actually does, Sentra answers with a company
                              founded in 2005; asked who founded it, it names two people and gives
                              them careers."></video>
@@ -570,9 +577,9 @@
     <div class="carousel" data-carousel>
       <div class="track" tabindex="0" aria-label="Plates">
         <figure class="slide">
-          <video src="export/aww90s-01.mp4" poster="export/aww90s-01-poster.webp"
+          <video src="export/aww90s-01.mp4" data-poster="export/aww90s-01-poster.webp"
                  width="2880" height="1800"
-                 autoplay muted loop playsinline preload="none"
+                 muted loop playsinline preload="none"
                  aria-label="Scroll through the AWW90s homepage."></video>
         </figure>
         <figure class="slide">
@@ -665,10 +672,28 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
   // Keep the neighbours warm. A cross-fade shows both plates at once, so an
   // unloaded next plate fades in from nothing — worse than the old gap, which
   // at least arrived off-screen. Warming both directions costs one request.
+  //
+  // But not before the carousel is anywhere near the screen. show(0) runs for
+  // every carousel at load, and warming from there stripped `loading` off two
+  // slides in each of twelve entries — twenty extra plates, 10 MB, fetched
+  // for a page that opens on the landing. Now the neighbours warm once the
+  // carousel comes within half a viewport, and on every change after that.
   const warm = n => {
     const img = slides[(n + slides.length) % slides.length]?.querySelector('img');
     if (img) img.removeAttribute('loading');
   };
+  let near = !('IntersectionObserver' in window);
+  const warmAround = () => { if (near) { warm(i + 1); warm(i - 1); } };
+  if (!near) {
+    new IntersectionObserver((list, obs) => {
+      if (!list.some(e => e.isIntersecting)) return;
+      near = true;
+      for (const v of c.querySelectorAll('video[data-poster]')) v.poster = v.dataset.poster;
+      warmAround();
+      playOnly(i);
+      obs.disconnect();
+    }, { rootMargin: '50% 0px' }).observe(c);
+  }
 
   // Only the plate on screen plays. Videos elsewhere in the set stay paused,
   // so a page of carousels is not decoding several at once — and a phone is
@@ -678,7 +703,10 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
     slides.forEach((s, n) => {
       const v = s.querySelector('video');
       if (!v) return;
-      if (n === i && !calm) v.play().catch(() => {});
+      // play() fetches the file whatever preload says, so a video in an entry
+      // eleven viewports down was arriving with the landing. Same gate as the
+      // neighbours: not until the carousel is near.
+      if (n === i && !calm && near) v.play().catch(() => {});
       else v.pause();
     });
   }
@@ -688,8 +716,7 @@ for (const c of document.querySelectorAll('[data-carousel]')) {
     slides.forEach((s, k) => s.classList.toggle('is-on', k === i));
     out.textContent = `${pad(i + 1)}/${pad(slides.length)}`;
     playOnly(i);
-    warm(i + 1);
-    warm(i - 1);
+    warmAround();
   }
 
   const go = d => show(i + d);
