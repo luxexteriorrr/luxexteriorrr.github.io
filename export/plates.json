@@ -194,31 +194,10 @@
   "lotv-waste": [
     {
       "src": "lotv-waste-01.webp",
-      "width": 3000,
-      "height": 3750,
-      "bytes": 547176,
-      "lossless": false
-    },
-    {
-      "src": "lotv-waste-02.webp",
-      "width": 3721,
-      "height": 5262,
-      "bytes": 192778,
+      "width": 3184,
+      "height": 3934,
+      "bytes": 39104,
       "lossless": true
-    },
-    {
-      "src": "lotv-waste-03.webp",
-      "width": 3900,
-      "height": 2925,
-      "bytes": 419488,
-      "lossless": false
-    },
-    {
-      "src": "lotv-waste-04.webp",
-      "width": 3900,
-      "height": 2925,
-      "bytes": 532872,
-      "lossless": false
     },
     {
       "src": "lotv-waste-05.webp",
