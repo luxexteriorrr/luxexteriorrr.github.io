@@ -210,30 +210,37 @@
   "zerko-grotesk": [
     {
       "src": "zerko-grotesk-01.webp",
-      "width": 2271,
-      "height": 1678,
-      "bytes": 24786,
+      "width": 5625,
+      "height": 3750,
+      "bytes": 55582,
+      "lossless": true
+    },
+    {
+      "src": "zerko-grotesk-02.webp",
+      "width": 5625,
+      "height": 3750,
+      "bytes": 84068,
+      "lossless": true
+    },
+    {
+      "src": "zerko-grotesk-03.webp",
+      "width": 5625,
+      "height": 3750,
+      "bytes": 105690,
       "lossless": true
     },
     {
       "src": "zerko-grotesk-04.webp",
-      "width": 2400,
-      "height": 1600,
-      "bytes": 30678,
+      "width": 5625,
+      "height": 3750,
+      "bytes": 35000,
       "lossless": true
     },
     {
       "src": "zerko-grotesk-05.webp",
-      "width": 2400,
-      "height": 1600,
-      "bytes": 41646,
-      "lossless": true
-    },
-    {
-      "src": "zerko-grotesk-06.webp",
-      "width": 2400,
-      "height": 1600,
-      "bytes": 28664,
+      "width": 5625,
+      "height": 3750,
+      "bytes": 44940,
       "lossless": true
     }
   ],
