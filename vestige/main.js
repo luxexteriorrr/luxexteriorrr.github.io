@@ -1,484 +1,146 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // gsap register
-    gsap.registerPlugin(ScrollTrigger,TextPlugin,DrawSVGPlugin)
+// Vestige — the fade.
+// Carried over from the 2025 version: after a stretch with no input, the visible
+// `.decay` elements fade out one by one in random order; any input brings them back.
+// Settings live in the URL hash so a look can be shared; press D for the panel.
 
-    ScrollTrigger.refresh();
-    //full screen 
-    document.addEventListener(
-        "keydown",
-        (e) => {
-          if (e.key === "Enter") {
-            toggleFullScreen();
-          }
-        },
-        false,
-      );
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().then(() => {
-            ScrollTrigger.refresh();
-          });
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen().then(() => {
-            ScrollTrigger.refresh();
-          });
-        }
+const DEFAULTS = {
+  unit: 'paragraph', // paragraph | sentence | word — what fades as one piece
+  idle: 2000,        // ms of no input before the fade starts
+  out: 1000,         // ms each piece takes to fade out
+  gap: 1000,         // ms pause before the next piece starts fading
+  back: 500,         // ms each piece takes to come back
+  restore: 'one',    // one = back one by one (as in 2025), all = all at once
+};
+
+const settings = { ...DEFAULTS };
+const params = new URLSearchParams(location.hash.slice(1));
+for (const key of Object.keys(DEFAULTS)) {
+  if (!params.has(key)) continue;
+  settings[key] = typeof DEFAULTS[key] === 'number' ? Number(params.get(key)) : params.get(key);
+}
+
+const originals = new Map(); // decay element -> original HTML, so units can be re-split
+
+// Split each `.decay` block into the pieces that fade.
+function splitUnits() {
+  document.querySelectorAll('.decay').forEach(block => {
+    if (!originals.has(block)) originals.set(block, block.innerHTML);
+    block.innerHTML = originals.get(block);
+    if (settings.unit === 'paragraph' || block.tagName === 'FIGURE') {
+      block.classList.add('unit');
+      return;
     }
-
-
-    //selectors
-    const nav = document.getElementById('nav')
-    const overlay1 = document.querySelector('.projectoverlay');
-    const title = document.getElementById('title');
-    const about = document.getElementById('about');
-    const print = document.getElementById('print');
-    const navLinks = document.querySelectorAll('nav a'); 
-    const paragraphs2 = document.querySelectorAll('#two p');
-    const paragraphs3 = document.querySelectorAll('#three p')
-    const pageWrapper = document.querySelector('.pagewrapper')
-    const enter = document.querySelector('#enter')
-    const erosionParagraphs = document.querySelectorAll(".erosion");
-    const sectionTwo = document.querySelector('#two')
-    
-    //disapearing of the contenet 
-    function disappearContent () {
-        let inactivityTimer ; 
-        let visibleElements = new Set(); // Track elements currently in the viewport with the class decay
-        let isFadingOut = false; // Track if fade-out is happening
-        //lookout for the events on the page and reset the timer 
-        ["scroll", "mousedown", "mousemove", "keypress", "touchstart"].forEach(event => {
-            document.addEventListener(event, resetTimer, { passive: true });
-        });
-        //track the visible elements of the page
-        function observeElements() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && entry.target.classList.contains("decay")) {
-                        visibleElements.add(entry.target);
-                    } else {
-                        visibleElements.delete(entry.target);
-                    }
-                });
-                console.log("in viewport", Array.from(visibleElements));
-            }, { threshold: 0.1 });
-        
-            // Observe only `.decay` elements
-            document.querySelectorAll(".decay").forEach(el => observer.observe(el));
-        }   
-        //resetting the timer + fade back in
-        function resetTimer() {
-            clearTimeout(inactivityTimer);
-            console.log('reset time main');
-        
-            // If fading out, stop it functio and fade in()
-            if (isFadingOut) {
-                console.log("activity");
-                isFadingOut = false; // stop fade out if there is user interaction
-            }
-        
-            fadeInVisibleElements(); // Restore elements
-        
-            inactivityTimer = setTimeout(triggerFade, 2000); // Restart inactivity timer 
-        }
-        //trigger fade on no activity
-        function triggerFade() {
-            console.log("fade");
-            isFadingOut = true
-            fadeOutVisibleElements();
-        }
-        //fade out function
-        function fadeOutVisibleElements() {
-            const elementsArray = Array.from(visibleElements); // Convert Set to Array
-            gsap.utils.shuffle(elementsArray);
-            
-            let index = 0; // Start index
-        
-            function fadeNextElement() {
-                if (index >= elementsArray.length || !isFadingOut) return; // Stop when all elements are faded
-        
-                let el = elementsArray[index]; // Get current element
-                //let randomDuration = gsap.utils.random(1, 3); // Random fade duration (1-3s)
-                
-                gsap.to(el, { 
-                    opacity: 0, 
-                    duration: 1, 
-                    ease: "linear",
-                    onComplete: () => {
-                        index++; // Move to next element
-                        fadeNextElement(); // Call function recursively
-                    },
-                    delay: 1,
-                });
-            }
-        
-            fadeNextElement(); // Start the first fade
-        }
-        //fade in function
-        function fadeInVisibleElements() {
-            const elementsArray = Array.from(visibleElements);
-            let index = 0;
-        
-            function fadeNextElement() {
-                if (index >= elementsArray.length) return;
-        
-                let el = elementsArray[index];
-                //let randomDuration = gsap.utils.random(1, 2);
-        
-                gsap.to(el, { 
-                    opacity: 1, 
-                    duration: 0.5, 
-                    ease: "linear",
-                    onComplete: () => {
-                        index++; 
-                        fadeNextElement(); 
-                    }
-                });
-            }
-        
-            fadeNextElement();
-        }
-        observeElements();
-        resetTimer();
-
+    block.classList.remove('unit');
+    const text = block.textContent;
+    const pieces = settings.unit === 'word'
+      ? text.split(/(\s+)/)
+      : text.match(/[^.!?]+[.!?]*\s*/g) || [text];
+    block.textContent = '';
+    for (const piece of pieces) {
+      if (/^\s+$/.test(piece)) { block.append(piece); continue; }
+      const span = document.createElement('span');
+      span.className = 'unit';
+      span.textContent = piece;
+      block.append(span);
     }
-    //disappearContent()
-    function widthspacing() {
-      const allParagraphs = document.querySelectorAll('p');
+  });
+}
 
-      allParagraphs.forEach(paragraph => {
-        ScrollTrigger.create({
-          trigger: paragraph,
-          start: "top 50%",
-          once: false,
-          markers: false,
-          scrub: false,
-          onEnter: () => {
-            const randomWidth = Math.floor(Math.random() * (65 - 15 + 1)) + 15;
-            const randomHeight = Math.floor(Math.random() * (45 - 5 + 1)) + 45;
-            //const randomLine = Math.floor(Math.random() * (5 - 1 + 1)) + 5;
-            gsap.to(paragraph, {
-              width: `${randomWidth}%`,
-              height: `${randomHeight}%`,
-              //lineHeight: `${randomLine}`,
-              duration: 50,
-              ease: 'linear'
-            });
-          }
-        });
-      });
-    }
-    widthspacing();
+// Track which units are on screen; only those fade.
+const visible = new Set();
+let observer;
+function observeUnits() {
+  observer?.disconnect();
+  visible.clear();
+  observer = new IntersectionObserver(entries => {
+    for (const e of entries) e.isIntersecting ? visible.add(e.target) : visible.delete(e.target);
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.unit').forEach(u => observer.observe(u));
+}
 
-    //overlay
-    function toggleOverlay(overlayId) {
-        const overlay = document.getElementById(overlayId);
-        if (!overlay) {
-            console.error(`Overlay with ID '${overlayId}' not found.`);
-            return;
-        }
-    
-        const isActive = overlay.classList.toggle("active"); // Toggle 'active' class
-    }
+let idleTimer, stepTimer, fading = false;
 
+function fadeOut() {
+  fading = true;
+  const queue = shuffle([...visible].filter(u => u.style.opacity !== '0'));
+  const next = () => {
+    if (!fading || !queue.length) return;
+    const unit = queue.shift();
+    unit.style.transition = `opacity ${settings.out}ms linear`;
+    unit.style.opacity = '0';
+    stepTimer = setTimeout(next, settings.out + settings.gap);
+  };
+  stepTimer = setTimeout(next, settings.gap);
+}
 
+function restore() {
+  fading = false;
+  clearTimeout(stepTimer);
+  const faded = [...document.querySelectorAll('.unit')].filter(u => u.style.opacity === '0');
+  if (settings.restore === 'all') {
+    faded.forEach(u => { u.style.transition = `opacity ${settings.back}ms linear`; u.style.opacity = '1'; });
+    return;
+  }
+  // One by one, like 2025: visible pieces first, the rest quietly.
+  const onScreen = faded.filter(u => visible.has(u));
+  faded.filter(u => !visible.has(u)).forEach(u => { u.style.transition = 'none'; u.style.opacity = '1'; });
+  onScreen.forEach((u, i) => {
+    u.style.transition = `opacity ${settings.back}ms linear ${i * settings.back}ms`;
+    u.style.opacity = '1';
+  });
+}
 
-    // ALL OF THE ABOVE KEEP OUTSIDE OF MEDIA QUERY -------------- !important
+function activity(e) {
+  if (e?.target?.closest?.('#panel')) return;
+  clearTimeout(idleTimer);
+  if (fading || document.querySelector('.unit[style*="opacity: 0"]')) restore();
+  idleTimer = setTimeout(fadeOut, settings.idle);
+}
 
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
 
+// --- panel (press D) ---------------------------------------------------------
+function buildPanel() {
+  const panel = document.getElementById('panel');
+  const field = (key, label, input) => `<label><span>${label}</span>${input}</label>`;
+  const number = (key, label, step) => field(key, label, `<input type="number" data-key="${key}" min="0" step="${step}" value="${settings[key]}">`);
+  const select = (key, label, options) => field(key, label,
+    `<select data-key="${key}">${options.map(o => `<option${o === settings[key] ? ' selected' : ''}>${o}</option>`).join('')}</select>`);
+  panel.innerHTML = `
+    <p>fade · press D to hide</p>
+    ${select('unit', 'fades as', ['paragraph', 'sentence', 'word'])}
+    ${number('idle', 'idle before fade (ms)', 250)}
+    ${number('out', 'fade-out length (ms)', 100)}
+    ${number('gap', 'pause between pieces (ms)', 100)}
+    ${number('back', 'come-back length (ms)', 100)}
+    ${select('restore', 'comes back', ['one', 'all'])}
+    <button type="button" data-reset>reset to 2025 defaults</button>`;
+  panel.addEventListener('change', e => {
+    const key = e.target.dataset.key;
+    if (!key) return;
+    settings[key] = typeof DEFAULTS[key] === 'number' ? Number(e.target.value) : e.target.value;
+    saveHash();
+    if (key === 'unit') { restore(); splitUnits(); observeUnits(); }
+  });
+  panel.querySelector('[data-reset]').addEventListener('click', () => {
+    Object.assign(settings, DEFAULTS); saveHash(); buildPanel(); restore(); splitUnits(); observeUnits();
+  });
+}
+function saveHash() {
+  const changed = Object.keys(DEFAULTS).filter(k => settings[k] !== DEFAULTS[k]);
+  history.replaceState(null, '', changed.length ? '#' + changed.map(k => `${k}=${settings[k]}`).join('&') : location.pathname);
+}
 
+document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 'd' && !e.target.closest('#panel')) document.getElementById('panel').toggleAttribute('hidden');
+});
+['scroll', 'mousemove', 'mousedown', 'keydown', 'touchstart', 'wheel'].forEach(type =>
+  addEventListener(type, activity, { passive: true }));
 
-
-    //disable scroll
-    function disableScroll() {document.body.style.overflow = "hidden";}
-    //enable scroll
-    function enableScroll() { document.body.style.overflow = "auto";}
-    //increase opacity of the nav links
-    function showNav() {
-        // Then animate nav links in
-        gsap.to("nav a", {
-          opacity: 1,
-          duration: 1,
-          stagger: 0.1,
-          ease: "linear"
-        });
-    }
-    //decrease opacity of the navlinks
-    function hideNav() {
-        // Animate nav links out
-        gsap.to("nav a", {
-          opacity: 0,
-          duration: 1,
-          stagger: {
-            each: 0.05,
-            from: "end" // optional: fade out in reverse order
-          },
-          ease: "linear",
-        });
-    }
-      
-    
-    // Initial state on page load
-    //hideNav();
-    //disableScroll();
-
-    // Flashing animation for #enter before click
-    gsap.to("#enter", {
-        opacity: 0.5,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-    }); 
-
-    enter.addEventListener('click', () => {
-        const loadingText = document.getElementById('loadingtext');
-
-        let progress = 0;
-        const fakeDuration = 5000; // Match duration of loading bar (5s)
-        const intervalTime = 30;
-        const steps = fakeDuration / intervalTime;
-
-        const tl = gsap.timeline();
-
-        tl.to('#enter', {
-            opacity: 0,
-            duration: 1,
-            onComplete: () => {
-                document.getElementById('enter').style.display = 'none';
-            }
-        })
-
-        .fromTo('#loadingtext', { opacity: 0 }, {
-            opacity: 1,
-            duration: 1
-        })
-
-        .add(() => {
-            // Start fake loading % count here
-            const interval = setInterval(() => {
-                progress += 100 / steps;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                }
-                loadingText.textContent = `${Math.floor(progress)}%`;
-            }, intervalTime);
-        }, "+=0") // start alongside bar animation
-
-        .fromTo('#loadingdiv', { width: '0%' }, {
-            width: '100%',
-            duration: 5,
-        }, "<") // start at same time as add()
-
-        .to('#loadingtext', {
-            delay: 1,
-            opacity: 0,
-            duration: 1
-        })
-
-        .to('#on1', {
-          opacity: 1,
-          duration: 6,
-        })
-        
-        .to('#on1', {
-          opacity: 0,
-          duration: 6
-        })
-        
-        .to('#on2', {
-          opacity: 1,
-          duration: 12,
-        })
-        
-        .to('#on2', {
-          opacity: 0,
-          duration: 6
-        })
-        
-        .to('#on3', {
-          opacity: 1,
-          duration: 12,
-        })
-        
-        .to('#on3', {
-          opacity: 0,
-          duration: 6
-        })
-        
-        .to('#on4', {
-          opacity: 1,
-          duration: 12
-        })
-        
-        .to('#on4', {
-          opacity: 0,
-          duration: 6
-        }) 
-
-        .to('#on5', {
-          opacity: 1,
-          duration: 3
-        })          
-
-        /*.to('#loadingwrapper', {
-          height: '25%',
-          duration: 10
-      })*/
-
-        .call(() => {
-            showNav();
-            enableScroll();
-            disappearContent();
-            ScrollTrigger.refresh();
-        });
-    });
-    showNav()
-    document.querySelector('#loadingdiv').style.display = 'none'
-
-  
-      
-
-        
-      // Event listener for opening overlays (Uses `data-overlay` attributes)
-    document.querySelectorAll("[data-overlay]").forEach(trigger => {
-      trigger.addEventListener("click", function () {
-          const overlayId = this.getAttribute("data-overlay"); // Get the overlay ID from the clicked element
-          console.log(`clic`);
-          toggleOverlay(overlayId);
-      });
-    });
-
-    // Event listener for closing overlays (Delegated)
-    document.addEventListener("click", function (event) {
-      if (event.target.matches("#closebutton")) {
-          const overlay = event.target.closest(".overlay"); // Find closest overlay to the clicked close button
-          if (overlay) {
-              toggleOverlay(overlay.id);
-          }
-      }
-    });
-
-    // Function to toggle overlay visibility
-    function toggleOverlay(overlayId) {
-      const overlay = document.getElementById(overlayId);
-      if (!overlay) {
-          console.error(`Overlay with ID '${overlayId}' not found.`);
-          return;
-      }
-
-      const isActive = overlay.classList.toggle("active"); // Toggle 'active' class
-      console.log(`Overlay ${isActive ? 'opened' : 'closed'} with ID: '${overlayId}'`);
-    }
-
-
-
-
-
-
-
-
-
-    //images section 
-    gsap.utils.toArray("#images img").forEach((img, i) => {
-      gsap.to(img, {
-        filter: "blur(20px)",
-        duration: 10,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: img,
-          start: "center 50%",
-          end: "bottom 50%",
-          scrub: false,
-          markers: false
-        }
-      });
-    });
-    
-    
-    //eror overlay 
-    // Get all fake links
-    const fakeLinks = document.querySelectorAll('.fakelinks');
-    const overlay404 = document.querySelector('.overlay404');
-    const closeError = document.getElementById('closeerror');
-  
-    fakeLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        overlay404.classList.add('active');
-      });
-    });
-  
-    closeError.addEventListener('click', () => {
-      overlay404.classList.remove('active');
-    });
-
-
-
-
-
-      // Define the sounds
-      const ambient1 = new Howl({
-        src: ['/around.a.memory/assets/audio/birds.mp3'],
-        loop: true,
-        volume: 0
-      });
-
-      const ambient2 = new Howl({
-        src: ['/around.a.memory/assets/audio/walk.mp3'],
-        loop: true,
-        volume: 0
-      });
-
-      const ambient3 = new Howl({
-        src: ['/around.a.memory/assets/audio/pond.mp3'],
-        loop: true,
-        volume: 0
-      });
-
-      // Start ambient1 on #enter click
-      enter.addEventListener("click", () => {
-        ambient1.play();
-        ambient1.fade(0, 0.8, 3000); // fade in over 3 seconds
-      });
-
-      // Crossfade on scroll to #two
-      ScrollTrigger.create({
-        trigger: "#two",
-        start: "top center",
-        onEnter: () => {
-          ambient1.fade(0.8, 0.2, 2000); // fade out ambient1
-          if (!ambient2.playing()) ambient2.play();
-          ambient2.fade(0.2, 0.8, 2000); // fade in ambient2
-        },
-        onLeaveBack: () => {
-          ambient2.fade(0.8, 0.2, 2000);
-          if (!ambient1.playing()) ambient1.play();
-          ambient1.fade(0.2, 0.8, 2000);
-        }
-      });
-
-      // Crossfade on scroll to #links
-      ScrollTrigger.create({
-        trigger: "#links",
-        start: "top center",
-        onEnter: () => {
-          ambient2.fade(0.8, 0.2, 2000);
-          if (!ambient3.playing()) ambient3.play();
-          ambient3.fade(0.8, 0.2, 2000);
-        },
-        onLeaveBack: () => {
-          ambient3.fade(0.8, 0.2, 2000);
-          if (!ambient2.playing()) ambient2.play();
-          ambient2.fade(0.8, 0.2, 2000);
-        }
-      });
-
-
-
-
-
-
-
-  
-})
+splitUnits();
+observeUnits();
+buildPanel();
+activity();
