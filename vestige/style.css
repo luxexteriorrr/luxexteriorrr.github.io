@@ -8,7 +8,7 @@
 
 :root {
   --paper: #ffffff;
-  --ink: #0000EE; /* classic hyperlink blue */
+  --ink: #ffffff;
   --quiet: #b3b3b3;
   --measure: 46rem;
 }
@@ -25,20 +25,45 @@ html::-webkit-scrollbar { display: none; }
 body {
   margin: 0;
   font-family: "Arketa", ui-monospace, monospace;
-  font-size: 4.5vw; /* scales with the window, so the text fills it at any size */
+  font-size: 2vw; /* scales with the window, like the container below */
   line-height: 1.1;
   text-align: center;
+  text-transform: uppercase; /* trying all caps; the source text stays mixed case */
   -webkit-font-smoothing: antialiased;
 }
 
 
+/* one centred column, 60vw wide, the same width as the stream behind it */
 main {
-  padding: 1.5vw 1.5vw 60vh;
+  max-width: 60vw;
+  margin: 0 auto;
+  padding: 6vw 0 60vh;
+}
+
+/* phones: 2vw would be too small, so switch to a fixed size and a 16px gutter */
+@media (max-width: 700px) {
+  body { font-size: 16px; }
+  main { max-width: none; padding: 48px 16px 60vh; }
 }
 
 /* one continuous run of text: sections, paragraphs and dates all flow inline */
 section, p, .dates, .dates li { display: inline; margin: 0; padding: 0; }
 
+
+/* the live pondcam: fixed dead centre of the screen, the text scrolls over it.
+   It doesn't fade, so when you stop and the words go, the pond is what's left.
+   Only the feed shows: the iframe is 200px taller than the frame, so YouTube letterboxes the video
+   into the middle and its title bar and logo sit in the bars, which are cropped off.
+   pointer-events: none stops hover overlays and lets mouse movement count as activity. */
+figure.stream {
+  position: fixed; top: 50%; left: 50%; z-index: 0;
+  width: 60vw; aspect-ratio: 16 / 9; margin: 0;
+  transform: translate(-50%, -50%);
+  overflow: hidden; pointer-events: none;
+}
+figure.stream iframe { position: absolute; left: 0; top: -100px; width: 100%; height: calc(100% + 200px); border: 0; }
+main { position: relative; z-index: 1; mix-blend-mode: exclusion; /* white + exclusion: black on the white page, a soft greyish negative over the pond */ }
+@media (max-width: 700px) { figure.stream { width: calc(100vw - 32px); } }
 
 /* the fading pieces */
 .unit { opacity: 1; }
