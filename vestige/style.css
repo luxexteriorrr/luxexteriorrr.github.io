@@ -10,18 +10,24 @@
   --paper: #ffffff;
   --ink: #000000;
   --quiet: #b3b3b3;
-  --measure: 34rem;
+  --measure: 46rem;
 }
 
 * { box-sizing: border-box; }
 
-html { background: var(--paper); color: var(--ink); }
+html {
+  background: var(--paper);
+  color: var(--ink);
+  scrollbar-width: none; /* hide the scrollbar; scrolling still works */
+}
+html::-webkit-scrollbar { display: none; }
 
 body {
   margin: 0;
   font-family: "Arketa", ui-monospace, monospace;
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: 4.5vw; /* scales with the window, so the text fills it at any size */
+  line-height: 1.1;
+  text-align: center;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -36,30 +42,12 @@ header {
 }
 
 main {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: 40vh 20px 60vh;
+  padding: 1.5vw 1.5vw 60vh;
 }
 
-section { margin-bottom: 30vh; }
+/* one continuous run of text: sections, paragraphs and dates all flow inline */
+section, p, .dates, .dates li { display: inline; margin: 0; padding: 0; }
 
-p { margin: 0 0 1.2em; }
-
-.dates { list-style: none; padding: 0; margin: 0; }
-.dates li { margin: 0; }
-
-/* image placeholders — replaced by the processed images later */
-.slot {
-  margin: 4em 0;
-  aspect-ratio: 3 / 4;
-  border: 1px solid var(--quiet);
-  display: flex; align-items: flex-end;
-  padding: 8px;
-  font-size: 11px;
-  color: var(--quiet);
-}
-.slot-run { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 4em 0; }
-.slot-run .slot { margin: 0; }
 
 /* the fading pieces */
 .unit { opacity: 1; }
@@ -67,6 +55,7 @@ p { margin: 0 0 1.2em; }
 /* settings panel (press D) */
 #panel {
   position: fixed; right: 16px; bottom: 16px; z-index: 3;
+  text-align: left;
   width: 240px; padding: 12px;
   background: #fff; border: 1px solid #000;
   font: 11px/1.4 ui-monospace, monospace;
@@ -77,7 +66,3 @@ p { margin: 0 0 1.2em; }
 #panel input, #panel select { width: 90px; font: inherit; }
 #panel button { margin-top: 8px; font: inherit; width: 100%; }
 
-@media (max-width: 600px) {
-  body { font-size: 16px; }
-  main { padding-top: 30vh; }
-}

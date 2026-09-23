@@ -4,12 +4,12 @@
 // Settings live in the URL hash so a look can be shared; press D for the panel.
 
 const DEFAULTS = {
-  unit: 'paragraph', // paragraph | sentence | word — what fades as one piece
+  unit: 'word',      // paragraph | sentence | word — what fades as one piece
   idle: 2000,        // ms of no input before the fade starts
   out: 1000,         // ms each piece takes to fade out
-  gap: 1000,         // ms pause before the next piece starts fading
+  gap: 100,          // ms pause before the next piece starts fading (2025 used 1000 per paragraph)
   back: 500,         // ms each piece takes to come back
-  restore: 'one',    // one = back one by one (as in 2025), all = all at once
+  restore: 'all',    // all = back at once on any input; one = one by one (as in 2025, paragraph mode)
 };
 
 const settings = { ...DEFAULTS };
@@ -46,23 +46,17 @@ function splitUnits() {
   });
 }
 
-// Track which units are on screen; only those fade.
-const visible = new Set();
-let observer;
-function observeUnits() {
-  observer?.disconnect();
-  visible.clear();
-  observer = new IntersectionObserver(entries => {
-    for (const e of entries) e.isIntersecting ? visible.add(e.target) : visible.delete(e.target);
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.unit').forEach(u => observer.observe(u));
+// Only what's on screen fades; measured at the moment the fade starts.
+function onScreen(unit) {
+  const r = unit.getBoundingClientRect();
+  return r.bottom > 0 && r.top < innerHeight && r.width > 0;
 }
 
 let idleTimer, stepTimer, fading = false;
 
 function fadeOut() {
   fading = true;
-  const queue = shuffle([...visible].filter(u => u.style.opacity !== '0'));
+  const queue = shuffle([...document.querySelectorAll('.unit')].filter(u => u.style.opacity !== '0' && onScreen(u)));
   const next = () => {
     if (!fading || !queue.length) return;
     const unit = queue.shift();
@@ -82,9 +76,9 @@ function restore() {
     return;
   }
   // One by one, like 2025: visible pieces first, the rest quietly.
-  const onScreen = faded.filter(u => visible.has(u));
-  faded.filter(u => !visible.has(u)).forEach(u => { u.style.transition = 'none'; u.style.opacity = '1'; });
-  onScreen.forEach((u, i) => {
+  const seen = faded.filter(onScreen);
+  faded.filter(u => !onScreen(u)).forEach(u => { u.style.transition = 'none'; u.style.opacity = '1'; });
+  seen.forEach((u, i) => {
     u.style.transition = `opacity ${settings.back}ms linear ${i * settings.back}ms`;
     u.style.opacity = '1';
   });
@@ -116,17 +110,21 @@ function buildPanel() {
     ${number('out', 'fade-out length (ms)', 100)}
     ${number('gap', 'pause between pieces (ms)', 100)}
     ${number('back', 'come-back length (ms)', 100)}
-    ${select('restore', 'comes back', ['one', 'all'])}
-    <button type="button" data-reset>reset to 2025 defaults</button>`;
+    ${select('restore', 'comes back', ['all', 'one'])}
+    <button type="button" data-reset>reset to defaults</button>`;
+}
+function wirePanel() {
+  const panel = document.getElementById('panel');
   panel.addEventListener('change', e => {
     const key = e.target.dataset.key;
     if (!key) return;
     settings[key] = typeof DEFAULTS[key] === 'number' ? Number(e.target.value) : e.target.value;
     saveHash();
-    if (key === 'unit') { restore(); splitUnits(); observeUnits(); }
+    if (key === 'unit') { restore(); splitUnits(); }
   });
-  panel.querySelector('[data-reset]').addEventListener('click', () => {
-    Object.assign(settings, DEFAULTS); saveHash(); buildPanel(); restore(); splitUnits(); observeUnits();
+  panel.addEventListener('click', e => {
+    if (!e.target.matches('[data-reset]')) return;
+    Object.assign(settings, DEFAULTS); saveHash(); buildPanel(); restore(); splitUnits();
   });
 }
 function saveHash() {
@@ -141,6 +139,6 @@ document.addEventListener('keydown', e => {
   addEventListener(type, activity, { passive: true }));
 
 splitUnits();
-observeUnits();
 buildPanel();
+wirePanel();
 activity();
