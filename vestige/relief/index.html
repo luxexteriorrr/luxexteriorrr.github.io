@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relief — Vestige — Kirill Konstantinov</title>
+  <meta name="description" content="A CNC relief of Hampstead Heath, from Vestige. Drag to turn it.">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <style>
+    @font-face {
+      font-family: "Arketa";
+      src: url("../assets/font/OOArketa-Regular.otf") format("opentype");
+      font-display: swap;
+    }
+    :root { --paper: #0000EE; --ink: #fff; } /* matches the essay; was white page, black text */
+    html, body { margin: 0; height: 100%; background: var(--paper); overflow: hidden; }
+
+    /* the relief fills the window; drag to turn, pinch or scroll to zoom */
+    model-viewer { position: fixed; inset: 0; width: 100vw; height: 100dvh; background: transparent; }
+
+    /* the way back, set like the essay */
+    a {
+      position: fixed; top: 16px; left: 16px; z-index: 3; /* above the loading screen, so you can leave mid-load */
+      font: 2vw/1.1 "Arketa", ui-monospace, monospace; text-transform: uppercase;
+      color: var(--ink); text-underline-offset: 0.12em;
+    }
+    @media (max-width: 700px) { a { font-size: 16px; } }
+
+    /* loading screen: a sheet over the relief with the real download %,
+       taken from model-viewer's progress; it fades once the model is in */
+    #loading {
+      position: fixed; inset: 0; z-index: 2;
+      display: grid; place-items: center;
+      background: var(--paper); color: var(--ink);
+      font: 2vw/1.1 "Arketa", ui-monospace, monospace; text-transform: uppercase;
+      font-variant-numeric: tabular-nums;
+      transition: opacity 1s linear;
+    }
+    #loading.done { opacity: 0; pointer-events: none; }
+    @media (max-width: 700px) { #loading { font-size: 16px; } }
+  </style>
+</head>
+<body>
+  <a href="../">Back to Vestige</a>
+  <model-viewer data-model="cnc1" shadow-intensity="1" camera-controls touch-action="none" alt="CNC relief of Hampstead Heath">
+    <div slot="progress-bar"></div><!-- replaces the default bar; #loading shows progress instead -->
+  </model-viewer>
+  <div id="loading" role="status" aria-live="polite">0%</div>
+  <script>
+    // The relief is 368 MB, too big for GitHub Pages. Locally it's a symlink into
+    // .git/lfs (gitignored); everywhere else it streams from the LFS copy GitHub
+    // already holds, pinned to the commit that stored it.
+    const MODELS = 'https://media.githubusercontent.com/media/luxexteriorrr/luxexteriorrr.github.io/0bf725c0bcbc36fbe605f7eff1844cc6754d5621/vestige/assets/3d/';
+    const local = ['localhost', '127.0.0.1'].includes(location.hostname) || /^192\.168\.|^10\./.test(location.hostname);
+    const m = document.querySelector('model-viewer');
+    const loading = document.getElementById('loading');
+    // progress covers the download only; building 6M triangles afterwards reports
+    // nothing, so the count holds at 99% until the relief can actually be shown
+    m.addEventListener('progress', e => {
+      loading.textContent = Math.min(99, Math.floor(e.detail.totalProgress * 100)) + '%';
+    });
+    m.addEventListener('load', () => {
+      loading.textContent = '100%';
+      loading.classList.add('done');
+    });
+    m.addEventListener('error', () => { loading.textContent = 'Could not load'; });
+    m.src = (local ? '../assets/3d/' : MODELS) + m.dataset.model + '.glb';
+  </script>
+</body>
+</html>

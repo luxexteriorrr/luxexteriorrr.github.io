@@ -31,19 +31,31 @@ function splitUnits() {
       return;
     }
     block.classList.remove('unit');
-    const text = block.textContent;
+    splitText(block);
+  });
+}
+
+// Wrap each word (or sentence) of every text node in a span, leaving elements
+// such as the relief link in place around their own words.
+function splitText(el) {
+  for (const node of [...el.childNodes]) {
+    if (node.nodeType === Node.ELEMENT_NODE) { splitText(node); continue; }
+    if (node.nodeType !== Node.TEXT_NODE) continue;
+    const text = node.textContent;
     const pieces = settings.unit === 'word'
       ? text.split(/(\s+)/)
       : text.match(/[^.!?]+[.!?]*\s*/g) || [text];
-    block.textContent = '';
+    const frag = document.createDocumentFragment();
     for (const piece of pieces) {
-      if (/^\s+$/.test(piece)) { block.append(piece); continue; }
+      if (!piece) continue;
+      if (/^\s+$/.test(piece)) { frag.append(piece); continue; }
       const span = document.createElement('span');
       span.className = 'unit';
       span.textContent = piece;
-      block.append(span);
+      frag.append(span);
     }
-  });
+    node.replaceWith(frag);
+  }
 }
 
 // Only what's on screen fades; measured at the moment the fade starts.

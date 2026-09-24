@@ -9,3 +9,7 @@ PLAN.md
 
 # Dependencies (rebuild with: npm install)
 node_modules/
+
+# Vestige CNC models: 1 GB, too big for Pages. Local symlinks into .git/lfs;
+# the live page loads them from media.githubusercontent.com instead.
+vestige/assets/3d/

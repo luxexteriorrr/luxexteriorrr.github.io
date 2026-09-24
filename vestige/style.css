@@ -7,8 +7,11 @@
 }
 
 :root {
-  --paper: #ffffff;
+  /* trying link blue with white text (24 Sep). Previous look: --paper #ffffff, --blend exclusion
+     (white text read black on the page and as a soft negative over the pond) */
+  --paper: #0000EE;
   --ink: #ffffff;
+  --blend: normal; /* exclusion can't give white on blue, so the blend is off while trying this */
   --quiet: #b3b3b3;
   --measure: 46rem;
 }
@@ -62,8 +65,11 @@ figure.stream {
   overflow: hidden; pointer-events: none;
 }
 figure.stream iframe { position: absolute; left: 0; top: -100px; width: 100%; height: calc(100% + 200px); border: 0; }
-main { position: relative; z-index: 1; mix-blend-mode: exclusion; /* white + exclusion: black on the white page, a soft greyish negative over the pond */ }
+main { position: relative; z-index: 1; mix-blend-mode: var(--blend); /* exclusion on white: black on the page, a soft greyish negative over the pond */ }
 @media (max-width: 700px) { figure.stream { width: calc(100vw - 32px); } }
+
+/* the one link: to the CNC relief, on its own page */
+main a { color: inherit; text-decoration: underline; text-underline-offset: 0.12em; }
 
 /* the fading pieces */
 .unit { opacity: 1; }
