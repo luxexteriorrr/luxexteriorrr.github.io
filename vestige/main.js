@@ -154,3 +154,18 @@ splitUnits();
 buildPanel();
 wirePanel();
 activity();
+
+// Citations: clicking a number shows the full reference under its paragraph (taken from the
+// bibliography at the end); clicking again hides it.
+document.addEventListener('click', e => {
+  const cite = e.target.closest('.cite');
+  if (!cite) return;
+  const para = cite.closest('p');
+  const open = para.nextElementSibling?.matches(`.fn[data-fn="${cite.dataset.fn}"]`) ? para.nextElementSibling : null;
+  if (open) { open.remove(); cite.setAttribute('aria-expanded', 'false'); return; }
+  const fn = document.createElement('span');
+  fn.className = 'fn'; fn.dataset.fn = cite.dataset.fn; fn.setAttribute('role', 'note');
+  fn.innerHTML = document.getElementById('bib-' + cite.dataset.fn).innerHTML;
+  para.after(fn);
+  cite.setAttribute('aria-expanded', 'true');
+});

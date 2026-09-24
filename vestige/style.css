@@ -69,9 +69,29 @@ main { position: relative; z-index: 1; mix-blend-mode: var(--blend); /* exclusio
 /* links: the relief, and every calendar date (only the days with a photo lead anywhere) */
 main a { color: inherit; text-decoration: underline; text-underline-offset: 0.12em; }
 
-/* references: after the diary entry, small, in sentence case, still fading */
-#references { display: block; margin-top: 4vw; font-size: max(11px, 0.8vw); text-transform: none; text-align: left; }
-#references p { display: block; margin: 0 0 0.8em; overflow-wrap: anywhere; }
+/* citations, set like ecologies.online: a small raised number in the text; hovering the
+   paragraph turns it into a pill, clicking it shows the full reference under the paragraph.
+   The column's exclusion blend inverts colour on the white page, so the pill is written as
+   a white fill with black ink and shows as black with a white numeral. */
+.cite {
+  font: inherit; font-size: 0.55em; vertical-align: 15%; line-height: 1;
+  color: inherit; background: none; border: 0; border-radius: 0; padding: 0.15em 0.35em; margin: 0 0.1em;
+  cursor: pointer; transition: all 1.5s 1s;
+}
+p:hover > .cite, .cite[aria-expanded="true"] { background: #fff; color: #000; border-radius: 50em; transition: all 1.5s; }
+.fn { display: block; margin: 0.6em 0 1em; text-transform: none; text-align: left; font-size: max(11px, 0.8vw); animation: fn-in 0.6s linear; }
+.fn .n { margin-inline-end: 3em; }
+@keyframes fn-in { from { opacity: 0; } }
+
+/* bibliography: after the diary entry; numbered, three columns, small, in sentence case, still fading */
+#bib { display: block; margin-top: 4vw; text-transform: none; text-align: left; font-size: max(11px, 0.8vw); }
+/* full window width, out of the 60vw text column (main is centred, so 50% - 50vw lands on the window's left edge) */
+#bib { width: 100vw; margin-left: calc(50% - 50vw); padding: 0 16px; }
+#bib h2 { display: block; margin: 0 0 1em; font: inherit; }
+#bib ol { display: block; margin: 0; padding: 0; column-count: 3; column-gap: 2em; }
+#bib li { display: block; list-style: none; margin: 0 0 1em; break-inside: avoid; overflow-wrap: anywhere; }
+#bib .n { margin-inline-end: 3em; }
+@media (max-width: 700px) { #bib ol { column-count: 1; } }
 
 /* the fading pieces */
 .unit { opacity: 1; }
