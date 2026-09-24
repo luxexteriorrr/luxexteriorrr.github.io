@@ -52,7 +52,7 @@ section, p, .dates, .dates li { display: inline; margin: 0; padding: 0; }
 
 
 /* the live pondcam: fixed dead centre of the screen, the text scrolls over it.
-   It doesn't fade, so when you stop and the words go, the pond is what's left.
+   It fades too, as one piece, at a random point among the words (as the 2025 iframe did).
    Only the feed shows: the iframe is 200px taller than the frame, so YouTube letterboxes the video
    into the middle and its title bar and logo sit in the bars, which are cropped off.
    pointer-events: none stops hover overlays and lets mouse movement count as activity. */
