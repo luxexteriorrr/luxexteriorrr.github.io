@@ -26,7 +26,7 @@ function splitUnits() {
   document.querySelectorAll('.decay').forEach(block => {
     if (!originals.has(block)) originals.set(block, block.innerHTML);
     block.innerHTML = originals.get(block);
-    if (settings.unit === 'paragraph' || block.tagName === 'FIGURE') {
+    if (settings.unit === 'paragraph' || block.tagName === 'FIGURE' || block.classList.contains('sq')) {
       block.classList.add('unit');
       return;
     }
@@ -169,6 +169,30 @@ document.addEventListener('click', e => {
   para.after(fn);
   cite.setAttribute('aria-expanded', 'true');
 });
+
+// Drifting squares: each one wanders slowly, turning a little at a time, and wraps at the edges.
+// Still for anyone who has asked for reduced motion.
+(() => {
+  const squares = [...document.querySelectorAll('.drift .sq')];
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const state = squares.map(() => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+    a: Math.random() * Math.PI * 2, v: 6 + Math.random() * 10 }));
+  const place = () => squares.forEach((p, i) => { p.style.transform = `translate(${state[i].x}px, ${state[i].y}px)`; });
+  place();
+  if (still) return;
+  let last = performance.now();
+  requestAnimationFrame(function step(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    state.forEach(s => {
+      s.a += (Math.random() - 0.5) * 0.6 * dt * 10 * 0.1;
+      s.x += Math.cos(s.a) * s.v * dt; s.y += Math.sin(s.a) * s.v * dt;
+      if (s.x < -10) s.x = innerWidth; if (s.x > innerWidth) s.x = -10;
+      if (s.y < -10) s.y = innerHeight; if (s.y > innerHeight) s.y = -10;
+    });
+    place();
+    requestAnimationFrame(step);
+  });
+})();
 
 // Media track: place each scene between its two markers in the text (document coordinates).
 (() => {

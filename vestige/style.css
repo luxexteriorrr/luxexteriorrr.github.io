@@ -97,6 +97,11 @@ main a { color: inherit; text-decoration: underline; text-underline-offset: 0.12
 .dates li.decay:last-child { margin-bottom: calc(-1 * var(--n) * 1.1em); }
 .dates li.decay a { display: block; position: sticky; top: calc(50vh + 1.05em + var(--i) * 1.1em); }
 
+/* drifting squares, from the 2025 presentation: single black squares fixed over the page, slowly
+   wandering, and fading with everything else when the page is left alone */
+.drift .sq { position: fixed; top: 0; left: 0; z-index: 2; width: max(5px, 0.36vw); height: max(5px, 0.36vw);
+  background: #000; pointer-events: none; }
+
 /* citations, set like ecologies.online: a small raised number in the text; hovering the
    paragraph turns it into a pill, clicking it shows the full reference under the paragraph.
    The column's exclusion blend inverts colour on the white page, so the pill is written as
