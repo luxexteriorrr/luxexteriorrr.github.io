@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Relief — Vestige — Kirill Konstantinov</title>
   <meta name="description" content="A CNC relief of Hampstead Heath, from Vestige. Drag to turn it.">
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
@@ -12,24 +12,28 @@
       src: url("../assets/font/OOArketa-Regular.otf") format("opentype");
       font-display: swap;
     }
-    :root { --paper: #0000EE; --ink: #fff; } /* matches the essay; was white page, black text */
+    :root { --paper: #fff; --ink: #000; }
     html, body { margin: 0; height: 100%; background: var(--paper); overflow: hidden; }
 
-    /* the relief fills the window; drag to turn, pinch or scroll to zoom */
-    model-viewer { position: fixed; inset: 0; width: 100vw; height: 100dvh; background: transparent; }
+    /* the relief fills the whole screen, under the phone's status bar and browser toolbar too
+       (viewport-fit=cover + 100lvh; 100dvh stopped short and left white bands); drag to turn */
+    model-viewer { position: fixed; top: 0; left: 0; width: 100vw; height: 100lvh; background: transparent; }
 
     /* the way back, set like the essay */
     a {
-      position: fixed; top: 16px; left: 16px; z-index: 3; /* above the loading screen, so you can leave mid-load */
+      position: fixed; top: max(16px, env(safe-area-inset-top)); left: 16px; z-index: 3;
       font: 2vw/1.1 "Arketa", ui-monospace, monospace; text-transform: uppercase;
       color: var(--ink); text-underline-offset: 0.12em;
     }
     @media (max-width: 700px) { a { font-size: 16px; } }
+    /* hidden while the % counts; fades in with the relief */
+    body:not(.ready) a { opacity: 0; pointer-events: none; }
+    a { transition: opacity 1s linear; }
 
     /* loading screen: a sheet over the relief with the real download %,
        taken from model-viewer's progress; it fades once the model is in */
     #loading {
-      position: fixed; inset: 0; z-index: 2;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100lvh; z-index: 2;
       display: grid; place-items: center;
       background: var(--paper); color: var(--ink);
       font: 2vw/1.1 "Arketa", ui-monospace, monospace; text-transform: uppercase;
@@ -62,8 +66,12 @@
     m.addEventListener('load', () => {
       loading.textContent = '100%';
       loading.classList.add('done');
+      document.body.classList.add('ready');
     });
-    m.addEventListener('error', () => { loading.textContent = 'Could not load'; });
+    m.addEventListener('error', () => {
+      loading.textContent = 'Could not load';
+      document.body.classList.add('ready'); // the way back shows, so nobody is stuck
+    });
     m.src = (local ? '../assets/3d/' : MODELS) + m.dataset.model + '.glb';
   </script>
 </body>

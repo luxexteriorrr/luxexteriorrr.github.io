@@ -7,11 +7,9 @@
 }
 
 :root {
-  /* trying link blue with white text (24 Sep). Previous look: --paper #ffffff, --blend exclusion
-     (white text read black on the page and as a soft negative over the pond) */
-  --paper: #0000EE;
+  --paper: #ffffff;
   --ink: #ffffff;
-  --blend: normal; /* exclusion can't give white on blue, so the blend is off while trying this */
+  --blend: exclusion; /* white text + exclusion: black on the page, a soft negative over the pond. Tried link blue + white text on 24 Sep: no */
   --quiet: #b3b3b3;
   --measure: 46rem;
 }
@@ -40,13 +38,13 @@ body {
 main {
   max-width: 60vw;
   margin: 0 auto;
-  padding: 6vw 0 60vh;
+  padding: 0;
 }
 
 /* phones: 2vw would be too small, so switch to a fixed size and a 16px gutter */
 @media (max-width: 700px) {
   body { font-size: 16px; }
-  main { max-width: none; padding: 48px 16px 60vh; }
+  main { max-width: none; padding: 0 16px; }
 }
 
 /* one continuous run of text: sections, paragraphs and dates all flow inline */
