@@ -8,10 +8,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <figure class="stream decay" aria-label="Live pondcam, Hampstead Heath">
-    <iframe src="https://www.youtube-nocookie.com/embed/IuyU7v9OK_I?autoplay=1&amp;mute=1&amp;controls=0&amp;playsinline=1&amp;rel=0&amp;modestbranding=1"
+  <!-- media track: one strip behind the text, the stream then the photos, spaced apart. Each item is
+       sticky in the middle of the screen from one marker in the text to the next, then scrolls up and
+       away as the next arrives from below. The stream opens the page and doesn't come back; from
+       Observer on there is nothing behind the text. -->
+  <div class="track">
+    <div class="scene" data-start="top" data-end="#walk-start"><figure class="media stream decay" aria-label="Live pondcam, Hampstead Heath">
+      <iframe src="https://www.youtube-nocookie.com/embed/IuyU7v9OK_I?autoplay=1&amp;mute=1&amp;controls=0&amp;playsinline=1&amp;rel=0&amp;modestbranding=1"
       title="Live pondcam, Hampstead Heath (Royal Free Charity)" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
-  </figure>
+    </figure></div>
+    <div class="scene" data-start="#walk-start" data-end="#d1"><figure class="media photo decay"><img src="assets/walks/IMG_3010.jpg" width="1200" height="1600" alt="Photocopied photograph from a walk on the Heath."></figure></div>
+    <div class="scene" data-start="#d1" data-end="#d2"><figure class="media photo decay"><img src="assets/walks/IMG_4350.jpg" width="1200" height="1600" alt="Photocopied photograph from a walk on the Heath."></figure></div>
+    <div class="scene" data-start="#d2" data-end="#d3"><figure class="media photo decay"><img src="assets/walks/IMG_0434.jpg" width="1200" height="1600" alt="Photocopied photograph from a walk on the Heath."></figure></div>
+    <div class="scene" data-start="#d3" data-end="#d4"><figure class="media photo decay"><img src="assets/walks/IMG_0159.jpg" width="1200" height="1600" alt="Photocopied photograph from a walk on the Heath."></figure></div>
+    <div class="scene" data-start="#d4" data-end="#d5"><figure class="media photo decay"><img src="assets/walks/IMG_0161.jpg" width="1200" height="1600" alt="Photocopied photograph from a walk on the Heath."></figure></div>
+    <div class="scene" data-start="#d5" data-end="#observer"><figure class="media photo decay"><img src="assets/walks/IMG_6138.jpg" width="1200" height="1600" alt="Photocopied photograph from a walk on the Heath."></figure></div>
+  </div>
   <main>
     <section id="intro" aria-label="Intro">
       <p class="decay">This is a page about ambience, about places, and about how some of them disappear.</p>
@@ -29,11 +41,12 @@
     </section>
 
     <section id="first-visit" aria-label="First visit">
-      <p class="decay">WALK 9 of June, 2020</p>
+      <p class="decay" id="walk-start">WALK 9 of June, 2020</p>
       <p class="decay">I remember the first time I visited Hampstead Heath; it was during the pandemic. I was trying to grasp that ambience amongst the noise, something that resembled that calm, the stillness of a childhood nostalgia for simpler times. It was not a mediated or manufactured one, but the very essence of true calm — the natural rhythm of leaves, distant birdsong, gravel underfoot screeching to the beat of the steps.</p>
       <p class="decay">It was almost like an interface opening up. There was something about rediscovering such a feeling for the first time. It felt somehow computational, in a strange yet so evident way. The feeling emerged through interaction — input, output, sensing, responding.</p>
       <p class="decay">But poetic, not so much mechanical.</p>
       <p class="decay">The memory of it, though faint, is somewhere there. The interface is somewhere there.</p>
+      <span class="gap" aria-hidden="true"></span>
     </section>
 
     <section id="calendar" aria-label="Calendar">
@@ -41,36 +54,16 @@
            The rest 404: link rot. -->
       <p class="index-head">Index of /vestige/walk/</p>
       <ul class="dates">
-        <li class="decay"><a href="walk/2020-08-14/">14 of August 2020</a></li>
-        <li class="decay"><a href="walk/2021-09-23/">23 of September 2021</a></li>
-        <li class="decay"><a href="walk/2024-09-12/">12 of September 2024</a></li>
-        <li class="decay"><a href="walk/2022-12-03/">3 of December 2022</a></li>
-        <li class="decay"><a href="walk/2021-03-18/">18 of March 2021</a></li>
-        <li class="decay"><a href="walk/2023-02-07/">7 of February 2023</a></li>
-        <li class="decay"><a href="walk/2020-06-09/">9 of June 2020</a></li>
-        <li class="decay"><a href="walk/2020-07-28/">28 of July 2020</a></li>
-        <li class="decay"><a href="walk/2021-10-12/">12 of October 2021</a></li>
-        <li class="decay"><a href="walk/2023-05-06/">6 of May 2023</a></li>
-        <li class="decay"><a href="walk/2022-01-31/">31 of January 2022</a></li>
-        <li class="decay"><a href="walk/2024-08-20/">20 of August 2024</a></li>
-        <li class="decay"><a href="walk/2020-11-19/">19 of November 2020</a></li>
-        <li class="decay"><a href="walk/2022-04-04/">4 of April 2022</a></li>
-        <li class="decay"><a href="walk/2023-06-27/">27 of June 2023</a></li>
-        <li class="decay"><a href="walk/2020-09-02/">2 of September 2020</a></li>
-        <li class="decay"><a href="walk/2021-07-09/">9 of July 2021</a></li>
-        <li class="decay"><a href="walk/2024-07-19/">19 of July 2024</a></li>
-        <li class="decay"><a href="walk/2023-12-13/">13 of December 2023</a></li>
-        <li class="decay"><a href="walk/2020-10-30/">30 of October 2020</a></li>
-        <li class="decay"><a href="walk/2024-03-25/">25 of March 2024</a></li>
-        <li class="decay"><a href="walk/2022-02-11/">11 of February 2022</a></li>
-        <li class="decay"><a href="walk/2023-08-01/">1 of August 2023</a></li>
-        <li class="decay"><a href="walk/2021-01-21/">21 of January 2021</a></li>
-        <li class="decay"><a href="walk/2022-05-05/">5 of May 2022</a></li>
-        <li class="decay"><a href="walk/2021-06-17/">17 of June 2021</a></li>
-        <li class="decay"><a href="walk/2020-09-08/">8 of September 2020</a></li>
-        <li class="decay"><a href="walk/2023-03-10/">10 of March 2023</a></li>
+        <li class="decay" id="d1" style="--i: 0"><a href="walk/2020-07-28/">28 of July 2020</a></li>
+        <li class="decay" id="d2" style="--i: 1"><a href="walk/2021-10-12/">12 of October 2021</a></li>
+        <li class="decay" id="d3" style="--i: 2"><a href="walk/2020-11-19/">19 of November 2020</a></li>
+        <li class="decay" id="d4" style="--i: 3"><a href="walk/2020-09-02/">2 of September 2020</a></li>
+        <li class="decay" id="d5" style="--i: 4"><a href="walk/2020-09-08/">8 of September 2020</a></li>
+        <li class="decay" id="d6" style="--i: 5"><a href="walk/2023-03-10/">10 of March 2023</a></li>
       </ul>
     </section>
+
+    <span class="gap gap-after-calendar" aria-hidden="true"></span>
 
     <section id="observer" aria-label="Observer">
       <p class="decay">Somewhere now, this water ripples, light bending on the surface, the birds vanishing behind the vegetation.<button type="button" class="cite" data-fn="3" aria-expanded="false">(3)</button></p>

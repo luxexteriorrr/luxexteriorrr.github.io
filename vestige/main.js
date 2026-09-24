@@ -169,3 +169,21 @@ document.addEventListener('click', e => {
   para.after(fn);
   cite.setAttribute('aria-expanded', 'true');
 });
+
+// Media track: place each scene between its two markers in the text (document coordinates).
+(() => {
+  const track = document.querySelector('.track');
+  const top = el => el.getBoundingClientRect().top + scrollY;
+  function layout() {
+    track.querySelectorAll('.scene').forEach(scene => {
+      const start = scene.dataset.start === 'top' ? 0 : top(document.querySelector(scene.dataset.start));
+      const end = top(document.querySelector(scene.dataset.end));
+      scene.style.top = start + 'px';
+      scene.style.height = Math.max(0, end - start) + 'px';
+    });
+  }
+  layout();
+  addEventListener('resize', layout);
+  addEventListener('load', layout);
+  document.fonts?.ready.then(layout);
+})();

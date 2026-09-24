@@ -51,20 +51,31 @@ main {
 section, p, .dates, .dates li { display: inline; margin: 0; padding: 0; }
 
 
-/* the live pondcam: fixed dead centre of the screen, the text scrolls over it.
-   It fades too, as one piece, at a random point among the words (as the 2025 iframe did).
-   Only the feed shows: the iframe is 200px taller than the frame, so YouTube letterboxes the video
-   into the middle and its title bar and logo sit in the bars, which are cropped off.
-   pointer-events: none stops hover overlays and lets mouse movement count as activity. */
-figure.stream {
-  position: fixed; top: 50%; left: 50%; z-index: 0;
-  width: 60vw; aspect-ratio: 16 / 9; margin: 0;
-  transform: translate(-50%, -50%);
-  overflow: hidden; pointer-events: none;
-}
-figure.stream iframe { position: absolute; left: 0; top: -100px; width: 100%; height: calc(100% + 200px); border: 0; }
+/* media track (trying, 24 Sep): a second layer behind the text. Each scene runs between two markers
+   in the text; its media is sticky in the middle of the screen, then scrolls up and away when the
+   next scene arrives from below. The stream opens the page (text starts just under it) and comes
+   back for Observer. The stream fades as one piece like the words; so do the photos.
+   The stream iframe is 200px taller than its frame so YouTube's title bar and logo are cropped off. */
+:root { --space: 10vh; /* space above and below each item in the strip */ --stream-w: 60vw; --stream-h: calc(var(--stream-w) * 9 / 16); --photo-h: min(80vh, calc((100vw - 32px) * 4 / 3)); }
+@media (max-width: 700px) { :root { --stream-w: calc(100vw - 32px); } }
+.track { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; }
+.scene { position: absolute; left: 0; width: 100%; }
+.media { position: sticky; top: calc(50vh - var(--h) / 2); height: var(--h); margin: var(--space) auto; overflow: hidden; }
+.media.stream { --h: var(--stream-h); width: var(--stream-w); }
+.media.stream iframe { position: absolute; left: 0; top: -100px; width: 100%; height: calc(100% + 200px); border: 0; }
+.media.photo { --h: var(--photo-h); aspect-ratio: 3 / 4; }
+.media.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.scene:first-child .media { margin-top: calc(50vh - var(--h) / 2); } /* the stream starts in the middle */
+/* the index heading pins to the middle of the screen while the calendar passes; the dates scroll up
+   under it. Its fill is black because the column's exclusion blend shows black as see-through: it hides
+   the dates beneath it but lets the photo or the paper show. */
+.index-head { position: sticky; top: calc(50vh - 0.55em - 0.5em); z-index: 1; margin: 0 !important; padding: 0.5em 0; background: #000; }
+/* blank stretches in the text where a photo is seen on its own */
+.gap { display: block; height: 60vh; }
+.gap-after-calendar { height: calc(var(--photo-h) / 2 + var(--space)); } /* lets the last photo leave with the index block */
+main { padding-top: calc(50vh + var(--stream-h) / 2 + 3vw) !important; } /* the text starts under the stream */
+
 main { position: relative; z-index: 1; mix-blend-mode: var(--blend); /* exclusion on white: black on the page, a soft greyish negative over the pond */ }
-@media (max-width: 700px) { figure.stream { width: calc(100vw - 32px); } }
 
 /* links: the relief, and every calendar date (only the days with a photo lead anywhere) */
 main a { color: inherit; text-decoration: underline; text-underline-offset: 0.12em; }
@@ -74,7 +85,17 @@ main a { color: inherit; text-decoration: underline; text-underline-offset: 0.12
 #calendar { display: block; margin: 4vw 0; text-align: left; text-transform: none; }
 .index-head { display: block; margin: 0 0 1em; }
 .dates, .dates li { display: block; }
-.dates li a::after { content: "/"; }
+.dates li a { text-decoration: none; } /* plain dates: no underline, no trailing slash */
+/* one continuous list: the dates arrive one at a time, far apart, and stack under the pinned heading;
+   each new date brings the next photo. The whole stack holds, then lets go together at the end.
+   Each date is sticky inside its own slot; slot heights shrink by one spacing per date, so every slot
+   ends at the same moment and the stack leaves as a block (negative margins keep the flow spacing). */
+.dates { --n: 6; --S: 120vh; --hold: 60vh; display: flow-root; /* flow-root: the last date's negative margin shortens the list, not collapses through it */ }
+.dates li.decay { --slot: calc(1.1em + var(--hold) + (var(--n) - 1 - var(--i)) * var(--S)); height: var(--slot); margin-bottom: calc(1.1em + var(--S) - var(--slot)); }
+/* the calendar (and so the pinned heading) ends n lines early, so the heading lets go at the same
+   moment as the dates and the whole block (heading + stack) leaves together */
+.dates li.decay:last-child { margin-bottom: calc(-1 * var(--n) * 1.1em); }
+.dates li.decay a { display: block; position: sticky; top: calc(50vh + 1.05em + var(--i) * 1.1em); }
 
 /* citations, set like ecologies.online: a small raised number in the text; hovering the
    paragraph turns it into a pill, clicking it shows the full reference under the paragraph.
