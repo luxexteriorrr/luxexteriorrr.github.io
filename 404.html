@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>404 Not Found</title>
+<!-- Deliberately bare: a server's default error page, no site styling. GitHub Pages serves
+     this for any missing URL with a real 404 status. Vestige's dead calendar links
+     (vestige/walk/<date>/ with no photo behind them) land here: link rot. -->
+</head>
+<body>
+<h1>Not Found</h1>
+<p>The requested URL <span id="url"></span> was not found on this server.</p>
+<hr>
+<script>document.getElementById('url').textContent = location.pathname;</script>
+</body>
+</html>
