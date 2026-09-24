@@ -10,6 +10,7 @@ PLAN.md
 # Dependencies (rebuild with: npm install)
 node_modules/
 
-# Vestige CNC models: 1 GB, too big for Pages. Local symlinks into .git/lfs;
-# the live page loads them from media.githubusercontent.com instead.
-vestige/assets/3d/
+# Vestige CNC relief: the full 368 MB scan stays local (a symlink into .git/lfs);
+# the page uses the 71 MB meshopt copy, which is committed as a normal file.
+vestige/assets/3d/*
+!vestige/assets/3d/cnc1-meshopt.glb

@@ -46,19 +46,14 @@
 </head>
 <body>
   <a href="../">Back to Vestige</a>
-  <model-viewer data-model="cnc1" shadow-intensity="1" camera-controls touch-action="none" alt="CNC relief of Hampstead Heath">
+  <model-viewer data-model="cnc1-meshopt" shadow-intensity="1" camera-controls touch-action="none" alt="CNC relief of Hampstead Heath">
     <div slot="progress-bar"></div><!-- replaces the default bar; #loading shows progress instead -->
   </model-viewer>
   <div id="loading" role="status" aria-live="polite">0%</div>
   <script>
-    // The relief is 368 MB, too big for GitHub Pages. Locally it's a symlink into
-    // .git/lfs (gitignored); everywhere else it streams from the LFS copy GitHub
-    // already holds, pinned to the commit that stored it.
-    const MODELS = 'https://media.githubusercontent.com/media/luxexteriorrr/luxexteriorrr.github.io/0bf725c0bcbc36fbe605f7eff1844cc6754d5621/vestige/assets/3d/';
-    const local = ['localhost', '127.0.0.1'].includes(location.hostname) || /^192\.168\.|^10\./.test(location.hostname);
     const m = document.querySelector('model-viewer');
     const loading = document.getElementById('loading');
-    // progress covers the download only; building 6M triangles afterwards reports
+    // progress covers the download only; building 6.3M triangles afterwards reports
     // nothing, so the count holds at 99% until the relief can actually be shown
     m.addEventListener('progress', e => {
       loading.textContent = Math.min(99, Math.floor(e.detail.totalProgress * 100)) + '%';
@@ -72,7 +67,13 @@
       loading.textContent = 'Could not load';
       document.body.classList.add('ready'); // the way back shows, so nobody is stuck
     });
-    m.src = (local ? '../assets/3d/' : MODELS) + m.dataset.model + '.glb';
+    // The relief is the meshopt-compressed copy of the 2025 CNC scan: every triangle
+    // kept (6.3M), unused UV map dropped, 385 MB -> 71 MB, served with the site.
+    // model-viewer needs the meshopt decoder set before it loads the file.
+    customElements.whenDefined('model-viewer').then(() => {
+      customElements.get('model-viewer').meshoptDecoderLocation = 'https://cdn.jsdelivr.net/npm/meshoptimizer@0.22.0/meshopt_decoder.js';
+      m.src = '../assets/3d/' + m.dataset.model + '.glb';
+    });
   </script>
 </body>
 </html>
