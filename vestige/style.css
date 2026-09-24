@@ -69,6 +69,13 @@ main { position: relative; z-index: 1; mix-blend-mode: var(--blend); /* exclusio
 /* links: the relief, and every calendar date (only the days with a photo lead anywhere) */
 main a { color: inherit; text-decoration: underline; text-underline-offset: 0.12em; }
 
+/* calendar: the dates leave the run of text and become a server directory listing,
+   the same world as the bare 404 most of them lead to */
+#calendar { display: block; margin: 4vw 0; text-align: left; text-transform: none; }
+.index-head { display: block; margin: 0 0 1em; }
+.dates, .dates li { display: block; }
+.dates li a::after { content: "/"; }
+
 /* citations, set like ecologies.online: a small raised number in the text; hovering the
    paragraph turns it into a pill, clicking it shows the full reference under the paragraph.
    The column's exclusion blend inverts colour on the white page, so the pill is written as
