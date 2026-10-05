@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-dock="pill">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,1020 +7,536 @@
 <meta name="description" content="Kirill Konstantinov is a graphic designer based in London, working in editorial, identity and type.">
 <link rel="preload" href="assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/zerko.css">
-<link rel="stylesheet" href="assets/style.css">
-<!-- GSAP vendored rather than pulled from a CDN: this is the page that goes in
-     an application email, and it should not depend on someone else's uptime.
-     3.12.7, the same version the other projects in this repo already load. -->
-<script src="assets/gsap.min.js"></script>
-<!-- Lenis 1.3.26, vendored for the same reason. It keeps the native scroll and
-     eases the wheel into it, so sticky, fragment links and the carousels are
-     untouched — see the init at the end of the script. -->
-<script src="assets/lenis.min.js"></script>
+<!-- The homepage since 5 Oct 2026 (was the image-wall trial at /wall/), after Ohlman Consorti: every plate from every
+     project on one mixed wall, a 4-column module with quarter / half / full
+     widths, marks at the same weight as photographs. The URL is the filter:
+     ?d=editorial for a discipline, ?p=as-seen-in for a project, so an
+     application can link straight to the view that fits the studio.
+
+     A project opens as a contact sheet (all its plates in equal square cells),
+     and a plate opens alone in a gallery (?p=as-seen-in&i=3). The header carries
+     what the wall leaves out: project, object, year, and the one line. -->
+<style>
+:root {
+  --fg: #111;
+  --bg: #fff;
+  --size: 13px;
+  --lead: 17px;             /* whole pixels: 1.28 × 13 gave a 40.63px header,
+                               and every plate under it started mid-pixel */
+  --track: 0.022em;
+  --pad: 14px;
+  --cols: 4;
+  --sheet-cols: 4;
+  --head-h: 40px;           /* measured from the header in the script */
+}
+@media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Scrolling as on the live site (floating-nav): no scrollbar, no bounce past
+   either end, and Lenis easing the wheel into the native scroll. */
+html, body { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+html { overscroll-behavior-y: none; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+::selection { background: transparent; color: #e6007e; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+body {
+  font-family: 'Zerko', sans-serif;
+  font-size: var(--size);
+  line-height: var(--lead);
+  letter-spacing: var(--track);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.u { text-decoration: underline; text-underline-offset: 0.18em; }
+
+/* Header: name, the view you are in, then a slot that names the plate under
+   the cursor on the wall, and carries object, year and the line on a project. */
+.head {
+  position: sticky; top: 0; z-index: 10;
+  min-height: 40px;
+  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 2em; row-gap: 0.2em;
+  padding: 12px var(--pad) 11px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--fg);
+}
+.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .slot { flex: 1; min-width: 0; }
+.mode-wall .head .slot { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mode-project .head .slot { max-width: 52em; }
+.head .count:empty { display: none; }
+/* Counter and Info always sit at the right edge, whatever the slot's width
+   (on a project the slot is capped to a reading measure and stops short). */
+.head .count, .head .count:empty + .info-toggle { margin-left: auto; }
+.head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+@media (max-width: 700px) {
+  .mode-wall .head .slot { display: none; }
+  .mode-wall .head { justify-content: space-between; }
+  .mode-project .head .slot { order: 9; flex-basis: 100%; }
+}
+
+/* Info, after Ohlman's "agency services": opening it slides everything under
+   the header down by the panel's height, and the panel comes down from behind
+   the header into the room that leaves. The header stays put; nothing is
+   covered, the work is pushed. Half a second, as on the reference. Works from
+   any scroll position, since the push is a transform, not a margin. */
+.info {
+  position: fixed; inset: var(--head-h) 0 auto 0; z-index: 9;   /* behind the header */
+  max-height: calc(100svh - var(--head-h)); overflow: auto;
+  overscroll-behavior: contain; scrollbar-width: none;
+  background: var(--bg);
+  padding: var(--pad) var(--pad) calc(2 * var(--pad));
+  border-bottom: 1px solid var(--fg);
+  display: grid; grid-template-columns: 2fr 1fr 1.4fr 1fr; gap: 2em;
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform 0.5s ease, visibility 0s linear 0.5s;
+}
+.info.open { transform: none; visibility: visible; transition: transform 0.5s ease; }
+.content { flex: 1; display: flex; flex-direction: column; transition: transform 0.5s ease; }
+.content.pushed { transform: translateY(var(--info-h)); }
+@media (prefers-reduced-motion: reduce) { .info, .info.open, .content { transition: none; } }
+.info h2 { font: inherit; margin: 0 0 1.28em; }
+.info p, .info ul { margin: 0; padding: 0; list-style: none; }
+.info a:hover, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
+@media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
+
+/* The wall. Rows of a 4-column module, no gutters: plates touch, as on the
+   reference. A row that does not fill leaves its gap as white space. */
+.row { display: grid; grid-template-columns: repeat(var(--cols), 1fr); align-items: start; }
+.cell { display: block; position: relative; }
+/* Heights are set in whole pixels by snapHeights() (object-fit covers the
+   sub-pixel difference), so rows meet without a hairline between them. */
+.cell img, .cell video { display: block; width: 100%; height: auto; object-fit: cover; }
+/* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
+   wordmark does not become a thin strip across the screen. */
+.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; }
+.cell.mark img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Contact sheet: every plate of one project in equal square cells, each
+   plate contained and centred in its cell. 4 across, so a project of three
+   to eight plates fills the screen the way fifty fill the reference's 8. */
+.sheet { display: grid; grid-template-columns: repeat(var(--sheet-cols), 1fr); }
+.sheet a { aspect-ratio: 1; position: relative; display: block; }
+/* The plate fills the cell's box and is contained inside it: a percentage
+   max-height does not resolve in an aspect-ratio box, so tall posters used
+   to run out of their cell (RADA Corsica, 5 Oct). */
+/* Inset by the page margin: at 4 across the cells are big, and with no inset
+   two landscapes side by side read as one image, and a tall poster touches
+   the header rule. */
+.sheet img { position: absolute; inset: var(--pad); width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad)); object-fit: contain; }
+.sheet .mark img { inset: 10%; width: 80%; height: 80%; }
+
+/* Gallery: one plate, as large as the screen allows under the header. Left
+   half of the screen goes back, right half goes on. */
+.gallery {
+  height: calc(100svh - var(--head-h));
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--pad);
+  cursor: e-resize;
+  user-select: none;
+}
+.gallery.back { cursor: w-resize; }
+.gallery.single { cursor: default; }
+.gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.gallery .mark { width: 80%; height: 80%; }
+/* The one line: in the header on a desk. On a phone it wrapped to five lines
+   and took the plate's room, so there it moves under the plate, one scroll
+   down, and the header keeps object and year only. */
+.gdesc { display: none; margin: 0; padding: 0 var(--pad) calc(2 * var(--pad)); max-width: 44em; }
+@media (max-width: 700px) {
+  .head .slot .d { display: none; }
+  .gdesc { display: block; }
+}
+
+/* The footer sits at the bottom of the window on a short page (a contact
+   sheet of four), and after the plates on a long one. */
+body { min-height: 100svh; display: flex; flex-direction: column; }
+main { flex: 1; }
+.page { flex: 1; display: flex; flex-direction: column; }
+.foot { padding: 4em var(--pad) var(--pad); }
+.mode-gallery .foot { display: none; }
+</style>
 </head>
-<body>
+<body class="mode-wall">
 
-
-<div class="scroller" id="scroller">
-<div class="scroll-content">
-
-<!-- Landing. One screen before the index: the description, the practice and
-     contact lines, and one key visual. Alex Hunting's opening block with
-     Bänziger's continuous index under it.
-
-     It lives INSIDE the scroller, not before it — html/body are overflow:hidden
-     and .scroller is the thing that scrolls, so anything meant to scroll away
-     has to be in here. The dock is fixed and sits over the landing from the
-     first pixel: on this screen it is the only thing that says the page goes
-     on. The sections repeat the panel's Practice and Contact on purpose — the
-     panel is for when you are deep in the index, this is for arriving. (8 Sep) -->
-<section class="landing" aria-label="Introduction">
-  <!-- Two sentences (8 Sep): position, then method. No inventory of services and
-       no argument; what was done and why is the PDF's job. -->
-  <p class="landing-bio">Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
-
-  <!-- The key visual takes the first fetch; the first index plate used to. -->
-  <figure class="landing-key">
-    <img src="export/zerko-thesis-mu-03.webp" width="2400" height="1600"
-         alt="Chapter 2 spread of the thesis: a page of text on Cyrillic in the contemporary, facing a full character set of a Soviet-era face printed small in rows."
-         fetchpriority="high" decoding="async">
-  </figure>
-
-  <!-- Every entry in the index, in index order, each a fragment link to its
-       article. The list is the landing's table of contents: a click scrolls
-       the scroller to the entry, and the URL carries the slug so an entry can
-       be sent as a link. Titles are the caption titles verbatim; no years —
-       the caption under the plate carries the year. -->
-  <section class="landing-works">
-    <h2>Selected Works</h2>
-    <ol>
-      <li><a href="#lotv-waste">LILIESOFTHEVALLEY WASTE! SPACE Pop-Up</a></li>
-      <li><a href="#zerko-thesis">Script Parity as Design Hypothesis</a></li>
-      <li><a href="#zerko-grotesk">Zerko Grotesk</a></li>
-      <li><a href="#as-seen-in">As Seen In</a></li>
-      <li><a href="#around-a-memory">Around A Memory</a></li>
-      <li><a href="#jray">JRAY</a></li>
-      <li><a href="#rada-birthday-bash">RADA Birthday Bash at Peckham Audio</a></li>
-      <li><a href="#rada-corsica">RADA at Corsica Studios</a></li>
-      <li><a href="#lotv-apoc-paris">LILIESOFTHEVALLEY APOC Paris Pop-Up</a></li>
-      <li><a href="#lotv-toe-rag">LILIESOFTHEVALLEY Toe Rag Newspaper Campaign</a></li>
-      <li><a href="#vestige">Vestige</a></li>
-      <li><a href="#sentra">Sentra</a></li>
-      <li><a href="#aww90s">AWW90s</a></li>
-    </ol>
+<section class="info" id="info" inert data-lenis-prevent>
+  <p class="bio">Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
+  <section>
+    <h2>Practice</h2>
+    <ul id="disciplines"></ul>
   </section>
-
-  <div class="landing-meta">
-    <section>
-      <h2>Practice</h2>
-      <p>Art Direction<br>Editorial Design<br>Graphic Design<br>Identity<br>Lettering<br>Type Design<br>Web</p>
-    </section>
-    <section>
-      <h2>Contact</h2>
-      <p><a href="mailto:lux.exteriorrr@gmail.com">Mail</a><br>
-         <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">Instagram</a><br>
-         <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
-         <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
-         <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
-      <p class="ask"><a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
-    </section>
-  </div>
+  <section>
+    <h2>Selected Works</h2>
+    <ul id="projects"></ul>
+  </section>
+  <section>
+    <h2>Contact</h2>
+    <p><a href="mailto:lux.exteriorrr@gmail.com">Mail</a><br>
+       <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">Instagram</a><br>
+       <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
+       <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
+       <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
+  </section>
 </section>
 
-<!-- The dock, in the page flow. It lives in a slot under the landing: off
-     screen on load, it rides up with the page and pins to the bottom edge once
-     it arrives — Alex Hunting's nav, mirrored to the bottom. The slot is
-     position: sticky, so CSS owns the state and there is no scroll listener.
-     Bar and panel are one box inside it; column-reverse puts the bar at the
-     bottom and grows the panel off its top edge. (8 Sep) -->
-<div class="dock-slot">
-<div class="dock">
-
-<header class="head">
-  <p><button type="button" class="id-toggle" id="info-toggle" aria-expanded="false" aria-controls="info"><span class="id">Kirill Konstantinov</span></button></p>
+<div class="page" id="page">
+<header class="head" id="head">
+  <a href="./" data-nav>Kirill Konstantinov</a>
+  <a href="./" class="view" data-nav id="view">Selected Works</a>
+  <span class="slot" id="slot" aria-live="off"></span>
+  <span class="count" id="count"></span>
+  <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
 </header>
 
-<!-- The bio and the email lived here as a fixed layer at the top of the page.
-     Removed 31 Aug: the dock carries the identity now, and both texts already
-     exist inside the panel under Practice and Contact. The index opens on the
-     first plate instead of on a paragraph. Restore from git if wanted. -->
-
-
-<!-- Info overlay. Sits BELOW the header in the stacking order (z-index 5 vs 10)
-     so the header's difference blend still resolves against it and the
-     identifier stays legible while it is open. -->
-<div class="info" id="info" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Information" hidden>
-  <div class="info-inner">
-    <section>
-      <h2>Practice</h2>
-      <p>Art Direction<br>Editorial Design<br>Graphic Design<br>Identity<br>Lettering<br>Type Design<br>Web</p>
-    </section>
-
-    <!-- Selected Works lived here. Removed 31 Aug: the panel is a small object
-         that slides off the bar, and a twelve-row list was the only reason it
-         had to be wide. The index below already names every entry.
-         Recover with: git show zerko-specimen:index.html -->
-
-    <section>
-      <h2>Contact</h2>
-      <p><a href="mailto:lux.exteriorrr@gmail.com">Mail</a><br>
-         <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">Instagram</a><br>
-         <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
-         <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
-         <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
-      <!-- Its own paragraph rather than a third <br> line, so it can take a
-           space above it: the two lines above are ways to reach him, this is a
-           thing to ask for. One link across the whole phrase — the portfolio
-           and the CV are one ask, not two. mailto is the honest interim: it is
-           what "on request" actually means today. Swap the href for a Drive
-           folder holding both and the markup does not otherwise change. -->
-      <p class="ask">
-         <a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
-    </section>
-
-  </div>
-</div>
-
+<!-- Everything under the header: what Info pushes down. -->
+<div class="content" id="content">
+<main id="main" aria-label="Selected works"></main>
+<footer class="foot">&copy; 2026 Kirill Konstantinov</footer>
 </div>
 </div>
 
-<main class="index">
-
-  <article class="entry" id="lotv-waste" style="--w:58%; --plate-ar:0.7071">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <!-- Three plates, 9 Sep: the poster, the workshop lettering, the shopfront.
-             The invitation card and the two window details are still in export/
-             and in the Catalogue's pool. -->
-        <figure class="slide">
-          <img src="export/lotv-waste-01.webp" width="3184" height="3934"
-               alt="Pop-up poster for the Lilies of the Valley residency at WASTE, knit pattern in black on yellow, shown as the print sheet with its trim marks." decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/lotv-waste-cover.svg" width="929" height="304"
-               alt="MACRAMÉ WORKSHOP set in striped display lettering." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/lotv-waste-05.webp" width="3900" height="2925"
-               alt="The full shopfront with knitwear hung against the glass and the dates
-                    and web address set along the lower panes."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/06</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-lotv-waste"><b>LILIESOFTHEVALLEY WASTE! SPACE Pop-Up</b></button>, Signage, 2026</p>
-    <div class="more" id="more-lotv-waste"><div class="more-inner"><p>Store and window design for the Lilies of the Valley pop-up at WASTE, London, with printed material for the workshop.</p></div></div>
-  </article>
-
-  <!-- Mockups only, 3 Sep: the nine flat A-series exports are gone and the
-       thesis is eight mockups — cover, then seven spreads in page order. They
-       stand in until the bound book is photographed. Every plate is now 3:2, so
-       --plate-ar (the TALLEST plate in the set; mobile reserves that height so
-       the caption never moves) drops from the flats' 1.4142 to 1.5.
-       Masters: _export/zerko-thesis/mockups/, see SOURCES.md there. -->
-  <article class="entry" id="zerko-thesis" style="--w:80%; --plate-max-h:74vh; --plate-ar:1.5">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-03.webp" width="2400" height="1600"
-               alt="Chapter 2 spread: a page of text on Cyrillic in the contemporary, facing a full character set of a Soviet-era face printed small in rows." decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-cover.webp" width="2400" height="1600"
-               alt="The thesis cover: black uncoated stock, the title set small in white across the
-                    top, Royal College of Art along the bottom, and a small hand-drawn figure with
-                    its arms out alone in the middle of the field." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-01.webp" width="2400" height="1600"
-               alt="The introduction spread: justified text in the left column, and the research
-                    question set enormous and rotated up the right-hand page — how can the making
-                    of a Latin–Cyrillic rationalist grotesk family test script parity as a design
-                    condition?" loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-02.webp" width="2400" height="1600"
-               alt="Plates of Cyrillic drawings: script exercises in pink and green on the left page, the same forms flooded in yellow on the right." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-04.webp" width="2400" height="1600"
-               alt="Coverage spread: one paragraph on the Soviet precedent for coverage at scale, set three times in English, Russian and German, all in bold caps." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-05.webp" width="2400" height="1600"
-               alt="Reading the page: two dense text pages, the Latin on the left and the same passage in Cyrillic on the right, with the footnotes and running heads aligned." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-06.webp" width="2400" height="1600"
-               alt="Word list: Arête, Хребет, Hřeben, Höhenzug, Ґрунт set large down the left page, and the two-script spacing string nodosonndoso facing it." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-thesis-mu-07.webp" width="2400" height="1600"
-               alt="Section 2.3, Sameness and Harmonisation: text on the left, and on the right a run of Д and the ИНПЦ module in Bold with pencil notes around them." loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/08</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-zerko-thesis"><b>Script Parity as Design Hypothesis</b></button>, Publication, 2026</p>
-    <div class="more" id="more-zerko-thesis"><div class="more-inner"><p>A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other.</p></div></div>
-  </article>
-
-  <article class="entry" id="zerko-grotesk" style="--w:86%; --plate-ar:1.3534">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <!-- Reykjavík 1972, 9 Sep: five specimen plates set in the world of the
-             Spassky–Fischer match, where every game was scored in both scripts.
-             Names, ladder, text, score, places. Masters in _export/zerko-grotesk. -->
-        <figure class="slide">
-          <img src="export/zerko-grotesk-01.webp" width="5625" height="3750"
-               alt="Фишер over Spassky, each name set in the other’s script, grey on yellow." decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-grotesk-02.webp" width="5625" height="3750"
-               alt="The weight ladder: six names from the 1972 match in both scripts, Thin to Black, white on blue." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-grotesk-03.webp" width="5625" height="3750"
-               alt="One paragraph on game three, in English and in Russian, grey on purple." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-grotesk-04.webp" width="5625" height="3750"
-               alt="The final score, 12½–8½, in yellow on red." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/zerko-grotesk-05.webp" width="5625" height="3750"
-               alt="Reykjavík, Laugardalshöll, 11 July to 1 September 1972, 21 games, in both scripts, white on black." loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/04</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-zerko-grotesk"><b>Zerko Grotesk</b></button>, Typeface, 2026</p>
-    <div class="more" id="more-zerko-grotesk"><div class="more-inner"><p>Zerko Grotesk is a rationalist family spanning Latin and Cyrillic, made for prolonged reading and display in complex multilingual environments. It runs in six weights with corresponding obliques. Designed simultaneously across both scripts, Zerko balances structural difference while preserving the conventions internal to each script.</p></div></div>
-  </article>
-
-  <article class="entry" id="as-seen-in" style="--w:78%; --plate-max-h:74vh; --plate-ar:0.7691">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/as-seen-in-59.webp" width="2362" height="3071"
-               alt="Full-bleed aerial page from As Seen In." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-05.webp" width="4724" height="3071"
-               alt="Spread from As Seen In." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-58.webp" width="3071" height="2362"
-               alt="USER INTERFACE ADDRESS CITY CLOUD EARTH, set large in blue on magenta." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-60.webp" width="4724" height="3071"
-               alt="INTERACTION INTERFACE DATA set as a row of chevron forms." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-14.webp" width="4724" height="3071"
-               alt="A row of seven stone images across a spread." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-61.webp" width="2362" height="3071"
-               alt="The loop mark drawn as overlapping letterforms." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-62.webp" width="3461" height="3461"
-               alt="Sedimented strata, pale, with a red seam." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/as-seen-in-67.webp" width="3461" height="3461"
-               alt="Aerial fields in ochre and blue." loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/08</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-as-seen-in"><b>As Seen In</b></button>, Publication, 2025</p>
-    <div class="more" id="more-as-seen-in"><div class="more-inner"><p>As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction.</p></div></div>
-  </article>
-
-  <article class="entry" id="around-a-memory" style="--w:70%; --plate-ar:1.3333">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/around-a-memory-30.webp" width="2048" height="1536"
-               alt="Around A Memory as an object: a saddle-stitched booklet in dusty pink,
-                    the COMFORT wordmark printed small on the cover, staples visible at the
-                    spine."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/around-a-memory-31.webp" width="2048" height="1536"
-               alt="The booklet opened: the pink cover against a translucent interior page
-                    carrying a large ghosted letterform and the line TRY PUTTING YOUR ARMS
-                    AROUND THIS."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/around-a-memory-32.webp" width="1170" height="874"
-               alt="A spread from Around A Memory: a man holding up a decayed red garment, faced by a grey text page beginning YOU SEEK IT, I SEEK IT."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/around-a-memory-33.webp" width="1170" height="871"
-               alt="A spread pairing a portrait in a Nordic knitted sweater with a blue-cast photograph of a young face."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/around-a-memory-34.webp" width="1170" height="875"
-               alt="A spread pairing a night street under floodlight with a face painted as a skull."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/around-a-memory-35.webp" width="1170" height="872"
-               alt="The essay spread: a large blue Y drawn across the page against two columns of body text."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/around-a-memory-01.svg" width="2160" height="100"
-               alt="COMFORT wordmark, drawn as a monoline outline."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/07</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-around-a-memory"><b>Around A Memory</b></button>, Publication, 2026</p>
-    <div class="more" id="more-around-a-memory"><div class="more-inner"><p>A photobook of paired images, with a monoline COMFORT wordmark and a geometric spiral drawing.</p></div></div>
-  </article>
-
-  <article class="entry" id="jray" style="--w:54%; --plate-ar:0.4600">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/jray-01.webp" width="1206" height="2622"
-               alt="Drenched by JRAY playing, sleeve shown on a phone." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/jray-wordmark.svg" width="245" height="25"
-               alt="DRENCHED wordmark: wide squared capitals, black."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/jray-tracklist.svg" width="529" height="357"
-               alt="The tracklist, set centred in magenta: ten titles from Obedience to Drenched,
-                    each with its Camelot key and tempo either side in a lighter tint."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/jray-mark.svg" width="7654" height="3122"
-               alt="The JRAY mark, drawn as a single continuous outline."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/04</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-jray"><b>JRAY</b></button>, Sleeve, 2026</p>
-    <div class="more" id="more-jray"><div class="more-inner"><p>Sleeve for Drenched by JRAY.</p></div></div>
-  </article>
-
-  <!-- awaiting plates: LOTV Identity, Identity, 2026 -->
-
-
-  <article class="entry" id="rada-birthday-bash" style="--w:48%; --plate-ar:0.8000">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/rada-birthday-bash-01.webp" width="4500" height="5625"
-               alt="RADA Birthday Bash poster." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/rada-birthday-bash-02.webp" width="5636" height="7014"
-               alt="RADA Birthday Bash poster." loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/02</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-rada-birthday-bash"><b>RADA Birthday Bash at Peckham Audio</b></button>, Poster, 2025</p>
-    <div class="more" id="more-rada-birthday-bash"><div class="more-inner"><p>Poster for the RADA birthday party at Peckham Audio.</p></div></div>
-  </article>
-
-  <article class="entry" id="rada-corsica" style="--w:44%; --plate-ar:0.7071">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/rada-corsica-03.webp" width="4961" height="7016"
-               alt="RADA Corsica poster." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/rada-corsica-01.webp" width="4032" height="3024"
-               alt="Three posters flyposted over a billboard." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/rada-corsica-04.webp" width="4032" height="3024"
-               alt="The poster flyposted in a row over a cosmetics billboard, with graffiti below." loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/rada-corsica-02.webp" width="3508" height="4961"
-               alt="RADA Corsica poster." loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/04</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-rada-corsica"><b>RADA at Corsica Studios</b></button>, Poster and social media, 2025</p>
-    <div class="more" id="more-rada-corsica"><div class="more-inner"><p>Poster and social media for a trance, techno and hardcore night at Corsica Studios, flyposted across south London.</p></div></div>
-  </article>
-
-  <article class="entry" id="lotv-apoc-paris" style="--w:46%; --plate-ar:0.8025">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/lotv-apoc-paris-01.webp" width="4572" height="5697"
-               alt="Announcement for the Lilies of the Valley pop-up at APOC Paris, 24 Rue
-                    Chapon, 12–17 June: an octagonal frame ruled in red, white and blue."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/01</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-lotv-apoc-paris"><b>LILIESOFTHEVALLEY APOC Paris Pop-Up</b></button>, Identity, 2025</p>
-    <div class="more" id="more-lotv-apoc-paris"><div class="more-inner"><p>Poster and a mini identity for the Lilies of the Valley pop-up at APOC Store, Paris, with custom tags.</p></div></div>
-  </article>
-
-  <article class="entry" id="lotv-toe-rag" style="--w:56%; --plate-ar:0.7789">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <img src="export/lotv-toe-rag-01.webp" width="3036" height="3898"
-               alt="Lilies of the Valley campaign image for Toe Rag: a mannequin in a grey
-                    knitted top with peaked shoulders, wearing a black and cream Fair Isle
-                    headband trimmed with feathers."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/lotv-toe-rag-02.webp" width="3934" height="2950"
-               alt="The campaign running as a full page in Toe Rag, opposite the paper's
-                    Recommendations listings for February to June 2026."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/lotv-toe-rag-03.webp" width="3120" height="3900"
-               alt="Campaign frame: close crop of the black and cream Fair Isle headband,
-                    trimmed with feathers."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/lotv-toe-rag-04.webp" width="3120" height="3900"
-               alt="Campaign frame: a black knitted cardigan with a ruffled shoulder, shot
-                    side on at full length."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/lotv-toe-rag-05.webp" width="3120" height="3900"
-               alt="Campaign frame: a camel V-neck over a black skirt, with a grey knitted
-                    cap."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/08</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-lotv-toe-rag"><b>LILIESOFTHEVALLEY Toe Rag Newspaper Campaign</b></button>, Art Direction, 2026</p>
-    <!-- Interim line from the Catalogue Format field; no Description in Notion yet. -->
-    <div class="more" id="more-lotv-toe-rag"><div class="more-inner"><p>Campaign for Lilies of the Valley, February 2026: Instagram and a full page in Toe Rag.</p></div></div>
-  </article>
-
-  <!-- Sentra, rebuilt 1 Sep. The plates were the A1 poster, one photograph of
-       the stand at the show, and two flat sheets — none of which showed the
-       thing itself. These are captures of the running system: the wall and the
-       phone, both live, both at the density of the real panel.
-
-       The two moving plates are ONE session. The billboard was left recording
-       and the phone driven through a conversation; the wall picked the fragments
-       up over the socket exactly as it did at RCA. So 01 and 03 are two views of
-       the same thirty seconds, not two demos.
-
-       9:16 throughout now, hence --plate-ar 0.5625 — every plate is a screen. -->
-  <article class="entry" id="vestige" style="--w:62%; --plate-ar:1.8349">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <!-- 23 Sep: Kirill's screenshot of the live page, browser window included. -->
-        <figure class="slide">
-          <img src="export/vestige-01.webp" width="2000" height="1090"
-               alt="The Vestige page: a centred column of capitals running over a live video of a pond on Hampstead Heath, the letters inverted where they cross the water."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/01</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-vestige"><b>Vestige</b></button>, Website, 2025</p>
-    <div class="more" id="more-vestige"><div class="more-inner"><p>An essay on ambience, Hampstead Heath and the decaying web, set over a live pondcam on the Heath. The words fade when you stop moving. <a href="/vestige/">Open the page</a>.</p></div></div>
-  </article>
-
-  <article class="entry" id="sentra" style="--w:100%; --plate-ar:0.5625">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <!-- No autoplay attribute on any video. autoplay makes the browser fetch the
-               file at load whatever preload says — 1.6 MB of video was arriving with the
-               landing for entries eleven viewports down. The carousel script plays a video
-               once its entry is near, and the observer below pauses it off screen. The
-               poster is data-poster for the same reason: a poster has no lazy option and
-               was 860 KB across the three, so the script sets it once the entry is near.
-               (8 Sep) -->
-          <video src="export/sentra-01.mp4" data-poster="export/sentra-01-poster.webp"
-                 width="1440" height="2560"
-                 muted loop playsinline preload="none"
-                 aria-label="The wall filling in real time while someone talks to Sentra. Each
-                             turn lands as a block of colour with the words knocked out of it in
-                             the same grey as the ground, so they exist only where something has
-                             been filed. The human turns are one line; Sentra's run twenty."></video>
-        </figure>
-        <figure class="slide">
-          <img src="export/sentra-05.webp" width="1620" height="2880"
-               alt="The wall full. Nine colours stacked edge to edge, and Sentra explaining that
-                    it started out as a small collective of designers and writers passionate about
-                    small press and artist books — an origin invented to match what it had just
-                    been told."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <video src="export/sentra-03.mp4" data-poster="export/sentra-03-poster.webp"
-                 width="1242" height="2208"
-                 muted loop playsinline preload="none"
-                 aria-label="The phone. Asked what it actually does, Sentra answers with a company
-                             founded in 2005; asked who founded it, it names two people and gives
-                             them careers."></video>
-        </figure>
-        <figure class="slide">
-          <img src="export/sentra-02.webp" width="1242" height="2208"
-               alt="The phone mid-session: timestamps in a left gutter, a purple square for You and
-                    orange for Sentra, and a reply that answers a mention of artist books by
-                    claiming a deep appreciation for such niche fields."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/sentra-04.webp" width="1242" height="2208"
-               alt="The opening screen: What is Sentra? — we could simply tell you, but it
-                    wouldn't make sense yet. Below it a notice warning against sharing anything
-                    personal, and the way in."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/sentra-mu-02.webp" width="2400" height="1803"
-               alt="The A1 explainer poster, folded: What is Sentra? set large in orange on pink,
-                    and a short block of text low on the sheet describing a system that turns
-                    conversation into campaign and your disclosures into design."
-               loading="lazy" decoding="async">
-        </figure>
-        <figure class="slide">
-          <img src="export/sentra-mu-03.webp" width="2400" height="1803"
-               alt="An invoice from Sentra Corp., folded. Session number, date and client code,
-                    usage terms set as an unreadable black block, and a subtotal and total with
-                    no figures against them."
-               loading="lazy" decoding="async">
-        </figure>
-        <!-- Last, and deliberately. Everything before this shows Sentra being charming;
-             this is the file it was building while you talked. -->
-        <figure class="slide">
-          <img src="export/sentra-mu-01.webp" width="2400" height="1803"
-               alt="The session dossier, folded. The logged conversation runs down the left in
-                    colour-blocked type; the right-hand column is the system's reading of it —
-                    trust indicators, vulnerability markers, a data-extraction timeline, and an
-                    estimated lifetime value for the person who was talking."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/05</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-sentra"><b>Sentra</b></button>, RCA2025 installation</p>
-    <!-- Interim line from the Catalogue Format field; no Description in Notion yet. -->
-    <div class="more" id="more-sentra"><div class="more-inner"><p>Identity and installation for a fictional AI company, shown at RCA2025.</p></div></div>
-  </article>
-
-
-  <article class="entry" id="aww90s" style="--w:62%; --plate-ar:1.6000">
-    <div class="carousel" data-carousel>
-      <div class="track" tabindex="0" aria-label="Plates">
-        <figure class="slide">
-          <video src="export/aww90s-01.mp4" data-poster="export/aww90s-01-poster.webp"
-                 width="2880" height="1800"
-                 muted loop playsinline preload="none"
-                 aria-label="Scroll through the AWW90s homepage."></video>
-        </figure>
-        <figure class="slide">
-          <img src="export/aww90s-02.webp" width="2880" height="1200"
-               alt="AWW90s homepage — archive pieces, type block and membership card."
-               loading="lazy" decoding="async">
-        </figure>
-      </div>
-      <span class="count" data-count>01/02</span>
-    </div>
-    <p class="cap"><button type="button" class="cap-toggle" aria-expanded="false" aria-controls="more-aww90s"><b>AWW90s</b></button>, Website, 2024</p>
-    <div class="more" id="more-aww90s"><div class="more-inner"><p>Site for an archive fashion store.</p></div></div>
-  </article>
-
-</main>
-
-<footer class="foot">
-  <p class="dim">&copy; 2026 Kirill Konstantinov. All work shown remains the property of the author and its respective clients. Images may not be reproduced without permission.</p>
-</footer>
-</div><!-- /.scroll-content -->
-</div>
-
+<!-- Lenis 1.3.26, vendored, the same file the live index loads. -->
+<script src="assets/lenis.min.js"></script>
+<script src="assets/works.js"></script>
 <script>
-// Single-storey g. Zerko's ss01 swaps R, a, g and y as a set, and CSS applies
-// a stylistic set to a whole element rather than one glyph — so each g gets
-// wrapped and the feature is applied only to that span.
-(function altG() {
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-    acceptNode: n => (n.parentNode.closest('script, style, .g1') || !n.nodeValue.includes('g'))
-      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
-  });
-  const nodes = [];
-  while (walker.nextNode()) nodes.push(walker.currentNode);
-  for (const node of nodes) {
-    const frag = document.createDocumentFragment();
-    for (const part of node.nodeValue.split(/(g)/)) {
-      if (part === 'g') {
-        const s = document.createElement('span');
-        s.className = 'g1';
-        s.textContent = 'g';
-        frag.appendChild(s);
-      } else if (part) {
-        frag.appendChild(document.createTextNode(part));
-      }
+(() => {
+  // A project can be a client (LOTV, RADA) holding several pieces; a plate
+  // then carries `piece`, and the gallery names the piece, not the client.
+  const { projects, items, pieces = {} } = window.WORKS;
+  const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
+  const DISCIPLINES = [
+    ['editorial', 'Editorial Design'],
+    ['art-direction', 'Art Direction'],
+    ['identity', 'Identity'],
+    ['type', 'Type Design'],
+    ['graphic-design', 'Graphic Design'],
+    ['web', 'Web'],
+  ];
+  const discName = Object.fromEntries(DISCIPLINES);
+  const EXPORT = 'export/';
+
+  // Mixed order: round-robin across projects so neighbours come from
+  // different work, with a seeded shuffle of each round so it does not read
+  // as a pattern. Same seed every load, so the wall is stable and can be tuned.
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const queues = projects.map(p => items.filter(i => i.p === p.slug));
+  const mixed = [];
+  let last = null;
+  while (queues.some(q => q.length)) {
+    const round = queues.filter(q => q.length).sort(() => rand() - 0.5);
+    if (round.length > 1 && round[0][0].p === last) round.push(round.shift());
+    for (const q of round) { const it = q.shift(); mixed.push(it); last = it.p; }
+  }
+
+  const ar = it => it.w / it.h;
+  // An SVG is a mark (wordmark, lettering) unless flagged as a plate: the
+  // Zerko specimen plates are full-bleed SVGs and show like any image.
+  const isMark = it => it.src.endsWith('.svg') && !it.plate;
+  const pad2 = n => String(n).padStart(2, '0');
+
+  // Span in quarters of the width. Each shape has a set of allowed sizes and
+  // the wall cycles through them, so the rhythm varies without being random.
+  let turn = 0;
+  function span(it, cols) {
+    const a = ar(it);
+    let opts;
+    if (isMark(it)) opts = a > 4 ? [4, 2] : [2, 1];
+    else if (a >= 1.25) opts = [4, 2, 4, 2, 2];
+    else if (a >= 0.8) opts = [2, 1, 2];
+    else opts = [2, 1, 2, 1, 1];
+    const s = opts[turn++ % opts.length];
+    // On a phone (2 columns): quarters become halves, halves and fulls go full.
+    return cols === 2 ? (s >= 2 ? 2 : 1) : s;
+  }
+
+  // Pack into rows. A row closes when the next plate does not fit; whatever
+  // is left becomes white space, sometimes before the plates, sometimes after.
+  function pack(list, cols) {
+    turn = 0;
+    const rows = [];
+    let row = [], used = 0;
+    for (const it of list) {
+      const s = span(it, cols);
+      if (used + s > cols && row.length) { rows.push({ row, used }); row = []; used = 0; }
+      row.push({ it, s }); used += s;
     }
-    node.parentNode.replaceChild(frag, node);
-  }
-})();
-
-// Carousels. Plates are stacked and cross-faded; the index lives here rather
-// than being read back off a scroll position.
-//
-// The device-pixel width pinning this replaces is gone with the scroll
-// container that needed it — there is no neighbouring plate to show a sliver
-// of any more.
-//
-// Swipe is handled here too. The scroll-snap version got touch and momentum
-// free from the browser; a stack has to earn it, so a horizontal drag past a
-// threshold advances or retreats. Vertical drags are left alone so the page
-// still scrolls with a finger on a plate.
-for (const c of document.querySelectorAll('[data-carousel]')) {
-  const track = c.querySelector('.track');
-  const slides = [...c.querySelectorAll('.slide')];
-  const out = c.querySelector('[data-count]');
-  const pad = n => String(n).padStart(2, '0');
-
-  // WHICH SLIDE HOLDS THE BOX UP. One slide stays in normal flow and supplies
-  // the height; the rest are absolute and stack on it. That slide has to be the
-  // tallest in the set, or the others paint over the entry below.
-  //
-  // The stylesheet used to assume it was the first, which held only because
-  // 855e085 reordered every set to lead with its tallest plate. That is an
-  // invariant nothing enforces: swapping a plate silently breaks it, and it
-  // broke here the moment the thesis mockup became the lead — visible on mobile
-  // only, where no --plate-max-h clamps the overflow out of sight.
-  //
-  // So pick it instead of assuming it. Tallest at a shared width is smallest
-  // width/height, and every plate carries width and height attributes, so this
-  // reads off the markup — no layout, no waiting for a decode, and correct
-  // again by itself whenever the plates change.
-  const ratio = s => {
-    const m = s.querySelector('img, video');
-    const w = +(m?.getAttribute('width')), h = +(m?.getAttribute('height'));
-    return w > 0 && h > 0 ? w / h : Infinity;
-  };
-  slides.reduce((tall, s) => ratio(s) < ratio(tall) ? s : tall, slides[0])
-        ?.classList.add('is-tall');
-
-  let i = 0;
-
-  // Keep the neighbours warm. A cross-fade shows both plates at once, so an
-  // unloaded next plate fades in from nothing — worse than the old gap, which
-  // at least arrived off-screen. Warming both directions costs one request.
-  //
-  // But not before the carousel is anywhere near the screen. show(0) runs for
-  // every carousel at load, and warming from there stripped `loading` off two
-  // slides in each of twelve entries — twenty extra plates, 10 MB, fetched
-  // for a page that opens on the landing. Now the neighbours warm once the
-  // carousel comes within half a viewport, and on every change after that.
-  const warm = n => {
-    const img = slides[(n + slides.length) % slides.length]?.querySelector('img');
-    if (img) img.removeAttribute('loading');
-  };
-  let near = !('IntersectionObserver' in window);
-  const warmAround = () => { if (near) { warm(i + 1); warm(i - 1); } };
-  if (!near) {
-    new IntersectionObserver((list, obs) => {
-      if (!list.some(e => e.isIntersecting)) return;
-      near = true;
-      for (const v of c.querySelectorAll('video[data-poster]')) v.poster = v.dataset.poster;
-      warmAround();
-      playOnly(i);
-      obs.disconnect();
-    }, { rootMargin: '50% 0px' }).observe(c);
+    if (row.length) rows.push({ row, used });
+    return rows;
   }
 
-  // Only the plate on screen plays. Videos elsewhere in the set stay paused,
-  // so a page of carousels is not decoding several at once — and a phone is
-  // not burning battery on work nobody can see.
-  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function playOnly(i) {
-    slides.forEach((s, n) => {
-      const v = s.querySelector('video');
-      if (!v) return;
-      // play() fetches the file whatever preload says, so a video in an entry
-      // eleven viewports down was arriving with the landing. Same gate as the
-      // neighbours: not until the carousel is near.
-      if (n === i && !calm && near) v.play().catch(() => {});
-      else v.pause();
+  const main = document.getElementById('main');
+  const slot = document.getElementById('slot');
+  const count = document.getElementById('count');
+  const viewEl = document.getElementById('view');
+  const caption = p => p.meta ? `${p.title}, ${p.meta}` : p.title;
+  // What a plate is: its piece if it has one, otherwise its project.
+  const about = it => pieces[it.piece] || bySlug[it.p];
+  const wallCaption = it => it.piece ? `${bySlug[it.p].title}, ${caption(pieces[it.piece])}` : caption(bySlug[it.p]);
+
+  // One plate as an element: an image, or a video for the moving ones.
+  // `still` gives the poster instead of the video (for the contact sheet).
+  // `sizes` is how wide the plate shows (e.g. '25vw'): with it the browser
+  // takes the 1600px copy for a tile and the full plate when it fills the
+  // screen. Full-size plates decoded mid-scroll made the wall stutter.
+  const srcOf = (file, hasSm) => hasSm ? `${EXPORT}1600/${file}` : EXPORT + file;
+  function media(it, { eager = false, still = false, sizes = '100vw' } = {}) {
+    const p = bySlug[it.p];
+    if (it.video && !still) {
+      const v = document.createElement('video');
+      Object.assign(v, { src: EXPORT + it.src, poster: srcOf(it.poster, it.posterSm), muted: true, loop: true, autoplay: true, playsInline: true, preload: 'metadata' });
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.width = it.w; v.height = it.h;
+      v.setAttribute('aria-label', p.title);
+      return v;
+    }
+    const img = new Image(it.w, it.h);
+    const file = it.video ? it.poster : it.src, hasSm = it.video ? it.posterSm : it.sm;
+    img.src = EXPORT + file;
+    if (hasSm) {
+      // Each file's own pixel width: the copy is 1600 on its long edge.
+      const smW = it.w >= it.h ? 1600 : Math.round(1600 * it.w / it.h);
+      img.srcset = `${EXPORT}1600/${file} ${smW}w, ${EXPORT}${file} ${it.w}w`;
+      img.sizes = sizes;
+    }
+    img.alt = it.alt || p.title;
+    img.decoding = 'async';
+    img.draggable = false;
+    if (!eager) img.loading = 'lazy';
+    return img;
+  }
+
+  function renderWall(list) {
+    const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
+    let n = 0;
+    pack(list, cols).forEach(({ row, used }, r) => {
+      const el = document.createElement('div');
+      el.className = 'row';
+      // Leftover columns: alternate between leading and trailing white space.
+      let start = used < cols && r % 2 ? cols - used + 1 : 1;
+      for (const { it, s } of row) {
+        const a = document.createElement('a');
+        a.className = 'cell';
+        a.href = `?p=${it.p}`;
+        a.dataset.nav = '';
+        a.dataset.caption = wallCaption(it);
+        a.style.gridColumn = `${start} / span ${s}`;
+        if (isMark(it)) { const r = s >= 4 ? 4 : s >= 2 ? 2 : 1; a.classList.add('mark'); a.dataset.ratio = r; a.style.setProperty('--box', `${r} / 1`); }
+        a.append(media(it, { eager: n++ < 4, sizes: `${Math.round(s / cols * 100)}vw` }));
+        start += s;
+        el.append(a);
+      }
+      main.append(el);
     });
   }
 
-  function show(n) {
-    i = (n + slides.length) % slides.length;
-    slides.forEach((s, k) => s.classList.toggle('is-on', k === i));
-    out.textContent = `${pad(i + 1)}/${pad(slides.length)}`;
-    playOnly(i);
-    warmAround();
-  }
-
-  const go = d => show(i + d);
-
-  // A drag ends in a click too, so a swipe would otherwise advance twice —
-  // once on release and again on the click that follows it.
-  let sx = 0, sy = 0, dragged = false;
-
-  track.addEventListener('click', () => { if (!dragged) go(1); });
-
-  track.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    e.preventDefault();
-    go(e.key === 'ArrowRight' ? 1 : -1);
-  });
-
-  track.addEventListener('pointerdown', e => {
-    sx = e.clientX; sy = e.clientY; dragged = false;
-  });
-
-  track.addEventListener('pointerup', e => {
-    const dx = e.clientX - sx, dy = e.clientY - sy;
-    // Horizontal intent only, so a vertical flick still scrolls the page.
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-      dragged = true;
-      go(dx < 0 ? 1 : -1);
-    }
-  });
-
-  show(0);
-}
-
-// Info overlay. The sheet is in the markup and only shown/hidden here, so it
-// exists without JavaScript. #info in the address bar makes it linkable and
-// lets the back button close it.
-(function info() {
-  const dock   = document.querySelector('.dock');
-  const sheet  = document.getElementById('info');
-  const inner  = sheet.querySelector('.info-inner');
-  const toggle = document.getElementById('info-toggle');
-  const root   = document.documentElement;
-
-  let open = false;
-
-  // CSS owns open and closed. This only supplies the three numbers CSS cannot
-  // work out for itself, because none of them can be written as a static value:
-  // the collapsed width depends on the webfont, and the open width and height
-  // depend on the content and the viewport.
-  //
-  // No requestAnimationFrame anywhere. The previous version produced the open
-  // state with a GSAP tween, so anything that stopped the ticker — a throttled
-  // tab, reduced motion — left the panel permanently shut. Now the transition
-  // is only how it gets there; not running one just means it arrives at once.
-
-  function sizes() {
-    const wasHidden = sheet.hidden;
-    const wasOpen   = document.body.classList.contains('info-open');
-    if (wasOpen) document.body.classList.remove('info-open');   // measure collapsed
-
-    // COLLAPSED IS THE BAR, and measuring it needs two things out of the way.
-    //
-    // The panel: this used to unhide the sheet before measuring, and the dock
-    // is one fit-content box around both, so the collapsed width came back as
-    // the PANEL's width — 410px against the name's 113px. That made --dock-w
-    // larger than --dock-open-w, so the pill was born as wide as the thing it
-    // opens into and the open gesture had nothing left to animate.
-    //
-    // And the dock's own width, which this function set last time round. CSS
-    // pins it to --dock-w, so re-measuring it just reads back the previous
-    // answer and the first bad number is kept for good. Released to auto for
-    // the measurement, then handed straight back to the stylesheet.
-    sheet.hidden = true;
-    const pinned = dock.style.width;
-    dock.style.width = 'auto';
-    const collapsed = Math.ceil(dock.getBoundingClientRect().width);
-    dock.style.width = pinned;
-
-    sheet.hidden = false;
-    const panelW = sheet.offsetWidth;
-    const panelH = Math.min(inner.offsetHeight, Math.round(innerHeight * 0.62));
-
-    if (wasOpen) document.body.classList.add('info-open');
-    if (wasHidden) sheet.hidden = true;
-    return { collapsed, panelW, panelH };
-  }
-
-  function apply() {
-    const { collapsed, panelW, panelH } = sizes();
-    root.style.setProperty('--dock-w', collapsed + 'px');
-    root.style.setProperty('--dock-bar-h', dock.querySelector('.head').offsetHeight + 'px');
-    root.style.setProperty('--dock-open-w', panelW + 'px');
-    root.style.setProperty('--panel-h', panelH + 'px');
-  }
-
-  function set(next, push) {
-    if (next === open) return;
-    open = next;
-    toggle.setAttribute('aria-expanded', String(open));
-
-    if (open) {
-      sheet.hidden = false;
-      apply();                       // measured while visible, before the class
-      // Force a layout so the closed state is committed before the class flips —
-      // otherwise the browser coalesces both into one style pass and there is no
-      // start value to transition from. A reflow, not requestAnimationFrame: rAF
-      // does not fire in a background tab, and gating the OPEN STATE on it was
-      // the very fault this rebuild exists to remove.
-      void dock.offsetHeight;
-      document.body.classList.add('info-open');
-    } else {
-      document.body.classList.remove('info-open');
-      // Hide only once it has closed, so the transition has something to run on.
-      // The timeout is a fallback for when transitionend never fires.
-      // Only the sheet's OWN height transition counts. transitionend bubbles,
-      // and the content's opacity finishes first — listening for any
-      // transitionend hid the panel mid-collapse.
-      const done = e => {
-        if (e && (e.target !== sheet || e.propertyName !== 'height')) return;
-        if (open) return;
-        sheet.hidden = true;
-        sheet.removeEventListener('transitionend', done);
-      };
-      sheet.addEventListener('transitionend', done);
-      setTimeout(done, 900);
-    }
-
-    // replaceState, not push: toggling four times used to leave four entries in
-    // the back stack, so Back walked the panel instead of leaving the page.
-    if (push) history.replaceState({}, '', open ? '#info' : location.pathname);
-  }
-
-  apply();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
-  addEventListener('resize', apply);
-
-  toggle.addEventListener('click', () => set(!open, true));
-  addEventListener('keydown', e => { if (e.key === 'Escape' && open) set(false, true); });
-
-  // The hash describes the state; it does not restore it. A small dock coming up
-  // open on every reload was noise, and made the first click read as a close.
-  if (location.hash === '#info') history.replaceState({}, '', location.pathname);
-})();
-
-// The scroll-position restore this used to undo no longer applies: the index
-// is state in a variable, not a scroll offset, so nothing is restored across a
-// reload or the back/forward cache and every entry opens on its first plate.
-
-// Description, on demand. The caption's title is a button; clicking it opens
-// a short block under the caption — the one or two sentences the site is
-// allowed (the PDF does the arguing). Jacob Wise's pattern, without jQuery:
-// the two states live in CSS on .entry.is-open, and the block's height is
-// animated by a grid row going 0fr → 1fr, so nothing is measured. Entries
-// open independently. (8 Sep)
-document.addEventListener('click', e => {
-  const t = e.target.closest('.cap-toggle');
-  if (!t) return;
-  const entry = t.closest('.entry');
-  const open = entry.classList.toggle('is-open');
-  t.setAttribute('aria-expanded', String(open));
-});
-
-// Reveal: an entry fades in the first time a slice of it is on screen, then
-// the observer lets go of it. Threshold rather than rootMargin, so a tall
-// plate starts its fade once a little of it shows and is fully in by the time
-// its caption arrives. The viewport is the root: the scroller fills it, so
-// intersecting one is intersecting the other.
-if ('IntersectionObserver' in window) {
-  const items = document.querySelectorAll('.index .entry');
-  items.forEach(el => el.classList.add('reveal'));
-  const io = new IntersectionObserver((list, obs) => {
-    for (const x of list) {
-      if (!x.isIntersecting) continue;
-      x.target.classList.add('is-in');
-      obs.unobserve(x.target);
-    }
-  }, { threshold: 0.12 });
-  items.forEach(el => io.observe(el));
-}
-
-// Pause videos in carousels that are off screen entirely. Autoplay in a long
-// index would otherwise have every video running at once.
-if ('IntersectionObserver' in window) {
-  const io = new IntersectionObserver(entries => {
-    for (const e of entries) {
-      for (const v of e.target.querySelectorAll('video')) {
-        if (!e.isIntersecting) v.pause();
-        else if (v.closest('.slide') === e.target.querySelector('.slide')) v.play().catch(() => {});
-      }
-    }
-  }, { rootMargin: '100px' });
-  document.querySelectorAll('[data-carousel]').forEach(c => io.observe(c));
-}
-// Smooth scroll. Lenis keeps the NATIVE scroll — the scroller still scrolls,
-// the dock slot still sticks, fragment links still land — and only eases the
-// wheel input into it, so a tick becomes a short glide rather than a step.
-// The wrapper is the scroller, not the window: html and body do not scroll on
-// this page. autoRaf runs its own frame loop; nothing here is gated on GSAP's
-// ticker. lerp is the one knob — 0.1 is Lenis's default and a touch floatier,
-// 1 would be native. (8 Sep)
-if (window.Lenis) {
-  const scroller = document.getElementById('scroller');
-  window.lenis = new Lenis({
-    wrapper: scroller,
-    content: scroller.querySelector('.scroll-content'),
-    lerp: 0.12,
-    autoRaf: true,
-    // NOT Lenis's own `anchors`. Its click handler starts a glide but never
-    // preventDefaults, so the browser's native fragment jump lands first and
-    // the glide has nowhere to go — the click read as a jump. Handled below.
-    anchors: false,
-  });
-
-  // Fragment links: stop the native jump, glide there, then write the hash so
-  // the URL still carries the entry. A fixed duration rather than the lerp —
-  // the works list can send the page 4000px in one click, and a lerp would
-  // either crawl at the end or be too quick at the start. Lenis ignores
-  // scroll-margin, so the 4vh of air above an entry is given as an offset.
-  // pushState, not location.hash: setting the hash directly scrolls natively.
-  scroller.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const target = document.getElementById(a.getAttribute('href').slice(1));
-    if (!target) return;
-    e.preventDefault();
-    window.lenis.scrollTo(target, {
-      offset: -Math.round(innerHeight * 0.04),
-      duration: 1.35,
-      easing: t => 1 - Math.pow(1 - t, 4),   // ease-out quart: fast off the mark, soft landing
+  function renderSheet(p, list) {
+    const grid = document.createElement('div');
+    grid.className = 'sheet';
+    const sheetCols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-cols')) || 4;
+    const sizes = `${Math.round(100 / sheetCols)}vw`;
+    list.forEach((it, k) => {
+      const a = document.createElement('a');
+      a.href = `?p=${p.slug}&i=${k + 1}`;
+      a.dataset.nav = '';
+      if (isMark(it)) a.classList.add('mark');
+      a.append(media(it, { eager: true, still: true, sizes }));
+      grid.append(a);
     });
-    history.pushState(null, '', '#' + target.id);
-  });
+    main.append(grid);
+  }
 
-  // The landing does not wait forever. Fifteen seconds without any input and
-  // the page drifts down to the first entry on its own — slowly, so it reads
-  // as an invitation rather than a redirect. Any wheel, touch, key or click
-  // before it fires cancels it for good; any wheel or touch during the glide
-  // takes over, because Lenis hands control to the gesture. Once per load,
-  // only from the top, only while the tab is visible (a hidden tab runs no
-  // frames, and the glide would land as a jump on return), and not at all for
-  // anyone who has asked for reduced motion.
-  {
-    const IDLE_MS = 15000;
-    const first = document.querySelector('.index .entry');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let timer = null, spent = false;
-
-    const cancel = () => {
-      spent = true;
-      clearTimeout(timer);
-      for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
-        scroller.removeEventListener(ev, cancel);
-      }
-      document.removeEventListener('visibilitychange', arm);
-    };
-    const drift = () => {
-      if (spent || document.hidden || scroller.scrollTop > 0) return;
-      cancel();
-      window.lenis.scrollTo(first, {
-        offset: -Math.round(innerHeight * 0.04),
-        duration: 2.8,
-        easing: t => -(Math.cos(Math.PI * t) - 1) / 2,   // ease-in-out sine: no start, no stop
+  function renderGallery(p, list, i) {
+    const g = document.createElement('div');
+    g.className = 'gallery' + (list.length < 2 ? ' single' : '');
+    const it = list[i - 1];
+    const m = media(it, { eager: true });
+    if (isMark(it)) m.classList.add('mark');
+    g.append(m);
+    if (list.length > 1) {
+      const step = d => go(`?p=${p.slug}&i=${(i - 1 + d + list.length) % list.length + 1}`, true);
+      g.addEventListener('mousemove', e => g.classList.toggle('back', e.clientX < innerWidth / 2));
+      g.addEventListener('click', e => step(e.clientX < innerWidth / 2 ? -1 : 1));
+      // Swipe on a phone: a mostly sideways drag of 40px or more. A tap still
+      // lands as a click on either half.
+      let x0 = null, y0 = null;
+      g.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+      g.addEventListener('touchend', e => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+        x0 = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); step(dx < 0 ? 1 : -1); }
       });
-    };
-    function arm() {
-      clearTimeout(timer);
-      if (spent || document.hidden) return;
-      timer = setTimeout(drift, IDLE_MS);
+      gallerySteps = step;
+      // Fetch the neighbours ahead of the click.
+      [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
     }
-
-    if (first && !reduced) {
-      for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
-        scroller.addEventListener(ev, cancel, { passive: true });
-      }
-      // The dock and the works list are inside the scroller, so a click on
-      // either is caught above. The clock restarts when the tab comes back
-      // into view.
-      document.addEventListener('visibilitychange', arm);
-      arm();
+    main.append(g);
+    const desc = about(it).desc;
+    if (desc) {
+      const d = document.createElement('p');
+      d.className = 'gdesc';
+      d.textContent = desc;
+      main.append(d);
     }
   }
-}
+
+  let gallerySteps = null;
+
+  function render() {
+    const q = new URLSearchParams(location.search);
+    const d = q.get('d'), pr = q.get('p');
+    const p = bySlug[pr];
+    main.replaceChildren();
+    gallerySteps = null;
+    slot.textContent = '';
+    count.textContent = '';
+
+    let label = 'Selected Works', viewHref = './', mode = 'wall';
+    if (p) {
+      // The project's own order, not the wall's.
+      const list = items.filter(it => it.p === p.slug);
+      let i = parseInt(q.get('i')) || 0;
+      if (list.length === 1) i = 1;          // one plate: straight to it
+      i = Math.min(Math.max(i, 0), list.length);
+      label = p.title;
+      viewHref = `?p=${p.slug}`;
+      mode = 'project';
+      if (i) {
+        renderGallery(p, list, i);
+        // A grouped project names the piece this plate belongs to.
+        const it = list[i - 1], a = about(it);
+        slot.textContent = it.piece ? caption(a) : a.meta;
+        if (a.desc) {
+          const d = document.createElement('span');
+          d.className = 'd';
+          d.textContent = `. ${a.desc}`;
+          slot.append(d);
+        }
+        if (list.length > 1) count.textContent = `${pad2(i)}/${pad2(list.length)}`;
+        document.body.className = 'mode-project mode-gallery';
+      } else {
+        renderSheet(p, list);
+        slot.textContent = p.meta;
+        document.body.className = 'mode-project';
+      }
+    } else {
+      let list = mixed;
+      if (d && discName[d]) { list = mixed.filter(it => bySlug[it.p].d.includes(d)); label = discName[d]; viewHref = `?d=${d}`; }
+      renderWall(list);
+      snapHeights();
+      document.body.className = 'mode-wall';
+    }
+
+    viewEl.textContent = label;
+    viewEl.setAttribute('href', viewHref);
+    document.title = label === 'Selected Works' ? 'Kirill Konstantinov' : `${label} | Kirill Konstantinov`;
+    document.querySelectorAll('.info a[data-nav]').forEach(a => {
+      const h = a.getAttribute('href');
+      const here = h === './' ? !d && !p : h === `?p=${pr}` || h === `?d=${d}`;
+      here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+    });
+    measureHead();
+  }
+
+  // Info lists: disciplines and projects, each a filter link.
+  const li = (href, text) => `<li><a href="${href}" data-nav>${text}</a></li>`;
+  document.getElementById('disciplines').innerHTML =
+    li('./', 'All') + DISCIPLINES.map(([k, v]) => li(`?d=${k}`, v)).join('');
+  document.getElementById('projects').innerHTML =
+    projects.map(p => li(`?p=${p.slug}`, p.title)).join('');
+
+  const toggle = document.querySelector('.info-toggle');
+  const info = document.getElementById('info');
+  const content = document.getElementById('content');
+  let infoOpen = false;
+  const setInfo = open => {
+    infoOpen = open;
+    // The page moves down by exactly the panel's height (capped at a screen).
+    document.documentElement.style.setProperty('--info-h', Math.min(info.scrollHeight, innerHeight - document.getElementById('head').offsetHeight) + 'px');
+    info.classList.toggle('open', open);
+    content.classList.toggle('pushed', open);
+    info.inert = !open;
+    toggle.setAttribute('aria-expanded', open);
+  };
+  toggle.addEventListener('click', () => setInfo(!infoOpen));
+  // While Info is open, a click anywhere on the pushed-down work closes it
+  // rather than opening a plate underneath.
+  content.addEventListener('click', e => {
+    if (!infoOpen) return;
+    e.preventDefault(); e.stopPropagation();
+    setInfo(false);
+  }, true);
+
+  // Links change the URL without a reload. Stepping through the gallery
+  // replaces the history entry, so Back leaves the gallery in one press.
+  function go(href, replace = false) {
+    const url = href === './' ? location.pathname : href;
+    replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
+    setInfo(false);
+    render();
+    if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
+  }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-nav]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    go(a.getAttribute('href'));
+  });
+  addEventListener('popstate', render);
+
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (infoOpen) return setInfo(false);
+      const q = new URLSearchParams(location.search);
+      if (q.get('i') && bySlug[q.get('p')] && items.filter(it => it.p === q.get('p')).length > 1) go(`?p=${q.get('p')}`);
+    }
+    if (gallerySteps && e.key === 'ArrowRight') gallerySteps(1);
+    if (gallerySteps && e.key === 'ArrowLeft') gallerySteps(-1);
+  });
+
+  // On the wall, the plate under the cursor names itself in the header.
+  main.addEventListener('mouseover', e => {
+    if (!document.body.classList.contains('mode-wall')) return;
+    const c = e.target.closest('.cell'); slot.textContent = c ? c.dataset.caption : '';
+  });
+  main.addEventListener('mouseleave', () => { if (document.body.classList.contains('mode-wall')) slot.textContent = ''; });
+
+  // The header's height varies (the line wraps on a phone); the gallery and
+  // the Info panel are sized against it.
+  function measureHead() {
+    document.documentElement.style.setProperty('--head-h', document.getElementById('head').offsetHeight + 'px');
+  }
+  new ResizeObserver(measureHead).observe(document.getElementById('head'));
+
+  // Re-pack when the column count changes (4 on a desk, 2 on a phone).
+  // Plate heights in whole pixels. Left to the browser they come out as
+  // fractions (1232.55px), each row then starts mid-pixel, and the blended
+  // edge shows as a faint line between rows.
+  function snapHeights() {
+    main.querySelectorAll('.cell').forEach(c => {
+      const w = c.getBoundingClientRect().width;
+      if (c.classList.contains('mark')) { c.style.height = Math.round(w / parseFloat(c.dataset.ratio)) + 'px'; return; }
+      const m = c.firstElementChild;
+      m.style.height = Math.round(w * m.getAttribute('height') / m.getAttribute('width')) + 'px';
+    });
+  }
+  let snapTimer;
+  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(snapHeights, 100); });
+
+  matchMedia('(max-width: 700px)').addEventListener('change', render);
+  render();
+
+  // Smooth wheel, same setting as the live index (lerp 0.12). It eases the
+  // wheel into the native scroll, so sticky and touch are untouched. The Info
+  // panel scrolls on its own (data-lenis-prevent).
+  if (window.Lenis) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
+})();
 </script>
-
-
 </body>
 </html>
