@@ -32,6 +32,10 @@
   --sheet-cols: 4;
   --head-h: 40px;           /* measured from the header in the script */
   --gcap-h: 34px;           /* the gallery's caption line on a phone */
+  /* One curve for every movement on the site, the page transition's (from
+     the Framer reference); Info runs it faster than the 1.5s page change. */
+  --ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --info-t: 0.7s;
 }
 @media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
 
@@ -137,10 +141,10 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   display: grid; grid-template-columns: 2fr 1fr 1.4fr 1fr; gap: 2em;
   transform: translateY(-100%);
   visibility: hidden;
-  transition: transform 0.5s ease, visibility 0s linear 0.5s;
+  transition: transform var(--info-t) var(--ease), visibility 0s linear var(--info-t);
 }
-.info.open { transform: none; visibility: visible; transition: transform 0.5s ease; }
-.content { flex: 1; display: flex; flex-direction: column; transition: transform 0.5s ease; }
+.info.open { transform: none; visibility: visible; transition: transform var(--info-t) var(--ease); }
+.content { flex: 1; display: flex; flex-direction: column; transition: transform var(--info-t) var(--ease); }
 .content.pushed { transform: translateY(var(--info-h)); }
 @media (prefers-reduced-motion: reduce) { .info, .info.open, .content { transition: none; } }
 html.info-instant .info, html.info-instant .content { transition: none !important; }
