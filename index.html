@@ -129,7 +129,8 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    without the API just switch. The gallery steps without it. */
 .head { view-transition-name: head; }
 ::view-transition { background: var(--bg); }
-@keyframes vt-exit { to { opacity: 0; transform: translateY(-10%) scale(0.95); } }
+/* Trial 5 Oct: exit without the fade (the reference fades to 0). */
+@keyframes vt-exit { to { transform: translateY(-10%) scale(0.95); } }
 @keyframes vt-enter {
   from { transform: translateY(10%); clip-path: inset(100% 0 0 0); }
   to   { transform: none; clip-path: inset(0 0 0 0); }
