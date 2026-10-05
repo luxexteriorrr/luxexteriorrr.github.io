@@ -268,7 +268,8 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
    then the description. Scrolls away with the page. */
 .ptitle { margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
 .ptitle .t { display: block; }
-.ptitle .clear { margin-left: 0.5em; padding: 0 0.2em; }
+.ptitle .clear { margin-left: 0.35em; padding: 0 0.2em; }
+.ptitle.filters { display: flex; flex-wrap: wrap; column-gap: 1.6em; row-gap: 0.2em; }
 .ptitle .clear:hover { opacity: 0.55; }
 .ptitle .t + .d { display: block; margin-top: 0.6em; }
 
@@ -494,6 +495,14 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     return b;
   }
 
+  // Filters in the address: ?d=editorial,identity. Kept in the Info order,
+  // so the same set always has the same address.
+  const selectedFilters = search => (new URLSearchParams(search).get('d') || '').split(',').filter(k => discName[k]);
+  const filterHref = set => {
+    const keep = DISCIPLINES.map(([k]) => k).filter(k => set.includes(k));
+    return keep.length ? `?d=${keep.join(',')}` : './';
+  };
+
   function renderWall(list) {
     const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
     let n = 0;
@@ -609,7 +618,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 
   function render() {
     const q = new URLSearchParams(location.search);
-    const d = q.get('d'), pr = q.get('p');
+    const pr = q.get('p');
+    const ds = selectedFilters(location.search);
     const p = bySlug[pr];
     main.replaceChildren();
     gallerySteps = null;
@@ -647,18 +657,28 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       }
     } else {
       let list = mixed;
-      if (d && discName[d]) { list = mixed.filter(it => bySlug[it.p].d.includes(d)); label = discName[d]; viewHref = `?d=${d}`; }
-      if (d && discName[d]) {
-        // The filter names itself at the top, with a cross that clears it:
-        // back to all the work, and the title goes with it.
-        const b = titleBlock(discName[d]);
-        const x = document.createElement('a');
-        x.href = './';
-        x.dataset.nav = '';
-        x.className = 'clear';
-        x.setAttribute('aria-label', `Clear the ${discName[d]} filter`);
-        x.textContent = '×';
-        b.querySelector('.t').append(x);
+      if (ds.length) {
+        // Several filters at once: work in any of them. They name themselves
+        // at the top, each with a cross that takes just that one away; the
+        // last one gone is all the work again, and the bar goes with it.
+        list = mixed.filter(it => bySlug[it.p].d.some(k => ds.includes(k)));
+        label = ds.map(k => discName[k]).join(' + ');
+        viewHref = filterHref(ds);
+        const b = document.createElement('p');
+        b.className = 'ptitle filters';
+        ds.forEach(k => {
+          const f = document.createElement('span');
+          f.className = 'f';
+          f.textContent = discName[k];
+          const x = document.createElement('a');
+          x.href = filterHref(ds.filter(o => o !== k));
+          x.dataset.nav = '';
+          x.className = 'clear';
+          x.setAttribute('aria-label', `Remove the ${discName[k]} filter`);
+          x.textContent = '×';
+          f.append(x);
+          b.append(f);
+        });
         main.append(b);
       }
       renderWall(list);
@@ -670,9 +690,16 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     viewEl.classList.toggle('is-home', label === 'Selected Works');
     viewEl.setAttribute('href', viewHref);
     document.title = label === 'Selected Works' ? 'Kirill Konstantinov' : `${label} | Kirill Konstantinov`;
-    document.querySelectorAll('.info a[data-nav]').forEach(a => {
+    // Info: each discipline toggles itself in or out of the current set
+    // (from a project, it starts a new one); All clears them.
+    document.querySelectorAll('#disciplines a[data-k]').forEach(a => {
+      const k = a.dataset.k, on = !p && ds.includes(k);
+      a.setAttribute('href', on ? filterHref(ds.filter(o => o !== k)) : filterHref([...(p ? [] : ds), k]));
+      on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('.info a[data-nav]:not([data-k])').forEach(a => {
       const h = a.getAttribute('href');
-      const here = h === './' ? !d && !p : h === `?p=${pr}` || h === `?d=${d}`;
+      const here = h === './' ? !ds.length && !p : h === `?p=${pr}`;
       here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     });
     measureHead();
@@ -683,7 +710,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // Info lists: disciplines and projects, each a filter link.
   const li = (href, text) => `<li><a href="${href}" data-nav>${text}</a></li>`;
   document.getElementById('disciplines').innerHTML =
-    li('./', 'All') + DISCIPLINES.map(([k, v]) => li(`?d=${k}`, v)).join('');
+    li('./', 'All') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
   document.getElementById('projects').innerHTML =
     projects.map(p => li(`?p=${p.slug}`, p.title)).join('');
 
