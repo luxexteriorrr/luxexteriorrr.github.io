@@ -270,6 +270,15 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .ptitle .t { display: block; }
 .ptitle .clear { margin-left: 0.35em; padding: 0 0.2em; }
 .ptitle.filters { display: flex; flex-wrap: wrap; column-gap: 1.6em; row-gap: 0.2em; }
+/* The filter bar stays to hand: sticky under the header, it slides away as
+   you scroll down into the work and comes back as soon as you scroll up.
+   Behind the header (z 5 < 10), so "away" tucks it up under it. */
+.ptitle.filters {
+  position: sticky; top: var(--head-h); z-index: 5;
+  max-width: none; background: var(--bg);
+  transition: transform var(--info-t) var(--ease);
+}
+.ptitle.filters.away { transform: translateY(calc(-100% - var(--head-h))); }
 .ptitle .clear:hover { opacity: 0.55; }
 .ptitle .t + .d { display: block; margin-top: 0.6em; }
 
@@ -932,6 +941,16 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
+
+  // Filter bar: away while scrolling down, back while scrolling up. A few
+  // pixels of slack so a trackpad's jitter does not flick it.
+  let lastY = scrollY;
+  addEventListener('scroll', () => {
+    const bar = main.querySelector('.ptitle.filters');
+    const y = scrollY, dy = y - lastY;
+    if (bar && Math.abs(dy) > 4) bar.classList.toggle('away', dy > 0 && y > bar.offsetHeight);
+    if (Math.abs(dy) > 4) lastY = y;
+  }, { passive: true });
 
   // Smooth wheel, same setting as the live index (lerp 0.12). It eases the
   // wheel into the native scroll, so sticky and touch are untouched. The Info
