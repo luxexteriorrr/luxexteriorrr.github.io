@@ -210,6 +210,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .info h2 { font: inherit; margin: 0 0 1.28em; }
 .info p, .info ul { margin: 0; padding: 0; list-style: none; }
 .info a:hover, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
+.info .ask { margin-top: 1.28em; }
 @media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
 
 /* The wall. Rows of a 4-column module, no gutters: plates touch, as on the
@@ -349,6 +350,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
        <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
        <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
        <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
+    <!-- As on the previous site: one link for both, since they are one ask.
+         Swap the mailto for the PDF once it exists. -->
+    <p class="ask"><a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
   </section>
 </section>
 
@@ -839,6 +843,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   }
   let shownProject = projectOf(location.search);
   const sameProject = search => !!shownProject && projectOf(search) === shownProject;
+  // Adding or dropping a filter is the same wall, refiltered: it switches in
+  // place, without the page transition.
+  const wallToWall = search => !shownProject && !projectOf(search);
 
   function go(href, replace = false) {
     const url = href === './' ? location.pathname : href;
@@ -854,7 +861,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     };
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
-    if (replace) swap();                                   // gallery steps
+    if (replace || wallToWall(new URL(url, location.href).search)) swap();   // gallery steps; filters
     else if (inPlace) inProject(closingRender, new URL(url, location.href).search);
     else transition(swap, goingUp(new URL(url, location.href).search));
   }
@@ -864,7 +871,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     e.preventDefault();
     go(a.getAttribute('href'));
   });
-  addEventListener('popstate', () => sameProject(location.search) ? inProject(render, location.search) : transition(render, goingUp(location.search)));
+  addEventListener('popstate', () => wallToWall(location.search) ? render()
+    : sameProject(location.search) ? inProject(render, location.search)
+    : transition(render, goingUp(location.search)));
 
   // Light / dark, in Info. The current mode is underlined. The choice is
   // remembered in this browser; with none stored the page follows the system.
