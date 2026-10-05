@@ -207,7 +207,12 @@ main { flex: 1; }
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
   // then carries `piece`, and the gallery names the piece, not the client.
-  const { projects, items, pieces = {} } = window.WORKS;
+  // A project marked hidden stays in the data but is left off the site:
+  // not on the wall, not in Info, and its address falls back to the wall.
+  const shown = new Set(window.WORKS.projects.filter(p => !p.hidden).map(p => p.slug));
+  const projects = window.WORKS.projects.filter(p => shown.has(p.slug));
+  const items = window.WORKS.items.filter(it => shown.has(it.p));
+  const pieces = window.WORKS.pieces || {};
   const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
   const DISCIPLINES = [
     ['editorial', 'Editorial Design'],

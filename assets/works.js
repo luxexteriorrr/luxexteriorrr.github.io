@@ -4,6 +4,7 @@
 // Zerko specimen plates 06–62 (SVG, plate: 1 = a plate, not a mark) added 5 Oct.
 // As Seen In spreads 09, 10, 27, 37 added 5 Oct.
 // sm / posterSm = a 1600px copy exists in export/1600/ (wall-sizes.mjs).
+// hidden: 1 = kept in the data, left off the site (AWW90s, 5 Oct).
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -100,7 +101,8 @@ window.WORKS = {
    "d": [
     "web"
    ],
-   "desc": "Site for an archive fashion store."
+   "desc": "Site for an archive fashion store.",
+   "hidden": 1
   }
  ],
  "pieces": {
@@ -277,6 +279,14 @@ window.WORKS = {
   },
   {
    "p": "zerko-grotesk",
+   "src": "zerko-grotesk-07.svg",
+   "w": 5625,
+   "h": 3165,
+   "alt": "WORLD CHAMPION in black capitals on pale grey, cropped past the edge.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
    "src": "zerko-grotesk-01.webp",
    "w": 5625,
    "h": 3750,
@@ -321,14 +331,6 @@ window.WORKS = {
    "w": 5625,
    "h": 3165,
    "alt": "Cyrillic capitals for world champion, set huge in black on blue and cropped past the edge.",
-   "plate": 1
-  },
-  {
-   "p": "zerko-grotesk",
-   "src": "zerko-grotesk-07.svg",
-   "w": 5625,
-   "h": 3165,
-   "alt": "WORLD CHAMPION in black capitals on pale grey, cropped past the edge.",
    "plate": 1
   },
   {
@@ -485,6 +487,13 @@ window.WORKS = {
   },
   {
    "p": "around-a-memory",
+   "src": "around-a-memory-01.svg",
+   "w": 2160,
+   "h": 100,
+   "alt": "COMFORT wordmark, drawn as a monoline outline."
+  },
+  {
+   "p": "around-a-memory",
    "src": "around-a-memory-30.webp",
    "w": 2048,
    "h": 1536,
@@ -526,13 +535,6 @@ window.WORKS = {
    "w": 1170,
    "h": 872,
    "alt": "The essay spread: a large blue Y drawn across the page against two columns of body text."
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-01.svg",
-   "w": 2160,
-   "h": 100,
-   "alt": "COMFORT wordmark, drawn as a monoline outline."
   },
   {
    "p": "jray",
