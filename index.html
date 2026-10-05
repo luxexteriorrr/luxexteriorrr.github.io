@@ -285,6 +285,7 @@ body { min-height: 100svh; display: flex; flex-direction: column; }
 main { flex: 1; }
 .page { flex: 1; display: flex; flex-direction: column; }
 .foot { padding: 4em var(--pad) var(--pad); }
+.foot p { margin: 0; max-width: 44em; opacity: 0.55; }
 .mode-gallery .foot { display: none; }
 </style>
 </head>
@@ -327,7 +328,8 @@ main { flex: 1; }
 <!-- Everything under the header: what Info pushes down. -->
 <div class="content" id="content">
 <main id="main" aria-label="Selected works"></main>
-<footer class="foot">&copy; 2026 Kirill Konstantinov</footer>
+<!-- Wording carried over from the previous site (floating-nav), dimmed as there. -->
+<footer class="foot"><p>&copy; 2026 Kirill Konstantinov. All work shown remains the property of the author and its respective clients. Images may not be reproduced without permission.</p></footer>
 </div>
 </div>
 
