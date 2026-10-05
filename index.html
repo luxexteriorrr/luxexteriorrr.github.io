@@ -659,6 +659,10 @@ main { flex: 1; }
   // A transition the browser skips (hidden tab, a second click mid-animation)
   // rejects its promises; the view still changes, so those are ignored.
   // `back` plays it in reverse (leaving a project for the wall or a filter).
+  // Scroll positions are ours to set (see inProject); the browser's own
+  // restoration on Back would land somewhere else first.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
   const transition = (swap, back = false) => {
     if (!document.startViewTransition || document.hidden) return swap();
     document.documentElement.classList.toggle('vt-back', back);
@@ -696,11 +700,32 @@ main { flex: 1; }
       if (el) el.style.viewTransitionName = '';
     });
   }
-  // Sheet -> plate, or plate -> sheet, within one project.
+  // Sheet -> plate, or plate -> sheet, within one project. `swap` only
+  // renders; the scroll is handled here, inside the transition, so the sheet
+  // is already where it should be when the browser captures it. Going in, the
+  // sheet's place is remembered; coming back, it is restored, and if the plate
+  // you stepped to has its thumbnail out of view, that thumbnail is centred.
+  // Otherwise the plate shrank towards a thumbnail off screen (5 Oct).
+  let sheetScroll = 0;
+  const scrollNow = y => window.lenis ? window.lenis.scrollTo(y, { immediate: true, force: true }) : scrollTo(0, y);
+  function bringIntoView(i) {
+    scrollNow(sheetScroll);
+    const t = thumb(i);
+    if (!t) return;
+    const r = t.getBoundingClientRect(), top = document.getElementById('head').offsetHeight;
+    if (r.top >= top && r.bottom <= innerHeight) return;
+    scrollNow(scrollY + r.top - (top + (innerHeight - top - r.height) / 2));
+  }
   function inProject(swap, search) {
     const next = indexOf(search);
-    if (next && !shownIndex) return zoom(swap, thumb(next), plate);
-    if (!next && shownIndex) { const back = shownIndex; return zoom(swap, plate(), () => thumb(back)); }
+    if (next && !shownIndex) {
+      sheetScroll = scrollY;
+      return zoom(() => { swap(); scrollNow(0); }, thumb(next), plate);
+    }
+    if (!next && shownIndex) {
+      const back = shownIndex;
+      return zoom(() => { swap(); bringIntoView(back); }, plate(), () => thumb(back));
+    }
     swap();
   }
   let shownProject = projectOf(location.search);
@@ -718,7 +743,7 @@ main { flex: 1; }
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
     if (replace) swap();                                   // gallery steps
-    else if (inPlace) inProject(swap, new URL(url, location.href).search);
+    else if (inPlace) inProject(render, new URL(url, location.href).search);
     else transition(swap, goingUp(new URL(url, location.href).search));
   }
   document.addEventListener('click', e => {
