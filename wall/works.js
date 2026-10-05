@@ -3,6 +3,7 @@
 // RADA Corsica artist posts (05–11) added 5 Oct.
 // Zerko specimen plates 06–62 (SVG, plate: 1 = a plate, not a mark) added 5 Oct.
 // As Seen In spreads 09, 10, 27, 37 added 5 Oct.
+// sm / posterSm = a 1600px copy exists in export/1600/ (wall-sizes.mjs).
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -136,7 +137,8 @@ window.WORKS = {
    "w": 3184,
    "h": 3934,
    "alt": "Pop-up poster for the Lilies of the Valley residency at WASTE, knit pattern in black on yellow, shown as the print sheet with its trim marks.",
-   "piece": "lotv-waste"
+   "piece": "lotv-waste",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -152,7 +154,8 @@ window.WORKS = {
    "w": 3900,
    "h": 2925,
    "alt": "The full shopfront with knitwear hung against the glass and the dates and web address set along the lower panes.",
-   "piece": "lotv-waste"
+   "piece": "lotv-waste",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -160,7 +163,8 @@ window.WORKS = {
    "w": 4572,
    "h": 5697,
    "alt": "Announcement for the Lilies of the Valley pop-up at APOC Paris, 24 Rue Chapon, 12–17 June: an octagonal frame ruled in red, white and blue.",
-   "piece": "lotv-apoc-paris"
+   "piece": "lotv-apoc-paris",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -168,7 +172,8 @@ window.WORKS = {
    "w": 3036,
    "h": 3898,
    "alt": "Lilies of the Valley campaign image for Toe Rag: a mannequin in a grey knitted top with peaked shoulders, wearing a black and cream Fair Isle headband trimmed with feathers.",
-   "piece": "lotv-toe-rag"
+   "piece": "lotv-toe-rag",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -176,7 +181,8 @@ window.WORKS = {
    "w": 3934,
    "h": 2950,
    "alt": "The campaign running as a full page in Toe Rag, opposite the paper's Recommendations listings for February to June 2026.",
-   "piece": "lotv-toe-rag"
+   "piece": "lotv-toe-rag",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -184,7 +190,8 @@ window.WORKS = {
    "w": 3120,
    "h": 3900,
    "alt": "Campaign frame: close crop of the black and cream Fair Isle headband, trimmed with feathers.",
-   "piece": "lotv-toe-rag"
+   "piece": "lotv-toe-rag",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -192,7 +199,8 @@ window.WORKS = {
    "w": 3120,
    "h": 3900,
    "alt": "Campaign frame: a black knitted cardigan with a ruffled shoulder, shot side on at full length.",
-   "piece": "lotv-toe-rag"
+   "piece": "lotv-toe-rag",
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -200,98 +208,112 @@ window.WORKS = {
    "w": 3120,
    "h": 3900,
    "alt": "Campaign frame: a camel V-neck over a black skirt, with a grey knitted cap.",
-   "piece": "lotv-toe-rag"
+   "piece": "lotv-toe-rag",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-03.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "Chapter 2 spread: a page of text on Cyrillic in the contemporary, facing a full character set of a Soviet-era face printed small in rows."
+   "alt": "Chapter 2 spread: a page of text on Cyrillic in the contemporary, facing a full character set of a Soviet-era face printed small in rows.",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-cover.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "The thesis cover: black uncoated stock, the title set small in white across the top, Royal College of Art along the bottom, and a small hand-drawn figure with its arms out alone in the middle of the field."
+   "alt": "The thesis cover: black uncoated stock, the title set small in white across the top, Royal College of Art along the bottom, and a small hand-drawn figure with its arms out alone in the middle of the field.",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-01.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "The introduction spread: justified text in the left column, and the research question set enormous and rotated up the right-hand page — how can the making of a Latin–Cyrillic rationalist grotesk family test script parity as a design condition?"
+   "alt": "The introduction spread: justified text in the left column, and the research question set enormous and rotated up the right-hand page — how can the making of a Latin–Cyrillic rationalist grotesk family test script parity as a design condition?",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-02.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "Plates of Cyrillic drawings: script exercises in pink and green on the left page, the same forms flooded in yellow on the right."
+   "alt": "Plates of Cyrillic drawings: script exercises in pink and green on the left page, the same forms flooded in yellow on the right.",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-04.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "Coverage spread: one paragraph on the Soviet precedent for coverage at scale, set three times in English, Russian and German, all in bold caps."
+   "alt": "Coverage spread: one paragraph on the Soviet precedent for coverage at scale, set three times in English, Russian and German, all in bold caps.",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-05.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "Reading the page: two dense text pages, the Latin on the left and the same passage in Cyrillic on the right, with the footnotes and running heads aligned."
+   "alt": "Reading the page: two dense text pages, the Latin on the left and the same passage in Cyrillic on the right, with the footnotes and running heads aligned.",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-06.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "Word list: Arête, Хребет, Hřeben, Höhenzug, Ґрунт set large down the left page, and the two-script spacing string nodosonndoso facing it."
+   "alt": "Word list: Arête, Хребет, Hřeben, Höhenzug, Ґрунт set large down the left page, and the two-script spacing string nodosonndoso facing it.",
+   "sm": 1
   },
   {
    "p": "zerko-thesis",
    "src": "zerko-thesis-mu-07.webp",
    "w": 2400,
    "h": 1600,
-   "alt": "Section 2.3, Sameness and Harmonisation: text on the left, and on the right a run of Д and the ИНПЦ module in Bold with pencil notes around them."
+   "alt": "Section 2.3, Sameness and Harmonisation: text on the left, and on the right a run of Д and the ИНПЦ module in Bold with pencil notes around them.",
+   "sm": 1
   },
   {
    "p": "zerko-grotesk",
    "src": "zerko-grotesk-01.webp",
    "w": 5625,
    "h": 3750,
-   "alt": "Фишер over Spassky, each name set in the other’s script, grey on yellow."
+   "alt": "Фишер over Spassky, each name set in the other’s script, grey on yellow.",
+   "sm": 1
   },
   {
    "p": "zerko-grotesk",
    "src": "zerko-grotesk-02.webp",
    "w": 5625,
    "h": 3750,
-   "alt": "The weight ladder: six names from the 1972 match in both scripts, Thin to Black, white on blue."
+   "alt": "The weight ladder: six names from the 1972 match in both scripts, Thin to Black, white on blue.",
+   "sm": 1
   },
   {
    "p": "zerko-grotesk",
    "src": "zerko-grotesk-03.webp",
    "w": 5625,
    "h": 3750,
-   "alt": "One paragraph on game three, in English and in Russian, grey on purple."
+   "alt": "One paragraph on game three, in English and in Russian, grey on purple.",
+   "sm": 1
   },
   {
    "p": "zerko-grotesk",
    "src": "zerko-grotesk-04.webp",
    "w": 5625,
    "h": 3750,
-   "alt": "The final score, 12½–8½, in yellow on red."
+   "alt": "The final score, 12½–8½, in yellow on red.",
+   "sm": 1
   },
   {
    "p": "zerko-grotesk",
    "src": "zerko-grotesk-05.webp",
    "w": 5625,
    "h": 3750,
-   "alt": "Reykjavík, Laugardalshöll, 11 July to 1 September 1972, 21 games, in both scripts, white on black."
+   "alt": "Reykjavík, Laugardalshöll, 11 July to 1 September 1972, 21 games, in both scripts, white on black.",
+   "sm": 1
   },
   {
    "p": "zerko-grotesk",
@@ -370,98 +392,112 @@ window.WORKS = {
    "src": "as-seen-in-09.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "Spread with the same carved stone relief twice: washed white on violet on the left, in its own ochre and rust on white on the right."
+   "alt": "Spread with the same carved stone relief twice: washed white on violet on the left, in its own ochre and rust on white on the right.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-10.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "Spread with a striped stone relief mirrored on its own reflection: the photograph on white, then washed out on pale blue."
+   "alt": "Spread with a striped stone relief mirrored on its own reflection: the photograph on white, then washed out on pale blue.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-27.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "Spread 52–53: two tall strips of a layered grey and ochre landscape, and two columns of text with words picked out in pink and blue."
+   "alt": "Spread 52–53: two tall strips of a layered grey and ochre landscape, and two columns of text with words picked out in pink and blue.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-37.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page."
+   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-59.webp",
    "w": 2362,
    "h": 3071,
-   "alt": "Full-bleed aerial page from As Seen In."
+   "alt": "Full-bleed aerial page from As Seen In.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-05.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "Spread from As Seen In."
+   "alt": "Spread from As Seen In.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-58.webp",
    "w": 3071,
    "h": 2362,
-   "alt": "USER INTERFACE ADDRESS CITY CLOUD EARTH, set large in blue on magenta."
+   "alt": "USER INTERFACE ADDRESS CITY CLOUD EARTH, set large in blue on magenta.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-60.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "INTERACTION INTERFACE DATA set as a row of chevron forms."
+   "alt": "INTERACTION INTERFACE DATA set as a row of chevron forms.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-14.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "A row of seven stone images across a spread."
+   "alt": "A row of seven stone images across a spread.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-61.webp",
    "w": 2362,
    "h": 3071,
-   "alt": "The loop mark drawn as overlapping letterforms."
+   "alt": "The loop mark drawn as overlapping letterforms.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-62.webp",
    "w": 3461,
    "h": 3461,
-   "alt": "Sedimented strata, pale, with a red seam."
+   "alt": "Sedimented strata, pale, with a red seam.",
+   "sm": 1
   },
   {
    "p": "as-seen-in",
    "src": "as-seen-in-67.webp",
    "w": 3461,
    "h": 3461,
-   "alt": "Aerial fields in ochre and blue."
+   "alt": "Aerial fields in ochre and blue.",
+   "sm": 1
   },
   {
    "p": "around-a-memory",
    "src": "around-a-memory-30.webp",
    "w": 2048,
    "h": 1536,
-   "alt": "Around A Memory as an object: a saddle-stitched booklet in dusty pink, the COMFORT wordmark printed small on the cover, staples visible at the spine."
+   "alt": "Around A Memory as an object: a saddle-stitched booklet in dusty pink, the COMFORT wordmark printed small on the cover, staples visible at the spine.",
+   "sm": 1
   },
   {
    "p": "around-a-memory",
    "src": "around-a-memory-31.webp",
    "w": 2048,
    "h": 1536,
-   "alt": "The booklet opened: the pink cover against a translucent interior page carrying a large ghosted letterform and the line TRY PUTTING YOUR ARMS AROUND THIS."
+   "alt": "The booklet opened: the pink cover against a translucent interior page carrying a large ghosted letterform and the line TRY PUTTING YOUR ARMS AROUND THIS.",
+   "sm": 1
   },
   {
    "p": "around-a-memory",
@@ -503,7 +539,8 @@ window.WORKS = {
    "src": "jray-01.webp",
    "w": 1206,
    "h": 2622,
-   "alt": "Drenched by JRAY playing, sleeve shown on a phone."
+   "alt": "Drenched by JRAY playing, sleeve shown on a phone.",
+   "sm": 1
   },
   {
    "p": "jray",
@@ -532,7 +569,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "RADA Birthday Bash poster.",
-   "piece": "rada-birthday-bash"
+   "piece": "rada-birthday-bash",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -540,7 +578,8 @@ window.WORKS = {
    "w": 5636,
    "h": 7014,
    "alt": "RADA Birthday Bash poster.",
-   "piece": "rada-birthday-bash"
+   "piece": "rada-birthday-bash",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -548,7 +587,8 @@ window.WORKS = {
    "w": 4961,
    "h": 7016,
    "alt": "RADA Corsica poster.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -556,7 +596,8 @@ window.WORKS = {
    "w": 4032,
    "h": 3024,
    "alt": "Three posters flyposted over a billboard.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -564,7 +605,8 @@ window.WORKS = {
    "w": 4032,
    "h": 3024,
    "alt": "The poster flyposted in a row over a cosmetics billboard, with graffiti below.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -572,7 +614,8 @@ window.WORKS = {
    "w": 3508,
    "h": 4961,
    "alt": "RADA Corsica poster.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -580,7 +623,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Social post for RADA Sunburn at Corsica Studios announcing Yoshiko.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -588,7 +632,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Social post for RADA Sunburn at Corsica Studios announcing Lolalita.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -596,7 +641,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Social post for RADA Sunburn at Corsica Studios announcing Dogheadsurigeri.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -604,7 +650,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Social post for RADA Sunburn at Corsica Studios announcing The Twins.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -612,7 +659,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Social post for RADA Sunburn at Corsica Studios announcing Pew Two!.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -620,7 +668,8 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Social post for RADA Sunburn at Corsica Studios announcing Alterum.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "rada",
@@ -628,14 +677,16 @@ window.WORKS = {
    "w": 4500,
    "h": 5625,
    "alt": "Open-call post for RADA Sunburn at Corsica Studios: YOUR NAME! — play your set, over a blurred pink crowd.",
-   "piece": "rada-corsica"
+   "piece": "rada-corsica",
+   "sm": 1
   },
   {
    "p": "vestige",
    "src": "vestige-01.webp",
    "w": 2000,
    "h": 1090,
-   "alt": "The Vestige page: a centred column of capitals running over a live video of a pond on Hampstead Heath, the letters inverted where they cross the water."
+   "alt": "The Vestige page: a centred column of capitals running over a live video of a pond on Hampstead Heath, the letters inverted where they cross the water.",
+   "sm": 1
   },
   {
    "p": "sentra",
@@ -643,14 +694,16 @@ window.WORKS = {
    "w": 1440,
    "h": 2560,
    "video": 1,
-   "poster": "sentra-01-poster.webp"
+   "poster": "sentra-01-poster.webp",
+   "posterSm": 1
   },
   {
    "p": "sentra",
    "src": "sentra-05.webp",
    "w": 1620,
    "h": 2880,
-   "alt": "The wall full. Nine colours stacked edge to edge, and Sentra explaining that it started out as a small collective of designers and writers passionate about small press and artist books — an origin invented to match what it had just been told."
+   "alt": "The wall full. Nine colours stacked edge to edge, and Sentra explaining that it started out as a small collective of designers and writers passionate about small press and artist books — an origin invented to match what it had just been told.",
+   "sm": 1
   },
   {
    "p": "sentra",
@@ -658,42 +711,48 @@ window.WORKS = {
    "w": 1242,
    "h": 2208,
    "video": 1,
-   "poster": "sentra-03-poster.webp"
+   "poster": "sentra-03-poster.webp",
+   "posterSm": 1
   },
   {
    "p": "sentra",
    "src": "sentra-02.webp",
    "w": 1242,
    "h": 2208,
-   "alt": "The phone mid-session: timestamps in a left gutter, a purple square for You and orange for Sentra, and a reply that answers a mention of artist books by claiming a deep appreciation for such niche fields."
+   "alt": "The phone mid-session: timestamps in a left gutter, a purple square for You and orange for Sentra, and a reply that answers a mention of artist books by claiming a deep appreciation for such niche fields.",
+   "sm": 1
   },
   {
    "p": "sentra",
    "src": "sentra-04.webp",
    "w": 1242,
    "h": 2208,
-   "alt": "The opening screen: What is Sentra? — we could simply tell you, but it wouldn't make sense yet. Below it a notice warning against sharing anything personal, and the way in."
+   "alt": "The opening screen: What is Sentra? — we could simply tell you, but it wouldn't make sense yet. Below it a notice warning against sharing anything personal, and the way in.",
+   "sm": 1
   },
   {
    "p": "sentra",
    "src": "sentra-mu-02.webp",
    "w": 2400,
    "h": 1803,
-   "alt": "The A1 explainer poster, folded: What is Sentra? set large in orange on pink, and a short block of text low on the sheet describing a system that turns conversation into campaign and your disclosures into design."
+   "alt": "The A1 explainer poster, folded: What is Sentra? set large in orange on pink, and a short block of text low on the sheet describing a system that turns conversation into campaign and your disclosures into design.",
+   "sm": 1
   },
   {
    "p": "sentra",
    "src": "sentra-mu-03.webp",
    "w": 2400,
    "h": 1803,
-   "alt": "An invoice from Sentra Corp., folded. Session number, date and client code, usage terms set as an unreadable black block, and a subtotal and total with no figures against them."
+   "alt": "An invoice from Sentra Corp., folded. Session number, date and client code, usage terms set as an unreadable black block, and a subtotal and total with no figures against them.",
+   "sm": 1
   },
   {
    "p": "sentra",
    "src": "sentra-mu-01.webp",
    "w": 2400,
    "h": 1803,
-   "alt": "The session dossier, folded. The logged conversation runs down the left in colour-blocked type; the right-hand column is the system's reading of it — trust indicators, vulnerability markers, a data-extraction timeline, and an estimated lifetime value for the person who was talking."
+   "alt": "The session dossier, folded. The logged conversation runs down the left in colour-blocked type; the right-hand column is the system's reading of it — trust indicators, vulnerability markers, a data-extraction timeline, and an estimated lifetime value for the person who was talking.",
+   "sm": 1
   },
   {
    "p": "aww90s",
@@ -701,14 +760,16 @@ window.WORKS = {
    "w": 2880,
    "h": 1800,
    "video": 1,
-   "poster": "aww90s-01-poster.webp"
+   "poster": "aww90s-01-poster.webp",
+   "posterSm": 1
   },
   {
    "p": "aww90s",
    "src": "aww90s-02.webp",
    "w": 2880,
    "h": 1200,
-   "alt": "AWW90s homepage — archive pieces, type block and membership card."
+   "alt": "AWW90s homepage — archive pieces, type block and membership card.",
+   "sm": 1
   }
  ]
 };

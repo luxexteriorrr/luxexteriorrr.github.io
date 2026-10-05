@@ -262,18 +262,29 @@ main { flex: 1; }
 
   // One plate as an element: an image, or a video for the moving ones.
   // `still` gives the poster instead of the video (for the contact sheet).
-  function media(it, { eager = false, still = false } = {}) {
+  // `sizes` is how wide the plate shows (e.g. '25vw'): with it the browser
+  // takes the 1600px copy for a tile and the full plate when it fills the
+  // screen. Full-size plates decoded mid-scroll made the wall stutter.
+  const srcOf = (file, hasSm) => hasSm ? `${EXPORT}1600/${file}` : EXPORT + file;
+  function media(it, { eager = false, still = false, sizes = '100vw' } = {}) {
     const p = bySlug[it.p];
     if (it.video && !still) {
       const v = document.createElement('video');
-      Object.assign(v, { src: EXPORT + it.src, poster: EXPORT + it.poster, muted: true, loop: true, autoplay: true, playsInline: true });
+      Object.assign(v, { src: EXPORT + it.src, poster: srcOf(it.poster, it.posterSm), muted: true, loop: true, autoplay: true, playsInline: true, preload: 'metadata' });
       v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
       v.width = it.w; v.height = it.h;
       v.setAttribute('aria-label', p.title);
       return v;
     }
     const img = new Image(it.w, it.h);
-    img.src = EXPORT + (it.video ? it.poster : it.src);
+    const file = it.video ? it.poster : it.src, hasSm = it.video ? it.posterSm : it.sm;
+    img.src = EXPORT + file;
+    if (hasSm) {
+      // Each file's own pixel width: the copy is 1600 on its long edge.
+      const smW = it.w >= it.h ? 1600 : Math.round(1600 * it.w / it.h);
+      img.srcset = `${EXPORT}1600/${file} ${smW}w, ${EXPORT}${file} ${it.w}w`;
+      img.sizes = sizes;
+    }
     img.alt = it.alt || p.title;
     img.decoding = 'async';
     img.draggable = false;
@@ -297,7 +308,7 @@ main { flex: 1; }
         a.dataset.caption = wallCaption(it);
         a.style.gridColumn = `${start} / span ${s}`;
         if (isMark(it)) { a.classList.add('mark'); a.style.setProperty('--box', s >= 4 ? '4 / 1' : s >= 2 ? '2 / 1' : '1 / 1'); }
-        a.append(media(it, { eager: n++ < 4 }));
+        a.append(media(it, { eager: n++ < 4, sizes: `${Math.round(s / cols * 100)}vw` }));
         start += s;
         el.append(a);
       }
@@ -308,12 +319,14 @@ main { flex: 1; }
   function renderSheet(p, list) {
     const grid = document.createElement('div');
     grid.className = 'sheet';
+    const sheetCols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-cols')) || 4;
+    const sizes = `${Math.round(100 / sheetCols)}vw`;
     list.forEach((it, k) => {
       const a = document.createElement('a');
       a.href = `?p=${p.slug}&i=${k + 1}`;
       a.dataset.nav = '';
       if (isMark(it)) a.classList.add('mark');
-      a.append(media(it, { eager: true, still: true }));
+      a.append(media(it, { eager: true, still: true, sizes }));
       grid.append(a);
     });
     main.append(grid);
