@@ -525,7 +525,7 @@ window.WORKS = {
    "src": "rada-corsica-11.webp",
    "w": 4500,
    "h": 5625,
-   "alt": "Social post for RADA Sunburn at Corsica Studios announcing the raffle.",
+   "alt": "Open-call post for RADA Sunburn at Corsica Studios: YOUR NAME! — play your set, over a blurred pink crowd.",
    "piece": "rada-corsica"
   },
   {
