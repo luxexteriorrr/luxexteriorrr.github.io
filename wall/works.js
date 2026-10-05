@@ -1,5 +1,6 @@
 // Generated 5 Oct 2026 from index.html (plates, sizes, alt text, one-liners).
 // LOTV and RADA grouped by client (5 Oct): each plate keeps its piece, named in the gallery.
+// RADA Corsica artist posts (05–11) added 5 Oct.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -469,6 +470,62 @@ window.WORKS = {
    "w": 3508,
    "h": 4961,
    "alt": "RADA Corsica poster.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-05.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing Yoshiko.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-06.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing Lolalita.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-07.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing Dogheadsurigeri.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-08.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing The Twins.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-09.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing Pew Two!.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-10.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing Alterum.",
+   "piece": "rada-corsica"
+  },
+  {
+   "p": "rada",
+   "src": "rada-corsica-11.webp",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Social post for RADA Sunburn at Corsica Studios announcing the raffle.",
    "piece": "rada-corsica"
   },
   {

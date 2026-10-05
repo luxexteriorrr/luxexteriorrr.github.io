@@ -170,13 +170,6 @@
       "lossless": false
     },
     {
-      "src": "rada-corsica-04.webp",
-      "width": 4032,
-      "height": 3024,
-      "bytes": 1417138,
-      "lossless": false
-    },
-    {
       "src": "rada-corsica-02.webp",
       "width": 3508,
       "height": 4961,
@@ -189,6 +182,62 @@
       "height": 7016,
       "bytes": 518298,
       "lossless": false
+    },
+    {
+      "src": "rada-corsica-04.webp",
+      "width": 4032,
+      "height": 3024,
+      "bytes": 1417138,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-05.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 555132,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-06.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 506394,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-07.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 2854026,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-08.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 738330,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-09.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 2637030,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-10.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 1062436,
+      "lossless": false
+    },
+    {
+      "src": "rada-corsica-11.webp",
+      "width": 4500,
+      "height": 5625,
+      "bytes": 214844,
+      "lossless": true
     }
   ],
   "lotv-waste": [
