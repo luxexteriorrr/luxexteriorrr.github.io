@@ -496,6 +496,7 @@ main { flex: 1; }
       here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     });
     measureHead();
+    shownProject = p ? p.slug : null;
   }
 
   // Info lists: disciplines and projects, each a filter link.
@@ -540,8 +541,16 @@ main { flex: 1; }
     t.finished.catch(() => {});
   };
 
+  // Inside one project (contact sheet <-> one plate) the view changes in
+  // place, like stepping through the gallery: opening a plate is zooming in,
+  // not a new page. The page transition is kept for moving between pages.
+  const projectOf = search => new URLSearchParams(search).get('p');
+  let shownProject = projectOf(location.search);
+  const sameProject = search => !!shownProject && projectOf(search) === shownProject;
+
   function go(href, replace = false) {
     const url = href === './' ? location.pathname : href;
+    const inPlace = replace || sameProject(new URL(url, location.href).search);
     replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
     setInfo(false);
     const swap = () => {
@@ -550,7 +559,7 @@ main { flex: 1; }
     };
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
-    replace ? swap() : transition(swap);
+    inPlace ? swap() : transition(swap);
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
@@ -558,7 +567,7 @@ main { flex: 1; }
     e.preventDefault();
     go(a.getAttribute('href'));
   });
-  addEventListener('popstate', () => transition(render));
+  addEventListener('popstate', () => sameProject(location.search) ? render() : transition(render));
 
   // Light / dark, in Info. The current mode is underlined. The choice is
   // remembered in this browser; with none stored the page follows the system.
