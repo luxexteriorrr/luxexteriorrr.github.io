@@ -87,7 +87,9 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    (on a project the slot is capped to a reading measure and stops short). */
 .head .count, .head .count:empty + .info-toggle { margin-left: auto; }
 .head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
-.head .theme-toggle:hover, .head .info-toggle:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .info-toggle:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.info .theme { margin-top: 1.28em; }
+.info .theme button:hover, .info .theme button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
 @media (max-width: 700px) {
   .mode-wall .head .slot { display: none; }
   .mode-wall .head { justify-content: space-between; }
@@ -116,19 +118,24 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .content.pushed { transform: translateY(var(--info-h)); }
 @media (prefers-reduced-motion: reduce) { .info, .info.open, .content { transition: none; } }
 
-/* Page transition, after the Framer reference: the browser's View Transitions
-   API snapshots the old view and the new one and animates between them. The
-   old view fades out; the new one fades in with a short rise. The header has
+/* Page transition, taken from the Framer reference's own settings
+   (noravale.framer.website, global page effect, read from its code 5 Oct):
+   both views move at once over 1.5s on cubic-bezier(.76,0,.24,1).
+   Exit: the old view fades out, shrinks to 95% and drifts up 10%.
+   Enter: the new view rises from 10% below and is revealed by a hard-edged
+   wipe from the bottom up (their mask: wipe, angle 270, width 0%), no fade.
+   Built on the browser's View Transitions API, as Framer does. The header has
    its own name, so it holds still while the work changes under it. Browsers
-   without the API just switch, as before. */
+   without the API just switch. The gallery steps without it. */
 .head { view-transition-name: head; }
-/* Slowed 5 Oct (the first pass, 0.22s out / 0.45s in, was far too quick):
-   the old view takes half a second to go, the new one starts as it is half
-   gone and settles over most of a second, about 1.2s end to end. */
-@keyframes vt-out { to { opacity: 0; } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(24px); } }
-::view-transition-old(root) { animation: 0.5s ease-in both vt-out; }
-::view-transition-new(root) { animation: 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s both vt-in; }
+::view-transition { background: var(--bg); }
+@keyframes vt-exit { to { opacity: 0; transform: translateY(-10%) scale(0.95); } }
+@keyframes vt-enter {
+  from { transform: translateY(10%); clip-path: inset(100% 0 0 0); }
+  to   { transform: none; clip-path: inset(0 0 0 0); }
+}
+::view-transition-old(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-exit; }
+::view-transition-new(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-enter; }
 ::view-transition-group(head) { animation-duration: 0.6s; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
@@ -201,7 +208,12 @@ main { flex: 1; }
 <body class="mode-wall">
 
 <section class="info" id="info" inert data-lenis-prevent>
-  <p class="bio">Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
+  <div class="bio">
+  <p>Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
+    <!-- Light / dark: remembered in this browser; with no choice stored the
+         page follows the system setting. -->
+    <p class="theme"><button type="button" data-theme-set="light">Light</button> / <button type="button" data-theme-set="dark">Dark</button></p>
+  </div>
   <section>
     <h2>Practice</h2>
     <ul id="disciplines"></ul>
@@ -226,7 +238,6 @@ main { flex: 1; }
   <a href="./" class="view" data-nav id="view">Selected Works</a>
   <span class="slot" id="slot" aria-live="off"></span>
   <span class="count" id="count"></span>
-  <button type="button" class="theme-toggle" id="theme-toggle">Dark</button>
   <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
 </header>
 
@@ -532,10 +543,13 @@ main { flex: 1; }
     const url = href === './' ? location.pathname : href;
     replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
     setInfo(false);
-    transition(() => {
+    const swap = () => {
       render();
       if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
-    });
+    };
+    // Stepping through the gallery (replace) changes the plate in place, as
+    // before; only moving between views gets the page transition.
+    replace ? swap() : transition(swap);
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
@@ -545,22 +559,19 @@ main { flex: 1; }
   });
   addEventListener('popstate', () => transition(render));
 
-  // Light / dark. The button names the mode it switches to. The choice is
+  // Light / dark, in Info. The current mode is underlined. The choice is
   // remembered in this browser; with none stored the page follows the system.
-  const themeBtn = document.getElementById('theme-toggle');
   const sysDark = matchMedia('(prefers-color-scheme: dark)');
-  const isDark = () => (document.documentElement.dataset.theme || (sysDark.matches ? 'dark' : 'light')) === 'dark';
-  const labelTheme = () => { themeBtn.textContent = isDark() ? 'Light' : 'Dark'; themeBtn.setAttribute('aria-pressed', isDark()); };
-  themeBtn.addEventListener('click', () => {
-    const next = isDark() ? 'light' : 'dark';
-    transition(() => {
-      document.documentElement.dataset.theme = next;
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      labelTheme();
-    });
-  });
-  sysDark.addEventListener('change', labelTheme);
-  labelTheme();
+  const themeBtns = document.querySelectorAll('[data-theme-set]');
+  const currentTheme = () => document.documentElement.dataset.theme || (sysDark.matches ? 'dark' : 'light');
+  const markTheme = () => themeBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.themeSet === currentTheme()));
+  themeBtns.forEach(b => b.addEventListener('click', () => {
+    document.documentElement.dataset.theme = b.dataset.themeSet;
+    try { localStorage.setItem('theme', b.dataset.themeSet); } catch (e) {}
+    markTheme();
+  }));
+  sysDark.addEventListener('change', markTheme);
+  markTheme();
 
   addEventListener('keydown', e => {
     if (e.key === 'Escape') {
