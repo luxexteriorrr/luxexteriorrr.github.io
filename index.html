@@ -285,7 +285,10 @@ main { flex: 1; }
 
 <!-- Lenis 1.3.26, vendored, the same file the live index loads. -->
 <script src="assets/lenis.min.js"></script>
-<script src="assets/works.js"></script>
+<!-- The ?v= changes whenever works.js does, so a cached old copy is never
+     paired with a new page (5 Oct: phones kept the old file and the lettering
+     did not flip in dark mode). -->
+<script src="assets/works.js?v=2026-10-05b"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
