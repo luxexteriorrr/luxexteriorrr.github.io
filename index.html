@@ -143,6 +143,16 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 ::view-transition-old(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-exit; }
 ::view-transition-new(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-enter; }
 ::view-transition-group(head) { animation-duration: 0.6s; }
+/* Going back up (a project to the wall or a filter) runs it the other way:
+   the old view sinks and the new one comes down from above, wiped in from
+   the top. Same length and curve. */
+@keyframes vt-exit-back { to { transform: translateY(10%) scale(0.95); } }
+@keyframes vt-enter-back {
+  from { transform: translateY(-10%); clip-path: inset(0 0 100% 0); }
+  to   { transform: none; clip-path: inset(0 0 0 0); }
+}
+html.vt-back::view-transition-old(root) { animation-name: vt-exit-back; }
+html.vt-back::view-transition-new(root) { animation-name: vt-enter-back; }
 
 /* Contact sheet <-> one plate: the plate grows out of its thumbnail into the
    gallery (and shrinks back into it), while the rest of the view crossfades.
@@ -559,12 +569,16 @@ main { flex: 1; }
   // has one (Chrome, Safari); elsewhere it just switches.
   // A transition the browser skips (hidden tab, a second click mid-animation)
   // rejects its promises; the view still changes, so those are ignored.
-  const transition = swap => {
+  // `back` plays it in reverse (leaving a project for the wall or a filter).
+  const transition = (swap, back = false) => {
     if (!document.startViewTransition || document.hidden) return swap();
+    document.documentElement.classList.toggle('vt-back', back);
     const t = document.startViewTransition(swap);
     t.ready.catch(() => {});
-    t.finished.catch(() => {});
+    t.finished.catch(() => {}).finally(() => document.documentElement.classList.remove('vt-back'));
   };
+  // Leaving a project for a wall view (all, or a filter) is going back up.
+  const goingUp = search => !!shownProject && !projectOf(search);
 
   // Inside one project (contact sheet <-> one plate) the view changes in
   // place, like stepping through the gallery: opening a plate is zooming in,
@@ -616,7 +630,7 @@ main { flex: 1; }
     // before; only moving between views gets the page transition.
     if (replace) swap();                                   // gallery steps
     else if (inPlace) inProject(swap, new URL(url, location.href).search);
-    else transition(swap);
+    else transition(swap, goingUp(new URL(url, location.href).search));
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
@@ -624,7 +638,7 @@ main { flex: 1; }
     e.preventDefault();
     go(a.getAttribute('href'));
   });
-  addEventListener('popstate', () => sameProject(location.search) ? inProject(render, location.search) : transition(render));
+  addEventListener('popstate', () => sameProject(location.search) ? inProject(render, location.search) : transition(render, goingUp(location.search)));
 
   // Light / dark, in Info. The current mode is underlined. The choice is
   // remembered in this browser; with none stored the page follows the system.
