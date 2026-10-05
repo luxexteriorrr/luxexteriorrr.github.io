@@ -78,17 +78,26 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   .mode-project .head .slot { order: 9; flex-basis: 100%; }
 }
 
-/* Info drops down under the header: one sentence, the filters, contact. */
+/* Info, as Ohlman's "agency services": the panel waits above the top edge,
+   and opening it slides the whole page down by the panel's height while the
+   panel comes down into the room that leaves. Nothing is covered; the work is
+   pushed, not overlaid. Half a second, as on the reference. Works from any
+   scroll position, since the push is a transform on the page, not a margin. */
 .info {
-  position: fixed; inset: var(--head-h) 0 auto 0; z-index: 9;
-  max-height: calc(100vh - var(--head-h)); overflow: auto;
+  position: fixed; inset: 0 0 auto 0; z-index: 20;
+  max-height: 100svh; overflow: auto;
   overscroll-behavior: contain; scrollbar-width: none;
   background: var(--bg);
-  border-bottom: 1px solid var(--fg);
-  padding: var(--pad);
+  padding: 12px var(--pad) calc(2 * var(--pad));
   display: grid; grid-template-columns: 2fr 1fr 1.4fr 1fr; gap: 2em;
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform 0.5s ease, visibility 0s linear 0.5s;
 }
-.info[hidden] { display: none; }
+.info.open { transform: none; visibility: visible; transition: transform 0.5s ease; }
+.page { transition: transform 0.5s ease; }
+.page.pushed { transform: translateY(var(--info-h)); }
+@media (prefers-reduced-motion: reduce) { .info, .info.open, .page { transition: none; } }
 .info h2 { font: inherit; margin: 0 0 1.28em; }
 .info p, .info ul { margin: 0; padding: 0; list-style: none; }
 .info a:hover, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
@@ -144,21 +153,14 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    sheet of four), and after the plates on a long one. */
 body { min-height: 100svh; display: flex; flex-direction: column; }
 main { flex: 1; }
+.page { flex: 1; display: flex; flex-direction: column; }
 .foot { padding: 4em var(--pad) var(--pad); }
 .mode-gallery .foot { display: none; }
 </style>
 </head>
 <body class="mode-wall">
 
-<header class="head" id="head">
-  <a href="./" data-nav>Kirill Konstantinov</a>
-  <a href="./" class="view" data-nav id="view">Selected Works</a>
-  <span class="slot" id="slot" aria-live="off"></span>
-  <span class="count" id="count"></span>
-  <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
-</header>
-
-<section class="info" id="info" hidden data-lenis-prevent>
+<section class="info" id="info" inert data-lenis-prevent>
   <p class="bio">Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
   <section>
     <h2>Practice</h2>
@@ -178,8 +180,19 @@ main { flex: 1; }
   </section>
 </section>
 
+<!-- Everything Info pushes down when it opens. -->
+<div class="page" id="page">
+<header class="head" id="head">
+  <a href="./" data-nav>Kirill Konstantinov</a>
+  <a href="./" class="view" data-nav id="view">Selected Works</a>
+  <span class="slot" id="slot" aria-live="off"></span>
+  <span class="count" id="count"></span>
+  <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
+</header>
+
 <main id="main" aria-label="Selected works"></main>
 <footer class="foot">&copy; 2026 Kirill Konstantinov</footer>
+</div>
 
 <!-- Lenis 1.3.26, vendored, the same file the live index loads. -->
 <script src="../assets/lenis.min.js"></script>
@@ -433,8 +446,25 @@ main { flex: 1; }
 
   const toggle = document.querySelector('.info-toggle');
   const info = document.getElementById('info');
-  const setInfo = open => { info.hidden = !open; toggle.setAttribute('aria-expanded', open); };
-  toggle.addEventListener('click', () => setInfo(info.hidden));
+  const page = document.getElementById('page');
+  let infoOpen = false;
+  const setInfo = open => {
+    infoOpen = open;
+    // The page moves down by exactly the panel's height (capped at a screen).
+    document.documentElement.style.setProperty('--info-h', Math.min(info.scrollHeight, innerHeight) + 'px');
+    info.classList.toggle('open', open);
+    page.classList.toggle('pushed', open);
+    info.inert = !open;
+    toggle.setAttribute('aria-expanded', open);
+  };
+  toggle.addEventListener('click', () => setInfo(!infoOpen));
+  // While Info is open, a click anywhere on the pushed-down page closes it
+  // rather than opening a plate underneath.
+  page.addEventListener('click', e => {
+    if (!infoOpen || e.target.closest('.info-toggle')) return;
+    e.preventDefault(); e.stopPropagation();
+    setInfo(false);
+  }, true);
 
   // Links change the URL without a reload. Stepping through the gallery
   // replaces the history entry, so Back leaves the gallery in one press.
@@ -455,7 +485,7 @@ main { flex: 1; }
 
   addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-      if (!info.hidden) return setInfo(false);
+      if (infoOpen) return setInfo(false);
       const q = new URLSearchParams(location.search);
       if (q.get('i') && bySlug[q.get('p')] && items.filter(it => it.p === q.get('p')).length > 1) go(`?p=${q.get('p')}`);
     }
