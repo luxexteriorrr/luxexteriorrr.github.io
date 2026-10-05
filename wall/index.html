@@ -174,7 +174,9 @@ main { flex: 1; }
 <script src="works.js"></script>
 <script>
 (() => {
-  const { projects, items } = window.WORKS;
+  // A project can be a client (LOTV, RADA) holding several pieces; a plate
+  // then carries `piece`, and the gallery names the piece, not the client.
+  const { projects, items, pieces = {} } = window.WORKS;
   const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
   const DISCIPLINES = [
     ['editorial', 'Editorial Design'],
@@ -240,6 +242,9 @@ main { flex: 1; }
   const count = document.getElementById('count');
   const viewEl = document.getElementById('view');
   const caption = p => p.meta ? `${p.title}, ${p.meta}` : p.title;
+  // What a plate is: its piece if it has one, otherwise its project.
+  const about = it => pieces[it.piece] || bySlug[it.p];
+  const wallCaption = it => it.piece ? `${bySlug[it.p].title}, ${caption(pieces[it.piece])}` : caption(bySlug[it.p]);
 
   // One plate as an element: an image, or a video for the moving ones.
   // `still` gives the poster instead of the video (for the contact sheet).
@@ -275,7 +280,7 @@ main { flex: 1; }
         a.className = 'cell';
         a.href = `?p=${it.p}`;
         a.dataset.nav = '';
-        a.dataset.caption = caption(bySlug[it.p]);
+        a.dataset.caption = wallCaption(it);
         a.style.gridColumn = `${start} / span ${s}`;
         if (isMark(it)) { a.classList.add('mark'); a.style.setProperty('--box', s >= 4 ? '4 / 1' : s >= 2 ? '2 / 1' : '1 / 1'); }
         a.append(media(it, { eager: n++ < 4 }));
@@ -326,10 +331,11 @@ main { flex: 1; }
       [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
     }
     main.append(g);
-    if (p.desc) {
+    const desc = about(it).desc;
+    if (desc) {
       const d = document.createElement('p');
       d.className = 'gdesc';
-      d.textContent = p.desc;
+      d.textContent = desc;
       main.append(d);
     }
   }
@@ -357,11 +363,13 @@ main { flex: 1; }
       mode = 'project';
       if (i) {
         renderGallery(p, list, i);
-        slot.textContent = p.meta;
-        if (p.desc) {
+        // A grouped project names the piece this plate belongs to.
+        const it = list[i - 1], a = about(it);
+        slot.textContent = it.piece ? caption(a) : a.meta;
+        if (a.desc) {
           const d = document.createElement('span');
           d.className = 'd';
-          d.textContent = `. ${p.desc}`;
+          d.textContent = `. ${a.desc}`;
           slot.append(d);
         }
         if (list.length > 1) count.textContent = `${pad2(i)}/${pad2(list.length)}`;

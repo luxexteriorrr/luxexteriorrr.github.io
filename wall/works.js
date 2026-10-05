@@ -1,15 +1,17 @@
-// Generated 5 Oct 2026 from index.html (plates, sizes, alt text, one-liners). Disciplines are provisional.
+// Generated 5 Oct 2026 from index.html (plates, sizes, alt text, one-liners).
+// LOTV and RADA grouped by client (5 Oct): each plate keeps its piece, named in the gallery.
+// Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
   {
-   "slug": "lotv-waste",
-   "title": "LILIESOFTHEVALLEY WASTE! SPACE Pop-Up",
-   "meta": "Signage, 2026",
+   "slug": "lotv",
+   "title": "LILIESOFTHEVALLEY",
+   "meta": "Identity, signage and art direction, 2025–2026",
    "d": [
     "identity",
     "art-direction"
    ],
-   "desc": "Store and window design for the Lilies of the Valley pop-up at WASTE, London, with printed material for the workshop."
+   "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter."
   },
   {
    "slug": "zerko-thesis",
@@ -60,40 +62,13 @@ window.WORKS = {
    "desc": "Sleeve for Drenched by JRAY."
   },
   {
-   "slug": "rada-birthday-bash",
-   "title": "RADA Birthday Bash at Peckham Audio",
-   "meta": "Poster, 2025",
+   "slug": "rada",
+   "title": "RADA",
+   "meta": "Posters and social media, 2025",
    "d": [
     "graphic-design"
    ],
-   "desc": "Poster for the RADA birthday party at Peckham Audio."
-  },
-  {
-   "slug": "rada-corsica",
-   "title": "RADA at Corsica Studios",
-   "meta": "Poster and social media, 2025",
-   "d": [
-    "graphic-design"
-   ],
-   "desc": "Poster and social media for a trance, techno and hardcore night at Corsica Studios, flyposted across south London."
-  },
-  {
-   "slug": "lotv-apoc-paris",
-   "title": "LILIESOFTHEVALLEY APOC Paris Pop-Up",
-   "meta": "Identity, 2025",
-   "d": [
-    "identity"
-   ],
-   "desc": "Poster and a mini identity for the Lilies of the Valley pop-up at APOC Store, Paris, with custom tags."
-  },
-  {
-   "slug": "lotv-toe-rag",
-   "title": "LILIESOFTHEVALLEY Toe Rag Newspaper Campaign",
-   "meta": "Art Direction, 2026",
-   "d": [
-    "art-direction"
-   ],
-   "desc": "Campaign for Lilies of the Valley, February 2026: Instagram and a full page in Toe Rag."
+   "desc": "Posters and social media for RADA club nights in south London."
   },
   {
    "slug": "vestige",
@@ -124,27 +99,105 @@ window.WORKS = {
    "desc": "Site for an archive fashion store."
   }
  ],
+ "pieces": {
+  "lotv-waste": {
+   "title": "WASTE! SPACE Pop-Up",
+   "meta": "Signage, 2026",
+   "desc": "Store and window design for the Lilies of the Valley pop-up at WASTE, London, with printed material for the workshop."
+  },
+  "lotv-apoc-paris": {
+   "title": "APOC Paris Pop-Up",
+   "meta": "Identity, 2025",
+   "desc": "Poster and a mini identity for the Lilies of the Valley pop-up at APOC Store, Paris, with custom tags."
+  },
+  "lotv-toe-rag": {
+   "title": "Toe Rag Newspaper Campaign",
+   "meta": "Art Direction, 2026",
+   "desc": "Campaign for Lilies of the Valley, February 2026: Instagram and a full page in Toe Rag."
+  },
+  "rada-birthday-bash": {
+   "title": "Birthday Bash at Peckham Audio",
+   "meta": "Poster, 2025",
+   "desc": "Poster for the RADA birthday party at Peckham Audio."
+  },
+  "rada-corsica": {
+   "title": "Corsica Studios",
+   "meta": "Poster and social media, 2025",
+   "desc": "Poster and social media for a trance, techno and hardcore night at Corsica Studios, flyposted across south London."
+  }
+ },
  "items": [
   {
-   "p": "lotv-waste",
+   "p": "lotv",
    "src": "lotv-waste-01.webp",
    "w": 3184,
    "h": 3934,
-   "alt": "Pop-up poster for the Lilies of the Valley residency at WASTE, knit pattern in black on yellow, shown as the print sheet with its trim marks."
+   "alt": "Pop-up poster for the Lilies of the Valley residency at WASTE, knit pattern in black on yellow, shown as the print sheet with its trim marks.",
+   "piece": "lotv-waste"
   },
   {
-   "p": "lotv-waste",
+   "p": "lotv",
    "src": "lotv-waste-cover.svg",
    "w": 929,
    "h": 304,
-   "alt": "MACRAMÉ WORKSHOP set in striped display lettering."
+   "alt": "MACRAMÉ WORKSHOP set in striped display lettering.",
+   "piece": "lotv-waste"
   },
   {
-   "p": "lotv-waste",
+   "p": "lotv",
    "src": "lotv-waste-05.webp",
    "w": 3900,
    "h": 2925,
-   "alt": "The full shopfront with knitwear hung against the glass and the dates and web address set along the lower panes."
+   "alt": "The full shopfront with knitwear hung against the glass and the dates and web address set along the lower panes.",
+   "piece": "lotv-waste"
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-apoc-paris-01.webp",
+   "w": 4572,
+   "h": 5697,
+   "alt": "Announcement for the Lilies of the Valley pop-up at APOC Paris, 24 Rue Chapon, 12–17 June: an octagonal frame ruled in red, white and blue.",
+   "piece": "lotv-apoc-paris"
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-toe-rag-01.webp",
+   "w": 3036,
+   "h": 3898,
+   "alt": "Lilies of the Valley campaign image for Toe Rag: a mannequin in a grey knitted top with peaked shoulders, wearing a black and cream Fair Isle headband trimmed with feathers.",
+   "piece": "lotv-toe-rag"
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-toe-rag-02.webp",
+   "w": 3934,
+   "h": 2950,
+   "alt": "The campaign running as a full page in Toe Rag, opposite the paper's Recommendations listings for February to June 2026.",
+   "piece": "lotv-toe-rag"
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-toe-rag-03.webp",
+   "w": 3120,
+   "h": 3900,
+   "alt": "Campaign frame: close crop of the black and cream Fair Isle headband, trimmed with feathers.",
+   "piece": "lotv-toe-rag"
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-toe-rag-04.webp",
+   "w": 3120,
+   "h": 3900,
+   "alt": "Campaign frame: a black knitted cardigan with a ruffled shoulder, shot side on at full length.",
+   "piece": "lotv-toe-rag"
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-toe-rag-05.webp",
+   "w": 3120,
+   "h": 3900,
+   "alt": "Campaign frame: a camel V-neck over a black skirt, with a grey knitted cap.",
+   "piece": "lotv-toe-rag"
   },
   {
    "p": "zerko-thesis",
@@ -371,88 +424,52 @@ window.WORKS = {
    "alt": "The JRAY mark, drawn as a single continuous outline."
   },
   {
-   "p": "rada-birthday-bash",
+   "p": "rada",
    "src": "rada-birthday-bash-01.webp",
    "w": 4500,
    "h": 5625,
-   "alt": "RADA Birthday Bash poster."
+   "alt": "RADA Birthday Bash poster.",
+   "piece": "rada-birthday-bash"
   },
   {
-   "p": "rada-birthday-bash",
+   "p": "rada",
    "src": "rada-birthday-bash-02.webp",
    "w": 5636,
    "h": 7014,
-   "alt": "RADA Birthday Bash poster."
+   "alt": "RADA Birthday Bash poster.",
+   "piece": "rada-birthday-bash"
   },
   {
-   "p": "rada-corsica",
+   "p": "rada",
    "src": "rada-corsica-03.webp",
    "w": 4961,
    "h": 7016,
-   "alt": "RADA Corsica poster."
+   "alt": "RADA Corsica poster.",
+   "piece": "rada-corsica"
   },
   {
-   "p": "rada-corsica",
+   "p": "rada",
    "src": "rada-corsica-01.webp",
    "w": 4032,
    "h": 3024,
-   "alt": "Three posters flyposted over a billboard."
+   "alt": "Three posters flyposted over a billboard.",
+   "piece": "rada-corsica"
   },
   {
-   "p": "rada-corsica",
+   "p": "rada",
    "src": "rada-corsica-04.webp",
    "w": 4032,
    "h": 3024,
-   "alt": "The poster flyposted in a row over a cosmetics billboard, with graffiti below."
+   "alt": "The poster flyposted in a row over a cosmetics billboard, with graffiti below.",
+   "piece": "rada-corsica"
   },
   {
-   "p": "rada-corsica",
+   "p": "rada",
    "src": "rada-corsica-02.webp",
    "w": 3508,
    "h": 4961,
-   "alt": "RADA Corsica poster."
-  },
-  {
-   "p": "lotv-apoc-paris",
-   "src": "lotv-apoc-paris-01.webp",
-   "w": 4572,
-   "h": 5697,
-   "alt": "Announcement for the Lilies of the Valley pop-up at APOC Paris, 24 Rue Chapon, 12–17 June: an octagonal frame ruled in red, white and blue."
-  },
-  {
-   "p": "lotv-toe-rag",
-   "src": "lotv-toe-rag-01.webp",
-   "w": 3036,
-   "h": 3898,
-   "alt": "Lilies of the Valley campaign image for Toe Rag: a mannequin in a grey knitted top with peaked shoulders, wearing a black and cream Fair Isle headband trimmed with feathers."
-  },
-  {
-   "p": "lotv-toe-rag",
-   "src": "lotv-toe-rag-02.webp",
-   "w": 3934,
-   "h": 2950,
-   "alt": "The campaign running as a full page in Toe Rag, opposite the paper's Recommendations listings for February to June 2026."
-  },
-  {
-   "p": "lotv-toe-rag",
-   "src": "lotv-toe-rag-03.webp",
-   "w": 3120,
-   "h": 3900,
-   "alt": "Campaign frame: close crop of the black and cream Fair Isle headband, trimmed with feathers."
-  },
-  {
-   "p": "lotv-toe-rag",
-   "src": "lotv-toe-rag-04.webp",
-   "w": 3120,
-   "h": 3900,
-   "alt": "Campaign frame: a black knitted cardigan with a ruffled shoulder, shot side on at full length."
-  },
-  {
-   "p": "lotv-toe-rag",
-   "src": "lotv-toe-rag-05.webp",
-   "w": 3120,
-   "h": 3900,
-   "alt": "Campaign frame: a camel V-neck over a black skirt, with a grey knitted cap."
+   "alt": "RADA Corsica poster.",
+   "piece": "rada-corsica"
   },
   {
    "p": "vestige",
