@@ -204,7 +204,9 @@ main { flex: 1; }
   }
 
   const ar = it => it.w / it.h;
-  const isMark = it => it.src.endsWith('.svg');
+  // An SVG is a mark (wordmark, lettering) unless flagged as a plate: the
+  // Zerko specimen plates are full-bleed SVGs and show like any image.
+  const isMark = it => it.src.endsWith('.svg') && !it.plate;
   const pad2 = n => String(n).padStart(2, '0');
 
   // Span in quarters of the width. Each shape has a set of allowed sizes and

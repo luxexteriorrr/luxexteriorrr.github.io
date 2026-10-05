@@ -1,6 +1,7 @@
 // Generated 5 Oct 2026 from index.html (plates, sizes, alt text, one-liners).
 // LOTV and RADA grouped by client (5 Oct): each plate keeps its piece, named in the gallery.
 // RADA Corsica artist posts (05–11) added 5 Oct.
+// Zerko specimen plates 06–62 (SVG, plate: 1 = a plate, not a mark) added 5 Oct.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -290,6 +291,78 @@ window.WORKS = {
    "w": 5625,
    "h": 3750,
    "alt": "Reykjavík, Laugardalshöll, 11 July to 1 September 1972, 21 games, in both scripts, white on black."
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-06.svg",
+   "w": 5625,
+   "h": 3165,
+   "alt": "Cyrillic capitals for world champion, set huge in black on blue and cropped past the edge.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-07.svg",
+   "w": 5625,
+   "h": 3165,
+   "alt": "WORLD CHAMPION in black capitals on pale grey, cropped past the edge.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-15.svg",
+   "w": 5625,
+   "h": 3165,
+   "alt": "Матч, Match, “1972” in yellow on red, the Russian above the English.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-20.svg",
+   "w": 5625,
+   "h": 3750,
+   "alt": "The moves of game six, Fischer–Spassky, in Russian and English notation side by side.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-23.svg",
+   "w": 4500,
+   "h": 5625,
+   "alt": "Six chess openings, each in Russian over English, centred on yellow.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-31.svg",
+   "w": 5625,
+   "h": 5625,
+   "alt": "Reykjavík, Laugardalshöll, Iceland: each name in Russian bold over English light, on yellow.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-33.svg",
+   "w": 5625,
+   "h": 3165,
+   "alt": "REYKJAVÍK 1972 in black capitals on pale grey, cropped past the edge.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-59.svg",
+   "w": 5625,
+   "h": 3165,
+   "alt": "ЛЕНИН 1937 in white capitals on black, cropped past the edge.",
+   "plate": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-62.svg",
+   "w": 5625,
+   "h": 5625,
+   "alt": "Lowercase a to h and the figures 1 to 8 in the Regular, on pale grey.",
+   "plate": 1
   },
   {
    "p": "as-seen-in",
