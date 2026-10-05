@@ -31,6 +31,7 @@
   --cols: 4;
   --sheet-cols: 4;
   --head-h: 40px;           /* measured from the header in the script */
+  --gcap-h: 34px;           /* the gallery's caption line on a phone */
 }
 @media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
 
@@ -110,7 +111,12 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   .mode-wall .head .slot { display: none; }
   /* Contact sheet tighter on a phone: two across, a 4px inset instead of the
      page margin, so the plates are bigger and read as one set. */
-  body .sheet a { padding: 4px; }   /* body: wins over the base rule further down */
+  /* Rows as tall as their tallest plate rather than square cells, which left
+     a landscape plate floating in 50px of air above and below. Tall plates
+     are capped at 70vw so a poster does not take the screen. */
+  body .sheet a { padding: 4px; aspect-ratio: auto; container-type: normal; display: flex; align-items: center; justify-content: center; }
+  body .sheet img { width: auto; height: auto; max-width: 100%; max-height: 70vw; }
+  body .sheet .mark img { width: 100%; }
 }
 /* No label on the main wall: there it only said "Selected Works", which the
    page already is. Filters and projects keep theirs, it names where you are. */
@@ -241,6 +247,21 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
    and took the plate's room, so there it moves under the plate, one scroll
    down, and the header keeps object and year only. */
 .gdesc { display: none; margin: 0; padding: 0 var(--pad) calc(2 * var(--pad)); max-width: 44em; }
+/* Gallery caption on a phone (trial, 5 Oct): project and piece on the left,
+   the counter on the right, under the plate like a label, and the header
+   drops to name and Info. One line, so the plate's room is fixed. Desktop
+   keeps the caption in the header. */
+.gcap { display: none; }
+@media (max-width: 700px) {
+  .mode-gallery .head .view, .mode-gallery .head .slot, .mode-gallery .head .count { display: none; }
+  .mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-h)); }
+  .gcap {
+    display: flex; align-items: center; gap: 1em;
+    height: var(--gcap-h); padding: 0 var(--pad);
+  }
+  .gcap .t { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
+}
 @media (max-width: 700px) {
   .head .slot .d { display: none; }
   .gdesc { display: block; }
@@ -484,6 +505,26 @@ main { flex: 1; }
       [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
     }
     main.append(g);
+
+    // The phone caption line: project (back to its sheet), piece or object
+    // and year, and the counter.
+    const cap = document.createElement('div');
+    cap.className = 'gcap';
+    const t = document.createElement('span');
+    t.className = 't';
+    const back = document.createElement('a');
+    back.href = `?p=${p.slug}`;
+    back.dataset.nav = '';
+    back.textContent = p.title;
+    t.append(back, `, ${it.piece ? caption(pieces[it.piece]) : p.meta}`);
+    cap.append(t);
+    if (list.length > 1) {
+      const n = document.createElement('span');
+      n.textContent = `${pad2(i)}/${pad2(list.length)}`;
+      cap.append(n);
+    }
+    main.append(cap);
+
     const desc = about(it).desc;
     if (desc) {
       const d = document.createElement('p');
