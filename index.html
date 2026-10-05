@@ -138,6 +138,18 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 ::view-transition-old(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-exit; }
 ::view-transition-new(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-enter; }
 ::view-transition-group(head) { animation-duration: 0.6s; }
+
+/* Contact sheet <-> one plate: the plate grows out of its thumbnail into the
+   gallery (and shrinks back into it), while the rest of the view crossfades.
+   The clicked plate carries the name "plate" in both views, so the browser
+   morphs one into the other; object-fit keeps it from stretching between the
+   square cell and the plate's own shape. */
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+html.vt-zoom::view-transition-old(root) { animation: 0.35s ease both vt-fade-out; }
+html.vt-zoom::view-transition-new(root) { animation: 0.5s ease 0.2s both vt-fade-in; }
+::view-transition-group(plate) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1); }
+::view-transition-old(plate), ::view-transition-new(plate) { height: 100%; object-fit: contain; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
@@ -497,6 +509,7 @@ main { flex: 1; }
     });
     measureHead();
     shownProject = p ? p.slug : null;
+    shownIndex = p ? indexOf(location.search) && Math.min(indexOf(location.search), items.filter(it => it.p === p.slug).length) || (items.filter(it => it.p === p.slug).length === 1 ? 1 : 0) : 0;
   }
 
   // Info lists: disciplines and projects, each a filter link.
@@ -545,6 +558,36 @@ main { flex: 1; }
   // place, like stepping through the gallery: opening a plate is zooming in,
   // not a new page. The page transition is kept for moving between pages.
   const projectOf = search => new URLSearchParams(search).get('p');
+  const indexOf = search => parseInt(new URLSearchParams(search).get('i')) || 0;
+  let shownIndex = indexOf(location.search);
+  const thumb = i => document.querySelector(`.sheet a:nth-child(${i}) img`);
+  const plate = () => document.querySelector('.gallery > img, .gallery > video');
+
+  // The thumbnail-to-plate morph. `from` is the element now on screen, `to`
+  // finds its counterpart once the new view is rendered.
+  function zoom(swap, from, to) {
+    if (!document.startViewTransition || document.hidden || !from) return swap();
+    from.style.viewTransitionName = 'plate';
+    document.documentElement.classList.add('vt-zoom');
+    const t = document.startViewTransition(() => {
+      swap();
+      const el = to();
+      if (el) el.style.viewTransitionName = 'plate';
+    });
+    t.ready.catch(() => {});
+    t.finished.catch(() => {}).finally(() => {
+      document.documentElement.classList.remove('vt-zoom');
+      const el = to();
+      if (el) el.style.viewTransitionName = '';
+    });
+  }
+  // Sheet -> plate, or plate -> sheet, within one project.
+  function inProject(swap, search) {
+    const next = indexOf(search);
+    if (next && !shownIndex) return zoom(swap, thumb(next), plate);
+    if (!next && shownIndex) { const back = shownIndex; return zoom(swap, plate(), () => thumb(back)); }
+    swap();
+  }
   let shownProject = projectOf(location.search);
   const sameProject = search => !!shownProject && projectOf(search) === shownProject;
 
@@ -559,7 +602,9 @@ main { flex: 1; }
     };
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
-    inPlace ? swap() : transition(swap);
+    if (replace) swap();                                   // gallery steps
+    else if (inPlace) inProject(swap, new URL(url, location.href).search);
+    else transition(swap);
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
@@ -567,7 +612,7 @@ main { flex: 1; }
     e.preventDefault();
     go(a.getAttribute('href'));
   });
-  addEventListener('popstate', () => sameProject(location.search) ? render() : transition(render));
+  addEventListener('popstate', () => sameProject(location.search) ? inProject(render, location.search) : transition(render));
 
   // Light / dark, in Info. The current mode is underlined. The choice is
   // remembered in this browser; with none stored the page follows the system.
