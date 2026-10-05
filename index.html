@@ -7,6 +7,9 @@
 <meta name="description" content="Kirill Konstantinov is a graphic designer based in London, working in editorial, identity and type.">
 <link rel="preload" href="assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/zerko.css">
+<!-- Theme chosen with the toggle, applied before first paint so the page does
+     not flash the other colours. No choice stored = follow the system. -->
+<script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <!-- The homepage since 5 Oct 2026 (was the image-wall trial at /wall/), after Ohlman Consorti: every plate from every
      project on one mixed wall, a 4-column module with quarter / half / full
      widths, marks at the same weight as photographs. The URL is the filter:
@@ -36,8 +39,11 @@
    Values from the reference: #111 ground, #f7f7f7 text. */
 :root { color-scheme: light dark; --mark-ground: transparent; }
 @media (prefers-color-scheme: dark) {
-  :root { --fg: #f7f7f7; --bg: #111; --mark-ground: #f7f7f7; }
+  :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; --mark-ground: #f7f7f7; }
 }
+/* The header toggle overrides the system either way. */
+:root[data-theme="dark"] { color-scheme: dark; --fg: #f7f7f7; --bg: #111; --mark-ground: #f7f7f7; }
+:root[data-theme="light"] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -81,6 +87,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    (on a project the slot is capped to a reading measure and stops short). */
 .head .count, .head .count:empty + .info-toggle { margin-left: auto; }
 .head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .theme-toggle:hover, .head .info-toggle:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 @media (max-width: 700px) {
   .mode-wall .head .slot { display: none; }
   .mode-wall .head { justify-content: space-between; }
@@ -115,11 +122,14 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    its own name, so it holds still while the work changes under it. Browsers
    without the API just switch, as before. */
 .head { view-transition-name: head; }
+/* Slowed 5 Oct (the first pass, 0.22s out / 0.45s in, was far too quick):
+   the old view takes half a second to go, the new one starts as it is half
+   gone and settles over most of a second, about 1.2s end to end. */
 @keyframes vt-out { to { opacity: 0; } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(14px); } }
-::view-transition-old(root) { animation: 0.22s ease both vt-out; }
-::view-transition-new(root) { animation: 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) 0.08s both vt-in; }
-::view-transition-group(head) { animation-duration: 0.3s; }
+@keyframes vt-in { from { opacity: 0; transform: translateY(24px); } }
+::view-transition-old(root) { animation: 0.5s ease-in both vt-out; }
+::view-transition-new(root) { animation: 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s both vt-in; }
+::view-transition-group(head) { animation-duration: 0.6s; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
@@ -216,6 +226,7 @@ main { flex: 1; }
   <a href="./" class="view" data-nav id="view">Selected Works</a>
   <span class="slot" id="slot" aria-live="off"></span>
   <span class="count" id="count"></span>
+  <button type="button" class="theme-toggle" id="theme-toggle">Dark</button>
   <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
 </header>
 
@@ -533,6 +544,23 @@ main { flex: 1; }
     go(a.getAttribute('href'));
   });
   addEventListener('popstate', () => transition(render));
+
+  // Light / dark. The button names the mode it switches to. The choice is
+  // remembered in this browser; with none stored the page follows the system.
+  const themeBtn = document.getElementById('theme-toggle');
+  const sysDark = matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () => (document.documentElement.dataset.theme || (sysDark.matches ? 'dark' : 'light')) === 'dark';
+  const labelTheme = () => { themeBtn.textContent = isDark() ? 'Light' : 'Dark'; themeBtn.setAttribute('aria-pressed', isDark()); };
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    transition(() => {
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      labelTheme();
+    });
+  });
+  sysDark.addEventListener('change', labelTheme);
+  labelTheme();
 
   addEventListener('keydown', e => {
     if (e.key === 'Escape') {
