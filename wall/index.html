@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kirill Konstantinov</title>
+<meta name="description" content="Kirill Konstantinov is a graphic designer based in London, working in editorial, identity and type.">
+<link rel="preload" href="../assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/fonts/zerko.css">
+<!-- Image-wall trial (5 Oct 2026), after Ohlman Consorti: every plate from every
+     project on one mixed wall, a 4-column module with quarter / half / full
+     widths, marks at the same weight as photographs. The URL is the filter:
+     ?d=editorial for a discipline, ?p=as-seen-in for a project, so an
+     application can link straight to the view that fits the studio. -->
+<style>
+:root {
+  --fg: #111;
+  --bg: #fff;
+  --size: 13px;
+  --lead: 1.28;
+  --track: 0.022em;
+  --pad: 14px;
+  --head: 40px;
+  --cols: 4;
+}
+@media (max-width: 700px) { :root { --size: 12px; --cols: 2; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+::selection { background: transparent; color: #e6007e; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+body {
+  font-family: 'Zerko', sans-serif;
+  font-size: var(--size);
+  line-height: var(--lead);
+  letter-spacing: var(--track);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* Header: name, the view you are in, the plate under the cursor, Info. */
+.head {
+  position: fixed; inset: 0 0 auto 0; z-index: 10;
+  height: var(--head);
+  display: flex; align-items: center; gap: 2em;
+  padding: 0 var(--pad);
+  background: var(--bg);
+  border-bottom: 1px solid var(--fg);
+}
+.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .hover { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+@media (max-width: 700px) { .head .hover { display: none; } .head { justify-content: space-between; } }
+
+/* Info drops down under the header: one sentence, the filters, contact. */
+.info {
+  position: fixed; inset: var(--head) 0 auto 0; z-index: 9;
+  max-height: calc(100vh - var(--head)); overflow: auto;
+  background: var(--bg);
+  border-bottom: 1px solid var(--fg);
+  padding: var(--pad);
+  display: grid; grid-template-columns: 2fr 1fr 1.4fr 1fr; gap: 2em;
+}
+.info[hidden] { display: none; }
+.info h2 { font: inherit; margin: 0 0 1.28em; }
+.info p, .info ul { margin: 0; padding: 0; list-style: none; }
+.info a:hover, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
+@media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
+
+/* The wall. Rows of a 4-column module, no gutters: plates touch, as on the
+   reference. A row that does not fill leaves its gap as white space. */
+.wall { padding-top: var(--head); }
+.row { display: grid; grid-template-columns: repeat(var(--cols), 1fr); align-items: start; }
+.cell { display: block; position: relative; }
+.cell img, .cell video { display: block; width: 100%; height: auto; }
+/* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
+   wordmark does not become a thin strip across the screen. */
+.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; }
+.cell.mark img { width: 100%; height: 100%; object-fit: contain; }
+
+.foot { padding: 4em var(--pad) var(--pad); }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <a href="./" data-nav>Kirill Konstantinov</a>
+  <a href="./" class="view" data-nav id="view">Selected Works</a>
+  <span class="hover" id="hover" aria-live="off"></span>
+  <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
+</header>
+
+<section class="info" id="info" hidden>
+  <p class="bio">Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
+  <section>
+    <h2>Practice</h2>
+    <ul id="disciplines"></ul>
+  </section>
+  <section>
+    <h2>Selected Works</h2>
+    <ul id="projects"></ul>
+  </section>
+  <section>
+    <h2>Contact</h2>
+    <p><a href="mailto:lux.exteriorrr@gmail.com">Mail</a><br>
+       <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">Instagram</a><br>
+       <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
+       <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
+       <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
+  </section>
+</section>
+
+<main class="wall" id="wall" aria-label="Selected works"></main>
+<footer class="foot">&copy; 2026 Kirill Konstantinov</footer>
+
+<script src="works.js"></script>
+<script>
+(() => {
+  const { projects, items } = window.WORKS;
+  const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
+  const DISCIPLINES = [
+    ['editorial', 'Editorial Design'],
+    ['art-direction', 'Art Direction'],
+    ['identity', 'Identity'],
+    ['type', 'Type Design'],
+    ['graphic-design', 'Graphic Design'],
+    ['web', 'Web'],
+  ];
+  const discName = Object.fromEntries(DISCIPLINES);
+
+  // Mixed order: round-robin across projects so neighbours come from
+  // different work, with a seeded shuffle of each round so it does not read
+  // as a pattern. Same seed every load, so the wall is stable and can be tuned.
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const queues = projects.map(p => items.filter(i => i.p === p.slug));
+  const mixed = [];
+  let last = null;
+  while (queues.some(q => q.length)) {
+    const round = queues.filter(q => q.length).sort(() => rand() - 0.5);
+    if (round.length > 1 && round[0][0].p === last) round.push(round.shift());
+    for (const q of round) { const it = q.shift(); mixed.push(it); last = it.p; }
+  }
+
+  const ar = it => it.w / it.h;
+  const isMark = it => it.src.endsWith('.svg');
+
+  // Span in quarters of the width. Each shape has a set of allowed sizes and
+  // the wall cycles through them, so the rhythm varies without being random.
+  let turn = 0;
+  function span(it, cols) {
+    const a = ar(it);
+    let opts;
+    if (isMark(it)) opts = a > 4 ? [4, 2] : [2, 1];
+    else if (a >= 1.25) opts = [4, 2, 4, 2, 2];
+    else if (a >= 0.8) opts = [2, 1, 2];
+    else opts = [2, 1, 2, 1, 1];
+    const s = opts[turn++ % opts.length];
+    // On a phone (2 columns): quarters become halves, halves and fulls go full.
+    return cols === 2 ? (s >= 2 ? 2 : 1) : s;
+  }
+
+  // Pack into rows. A row closes when the next plate does not fit; whatever
+  // is left becomes white space, sometimes before the plates, sometimes after.
+  function pack(list, cols) {
+    turn = 0;
+    const rows = [];
+    let row = [], used = 0;
+    for (const it of list) {
+      const s = span(it, cols);
+      if (used + s > cols && row.length) { rows.push({ row, used }); row = []; used = 0; }
+      row.push({ it, s }); used += s;
+    }
+    if (row.length) rows.push({ row, used });
+    return rows;
+  }
+
+  const wall = document.getElementById('wall');
+  const hover = document.getElementById('hover');
+  const caption = it => { const p = bySlug[it.p]; return p.meta ? `${p.title}, ${p.meta}` : p.title; };
+
+  function cell(it, s, eager) {
+    const p = bySlug[it.p];
+    const a = document.createElement('a');
+    a.className = 'cell';
+    a.href = `?p=${it.p}`;
+    a.dataset.nav = '';
+    a.dataset.caption = caption(it);
+    a.style.gridColumn = `span ${s}`;
+    if (it.video) {
+      const v = document.createElement('video');
+      Object.assign(v, { src: '../export/' + it.src, poster: '../export/' + it.poster, muted: true, loop: true, autoplay: true, playsInline: true });
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.width = it.w; v.height = it.h;
+      v.setAttribute('aria-label', p.title);
+      a.append(v);
+    } else {
+      const img = new Image(it.w, it.h);
+      img.src = '../export/' + it.src;
+      img.alt = it.alt || p.title;
+      img.decoding = 'async';
+      if (!eager) img.loading = 'lazy';
+      if (isMark(it)) { a.classList.add('mark'); a.style.setProperty('--box', s >= 4 ? '4 / 1' : s >= 2 ? '2 / 1' : '1 / 1'); }
+      a.append(img);
+    }
+    return a;
+  }
+
+  function render() {
+    const q = new URLSearchParams(location.search);
+    const d = q.get('d'), pr = q.get('p');
+    let list = mixed, label = 'Selected Works';
+    if (pr && bySlug[pr]) { list = mixed.filter(i => i.p === pr); label = bySlug[pr].title; }
+    else if (d && discName[d]) { list = mixed.filter(i => bySlug[i.p].d.includes(d)); label = discName[d]; }
+
+    const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
+    wall.replaceChildren();
+    let n = 0;
+    pack(list, cols).forEach(({ row, used }, r) => {
+      const el = document.createElement('div');
+      el.className = 'row';
+      // Leftover columns: alternate between leading and trailing white space.
+      let start = used < cols && r % 2 ? cols - used + 1 : 1;
+      for (const { it, s } of row) {
+        const c = cell(it, s, n++ < 4);
+        c.style.gridColumn = `${start} / span ${s}`;
+        start += s;
+        el.append(c);
+      }
+      wall.append(el);
+    });
+
+    document.getElementById('view').textContent = label;
+    document.title = label === 'Selected Works' ? 'Kirill Konstantinov' : `${label} | Kirill Konstantinov`;
+    document.querySelectorAll('.info a[href^="?"], .info a[href="./"]').forEach(a => {
+      const here = (a.getAttribute('href') === './' && !d && !pr) || a.getAttribute('href') === location.search;
+      here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+    });
+  }
+
+  // Info lists: disciplines and projects, each a filter link.
+  const li = (href, text) => `<li><a href="${href}" data-nav>${text}</a></li>`;
+  document.getElementById('disciplines').innerHTML =
+    li('./', 'All') + DISCIPLINES.map(([k, v]) => li(`?d=${k}`, v)).join('');
+  document.getElementById('projects').innerHTML =
+    projects.map(p => li(`?p=${p.slug}`, p.title)).join('');
+
+  const toggle = document.querySelector('.info-toggle');
+  const info = document.getElementById('info');
+  const setInfo = open => { info.hidden = !open; toggle.setAttribute('aria-expanded', open); };
+  toggle.addEventListener('click', () => setInfo(info.hidden));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setInfo(false); });
+
+  // Filter links change the URL without a reload.
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-nav]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    history.pushState(null, '', a.getAttribute('href') === './' ? location.pathname : a.getAttribute('href'));
+    setInfo(false);
+    render();
+    scrollTo(0, 0);
+  });
+  addEventListener('popstate', render);
+
+  // The plate under the cursor names itself in the header.
+  wall.addEventListener('mouseover', e => { const c = e.target.closest('.cell'); hover.textContent = c ? c.dataset.caption : ''; });
+  wall.addEventListener('mouseleave', () => { hover.textContent = ''; });
+
+  // Re-pack when the column count changes (4 on a desk, 2 on a phone).
+  matchMedia('(max-width: 700px)').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>
