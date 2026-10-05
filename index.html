@@ -886,7 +886,16 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
     if (replace) swap();                                   // gallery steps
-    else if (wallToWall(new URL(url, location.href).search)) transition(swap, false, 'filter');
+    else if (wallToWall(new URL(url, location.href).search)) {
+      // A filter picked in Info: Info simply slides up on its own curve and
+      // the refiltered wall is already there underneath. From the bar (Info
+      // shut), the short crossfade.
+      if (infoOpen) {
+        render();
+        if (window.lenis) window.lenis.scrollTo(0, { immediate: true }); else scrollTo(0, 0);
+        setInfo(false);
+      } else transition(swap, false, 'filter');
+    }
     else if (inPlace) inProject(closingRender, new URL(url, location.href).search);
     else transition(swap, goingUp(new URL(url, location.href).search));
   }
