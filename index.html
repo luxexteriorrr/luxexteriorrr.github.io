@@ -256,40 +256,38 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .gallery.single { cursor: default; }
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .gallery .mark { width: 100%; height: auto; max-height: 100%; }
-/* The one line: in the header on a desk. On a phone it wrapped to five lines
-   and took the plate's room, so there it moves under the plate, one scroll
-   down, and the header keeps object and year only. */
-.gdesc { display: none; margin: 0; padding: 0 var(--pad) calc(2 * var(--pad)); max-width: 44em; }
-/* Gallery caption on a phone (trial, 5 Oct): project and piece on the left,
-   the counter on the right, under the plate like a label, and the header
-   drops to name and Info. One line, so the plate's room is fixed. Desktop
-   keeps the caption in the header. */
-.gcap { display: none; }
-@media (max-width: 700px) {
-  .mode-gallery .head .view, .mode-gallery .head .slot, .mode-gallery .head .count { display: none; }
-  .mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-h)); }
-  .gcap {
-    display: flex; align-items: center; gap: 1em;
-    height: var(--gcap-h); padding: 0 var(--pad);
-  }
-  .gcap .t { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
+/* One system on every screen (5 Oct): the header is only name and Info.
+   What a page is about sits with the work: a title block above a filter or
+   a contact sheet, and a caption line under the plate in the gallery. (The
+   header's project, object/year, line and counter came out; the slot stays
+   for the hover caption on the wall, desk only.) */
+.head .view, .head .count { display: none; }
+.mode-project .head .slot { display: none; }
 
-  /* Contact sheet on a phone, the same way: header down to name and Info,
-     project and object/year on a line pinned to the bottom of the screen,
-     the one line of description after the plates. */
-  .mode-sheet .head .view, .mode-sheet .head .slot { display: none; }
-  /* The sheet opens with its caption: project, object and year, then the
-     description under it, read first and scrolled away. (Tried pinned to the
-     bottom first; a six-line description pinned took a sixth of the screen.) */
-  .sdesc { display: block; margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
-  .sdesc .t { display: block; margin-bottom: 0.6em; }
-}
-@media (min-width: 701px) { .sdesc { display: none; } }
-}
+/* Title block above a filter or a contact sheet: name, object and year,
+   then the description. Scrolls away with the page. */
+.ptitle { margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
+.ptitle .t { display: block; }
+.ptitle .t + .d { display: block; margin-top: 0.6em; }
+
+/* Gallery: the plate fills what is left of the screen above its caption.
+   Caption: project (back to its sheet), piece or object and year, and on a
+   desk the description; the counter on the right. */
+.mode-gallery main { display: flex; flex-direction: column; height: calc(100svh - var(--head-h)); min-height: 0; }
+.mode-gallery .gallery { flex: 1; min-height: 0; height: auto; }
+.gcap { display: flex; align-items: baseline; gap: 2em; padding: 0 var(--pad) 12px; }
+.gcap .t { flex: 1; min-width: 0; max-width: 60em; }
+.gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
+.gdesc { display: none; }
 @media (max-width: 700px) {
-  .head .slot .d { display: none; }
-  .gdesc { display: block; }
+  /* Phone: one line, cut with an ellipsis, so the plate's room is fixed; the
+     description goes one scroll down instead (.gdesc). */
+  .mode-gallery main { height: auto; display: block; }
+  .mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-h)); }
+  .gcap { align-items: center; gap: 1em; height: var(--gcap-h); padding: 0 var(--pad); }
+  .gcap .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gcap .d { display: none; }
+  .gdesc { display: block; margin: 0; padding: 0 var(--pad) calc(2 * var(--pad)); max-width: 44em; }
 }
 
 /* The footer sits at the bottom of the window on a short page (a contact
@@ -473,6 +471,23 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     return img;
   }
 
+  // Title block above a filter or a contact sheet.
+  function titleBlock(title, desc) {
+    const b = document.createElement('p');
+    b.className = 'ptitle';
+    const t = document.createElement('span');
+    t.className = 't';
+    t.textContent = title;
+    b.append(t);
+    if (desc) {
+      const d = document.createElement('span');
+      d.className = 'd';
+      d.textContent = desc;
+      b.append(d);
+    }
+    return b;
+  }
+
   function renderWall(list) {
     const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
     let n = 0;
@@ -510,16 +525,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       a.append(media(it, { eager: true, still: true, sizes }));
       grid.append(a);
     });
-    // Phone only (hidden on a desk): the sheet opens with project, object
-    // and year, and the description under them.
-    const d = document.createElement('p');
-    d.className = 'sdesc';
-    const t = document.createElement('span');
-    t.className = 't';
-    t.textContent = p.meta ? `${p.title}, ${p.meta}` : p.title;
-    d.append(t);
-    if (p.desc) d.append(p.desc);
-    main.append(d);
+    // The sheet opens with project, object and year, and the description.
+    main.append(titleBlock(p.meta ? `${p.title}, ${p.meta}` : p.title, p.desc));
     main.append(grid);
 
   }
@@ -562,6 +569,15 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     back.dataset.nav = '';
     back.textContent = p.title;
     t.append(back, `, ${it.piece ? caption(pieces[it.piece]) : p.meta}`);
+    // On a desk the description follows in the caption; on a phone it sits
+    // one scroll down (.gdesc) and this part is hidden.
+    const line = about(it).desc;
+    if (line) {
+      const dd = document.createElement('span');
+      dd.className = 'd';
+      dd.textContent = `. ${line}`;
+      t.append(dd);
+    }
     cap.append(t);
     if (list.length > 1) {
       const n = document.createElement('span');
@@ -622,6 +638,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     } else {
       let list = mixed;
       if (d && discName[d]) { list = mixed.filter(it => bySlug[it.p].d.includes(d)); label = discName[d]; viewHref = `?d=${d}`; }
+      if (d && discName[d]) main.append(titleBlock(discName[d]));
       renderWall(list);
       snapHeights();
       document.body.className = 'mode-wall';
