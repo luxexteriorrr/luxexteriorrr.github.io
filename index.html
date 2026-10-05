@@ -155,6 +155,14 @@ html.info-instant .info, html.info-instant .content { transition: none !importan
    its own name, so it holds still while the work changes under it. Browsers
    without the API just switch. The gallery steps without it. */
 .head { view-transition-name: head; }
+/* The header's own still layer during a transition also covers the strip
+   above it: on an iPhone the transition area reaches up under the status
+   bar, and the moving page showed through between it and the header (5 Oct).
+   Off screen the rest of the time (no overscroll bounce to reveal it). */
+.head::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 100%;
+  height: 160px; background: var(--bg); pointer-events: none;
+}
 ::view-transition { background: var(--bg); }
 /* Trial 5 Oct: exit without the fade (the reference fades to 0). */
 @keyframes vt-exit { to { transform: translateY(-10%) scale(0.95); } }
