@@ -143,6 +143,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .content { flex: 1; display: flex; flex-direction: column; transition: transform 0.5s ease; }
 .content.pushed { transform: translateY(var(--info-h)); }
 @media (prefers-reduced-motion: reduce) { .info, .info.open, .content { transition: none; } }
+html.info-instant .info, html.info-instant .content { transition: none !important; }
 
 /* Page transition, taken from the Framer reference's own settings
    (noravale.framer.website, global page effect, read from its code 5 Oct):
@@ -644,6 +645,13 @@ main { flex: 1; }
     toggle.setAttribute('aria-expanded', open);
   };
   toggle.addEventListener('click', () => setInfo(!infoOpen));
+  // Shut Info with no slide (for navigation, inside a page transition).
+  function closeInfoNow() {
+    if (!infoOpen) return;
+    document.documentElement.classList.add('info-instant');
+    setInfo(false);
+    setTimeout(() => document.documentElement.classList.remove('info-instant'), 80);
+  }
   // While Info is open, a click anywhere on the pushed-down work closes it
   // rather than opening a plate underneath.
   content.addEventListener('click', e => {
@@ -742,15 +750,18 @@ main { flex: 1; }
     const url = href === './' ? location.pathname : href;
     const inPlace = replace || sameProject(new URL(url, location.href).search);
     replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
-    setInfo(false);
+    // Info closes inside the swap, not before it: the page transition then
+    // starts from what is on screen (Info open) and ends on the new page with
+    // Info shut, instead of Info's own slide running under the wipe (5 Oct).
+    const closingRender = () => { closeInfoNow(); render(); };
     const swap = () => {
-      render();
+      closingRender();
       if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
     };
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
     if (replace) swap();                                   // gallery steps
-    else if (inPlace) inProject(render, new URL(url, location.href).search);
+    else if (inPlace) inProject(closingRender, new URL(url, location.href).search);
     else transition(swap, goingUp(new URL(url, location.href).search));
   }
   document.addEventListener('click', e => {
