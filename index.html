@@ -261,6 +261,22 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
   }
   .gcap .t { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
+
+  /* Contact sheet on a phone, the same way: header down to name and Info,
+     project and object/year on a line pinned to the bottom of the screen,
+     the one line of description after the plates. */
+  .mode-sheet .head .view, .mode-sheet .head .slot { display: none; }
+  .scap {
+    display: flex; align-items: center;
+    position: fixed; inset: auto 0 0 0; z-index: 8;
+    height: var(--gcap-h); padding: 0 var(--pad);
+    background: var(--bg);
+  }
+  .scap span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sdesc { display: block; margin: 0; padding: calc(2 * var(--pad)) var(--pad) 0; max-width: 44em; }
+  .mode-sheet .foot { padding-bottom: calc(var(--gcap-h) + var(--pad)); }
+}
+@media (min-width: 701px) { .scap, .sdesc { display: none; } }
 }
 @media (max-width: 700px) {
   .head .slot .d { display: none; }
@@ -477,6 +493,20 @@ main { flex: 1; }
       grid.append(a);
     });
     main.append(grid);
+
+    // Phone only (hidden on a desk): the pinned caption and the description.
+    const cap = document.createElement('div');
+    cap.className = 'scap';
+    const t = document.createElement('span');
+    t.textContent = p.meta ? `${p.title}, ${p.meta}` : p.title;
+    cap.append(t);
+    main.append(cap);
+    if (p.desc) {
+      const d = document.createElement('p');
+      d.className = 'sdesc';
+      d.textContent = p.desc;
+      main.append(d);
+    }
   }
 
   function renderGallery(p, list, i) {
@@ -571,7 +601,7 @@ main { flex: 1; }
       } else {
         renderSheet(p, list);
         slot.textContent = p.meta;
-        document.body.className = 'mode-project';
+        document.body.className = 'mode-project mode-sheet';
       }
     } else {
       let list = mixed;
