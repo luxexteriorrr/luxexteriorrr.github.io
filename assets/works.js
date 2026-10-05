@@ -7,6 +7,7 @@
 // hidden: 1 = kept in the data, left off the site (AWW90s, 5 Oct).
 // mono: 1 = pure black lettering, flipped to white in dark mode.
 // Vestige walk photocopies (02–07, from the site's calendar) added 5 Oct.
+// AWW90s (5 Oct): Kirill's own Figma design replaces the July-rebuild plates (01 video, 02); shown again.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -103,8 +104,7 @@ window.WORKS = {
    "d": [
     "web"
    ],
-   "desc": "Site for an archive fashion store.",
-   "hidden": 1
+   "desc": "Site for an archive fashion store."
   }
  ],
  "pieces": {
@@ -805,19 +805,66 @@ window.WORKS = {
   },
   {
    "p": "aww90s",
-   "src": "aww90s-01.mp4",
-   "w": 2880,
-   "h": 1800,
-   "video": 1,
-   "poster": "aww90s-01-poster.webp",
-   "posterSm": 1
+   "src": "aww90s-04.webp",
+   "w": 1290,
+   "h": 2796,
+   "alt": "The AWW home page on a phone: the red AWW mark, a gloved hand holding a lit stick reading vintage, SHOP THE LATEST SELECTION OF CLOTHING, and the icon bar along the bottom.",
+   "sm": 1
   },
   {
    "p": "aww90s",
-   "src": "aww90s-02.webp",
-   "w": 2880,
-   "h": 1200,
-   "alt": "AWW90s homepage — archive pieces, type block and membership card.",
+   "src": "aww90s-05.webp",
+   "w": 5184,
+   "h": 4338,
+   "alt": "A product page on desktop: a Comme des Garçons SS2004 knit top on the left half, the mono-set details and a black button on the right.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-06.webp",
+   "w": 1720,
+   "h": 3728,
+   "alt": "A product page on a phone: Prada S1996 mules from above, then name, price, size, description and an Add to cart button, with the icon bar below.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-07.webp",
+   "w": 3072,
+   "h": 4410,
+   "alt": "The same Prada product page on a tablet.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-03.webp",
+   "w": 7380,
+   "h": 3500,
+   "alt": "The product page at three widths, phone, tablet and desktop, side by side.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-08.webp",
+   "w": 1290,
+   "h": 2796,
+   "alt": "An editorial page on a phone: a portrait from the How To Be Cool As F*ck photo series, with its credits set centred in mono below.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-09.webp",
+   "w": 5184,
+   "h": 3351,
+   "alt": "An editorial page: a yellow smiley doughnut on black from the KingKong AW23 issue, credits centred below.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-10.webp",
+   "w": 5184,
+   "h": 3351,
+   "alt": "An editorial page: two women against a concrete wall from the KingKong AW23 issue, credits centred below.",
    "sm": 1
   }
  ]
