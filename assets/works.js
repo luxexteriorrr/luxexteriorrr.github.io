@@ -9,6 +9,7 @@
 // Vestige walk photocopies (02–07, from the site's calendar) added 5 Oct.
 // AWW90s (5 Oct): Kirill's own Figma design replaces the July-rebuild plates (01 video, 02); shown again.
 // link: a live address shown after the description (AWW90s: the client has since edited the site).
+// AWW90s entry page as a screen recording (17, 5 Oct), in place of the still entry (16).
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -811,11 +812,11 @@ window.WORKS = {
   },
   {
    "p": "aww90s",
-   "src": "aww90s-16.webp",
-   "w": 5184,
-   "h": 3351,
-   "alt": "The AWW entry screen: hands lighting a photo-booth strip with a lighter, STORE and WORKS set small in red.",
-   "sm": 1
+   "src": "aww90s-17.mp4",
+   "w": 1440,
+   "h": 930,
+   "video": 1,
+   "poster": "aww90s-17-poster.webp"
   },
   {
    "p": "aww90s",
