@@ -268,6 +268,8 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
    then the description. Scrolls away with the page. */
 .ptitle { margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
 .ptitle .t { display: block; }
+.ptitle .clear { margin-left: 0.5em; padding: 0 0.2em; }
+.ptitle .clear:hover { opacity: 0.55; }
 .ptitle .t + .d { display: block; margin-top: 0.6em; }
 
 /* Gallery: the plate fills what is left of the screen above its caption.
@@ -646,7 +648,19 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     } else {
       let list = mixed;
       if (d && discName[d]) { list = mixed.filter(it => bySlug[it.p].d.includes(d)); label = discName[d]; viewHref = `?d=${d}`; }
-      if (d && discName[d]) main.append(titleBlock(discName[d]));
+      if (d && discName[d]) {
+        // The filter names itself at the top, with a cross that clears it:
+        // back to all the work, and the title goes with it.
+        const b = titleBlock(discName[d]);
+        const x = document.createElement('a');
+        x.href = './';
+        x.dataset.nav = '';
+        x.className = 'clear';
+        x.setAttribute('aria-label', `Clear the ${discName[d]} filter`);
+        x.textContent = '×';
+        b.querySelector('.t').append(x);
+        main.append(b);
+      }
       renderWall(list);
       snapHeights();
       document.body.className = 'mode-wall';
