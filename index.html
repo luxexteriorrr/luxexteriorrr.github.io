@@ -187,6 +187,10 @@ html.info-instant .info, html.info-instant .content { transition: none !importan
 }
 html.vt-back::view-transition-old(root) { animation-name: vt-exit-back; }
 html.vt-back::view-transition-new(root) { animation-name: vt-enter-back; }
+/* Adding or dropping a filter is the same wall refiltered, so no wipe: a
+   short crossfade on the same curve. */
+html.vt-filter::view-transition-old(root) { animation: 0.45s var(--ease) both vt-fade-out; }
+html.vt-filter::view-transition-new(root) { animation: 0.45s var(--ease) both vt-fade-in; }
 
 /* Contact sheet <-> one plate: the plate grows out of its thumbnail into the
    gallery (and shrinks back into it), while the rest of the view crossfades.
@@ -769,12 +773,14 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // restoration on Back would land somewhere else first.
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-  const transition = (swap, back = false) => {
+  // `kind` picks a lighter treatment ('filter': a crossfade, see CSS).
+  const transition = (swap, back = false, kind = null) => {
     if (!document.startViewTransition || document.hidden) return swap();
     document.documentElement.classList.toggle('vt-back', back);
+    document.documentElement.classList.toggle('vt-filter', kind === 'filter');
     const t = document.startViewTransition(swap);
     t.ready.catch(() => {});
-    t.finished.catch(() => {}).finally(() => document.documentElement.classList.remove('vt-back'));
+    t.finished.catch(() => {}).finally(() => document.documentElement.classList.remove('vt-back', 'vt-filter'));
   };
   // Leaving a project for a wall view (all, or a filter) is going back up.
   const goingUp = search => !!shownProject && !projectOf(search);
@@ -861,7 +867,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     };
     // Stepping through the gallery (replace) changes the plate in place, as
     // before; only moving between views gets the page transition.
-    if (replace || wallToWall(new URL(url, location.href).search)) swap();   // gallery steps; filters
+    if (replace) swap();                                   // gallery steps
+    else if (wallToWall(new URL(url, location.href).search)) transition(swap, false, 'filter');
     else if (inPlace) inProject(closingRender, new URL(url, location.href).search);
     else transition(swap, goingUp(new URL(url, location.href).search));
   }
@@ -871,7 +878,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     e.preventDefault();
     go(a.getAttribute('href'));
   });
-  addEventListener('popstate', () => wallToWall(location.search) ? render()
+  addEventListener('popstate', () => wallToWall(location.search) ? transition(render, false, 'filter')
     : sameProject(location.search) ? inProject(render, location.search)
     : transition(render, goingUp(location.search)));
 
