@@ -1,4 +1,4 @@
-// Generated 5 Oct 2026 from index.html (plates, sizes, alt text). Disciplines are provisional.
+// Generated 5 Oct 2026 from index.html (plates, sizes, alt text, one-liners). Disciplines are provisional.
 window.WORKS = {
  "projects": [
   {
@@ -8,7 +8,8 @@ window.WORKS = {
    "d": [
     "identity",
     "art-direction"
-   ]
+   ],
+   "desc": "Store and window design for the Lilies of the Valley pop-up at WASTE, London, with printed material for the workshop."
   },
   {
    "slug": "zerko-thesis",
@@ -17,7 +18,8 @@ window.WORKS = {
    "d": [
     "editorial",
     "type"
-   ]
+   ],
+   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other."
   },
   {
    "slug": "zerko-grotesk",
@@ -25,7 +27,8 @@ window.WORKS = {
    "meta": "Typeface, 2026",
    "d": [
     "type"
-   ]
+   ],
+   "desc": "Zerko Grotesk is a rationalist family spanning Latin and Cyrillic, made for prolonged reading and display in complex multilingual environments. It runs in six weights with corresponding obliques. Designed simultaneously across both scripts, Zerko balances structural difference while preserving the conventions internal to each script."
   },
   {
    "slug": "as-seen-in",
@@ -34,7 +37,8 @@ window.WORKS = {
    "d": [
     "editorial",
     "art-direction"
-   ]
+   ],
+   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction."
   },
   {
    "slug": "around-a-memory",
@@ -42,7 +46,8 @@ window.WORKS = {
    "meta": "Publication, 2026",
    "d": [
     "editorial"
-   ]
+   ],
+   "desc": "A photobook of paired images, with a monoline COMFORT wordmark and a geometric spiral drawing."
   },
   {
    "slug": "jray",
@@ -51,7 +56,8 @@ window.WORKS = {
    "d": [
     "graphic-design",
     "identity"
-   ]
+   ],
+   "desc": "Sleeve for Drenched by JRAY."
   },
   {
    "slug": "rada-birthday-bash",
@@ -59,7 +65,8 @@ window.WORKS = {
    "meta": "Poster, 2025",
    "d": [
     "graphic-design"
-   ]
+   ],
+   "desc": "Poster for the RADA birthday party at Peckham Audio."
   },
   {
    "slug": "rada-corsica",
@@ -67,7 +74,8 @@ window.WORKS = {
    "meta": "Poster and social media, 2025",
    "d": [
     "graphic-design"
-   ]
+   ],
+   "desc": "Poster and social media for a trance, techno and hardcore night at Corsica Studios, flyposted across south London."
   },
   {
    "slug": "lotv-apoc-paris",
@@ -75,7 +83,8 @@ window.WORKS = {
    "meta": "Identity, 2025",
    "d": [
     "identity"
-   ]
+   ],
+   "desc": "Poster and a mini identity for the Lilies of the Valley pop-up at APOC Store, Paris, with custom tags."
   },
   {
    "slug": "lotv-toe-rag",
@@ -83,7 +92,8 @@ window.WORKS = {
    "meta": "Art Direction, 2026",
    "d": [
     "art-direction"
-   ]
+   ],
+   "desc": "Campaign for Lilies of the Valley, February 2026: Instagram and a full page in Toe Rag."
   },
   {
    "slug": "vestige",
@@ -91,7 +101,8 @@ window.WORKS = {
    "meta": "Website, 2025",
    "d": [
     "web"
-   ]
+   ],
+   "desc": "An essay on ambience, Hampstead Heath and the decaying web, set over a live pondcam on the Heath. The words fade when you stop moving. Open the page."
   },
   {
    "slug": "sentra",
@@ -100,7 +111,8 @@ window.WORKS = {
    "d": [
     "identity",
     "web"
-   ]
+   ],
+   "desc": "Identity and installation for a fictional AI company, shown at RCA2025."
   },
   {
    "slug": "aww90s",
@@ -108,7 +120,8 @@ window.WORKS = {
    "meta": "Website, 2024",
    "d": [
     "web"
-   ]
+   ],
+   "desc": "Site for an archive fashion store."
   }
  ],
  "items": [

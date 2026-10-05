@@ -11,7 +11,11 @@
      project on one mixed wall, a 4-column module with quarter / half / full
      widths, marks at the same weight as photographs. The URL is the filter:
      ?d=editorial for a discipline, ?p=as-seen-in for a project, so an
-     application can link straight to the view that fits the studio. -->
+     application can link straight to the view that fits the studio.
+
+     A project opens as a contact sheet (all its plates in equal square cells),
+     and a plate opens alone in a gallery (?p=as-seen-in&i=3). The header carries
+     what the wall leaves out: project, object, year, and the one line. -->
 <style>
 :root {
   --fg: #111;
@@ -20,10 +24,11 @@
   --lead: 1.28;
   --track: 0.022em;
   --pad: 14px;
-  --head: 40px;
   --cols: 4;
+  --sheet-cols: 4;
+  --head-h: 40px;           /* measured from the header in the script */
 }
-@media (max-width: 700px) { :root { --size: 12px; --cols: 2; } }
+@media (max-width: 700px) { :root { --size: 12px; --cols: 2; --sheet-cols: 2; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 ::selection { background: transparent; color: #e6007e; }
@@ -37,25 +42,34 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.u { text-decoration: underline; text-underline-offset: 0.18em; }
 
-/* Header: name, the view you are in, the plate under the cursor, Info. */
+/* Header: name, the view you are in, then a slot that names the plate under
+   the cursor on the wall, and carries object, year and the line on a project. */
 .head {
-  position: fixed; inset: 0 0 auto 0; z-index: 10;
-  height: var(--head);
-  display: flex; align-items: center; gap: 2em;
-  padding: 0 var(--pad);
+  position: sticky; top: 0; z-index: 10;
+  min-height: 40px;
+  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 2em; row-gap: 0.2em;
+  padding: 12px var(--pad) 11px;
   background: var(--bg);
   border-bottom: 1px solid var(--fg);
 }
 .head .view { text-decoration: underline; text-underline-offset: 0.18em; }
-.head .hover { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.head .slot { flex: 1; min-width: 0; }
+.mode-wall .head .slot { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mode-project .head .slot { max-width: 52em; }
+.head .count:empty { display: none; }
 .head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
-@media (max-width: 700px) { .head .hover { display: none; } .head { justify-content: space-between; } }
+@media (max-width: 700px) {
+  .mode-wall .head .slot { display: none; }
+  .mode-wall .head { justify-content: space-between; }
+  .mode-project .head .slot { order: 9; flex-basis: 100%; }
+}
 
 /* Info drops down under the header: one sentence, the filters, contact. */
 .info {
-  position: fixed; inset: var(--head) 0 auto 0; z-index: 9;
-  max-height: calc(100vh - var(--head)); overflow: auto;
+  position: fixed; inset: var(--head-h) 0 auto 0; z-index: 9;
+  max-height: calc(100vh - var(--head-h)); overflow: auto;
   background: var(--bg);
   border-bottom: 1px solid var(--fg);
   padding: var(--pad);
@@ -69,7 +83,6 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 
 /* The wall. Rows of a 4-column module, no gutters: plates touch, as on the
    reference. A row that does not fill leaves its gap as white space. */
-.wall { padding-top: var(--head); }
 .row { display: grid; grid-template-columns: repeat(var(--cols), 1fr); align-items: start; }
 .cell { display: block; position: relative; }
 .cell img, .cell video { display: block; width: 100%; height: auto; }
@@ -78,15 +91,39 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; }
 .cell.mark img { width: 100%; height: 100%; object-fit: contain; }
 
+/* Contact sheet: every plate of one project in equal square cells, each
+   plate contained and centred in its cell. 4 across, so a project of three
+   to eight plates fills the screen the way fifty fill the reference's 8. */
+.sheet { display: grid; grid-template-columns: repeat(var(--sheet-cols), 1fr); }
+.sheet a { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+.sheet img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; }
+.sheet .mark img { width: 80%; }
+
+/* Gallery: one plate, as large as the screen allows under the header. Left
+   half of the screen goes back, right half goes on. */
+.gallery {
+  height: calc(100svh - var(--head-h));
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--pad);
+  cursor: e-resize;
+  user-select: none;
+}
+.gallery.back { cursor: w-resize; }
+.gallery.single { cursor: default; }
+.gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.gallery .mark { width: 80%; height: 80%; }
+
 .foot { padding: 4em var(--pad) var(--pad); }
+.mode-gallery .foot { display: none; }
 </style>
 </head>
-<body>
+<body class="mode-wall">
 
-<header class="head">
+<header class="head" id="head">
   <a href="./" data-nav>Kirill Konstantinov</a>
   <a href="./" class="view" data-nav id="view">Selected Works</a>
-  <span class="hover" id="hover" aria-live="off"></span>
+  <span class="slot" id="slot" aria-live="off"></span>
+  <span class="count" id="count"></span>
   <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
 </header>
 
@@ -110,7 +147,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   </section>
 </section>
 
-<main class="wall" id="wall" aria-label="Selected works"></main>
+<main id="main" aria-label="Selected works"></main>
 <footer class="foot">&copy; 2026 Kirill Konstantinov</footer>
 
 <script src="works.js"></script>
@@ -127,6 +164,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
     ['web', 'Web'],
   ];
   const discName = Object.fromEntries(DISCIPLINES);
+  const EXPORT = '../export/';
 
   // Mixed order: round-robin across projects so neighbours come from
   // different work, with a seeded shuffle of each round so it does not read
@@ -144,6 +182,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 
   const ar = it => it.w / it.h;
   const isMark = it => it.src.endsWith('.svg');
+  const pad2 = n => String(n).padStart(2, '0');
 
   // Span in quarters of the width. Each shape has a set of allowed sizes and
   // the wall cycles through them, so the rhythm varies without being random.
@@ -175,46 +214,35 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
     return rows;
   }
 
-  const wall = document.getElementById('wall');
-  const hover = document.getElementById('hover');
-  const caption = it => { const p = bySlug[it.p]; return p.meta ? `${p.title}, ${p.meta}` : p.title; };
+  const main = document.getElementById('main');
+  const slot = document.getElementById('slot');
+  const count = document.getElementById('count');
+  const viewEl = document.getElementById('view');
+  const caption = p => p.meta ? `${p.title}, ${p.meta}` : p.title;
 
-  function cell(it, s, eager) {
+  // One plate as an element: an image, or a video for the moving ones.
+  // `still` gives the poster instead of the video (for the contact sheet).
+  function media(it, { eager = false, still = false } = {}) {
     const p = bySlug[it.p];
-    const a = document.createElement('a');
-    a.className = 'cell';
-    a.href = `?p=${it.p}`;
-    a.dataset.nav = '';
-    a.dataset.caption = caption(it);
-    a.style.gridColumn = `span ${s}`;
-    if (it.video) {
+    if (it.video && !still) {
       const v = document.createElement('video');
-      Object.assign(v, { src: '../export/' + it.src, poster: '../export/' + it.poster, muted: true, loop: true, autoplay: true, playsInline: true });
+      Object.assign(v, { src: EXPORT + it.src, poster: EXPORT + it.poster, muted: true, loop: true, autoplay: true, playsInline: true });
       v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
       v.width = it.w; v.height = it.h;
       v.setAttribute('aria-label', p.title);
-      a.append(v);
-    } else {
-      const img = new Image(it.w, it.h);
-      img.src = '../export/' + it.src;
-      img.alt = it.alt || p.title;
-      img.decoding = 'async';
-      if (!eager) img.loading = 'lazy';
-      if (isMark(it)) { a.classList.add('mark'); a.style.setProperty('--box', s >= 4 ? '4 / 1' : s >= 2 ? '2 / 1' : '1 / 1'); }
-      a.append(img);
+      return v;
     }
-    return a;
+    const img = new Image(it.w, it.h);
+    img.src = EXPORT + (it.video ? it.poster : it.src);
+    img.alt = it.alt || p.title;
+    img.decoding = 'async';
+    img.draggable = false;
+    if (!eager) img.loading = 'lazy';
+    return img;
   }
 
-  function render() {
-    const q = new URLSearchParams(location.search);
-    const d = q.get('d'), pr = q.get('p');
-    let list = mixed, label = 'Selected Works';
-    if (pr && bySlug[pr]) { list = mixed.filter(i => i.p === pr); label = bySlug[pr].title; }
-    else if (d && discName[d]) { list = mixed.filter(i => bySlug[i.p].d.includes(d)); label = discName[d]; }
-
+  function renderWall(list) {
     const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
-    wall.replaceChildren();
     let n = 0;
     pack(list, cols).forEach(({ row, used }, r) => {
       const el = document.createElement('div');
@@ -222,20 +250,100 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
       // Leftover columns: alternate between leading and trailing white space.
       let start = used < cols && r % 2 ? cols - used + 1 : 1;
       for (const { it, s } of row) {
-        const c = cell(it, s, n++ < 4);
-        c.style.gridColumn = `${start} / span ${s}`;
+        const a = document.createElement('a');
+        a.className = 'cell';
+        a.href = `?p=${it.p}`;
+        a.dataset.nav = '';
+        a.dataset.caption = caption(bySlug[it.p]);
+        a.style.gridColumn = `${start} / span ${s}`;
+        if (isMark(it)) { a.classList.add('mark'); a.style.setProperty('--box', s >= 4 ? '4 / 1' : s >= 2 ? '2 / 1' : '1 / 1'); }
+        a.append(media(it, { eager: n++ < 4 }));
         start += s;
-        el.append(c);
+        el.append(a);
       }
-      wall.append(el);
+      main.append(el);
     });
+  }
 
-    document.getElementById('view').textContent = label;
+  function renderSheet(p, list) {
+    const grid = document.createElement('div');
+    grid.className = 'sheet';
+    list.forEach((it, k) => {
+      const a = document.createElement('a');
+      a.href = `?p=${p.slug}&i=${k + 1}`;
+      a.dataset.nav = '';
+      if (isMark(it)) a.classList.add('mark');
+      a.append(media(it, { eager: true, still: true }));
+      grid.append(a);
+    });
+    main.append(grid);
+  }
+
+  function renderGallery(p, list, i) {
+    const g = document.createElement('div');
+    g.className = 'gallery' + (list.length < 2 ? ' single' : '');
+    const it = list[i - 1];
+    const m = media(it, { eager: true });
+    if (isMark(it)) m.classList.add('mark');
+    g.append(m);
+    if (list.length > 1) {
+      const step = d => go(`?p=${p.slug}&i=${(i - 1 + d + list.length) % list.length + 1}`, true);
+      g.addEventListener('mousemove', e => g.classList.toggle('back', e.clientX < innerWidth / 2));
+      g.addEventListener('click', e => step(e.clientX < innerWidth / 2 ? -1 : 1));
+      gallerySteps = step;
+      // Fetch the neighbours ahead of the click.
+      [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
+    }
+    main.append(g);
+  }
+
+  let gallerySteps = null;
+
+  function render() {
+    const q = new URLSearchParams(location.search);
+    const d = q.get('d'), pr = q.get('p');
+    const p = bySlug[pr];
+    main.replaceChildren();
+    gallerySteps = null;
+    slot.textContent = '';
+    count.textContent = '';
+
+    let label = 'Selected Works', viewHref = './', mode = 'wall';
+    if (p) {
+      // The project's own order, not the wall's.
+      const list = items.filter(it => it.p === p.slug);
+      let i = parseInt(q.get('i')) || 0;
+      if (list.length === 1) i = 1;          // one plate: straight to it
+      i = Math.min(Math.max(i, 0), list.length);
+      label = p.title;
+      viewHref = `?p=${p.slug}`;
+      mode = 'project';
+      if (i) {
+        renderGallery(p, list, i);
+        slot.textContent = p.desc ? `${p.meta}. ${p.desc}` : p.meta;
+        if (list.length > 1) count.textContent = `${pad2(i)}/${pad2(list.length)}`;
+        document.body.className = 'mode-project mode-gallery';
+      } else {
+        renderSheet(p, list);
+        slot.textContent = p.meta;
+        document.body.className = 'mode-project';
+      }
+    } else {
+      let list = mixed;
+      if (d && discName[d]) { list = mixed.filter(it => bySlug[it.p].d.includes(d)); label = discName[d]; viewHref = `?d=${d}`; }
+      renderWall(list);
+      document.body.className = 'mode-wall';
+    }
+
+    viewEl.textContent = label;
+    viewEl.setAttribute('href', viewHref);
     document.title = label === 'Selected Works' ? 'Kirill Konstantinov' : `${label} | Kirill Konstantinov`;
-    document.querySelectorAll('.info a[href^="?"], .info a[href="./"]').forEach(a => {
-      const here = (a.getAttribute('href') === './' && !d && !pr) || a.getAttribute('href') === location.search;
+    document.querySelectorAll('.info a[data-nav]').forEach(a => {
+      const h = a.getAttribute('href');
+      const here = h === './' ? !d && !p : h === `?p=${pr}` || h === `?d=${d}`;
       here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     });
+    measureHead();
   }
 
   // Info lists: disciplines and projects, each a filter link.
@@ -249,23 +357,47 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   const info = document.getElementById('info');
   const setInfo = open => { info.hidden = !open; toggle.setAttribute('aria-expanded', open); };
   toggle.addEventListener('click', () => setInfo(info.hidden));
-  addEventListener('keydown', e => { if (e.key === 'Escape') setInfo(false); });
 
-  // Filter links change the URL without a reload.
+  // Links change the URL without a reload. Stepping through the gallery
+  // replaces the history entry, so Back leaves the gallery in one press.
+  function go(href, replace = false) {
+    const url = href === './' ? location.pathname : href;
+    replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
+    setInfo(false);
+    render();
+    if (!replace) scrollTo(0, 0);
+  }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
-    history.pushState(null, '', a.getAttribute('href') === './' ? location.pathname : a.getAttribute('href'));
-    setInfo(false);
-    render();
-    scrollTo(0, 0);
+    go(a.getAttribute('href'));
   });
   addEventListener('popstate', render);
 
-  // The plate under the cursor names itself in the header.
-  wall.addEventListener('mouseover', e => { const c = e.target.closest('.cell'); hover.textContent = c ? c.dataset.caption : ''; });
-  wall.addEventListener('mouseleave', () => { hover.textContent = ''; });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (!info.hidden) return setInfo(false);
+      const q = new URLSearchParams(location.search);
+      if (q.get('i') && bySlug[q.get('p')] && items.filter(it => it.p === q.get('p')).length > 1) go(`?p=${q.get('p')}`);
+    }
+    if (gallerySteps && e.key === 'ArrowRight') gallerySteps(1);
+    if (gallerySteps && e.key === 'ArrowLeft') gallerySteps(-1);
+  });
+
+  // On the wall, the plate under the cursor names itself in the header.
+  main.addEventListener('mouseover', e => {
+    if (!document.body.classList.contains('mode-wall')) return;
+    const c = e.target.closest('.cell'); slot.textContent = c ? c.dataset.caption : '';
+  });
+  main.addEventListener('mouseleave', () => { if (document.body.classList.contains('mode-wall')) slot.textContent = ''; });
+
+  // The header's height varies (the line wraps on a phone); the gallery and
+  // the Info panel are sized against it.
+  function measureHead() {
+    document.documentElement.style.setProperty('--head-h', document.getElementById('head').offsetHeight + 'px');
+  }
+  new ResizeObserver(measureHead).observe(document.getElementById('head'));
 
   // Re-pack when the column count changes (4 on a desk, 2 on a phone).
   matchMedia('(max-width: 700px)').addEventListener('change', render);
