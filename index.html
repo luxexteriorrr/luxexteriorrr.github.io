@@ -266,21 +266,13 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
      project and object/year on a line pinned to the bottom of the screen,
      the one line of description after the plates. */
   .mode-sheet .head .view, .mode-sheet .head .slot { display: none; }
-  /* Pinned to the bottom: one line, project and object/year. The
-     description opens the sheet instead (.sdesc, above the plates), read
-     first and scrolled away, rather than covering the screen while browsing
-     (a six-line description pinned took a sixth of the screen). */
-  .scap {
-    display: flex; align-items: center;
-    position: fixed; inset: auto 0 0 0; z-index: 8;
-    height: var(--gcap-h); padding: 0 var(--pad);
-    background: var(--bg);
-  }
-  .scap p { margin: 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* The sheet opens with its caption: project, object and year, then the
+     description under it, read first and scrolled away. (Tried pinned to the
+     bottom first; a six-line description pinned took a sixth of the screen.) */
   .sdesc { display: block; margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
-  .mode-sheet .foot { padding-bottom: calc(var(--gcap-h) + var(--pad)); }
+  .sdesc .t { display: block; margin-bottom: 0.6em; }
 }
-@media (min-width: 701px) { .scap, .sdesc { display: none; } }
+@media (min-width: 701px) { .sdesc { display: none; } }
 }
 @media (max-width: 700px) {
   .head .slot .d { display: none; }
@@ -496,22 +488,18 @@ main { flex: 1; }
       a.append(media(it, { eager: true, still: true, sizes }));
       grid.append(a);
     });
-    // Phone only (hidden on a desk): the description opens the sheet, the
-    // pinned line names the project while scrolling.
-    if (p.desc) {
-      const d = document.createElement('p');
-      d.className = 'sdesc';
-      d.textContent = p.desc;
-      main.append(d);
-    }
+    // Phone only (hidden on a desk): the sheet opens with project, object
+    // and year, and the description under them.
+    const d = document.createElement('p');
+    d.className = 'sdesc';
+    const t = document.createElement('span');
+    t.className = 't';
+    t.textContent = p.meta ? `${p.title}, ${p.meta}` : p.title;
+    d.append(t);
+    if (p.desc) d.append(p.desc);
+    main.append(d);
     main.append(grid);
 
-    const cap = document.createElement('div');
-    cap.className = 'scap';
-    const t = document.createElement('p');
-    t.textContent = p.meta ? `${p.title}, ${p.meta}` : p.title;
-    cap.append(t);
-    main.append(cap);
   }
 
   function renderGallery(p, list, i) {
