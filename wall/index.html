@@ -21,14 +21,15 @@
   --fg: #111;
   --bg: #fff;
   --size: 13px;
-  --lead: 1.28;
+  --lead: 17px;             /* whole pixels: 1.28 × 13 gave a 40.63px header,
+                               and every plate under it started mid-pixel */
   --track: 0.022em;
   --pad: 14px;
   --cols: 4;
   --sheet-cols: 4;
   --head-h: 40px;           /* measured from the header in the script */
 }
-@media (max-width: 700px) { :root { --size: 12px; --cols: 2; --sheet-cols: 2; } }
+@media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -108,7 +109,9 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    reference. A row that does not fill leaves its gap as white space. */
 .row { display: grid; grid-template-columns: repeat(var(--cols), 1fr); align-items: start; }
 .cell { display: block; position: relative; }
-.cell img, .cell video { display: block; width: 100%; height: auto; }
+/* Heights are set in whole pixels by snapHeights() (object-fit covers the
+   sub-pixel difference), so rows meet without a hairline between them. */
+.cell img, .cell video { display: block; width: 100%; height: auto; object-fit: cover; }
 /* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
    wordmark does not become a thin strip across the screen. */
 .cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; }
@@ -323,7 +326,7 @@ main { flex: 1; }
         a.dataset.nav = '';
         a.dataset.caption = wallCaption(it);
         a.style.gridColumn = `${start} / span ${s}`;
-        if (isMark(it)) { a.classList.add('mark'); a.style.setProperty('--box', s >= 4 ? '4 / 1' : s >= 2 ? '2 / 1' : '1 / 1'); }
+        if (isMark(it)) { const r = s >= 4 ? 4 : s >= 2 ? 2 : 1; a.classList.add('mark'); a.dataset.ratio = r; a.style.setProperty('--box', `${r} / 1`); }
         a.append(media(it, { eager: n++ < 4, sizes: `${Math.round(s / cols * 100)}vw` }));
         start += s;
         el.append(a);
@@ -426,6 +429,7 @@ main { flex: 1; }
       let list = mixed;
       if (d && discName[d]) { list = mixed.filter(it => bySlug[it.p].d.includes(d)); label = discName[d]; viewHref = `?d=${d}`; }
       renderWall(list);
+      snapHeights();
       document.body.className = 'mode-wall';
     }
 
@@ -511,6 +515,20 @@ main { flex: 1; }
   new ResizeObserver(measureHead).observe(document.getElementById('head'));
 
   // Re-pack when the column count changes (4 on a desk, 2 on a phone).
+  // Plate heights in whole pixels. Left to the browser they come out as
+  // fractions (1232.55px), each row then starts mid-pixel, and the blended
+  // edge shows as a faint line between rows.
+  function snapHeights() {
+    main.querySelectorAll('.cell').forEach(c => {
+      const w = c.getBoundingClientRect().width;
+      if (c.classList.contains('mark')) { c.style.height = Math.round(w / parseFloat(c.dataset.ratio)) + 'px'; return; }
+      const m = c.firstElementChild;
+      m.style.height = Math.round(w * m.getAttribute('height') / m.getAttribute('width')) + 'px';
+    });
+  }
+  let snapTimer;
+  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(snapHeights, 100); });
+
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
 
