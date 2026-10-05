@@ -8,6 +8,41 @@
       "lossless": true
     },
     {
+      "src": "as-seen-in-09.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 703124,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-10.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 731094,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-14.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 718448,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-27.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 406058,
+      "lossless": false
+    },
+    {
+      "src": "as-seen-in-37.webp",
+      "width": 4724,
+      "height": 3071,
+      "bytes": 846736,
+      "lossless": false
+    },
+    {
       "src": "as-seen-in-58.webp",
       "width": 3071,
       "height": 2362,
@@ -27,13 +62,6 @@
       "height": 3071,
       "bytes": 80794,
       "lossless": true
-    },
-    {
-      "src": "as-seen-in-14.webp",
-      "width": 4724,
-      "height": 3071,
-      "bytes": 718448,
-      "lossless": false
     },
     {
       "src": "as-seen-in-61.webp",
