@@ -593,6 +593,7 @@ main { flex: 1; }
         document.body.className = 'mode-project mode-gallery';
       } else {
         renderSheet(p, list);
+        sizeSheet();
         slot.textContent = p.meta;
         document.body.className = 'mode-project mode-sheet';
       }
@@ -766,6 +767,28 @@ main { flex: 1; }
   // Plate heights in whole pixels. Left to the browser they come out as
   // fractions (1232.55px), each row then starts mid-pixel, and the blended
   // edge shows as a faint line between rows.
+  // Contact-sheet thumbnails sized up front, from the plate's own width and
+  // height, so each one holds its exact place before it has loaded. Left to
+  // the browser, an unloaded image is 0px tall: rows opened as the plates
+  // came in and the page grew (Zerko, 14 plates, 5 Oct). The limits match the
+  // CSS: the cell's inner box on a desk, the cell's width and 70vw on a phone.
+  function sizeSheet() {
+    const phone = matchMedia('(max-width: 700px)').matches;
+    main.querySelectorAll('.sheet a').forEach(a => {
+      const img = a.querySelector('img');
+      if (!img) return;
+      const cs = getComputedStyle(a);
+      const boxW = a.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const boxH = phone ? innerWidth * 0.7 : a.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const ar = img.getAttribute('width') / img.getAttribute('height');
+      let w = a.classList.contains('mark') ? boxW : Math.min(boxW, boxH * ar);
+      let h = w / ar;
+      if (h > boxH) { h = boxH; w = h * ar; }
+      img.style.width = Math.round(w) + 'px';
+      img.style.height = Math.round(h) + 'px';
+    });
+  }
+
   function snapHeights() {
     main.querySelectorAll('.cell').forEach(c => {
       const w = c.getBoundingClientRect().width;
@@ -775,7 +798,7 @@ main { flex: 1; }
     });
   }
   let snapTimer;
-  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(snapHeights, 100); });
+  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(() => { snapHeights(); sizeSheet(); }, 100); });
 
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
