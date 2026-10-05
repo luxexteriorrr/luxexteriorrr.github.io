@@ -121,6 +121,14 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .gallery.single { cursor: default; }
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .gallery .mark { width: 80%; height: 80%; }
+/* The one line: in the header on a desk. On a phone it wrapped to five lines
+   and took the plate's room, so there it moves under the plate, one scroll
+   down, and the header keeps object and year only. */
+.gdesc { display: none; margin: 0; padding: 0 var(--pad) calc(2 * var(--pad)); max-width: 44em; }
+@media (max-width: 700px) {
+  .head .slot .d { display: none; }
+  .gdesc { display: block; }
+}
 
 /* The footer sits at the bottom of the window on a short page (a contact
    sheet of four), and after the plates on a long one. */
@@ -303,11 +311,27 @@ main { flex: 1; }
       const step = d => go(`?p=${p.slug}&i=${(i - 1 + d + list.length) % list.length + 1}`, true);
       g.addEventListener('mousemove', e => g.classList.toggle('back', e.clientX < innerWidth / 2));
       g.addEventListener('click', e => step(e.clientX < innerWidth / 2 ? -1 : 1));
+      // Swipe on a phone: a mostly sideways drag of 40px or more. A tap still
+      // lands as a click on either half.
+      let x0 = null, y0 = null;
+      g.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+      g.addEventListener('touchend', e => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+        x0 = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); step(dx < 0 ? 1 : -1); }
+      });
       gallerySteps = step;
       // Fetch the neighbours ahead of the click.
       [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
     }
     main.append(g);
+    if (p.desc) {
+      const d = document.createElement('p');
+      d.className = 'gdesc';
+      d.textContent = p.desc;
+      main.append(d);
+    }
   }
 
   let gallerySteps = null;
@@ -333,7 +357,13 @@ main { flex: 1; }
       mode = 'project';
       if (i) {
         renderGallery(p, list, i);
-        slot.textContent = p.desc ? `${p.meta}. ${p.desc}` : p.meta;
+        slot.textContent = p.meta;
+        if (p.desc) {
+          const d = document.createElement('span');
+          d.className = 'd';
+          d.textContent = `. ${p.desc}`;
+          slot.append(d);
+        }
         if (list.length > 1) count.textContent = `${pad2(i)}/${pad2(list.length)}`;
         document.body.className = 'mode-project mode-gallery';
       } else {
