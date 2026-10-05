@@ -95,7 +95,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .head .count:empty { display: none; }
 /* Counter and Info always sit at the right edge, whatever the slot's width
    (on a project the slot is capped to a reading measure and stops short). */
-.head .count, .head .count:empty + .info-toggle { margin-left: auto; }
+.head .info-toggle { margin-left: auto; }   /* always at the right edge */
 .head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
 .head .info-toggle:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .info .theme { margin-top: 1.28em; }
@@ -276,7 +276,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .mode-gallery main { display: flex; flex-direction: column; height: calc(100svh - var(--head-h)); min-height: 0; }
 .mode-gallery .gallery { flex: 1; min-height: 0; height: auto; }
 .gcap { display: flex; align-items: baseline; gap: 2em; padding: 0 var(--pad) 12px; }
-.gcap .t { flex: 1; min-width: 0; max-width: 60em; }
+.gcap .t { flex: 1; min-width: 0; }   /* across the page; counter at the right edge */
 .gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
 .gdesc { display: none; }
 @media (max-width: 700px) {
