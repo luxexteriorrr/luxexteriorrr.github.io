@@ -95,10 +95,19 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .head .info-toggle:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .info .theme { margin-top: 1.28em; }
 .info .theme button:hover, .info .theme button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+/* On a phone the header is a fixed grid, so nothing jumps between pages:
+   name and Info always share the first row; the page you are on (and the
+   counter in the gallery) sits on the second; object and year on a third,
+   on project pages only. It used to wrap as it pleased, and on a long title
+   Info dropped to the second row. */
 @media (max-width: 700px) {
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1em; row-gap: 0.15em; }
+  .head > a:first-child { grid-area: 1 / 1; justify-self: start; }
+  .head .info-toggle { grid-area: 1 / 2; justify-self: end; margin-left: 0; }
+  .head .view { grid-area: 2 / 1; justify-self: start; }
+  .head .count { grid-area: 2 / 2; justify-self: end; margin-left: 0; }
+  .head .slot { grid-area: 3 / 1 / 4 / 3; }
   .mode-wall .head .slot { display: none; }
-  .mode-wall .head { justify-content: space-between; }
-  .mode-project .head .slot { order: 9; flex-basis: 100%; }
 }
 
 /* Info, after Ohlman's "agency services": opening it slides everything under
