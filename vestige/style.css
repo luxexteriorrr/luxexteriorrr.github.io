@@ -14,6 +14,12 @@
   --measure: 46rem;
 }
 
+/* dark mode (trying, 24 Sep): a black page; the same white text + exclusion now reads white,
+   and still a negative over the pond. Follows the phone's / computer's setting. */
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #000000; }
+}
+
 * { box-sizing: border-box; }
 
 html {
@@ -66,6 +72,14 @@ section, p, .dates, .dates li { display: inline; margin: 0; padding: 0; }
 .media.photo { --h: var(--photo-h); aspect-ratio: 3 / 4; }
 .media.photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .scene:first-child .media { margin-top: calc(50vh - var(--h) / 2); } /* the stream starts in the middle */
+/* walks as a wipe (trying, 28 Sep, after outcaststudio.co): each walk photo is fixed to the screen and
+   its scene is a window onto it (clip-path clips fixed children too). The scenes touch, so the next photo
+   is uncovered from below by its scene's top edge as its date arrives, while it drifts in at a slower
+   speed (--shift, set in main.js). ?walks=wipe is full screen; ?walks=frame keeps the 3:4 frame. */
+.walks-wipe .scene:has(.photo), .walks-frame .scene:has(.photo) { clip-path: inset(0); }
+.walks-wipe .media.photo, .walks-frame .media.photo { position: fixed; left: 50%; top: 50%; margin: 0;
+  transform: translate(-50%, calc(-50% + var(--shift, 0px))); }
+.walks-wipe .media.photo { width: 100vw; height: 100vh; height: 100lvh; aspect-ratio: auto; }
 /* the index heading pins to the middle of the screen while the calendar passes; the dates scroll up
    under it. Its fill is black because the column's exclusion blend shows black as see-through: it hides
    the dates beneath it but lets the photo or the paper show. */
@@ -125,6 +139,61 @@ p:hover > .cite, .cite[aria-expanded="true"] { background: #fff; color: #000; bo
 #bib li { display: block; list-style: none; margin: 0 0 1em; break-inside: avoid; overflow-wrap: anywhere; }
 #bib .n { margin-inline-end: 3em; }
 @media (max-width: 700px) { #bib ol { column-count: 1; } }
+
+/* layout A (trying, 28 Sep): the essay set as an essay. Flush left, ragged right, in the text's own case,
+   so the words written in capitals (WALK, BUT IT'S NOT, LOG IN, BUT, YET) read as the breaks they are.
+   Paragraphs become blocks with an indent, sections are a line apart, and the column sits left of centre,
+   so the photos behind it are partly clear. Arketa is monospaced (0.65em a character): 30em is ~46 characters. */
+.layout-a { --left: 8vw; }
+.layout-a body { text-transform: none; text-align: left; font-size: clamp(17px, 1.5vw, 34px); line-height: 1.3; }
+.layout-a main { max-width: none; width: 30em; margin: 0 0 0 var(--left); }
+.layout-a section { display: block; margin-bottom: 2.6em; }
+.layout-a p { display: block; }
+.layout-a p + p { text-indent: 2.6em; }
+.layout-a p.turn { text-indent: 0; margin: 1.3em 0; }
+.layout-a p.turn + p { text-indent: 0; }
+.layout-a #bib { margin-left: calc(-1 * var(--left)); }
+@media (max-width: 700px) {
+  .layout-a body { font-size: 16px; }
+  .layout-a main { width: auto; margin: 0; }
+  .layout-a #bib { margin-left: -16px; }
+}
+
+/* layout B (trying, 28 Sep, after limits.ho.ldin.gs): A's type, and the walk photos leave the strip and
+   live in the text as small tilted tokens at their walk and dates. Clicking (or tapping) a token grows its
+   photo where it stands, in the line, so the text moves apart around it; clicking again closes it.
+   Inside the column's exclusion blend a photo shows as its negative on the white page, so the photos are
+   pre-inverted (not in dark mode: exclusion over black leaves them as they are). The calendar becomes a
+   plain listing here (no pinning or stacking), so an opened photo pushes the dates down like the text. */
+.layout-b .scene:has(.photo), .layout-b .gap { display: none; }
+.layout-b .index-head, .layout-b .dates li.decay a { position: static; }
+.layout-b .dates li.decay, .layout-b .dates li.decay:last-child { height: auto; margin-bottom: 0; }
+.walk-token { display: inline-block; width: calc(0.9em * var(--k, 0.75)); aspect-ratio: var(--ratio, 3 / 4); margin: 0 0.15em; vertical-align: -0.12em;
+  background: var(--ink); transform: rotate(var(--r, 0deg)); cursor: zoom-in; text-indent: 0;
+  transition: width 0.6s ease, transform 0.6s ease; }
+.walk-token img { display: block; width: 100%; height: 100%; object-fit: cover; filter: invert(1); }
+/* open: 22 lines tall at most, 70% of the screen at most, and never wider than the column (--k = width / height) */
+.walk-token.open { width: min(100%, calc(min(70vh, 22em) * var(--k, 0.75))); transform: none; cursor: zoom-out; }
+/* &token=square: a small black square that opens into the photo */
+.walk-token.square:not(.open) { width: 0.5em; aspect-ratio: 1; vertical-align: 0.1em; }
+.walk-token.square:not(.open) img { visibility: hidden; }
+/* the pondcam as a token: live, cropped a little top and bottom to lose YouTube's title bar; clicks go to
+   the token, not the player. With the stream gone from behind, the text starts higher. */
+.walk-token.embed { overflow: hidden; }
+.walk-token iframe { display: block; position: relative; top: -14%; width: 100%; height: 128%; border: 0;
+  pointer-events: none; filter: invert(1); }
+.layout-b main { padding-top: 25vh !important; }
+@media (prefers-color-scheme: dark) { .walk-token img, .walk-token iframe { filter: none; } }
+
+/* &type=big (trying, 28 Sep, after limits.ho.ldin.gs): the text large and justified across a wide column */
+.type-big body { font-size: 3.4vw; line-height: 1.1; }
+.type-big main { width: auto; max-width: none; margin: 0 8vw; text-align: justify; hyphens: auto; }
+.type-big #bib { margin-left: -8vw; }
+@media (max-width: 700px) {
+  .type-big body { font-size: 20px; }
+  .type-big main { margin: 0; }
+  .type-big #bib { margin-left: -16px; }
+}
 
 /* the fading pieces */
 .unit { opacity: 1; }

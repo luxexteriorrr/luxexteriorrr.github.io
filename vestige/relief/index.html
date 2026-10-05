@@ -13,6 +13,7 @@
       font-display: swap;
     }
     :root { --paper: #fff; --ink: #000; }
+    @media (prefers-color-scheme: dark) { :root { --paper: #000; --ink: #fff; } } /* trying, as the essay */
     html, body { margin: 0; height: 100%; background: var(--paper); overflow: hidden; }
 
     /* the relief fills the whole screen, under the phone's status bar and browser toolbar too
