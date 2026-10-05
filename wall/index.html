@@ -102,7 +102,10 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 /* The plate fills the cell's box and is contained inside it: a percentage
    max-height does not resolve in an aspect-ratio box, so tall posters used
    to run out of their cell (RADA Corsica, 5 Oct). */
-.sheet img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+/* Inset by the page margin: at 4 across the cells are big, and with no inset
+   two landscapes side by side read as one image, and a tall poster touches
+   the header rule. */
+.sheet img { position: absolute; inset: var(--pad); width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad)); object-fit: contain; }
 .sheet .mark img { inset: 10%; width: 80%; height: 80%; }
 
 /* Gallery: one plate, as large as the screen allows under the header. Left
