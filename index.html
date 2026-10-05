@@ -108,7 +108,13 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   .head .count { grid-area: 2 / 2; justify-self: end; margin-left: 0; }
   .head .slot { grid-area: 3 / 1 / 4 / 3; }
   .mode-wall .head .slot { display: none; }
+  /* Contact sheet tighter on a phone: two across, a 4px inset instead of the
+     page margin, so the plates are bigger and read as one set. */
+  body .sheet a { padding: 4px; }   /* body: wins over the base rule further down */
 }
+/* No label on the main wall: there it only said "Selected Works", which the
+   page already is. Filters and projects keep theirs, it names where you are. */
+.head .view.is-home { display: none; }
 
 /* Info, after Ohlman's "agency services": opening it slides everything under
    the header down by the panel's height, and the panel comes down from behind
@@ -535,6 +541,7 @@ main { flex: 1; }
     }
 
     viewEl.textContent = label;
+    viewEl.classList.toggle('is-home', label === 'Selected Works');
     viewEl.setAttribute('href', viewHref);
     document.title = label === 'Selected Works' ? 'Kirill Konstantinov' : `${label} | Kirill Konstantinov`;
     document.querySelectorAll('.info a[data-nav]').forEach(a => {
