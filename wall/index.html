@@ -31,6 +31,15 @@
 @media (max-width: 700px) { :root { --size: 12px; --cols: 2; --sheet-cols: 2; } }
 
 *, *::before, *::after { box-sizing: border-box; }
+
+/* Scrolling as on the live site (floating-nav): no scrollbar, no bounce past
+   either end, and Lenis easing the wheel into the native scroll. */
+html, body { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+html { overscroll-behavior-y: none; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
 ::selection { background: transparent; color: #e6007e; }
 html, body { margin: 0; background: var(--bg); color: var(--fg); }
 body {
@@ -73,6 +82,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .info {
   position: fixed; inset: var(--head-h) 0 auto 0; z-index: 9;
   max-height: calc(100vh - var(--head-h)); overflow: auto;
+  overscroll-behavior: contain; scrollbar-width: none;
   background: var(--bg);
   border-bottom: 1px solid var(--fg);
   padding: var(--pad);
@@ -148,7 +158,7 @@ main { flex: 1; }
   <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
 </header>
 
-<section class="info" id="info" hidden>
+<section class="info" id="info" hidden data-lenis-prevent>
   <p class="bio">Kirill Konstantinov is a London-based graphic designer working across editorial design, art direction, identity and type. His work moves from research to a made object, with typography as the structure that carries an idea from one to the other.</p>
   <section>
     <h2>Practice</h2>
@@ -171,6 +181,8 @@ main { flex: 1; }
 <main id="main" aria-label="Selected works"></main>
 <footer class="foot">&copy; 2026 Kirill Konstantinov</footer>
 
+<!-- Lenis 1.3.26, vendored, the same file the live index loads. -->
+<script src="../assets/lenis.min.js"></script>
 <script src="works.js"></script>
 <script>
 (() => {
@@ -418,7 +430,7 @@ main { flex: 1; }
     replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
     setInfo(false);
     render();
-    if (!replace) scrollTo(0, 0);
+    if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
@@ -455,6 +467,11 @@ main { flex: 1; }
   // Re-pack when the column count changes (4 on a desk, 2 on a phone).
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
+
+  // Smooth wheel, same setting as the live index (lerp 0.12). It eases the
+  // wheel into the native scroll, so sticky and touch are untouched. The Info
+  // panel scrolls on its own (data-lenis-prevent).
+  if (window.Lenis) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
 })();
 </script>
 </body>

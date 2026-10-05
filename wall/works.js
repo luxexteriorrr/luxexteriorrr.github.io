@@ -367,6 +367,34 @@ window.WORKS = {
   },
   {
    "p": "as-seen-in",
+   "src": "as-seen-in-09.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Spread with the same carved stone relief twice: washed white on violet on the left, in its own ochre and rust on white on the right."
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-10.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Spread with a striped stone relief mirrored on its own reflection: the photograph on white, then washed out on pale blue."
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-27.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Spread 52–53: two tall strips of a layered grey and ochre landscape, and two columns of text with words picked out in pink and blue."
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-37.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page."
+  },
+  {
+   "p": "as-seen-in",
    "src": "as-seen-in-59.webp",
    "w": 2362,
    "h": 3071,
@@ -420,34 +448,6 @@ window.WORKS = {
    "w": 3461,
    "h": 3461,
    "alt": "Aerial fields in ochre and blue."
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-09.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with the same carved stone relief twice: washed white on violet on the left, in its own ochre and rust on white on the right."
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-10.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with a striped stone relief mirrored on its own reflection: the photograph on white, then washed out on pale blue."
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-27.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread 52–53: two tall strips of a layered grey and ochre landscape, and two columns of text with words picked out in pink and blue."
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-37.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page."
   },
   {
    "p": "around-a-memory",
