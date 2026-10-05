@@ -707,7 +707,14 @@ main { flex: 1; }
   // you stepped to has its thumbnail out of view, that thumbnail is centred.
   // Otherwise the plate shrank towards a thumbnail off screen (5 Oct).
   let sheetScroll = 0;
-  const scrollNow = y => window.lenis ? window.lenis.scrollTo(y, { immediate: true, force: true }) : scrollTo(0, y);
+  // Lenis caches the page height and re-measures a moment after it changes;
+  // coming back from the (one-screen) gallery it still thought the page was
+  // short and refused to scroll down to the plate. So: measure, then scroll.
+  const scrollNow = y => {
+    if (!window.lenis) return scrollTo(0, y);
+    window.lenis.resize();
+    window.lenis.scrollTo(y, { immediate: true, force: true });
+  };
   function bringIntoView(i) {
     scrollNow(sheetScroll);
     const t = thumb(i);
