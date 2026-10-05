@@ -805,10 +805,42 @@ window.WORKS = {
   },
   {
    "p": "aww90s",
+   "src": "aww90s-16.webp",
+   "w": 5184,
+   "h": 3351,
+   "alt": "The AWW entry screen: hands lighting a photo-booth strip with a lighter, STORE and WORKS set small in red.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-11.webp",
+   "w": 5184,
+   "h": 3351,
+   "alt": "The AWW home page on desktop: three panels of a gloved hand holding a lit stick reading vintage, SHOP THE LATEST SELECTION OF CLOTHING, the nav across the top.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
    "src": "aww90s-04.webp",
    "w": 1290,
    "h": 2796,
    "alt": "The AWW home page on a phone: the red AWW mark, a gloved hand holding a lit stick reading vintage, SHOP THE LATEST SELECTION OF CLOTHING, and the icon bar along the bottom.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-12.webp",
+   "w": 5220,
+   "h": 3351,
+   "alt": "The shop on desktop: brand, category and size filters in a mono column on the left, product images with name and price, sort options on the right.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-13.webp",
+   "w": 1290,
+   "h": 2796,
+   "alt": "The filter panel on a phone: search, sort, designers, categories and sizes as outlined mono buttons, with Reset and Apply.",
    "sm": 1
   },
   {
@@ -822,9 +854,9 @@ window.WORKS = {
   {
    "p": "aww90s",
    "src": "aww90s-06.webp",
-   "w": 1720,
-   "h": 3728,
-   "alt": "A product page on a phone: Prada S1996 mules from above, then name, price, size, description and an Add to cart button, with the icon bar below.",
+   "w": 1290,
+   "h": 2796,
+   "alt": "A product page on a phone: Prada S1996 mules from above, then name, price, size, description and an Add to cart button, with Back to shop in the icon bar.",
    "sm": 1
   },
   {
@@ -833,6 +865,22 @@ window.WORKS = {
    "w": 3072,
    "h": 4410,
    "alt": "The same Prada product page on a tablet.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-14.webp",
+   "w": 1290,
+   "h": 2796,
+   "alt": "The cart on a phone: the Prada mules, price, Delete, totals and Proceed to checkout.",
+   "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-15.webp",
+   "w": 1290,
+   "h": 2796,
+   "alt": "Checkout on a phone: Customer info, Address, Payment, Confirmation as steps, the form fields, the order and Proceed to address.",
    "sm": 1
   },
   {
