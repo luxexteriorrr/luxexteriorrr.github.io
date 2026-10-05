@@ -273,8 +273,13 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 /* Gallery: the plate fills what is left of the screen above its caption.
    Caption: project (back to its sheet), piece or object and year, and on a
    desk the description; the counter on the right. */
-.mode-gallery main { display: flex; flex-direction: column; height: calc(100svh - var(--head-h)); min-height: 0; }
-.mode-gallery .gallery { flex: 1; min-height: 0; height: auto; }
+/* The gallery's height is set outright (screen, less header, less the
+   caption as measured): a flex layout let tall plates run past the screen. */
+.mode-gallery main { min-height: 0; }
+.mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-real, var(--gcap-h))); }
+/* On a desk the plate sits inside the page with air on every side, not edge
+   to edge: a wide plate (Zerko, 16:9) filled the screen to the caption. */
+@media (min-width: 701px) { .mode-gallery .gallery { padding: 6vh 10vw; } }
 .gcap { display: flex; align-items: baseline; gap: 2em; padding: 0 var(--pad) 12px; }
 .gcap .t { flex: 1; min-width: 0; }   /* across the page; counter at the right edge */
 .gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
@@ -282,7 +287,6 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 @media (max-width: 700px) {
   /* Phone: one line, cut with an ellipsis, so the plate's room is fixed; the
      description goes one scroll down instead (.gdesc). */
-  .mode-gallery main { height: auto; display: block; }
   .mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-h)); }
   .gcap { align-items: center; gap: 1em; height: var(--gcap-h); padding: 0 var(--pad); }
   .gcap .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -585,6 +589,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       cap.append(n);
     }
     main.append(cap);
+    // The caption wraps on a desk; the plate's room is what it leaves.
+    const fitCap = () => document.documentElement.style.setProperty('--gcap-real', cap.offsetHeight + 'px');
+    fitCap();
+    new ResizeObserver(fitCap).observe(cap);
 
     const desc = about(it).desc;
     if (desc) {
