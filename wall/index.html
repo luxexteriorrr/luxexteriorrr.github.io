@@ -59,6 +59,9 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .mode-wall .head .slot { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mode-project .head .slot { max-width: 52em; }
 .head .count:empty { display: none; }
+/* Counter and Info always sit at the right edge, whatever the slot's width
+   (on a project the slot is capped to a reading measure and stops short). */
+.head .count, .head .count:empty + .info-toggle { margin-left: auto; }
 .head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
 @media (max-width: 700px) {
   .mode-wall .head .slot { display: none; }
