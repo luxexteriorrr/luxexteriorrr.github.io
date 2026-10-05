@@ -8,6 +8,7 @@
 // mono: 1 = pure black lettering, flipped to white in dark mode.
 // Vestige walk photocopies (02–07, from the site's calendar) added 5 Oct.
 // AWW90s (5 Oct): Kirill's own Figma design replaces the July-rebuild plates (01 video, 02); shown again.
+// link: a live address shown after the description (AWW90s: the client has since edited the site).
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -104,7 +105,12 @@ window.WORKS = {
    "d": [
     "web"
    ],
-   "desc": "Site for an archive fashion store."
+   "desc": "Site for an archive fashion store.",
+   "link": {
+    "href": "https://www.aww90s.com",
+    "text": "aww90s.com",
+    "note": "(client edited)"
+   }
   }
  ],
  "pieces": {
@@ -881,14 +887,6 @@ window.WORKS = {
    "w": 1290,
    "h": 2796,
    "alt": "Checkout on a phone: Customer info, Address, Payment, Confirmation as steps, the form fields, the order and Proceed to address.",
-   "sm": 1
-  },
-  {
-   "p": "aww90s",
-   "src": "aww90s-03.webp",
-   "w": 7380,
-   "h": 3500,
-   "alt": "The product page at three widths, phone, tablet and desktop, side by side.",
    "sm": 1
   },
   {

@@ -301,7 +301,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 @media (min-width: 701px) { .mode-gallery .gallery { padding: 6vh 10vw; } }
 .gcap { display: flex; align-items: baseline; gap: 2em; padding: 0 var(--pad) 12px; }
 .gcap .t { flex: 1; min-width: 0; }   /* across the page; counter at the right edge */
-.gcap a { text-decoration: underline; text-underline-offset: 0.18em; }
+.gcap a, .ptitle a.ext, .gdesc a.ext { text-decoration: underline; text-underline-offset: 0.18em; }
 .gdesc { display: none; }
 @media (max-width: 700px) {
   /* Phone: one line, cut with an ellipsis, so the plate's room is fixed; the
@@ -382,7 +382,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-05e"></script>
+<script src="assets/works.js?v=2026-10-05f"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -497,8 +497,22 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     return img;
   }
 
+  // A project's live address after its description, with a note in
+  // brackets (AWW90s: "aww90s.com (client edited)"). Opens in a new tab.
+  function appendLink(el, p) {
+    if (!p || !p.link) return;
+    const a = document.createElement('a');
+    a.href = p.link.href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'ext';
+    a.textContent = p.link.text;
+    el.append(' ', a);
+    if (p.link.note) el.append(` ${p.link.note}`);
+  }
+
   // Title block above a filter or a contact sheet.
-  function titleBlock(title, desc) {
+  function titleBlock(title, desc, p = null) {
     const b = document.createElement('p');
     b.className = 'ptitle';
     const t = document.createElement('span');
@@ -509,6 +523,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const d = document.createElement('span');
       d.className = 'd';
       d.textContent = desc;
+      appendLink(d, p);
       b.append(d);
     }
     return b;
@@ -560,7 +575,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       grid.append(a);
     });
     // The sheet opens with project, object and year, and the description.
-    main.append(titleBlock(p.meta ? `${p.title}, ${p.meta}` : p.title, p.desc));
+    main.append(titleBlock(p.meta ? `${p.title}, ${p.meta}` : p.title, p.desc, p));
     main.append(grid);
 
   }
@@ -610,6 +625,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const dd = document.createElement('span');
       dd.className = 'd';
       dd.textContent = `. ${line}`;
+      if (!it.piece) appendLink(dd, p);
       t.append(dd);
     }
     cap.append(t);
@@ -629,6 +645,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const d = document.createElement('p');
       d.className = 'gdesc';
       d.textContent = desc;
+      if (!it.piece) appendLink(d, p);
       main.append(d);
     }
   }
