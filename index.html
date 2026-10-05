@@ -31,6 +31,14 @@
 }
 @media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
 
+/* Dark mode follows the visitor's system setting, as on the Framer reference
+   (noravale.framer.website): no toggle, one block that swaps the two colours.
+   Values from the reference: #111 ground, #f7f7f7 text. */
+:root { color-scheme: light dark; --mark-ground: transparent; }
+@media (prefers-color-scheme: dark) {
+  :root { --fg: #f7f7f7; --bg: #111; --mark-ground: #f7f7f7; }
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 /* Scrolling as on the live site (floating-nav): no scrollbar, no bounce past
@@ -100,6 +108,21 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .content { flex: 1; display: flex; flex-direction: column; transition: transform 0.5s ease; }
 .content.pushed { transform: translateY(var(--info-h)); }
 @media (prefers-reduced-motion: reduce) { .info, .info.open, .content { transition: none; } }
+
+/* Page transition, after the Framer reference: the browser's View Transitions
+   API snapshots the old view and the new one and animates between them. The
+   old view fades out; the new one fades in with a short rise. The header has
+   its own name, so it holds still while the work changes under it. Browsers
+   without the API just switch, as before. */
+.head { view-transition-name: head; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(14px); } }
+::view-transition-old(root) { animation: 0.22s ease both vt-out; }
+::view-transition-new(root) { animation: 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) 0.08s both vt-in; }
+::view-transition-group(head) { animation-duration: 0.3s; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
 .info h2 { font: inherit; margin: 0 0 1.28em; }
 .info p, .info ul { margin: 0; padding: 0; list-style: none; }
 .info a:hover, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
@@ -114,7 +137,9 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .cell img, .cell video { display: block; width: 100%; height: auto; object-fit: cover; }
 /* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
    wordmark does not become a thin strip across the screen. */
-.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; }
+.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; background: var(--mark-ground); }
+/* Marks are black on transparent, so in dark mode they sit on a light card
+   (--mark-ground) instead of vanishing into the ground. */
 .cell.mark img { width: 100%; height: 100%; object-fit: contain; }
 
 /* Contact sheet: every plate of one project in equal square cells, each
@@ -130,6 +155,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    the header rule. */
 .sheet img { position: absolute; inset: var(--pad); width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad)); object-fit: contain; }
 .sheet .mark img { inset: 10%; width: 80%; height: 80%; }
+.sheet a.mark { background: var(--mark-ground); background-clip: content-box; padding: var(--pad); }
 
 /* Gallery: one plate, as large as the screen allows under the header. Left
    half of the screen goes back, right half goes on. */
@@ -143,7 +169,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .gallery.back { cursor: w-resize; }
 .gallery.single { cursor: default; }
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
-.gallery .mark { width: 80%; height: 80%; }
+.gallery .mark { width: 80%; height: 80%; background: var(--mark-ground); padding: 4%; }
 /* The one line: in the header on a desk. On a phone it wrapped to five lines
    and took the plate's room, so there it moves under the plate, one scroll
    down, and the header keeps object and year only. */
@@ -480,12 +506,25 @@ main { flex: 1; }
 
   // Links change the URL without a reload. Stepping through the gallery
   // replaces the history entry, so Back leaves the gallery in one press.
+  // Every change of view goes through a view transition where the browser
+  // has one (Chrome, Safari); elsewhere it just switches.
+  // A transition the browser skips (hidden tab, a second click mid-animation)
+  // rejects its promises; the view still changes, so those are ignored.
+  const transition = swap => {
+    if (!document.startViewTransition || document.hidden) return swap();
+    const t = document.startViewTransition(swap);
+    t.ready.catch(() => {});
+    t.finished.catch(() => {});
+  };
+
   function go(href, replace = false) {
     const url = href === './' ? location.pathname : href;
     replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
     setInfo(false);
-    render();
-    if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
+    transition(() => {
+      render();
+      if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
+    });
   }
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-nav]');
@@ -493,7 +532,7 @@ main { flex: 1; }
     e.preventDefault();
     go(a.getAttribute('href'));
   });
-  addEventListener('popstate', render);
+  addEventListener('popstate', () => transition(render));
 
   addEventListener('keydown', e => {
     if (e.key === 'Escape') {
