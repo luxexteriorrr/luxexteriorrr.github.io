@@ -6,6 +6,7 @@
 // sm / posterSm = a 1600px copy exists in export/1600/ (wall-sizes.mjs).
 // hidden: 1 = kept in the data, left off the site (AWW90s, 5 Oct).
 // mono: 1 = pure black lettering, flipped to white in dark mode.
+// Vestige walk photocopies (02–07, from the site's calendar) added 5 Oct.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -693,6 +694,48 @@ window.WORKS = {
    "h": 1090,
    "alt": "The Vestige page: a centred column of capitals running over a live video of a pond on Hampstead Heath, the letters inverted where they cross the water.",
    "sm": 1
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-02.webp",
+   "w": 1200,
+   "h": 1600,
+   "alt": "A walk on Hampstead Heath, photographed and run through a photocopy treatment in pale blue on white, from the Vestige calendar (1 of 6)."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-03.webp",
+   "w": 1200,
+   "h": 1600,
+   "alt": "A walk on Hampstead Heath, photographed and run through a photocopy treatment in pale blue on white, from the Vestige calendar (2 of 6)."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-04.webp",
+   "w": 1200,
+   "h": 1600,
+   "alt": "A walk on Hampstead Heath, photographed and run through a photocopy treatment in pale blue on white, from the Vestige calendar (3 of 6)."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-05.webp",
+   "w": 1200,
+   "h": 1600,
+   "alt": "A walk on Hampstead Heath, photographed and run through a photocopy treatment in pale blue on white, from the Vestige calendar (4 of 6)."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-06.webp",
+   "w": 1200,
+   "h": 1600,
+   "alt": "A walk on Hampstead Heath, photographed and run through a photocopy treatment in pale blue on white, from the Vestige calendar (5 of 6)."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-07.webp",
+   "w": 1200,
+   "h": 1600,
+   "alt": "A walk on Hampstead Heath, photographed and run through a photocopy treatment in pale blue on white, from the Vestige calendar (6 of 6)."
   },
   {
    "p": "sentra",
