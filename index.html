@@ -295,7 +295,12 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 /* The footer sits at the bottom of the window on a short page (a contact
    sheet of four), and after the plates on a long one. */
 body { min-height: 100svh; display: flex; flex-direction: column; }
-main { flex: 1; }
+/* The work always fills at least a whole screen, so the footer is never on
+   the first one: on a short project (JRAY, four plates) it used to sit at the
+   bottom of the window, half under Safari's toolbar. lvh, the screen with the
+   toolbars hidden, so it stays out of view when they collapse too. */
+main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
+.mode-gallery main { min-height: 0; }
 .page { flex: 1; display: flex; flex-direction: column; }
 /* Plenty of room before the footer, so the last plates end the page rather
    than run into the small print. Text at full colour. */
