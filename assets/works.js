@@ -10,6 +10,7 @@
 // AWW90s (5 Oct): Kirill's own Figma design replaces the July-rebuild plates (01 video, 02); shown again.
 // link: a live address shown after the description (AWW90s: the client has since edited the site).
 // AWW90s entry page as a screen recording (17, 5 Oct), in place of the still entry (16).
+// AWW90s prototype recordings 18–21 (phone, 5 Oct): editorial scrolls, shop/filter flow, product photo swipe.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -844,6 +845,14 @@ window.WORKS = {
   },
   {
    "p": "aww90s",
+   "src": "aww90s-20.mp4",
+   "w": 860,
+   "h": 1862,
+   "video": 1,
+   "poster": "aww90s-20-poster.webp"
+  },
+  {
+   "p": "aww90s",
    "src": "aww90s-13.webp",
    "w": 1290,
    "h": 2796,
@@ -868,6 +877,14 @@ window.WORKS = {
   },
   {
    "p": "aww90s",
+   "src": "aww90s-21.mp4",
+   "w": 860,
+   "h": 1862,
+   "video": 1,
+   "poster": "aww90s-21-poster.webp"
+  },
+  {
+   "p": "aww90s",
    "src": "aww90s-07.webp",
    "w": 3072,
    "h": 4410,
@@ -889,6 +906,22 @@ window.WORKS = {
    "h": 2796,
    "alt": "Checkout on a phone: Customer info, Address, Payment, Confirmation as steps, the form fields, the order and Proceed to address.",
    "sm": 1
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-18.mp4",
+   "w": 860,
+   "h": 1862,
+   "video": 1,
+   "poster": "aww90s-18-poster.webp"
+  },
+  {
+   "p": "aww90s",
+   "src": "aww90s-19.mp4",
+   "w": 860,
+   "h": 1862,
+   "video": 1,
+   "poster": "aww90s-19-poster.webp"
   },
   {
    "p": "aww90s",
