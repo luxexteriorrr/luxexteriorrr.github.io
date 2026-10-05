@@ -5,6 +5,7 @@
 // As Seen In spreads 09, 10, 27, 37 added 5 Oct.
 // sm / posterSm = a 1600px copy exists in export/1600/ (wall-sizes.mjs).
 // hidden: 1 = kept in the data, left off the site (AWW90s, 5 Oct).
+// mono: 1 = pure black lettering, flipped to white in dark mode.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -490,7 +491,8 @@ window.WORKS = {
    "src": "around-a-memory-01.svg",
    "w": 2160,
    "h": 100,
-   "alt": "COMFORT wordmark, drawn as a monoline outline."
+   "alt": "COMFORT wordmark, drawn as a monoline outline.",
+   "mono": 1
   },
   {
    "p": "around-a-memory",
@@ -549,7 +551,8 @@ window.WORKS = {
    "src": "jray-wordmark.svg",
    "w": 245,
    "h": 25,
-   "alt": "DRENCHED wordmark: wide squared capitals, black."
+   "alt": "DRENCHED wordmark: wide squared capitals, black.",
+   "mono": 1
   },
   {
    "p": "jray",
@@ -563,7 +566,8 @@ window.WORKS = {
    "src": "jray-mark.svg",
    "w": 7654,
    "h": 3122,
-   "alt": "The JRAY mark, drawn as a single continuous outline."
+   "alt": "The JRAY mark, drawn as a single continuous outline.",
+   "mono": 1
   },
   {
    "p": "rada",

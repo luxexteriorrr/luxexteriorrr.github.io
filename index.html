@@ -37,12 +37,17 @@
 /* Dark mode follows the visitor's system setting, as on the Framer reference
    (noravale.framer.website): no toggle, one block that swaps the two colours.
    Values from the reference: #111 ground, #f7f7f7 text. */
-:root { color-scheme: light dark; --mark-ground: transparent; }
+:root { color-scheme: light dark; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; --mark-ground: #f7f7f7; }
+  :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; }
+  :root:not([data-theme="light"]) img.mono { filter: invert(1); }
 }
 /* The header toggle overrides the system either way. */
-:root[data-theme="dark"] { color-scheme: dark; --fg: #f7f7f7; --bg: #111; --mark-ground: #f7f7f7; }
+:root[data-theme="dark"] { color-scheme: dark; --fg: #f7f7f7; --bg: #111; }
+/* Lettering that is pure black (COMFORT, DRENCHED, the JRAY mark: `mono` in
+   the data) turns white in dark mode. Coloured lettering (MACRAMÉ, the
+   tracklist) shows as it is in both modes. None of it gets a background. */
+:root[data-theme="dark"] img.mono { filter: invert(1); }
 :root[data-theme="light"] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -146,10 +151,15 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    square cell and the plate's own shape. */
 @keyframes vt-fade-out { to { opacity: 0; } }
 @keyframes vt-fade-in { from { opacity: 0; } }
-html.vt-zoom::view-transition-old(root) { animation: 0.35s ease both vt-fade-out; }
-html.vt-zoom::view-transition-new(root) { animation: 0.5s ease 0.2s both vt-fade-in; }
+/* One crossfade, same start and length on both sides: the first pass let
+   the sheet go before the gallery arrived, and the ground showed through. */
+html.vt-zoom::view-transition-old(root) { animation: 0.5s ease both vt-fade-out; }
+html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; }
 ::view-transition-group(plate) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1); }
-::view-transition-old(plate), ::view-transition-new(plate) { height: 100%; object-fit: contain; }
+/* The plate does not crossfade with itself: only the arriving picture is
+   drawn, moving and growing from where the other one was. */
+::view-transition-old(plate) { animation: none; opacity: 0; }
+::view-transition-new(plate) { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
@@ -167,25 +177,26 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease 0.2s both vt-fade
 .cell img, .cell video { display: block; width: 100%; height: auto; object-fit: cover; }
 /* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
    wordmark does not become a thin strip across the screen. */
-.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; background: var(--mark-ground); }
-/* Marks are black on transparent, so in dark mode they sit on a light card
-   (--mark-ground) instead of vanishing into the ground. */
+.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 6% 8%; }
 .cell.mark img { width: 100%; height: 100%; object-fit: contain; }
 
 /* Contact sheet: every plate of one project in equal square cells, each
    plate contained and centred in its cell. 4 across, so a project of three
    to eight plates fills the screen the way fifty fill the reference's 8. */
 .sheet { display: grid; grid-template-columns: repeat(var(--sheet-cols), 1fr); }
-.sheet a { aspect-ratio: 1; position: relative; display: block; }
+/* Each cell is a size container, so the plate can be fitted with cq units and
+   its own box is exactly the visible image (object-fit left an empty frame
+   around it, which made the thumbnail-to-plate zoom start from the wrong
+   shape). Inset by the page margin. */
+.sheet a { aspect-ratio: 1; display: grid; place-items: center; padding: var(--pad); container-type: size; }
 /* The plate fills the cell's box and is contained inside it: a percentage
    max-height does not resolve in an aspect-ratio box, so tall posters used
    to run out of their cell (RADA Corsica, 5 Oct). */
 /* Inset by the page margin: at 4 across the cells are big, and with no inset
    two landscapes side by side read as one image, and a tall poster touches
    the header rule. */
-.sheet img { position: absolute; inset: var(--pad); width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad)); object-fit: contain; }
-.sheet .mark img { inset: 10%; width: 80%; height: 80%; }
-.sheet a.mark { background: var(--mark-ground); background-clip: content-box; padding: var(--pad); }
+.sheet img { display: block; width: auto; height: auto; max-width: 100cqw; max-height: 100cqh; }
+.sheet .mark img { width: 80cqw; max-height: 80cqh; }
 
 /* Gallery: one plate, as large as the screen allows under the header. Left
    half of the screen goes back, right half goes on. */
@@ -199,7 +210,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease 0.2s both vt-fade
 .gallery.back { cursor: w-resize; }
 .gallery.single { cursor: default; }
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
-.gallery .mark { width: 80%; height: 80%; background: var(--mark-ground); padding: 4%; }
+.gallery .mark { width: 80%; height: auto; max-height: 80%; }
 /* The one line: in the header on a desk. On a phone it wrapped to five lines
    and took the plate's room, so there it moves under the plate, one scroll
    down, and the header keeps object and year only. */
@@ -373,6 +384,7 @@ main { flex: 1; }
     img.alt = it.alt || p.title;
     img.decoding = 'async';
     img.draggable = false;
+    if (it.mono) img.classList.add('mono');
     if (!eager) img.loading = 'lazy';
     return img;
   }
