@@ -302,6 +302,12 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 @media (min-width: 701px) { .mode-gallery .gallery { padding: 6vh 10vw; } }
 .gcap { display: flex; align-items: baseline; gap: 2em; padding: 0 var(--pad) 12px; }
 .gcap .t { flex: 1; min-width: 0; }   /* across the page; counter at the right edge */
+/* Close, in the top right corner of the gallery, under Info. On a phone the
+   plate starts a line lower, so a tall one does not run under the word. */
+.mode-gallery main { position: relative; }
+.gclose { position: absolute; top: 12px; right: var(--pad); z-index: 1; }
+.gclose:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+@media (max-width: 700px) { .mode-gallery .gallery { padding-top: calc(12px + var(--lead) + 8px); } }
 .gcap a, .ptitle a.ext, .gdesc a.ext { text-decoration: underline; text-underline-offset: 0.18em; }
 .gdesc { display: none; }
 @media (max-width: 700px) {
@@ -637,6 +643,15 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       cap.append(n);
     }
     main.append(cap);
+    // Close: back to the contact sheet, or to the wall for a one-plate
+    // project (whose sheet would open the plate again). Outside the gallery
+    // element, so a click on it does not also step.
+    const x = document.createElement('a');
+    x.className = 'gclose';
+    x.href = list.length > 1 ? `?p=${p.slug}` : './';
+    x.dataset.nav = '';
+    x.textContent = 'Close';
+    main.append(x);
     // The caption wraps on a desk; the plate's room is what it leaves.
     const fitCap = () => document.documentElement.style.setProperty('--gcap-real', cap.offsetHeight + 'px');
     fitCap();
@@ -928,7 +943,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     if (e.key === 'Escape') {
       if (infoOpen) return setInfo(false);
       const q = new URLSearchParams(location.search);
-      if (q.get('i') && bySlug[q.get('p')] && items.filter(it => it.p === q.get('p')).length > 1) go(`?p=${q.get('p')}`);
+      const x = document.querySelector('.gclose');
+      if (x) go(x.getAttribute('href'));
     }
     if (gallerySteps && e.key === 'ArrowRight') gallerySteps(1);
     if (gallerySteps && e.key === 'ArrowLeft') gallerySteps(-1);
