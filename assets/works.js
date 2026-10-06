@@ -11,6 +11,7 @@
 // link: a live address shown after the description (AWW90s: the client has since edited the site).
 // AWW90s entry page as a screen recording (17, 5 Oct), in place of the still entry (16).
 // AWW90s prototype recordings 18–21 (phone, 5 Oct): editorial scrolls, shop/filter flow, product photo swipe.
+// LOTV WASTE! hand-lettered announcement (lotv-waste-06) and the flat thesis cover (zerko-thesis-37) added 6 Oct.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -154,6 +155,15 @@ window.WORKS = {
   },
   {
    "p": "lotv",
+   "src": "lotv-waste-06.webp",
+   "w": 3000,
+   "h": 3750,
+   "alt": "Pop-up announcement for Lilies of the Valley at WASTE! SPACE, 270 Hackney Road, 13–16 August 2026: hand-lettered white type set on a slant across a flat sky blue.",
+   "piece": "lotv-waste",
+   "sm": 1
+  },
+  {
+   "p": "lotv",
    "src": "lotv-waste-cover.svg",
    "w": 929,
    "h": 304,
@@ -237,6 +247,14 @@ window.WORKS = {
    "w": 2400,
    "h": 1600,
    "alt": "The thesis cover: black uncoated stock, the title set small in white across the top, Royal College of Art along the bottom, and a small hand-drawn figure with its arms out alone in the middle of the field.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-37.webp",
+   "w": 2480,
+   "h": 3508,
+   "alt": "The thesis cover flat: Zerko Grotesk: Script Parity as a Design Condition set small in white at the top of a black A4 page, Royal College of Art at the foot, and the small hand-drawn figure with its arms out in the centre.",
    "sm": 1
   },
   {
