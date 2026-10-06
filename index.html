@@ -263,6 +263,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 }
 .gallery.back { cursor: w-resize; }
 .gallery.single { cursor: default; }
+.gallery.out { cursor: zoom-out; }   /* beside the plate: a click closes */
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .gallery .mark { width: 100%; height: auto; max-height: 100%; }
 /* One system on every screen (5 Oct): the header is only name and Info.
@@ -652,10 +653,19 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const m = media(it, { eager: true });
     if (isMark(it)) m.classList.add('mark');
     g.append(m);
+    // Where Close goes: the contact sheet, or the wall for a one-plate
+    // project (whose sheet would open the plate again). A click on the plate
+    // steps (left half back, right half on); a click beside it closes.
+    const closeHref = list.length > 1 ? `?p=${p.slug}` : './';
+    const off = e => e.target !== m;
+    g.addEventListener('mousemove', e => {
+      g.classList.toggle('out', off(e));
+      g.classList.toggle('back', !off(e) && e.clientX < innerWidth / 2);
+    });
+    g.addEventListener('click', e => { if (off(e)) go(closeHref); });
     if (list.length > 1) {
       const step = d => go(`?p=${p.slug}&i=${(i - 1 + d + list.length) % list.length + 1}`, true);
-      g.addEventListener('mousemove', e => g.classList.toggle('back', e.clientX < innerWidth / 2));
-      g.addEventListener('click', e => step(e.clientX < innerWidth / 2 ? -1 : 1));
+      g.addEventListener('click', e => { if (!off(e)) step(e.clientX < innerWidth / 2 ? -1 : 1); });
       // Swipe on a phone: a mostly sideways drag of 40px or more. A tap still
       // lands as a click on either half.
       let x0 = null, y0 = null;
@@ -700,12 +710,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       cap.append(n);
     }
     main.append(cap);
-    // Close: back to the contact sheet, or to the wall for a one-plate
-    // project (whose sheet would open the plate again). Outside the gallery
-    // element, so a click on it does not also step.
+    // Close, outside the gallery element, so a click on it does not also step.
     const x = document.createElement('a');
     x.className = 'gclose';
-    x.href = list.length > 1 ? `?p=${p.slug}` : './';
+    x.href = closeHref;
     x.dataset.nav = '';
     x.textContent = 'Close';
     main.append(x);
