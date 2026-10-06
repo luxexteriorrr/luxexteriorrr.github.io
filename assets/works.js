@@ -12,6 +12,7 @@
 // AWW90s entry page as a screen recording (17, 5 Oct), in place of the still entry (16).
 // AWW90s prototype recordings 18–21 (phone, 5 Oct): editorial scrolls, shop/filter flow, product photo swipe.
 // LOTV WASTE! hand-lettered announcement (lotv-waste-06) and the flat thesis cover (zerko-thesis-37) added 6 Oct.
+// JRAY signature (jray-02) added 6 Oct.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -571,6 +572,14 @@ window.WORKS = {
    "w": 1206,
    "h": 2622,
    "alt": "Drenched by JRAY playing, sleeve shown on a phone.",
+   "sm": 1
+  },
+  {
+   "p": "jray",
+   "src": "jray-02.webp",
+   "w": 2000,
+   "h": 2000,
+   "alt": "The hand-drawn signature for Drenched: a looping calligraphic script rendered in chrome greys with a white edge, on pale grey.",
    "sm": 1
   },
   {
