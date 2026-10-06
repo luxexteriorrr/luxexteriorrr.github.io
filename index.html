@@ -273,6 +273,16 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .head .view, .head .count { display: none; }
 .mode-project .head .slot { display: none; }
 
+/* Filter: one column, flush left, one plate per project with its line
+   underneath (renderColumn). */
+.col { padding: 0 var(--pad) var(--pad); }
+.cplate { margin: 0 0 5em; }
+.cplate a { display: block; width: min(var(--w), calc(80svh * var(--ar))); }
+.cplate img, .cplate video { display: block; width: 100%; height: auto; }
+.cplate figcaption { margin-top: 0.5em; max-width: 44em; font-weight: 400; }
+.cplate figcaption .n { font-weight: 500; }
+@media (max-width: 700px) { .cplate a { width: min(100%, calc(70svh * var(--ar))); } }
+
 /* Title block above a filter or a contact sheet: name, object and year,
    then the description. Scrolls away with the page. */
 .ptitle { margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
@@ -415,18 +425,28 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   const discName = Object.fromEntries(DISCIPLINES);
   const EXPORT = 'export/';
 
-  // Mixed order: round-robin across projects so neighbours come from
-  // different work, with a seeded shuffle of each round so it does not read
-  // as a pattern. Same seed every load, so the wall is stable and can be tuned.
-  let seed = 7;
-  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const queues = projects.map(p => items.filter(i => i.p === p.slug));
+  // The wall draws from a pool: every plate unless marked `wall: 0` (the pool
+  // gets curated later), in a fresh order on every load. Each next plate comes
+  // from a project picked at random, weighted by how many of its plates are
+  // left and never the one just shown (while there is another), so the work
+  // spreads evenly down the page. Shuffled with Fisher–Yates, not
+  // sort(() => rand() - 0.5): that depends on each browser's sort, and gave
+  // Chrome and Safari different walls from the same seed (6 Oct).
+  const shuffle = a => {
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  };
+  const queues = projects.map(p => shuffle(items.filter(it => it.p === p.slug && it.wall !== 0)));
   const mixed = [];
   let last = null;
   while (queues.some(q => q.length)) {
-    const round = queues.filter(q => q.length).sort(() => rand() - 0.5);
-    if (round.length > 1 && round[0][0].p === last) round.push(round.shift());
-    for (const q of round) { const it = q.shift(); mixed.push(it); last = it.p; }
+    let open = queues.filter(q => q.length && q[0].p !== last);
+    if (!open.length) open = queues.filter(q => q.length);
+    let r = Math.random() * open.reduce((n, q) => n + q.length, 0);
+    const q = open.find(q => (r -= q.length) < 0) || open[open.length - 1];
+    const it = q.shift();
+    mixed.push(it);
+    last = it.p;
   }
 
   const ar = it => it.w / it.h;
@@ -569,6 +589,40 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       }
       main.append(el);
     });
+  }
+
+  // A filter reads rather than shows: one column, flush left, one plate per
+  // project (its key plate: the one marked `key`, or else its first), in the
+  // Info order, each with its line underneath (after CD HQ). Width steps by
+  // shape, capped so a tall plate still fits the screen. A plate opens its
+  // project's contact sheet.
+  function renderColumn(list) {
+    const col = document.createElement('div');
+    col.className = 'col';
+    for (const p of list) {
+      const own = items.filter(i => i.p === p.slug);
+      const it = own.find(i => i.key) || own[0];
+      if (!it) continue;
+      const f = document.createElement('figure');
+      f.className = 'cplate';
+      const a = document.createElement('a');
+      a.href = `?p=${p.slug}`;
+      a.dataset.nav = '';
+      const r = ar(it);
+      const w = isMark(it) ? (r > 4 ? 60 : 40) : r >= 1.25 ? 60 : r >= 0.6 ? 40 : 20;
+      a.style.setProperty('--w', w + '%');
+      a.style.setProperty('--ar', r);
+      a.append(media(it, { sizes: `${w}vw` }));
+      const c = document.createElement('figcaption');
+      // The name in Medium, what it is in Regular.
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = p.title;
+      c.append(n, p.meta ? `, ${p.meta}` : '');
+      f.append(a, c);
+      col.append(f);
+    }
+    main.append(col);
   }
 
   function renderSheet(p, list) {
@@ -717,7 +771,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         // Several filters at once: work in any of them. They name themselves
         // at the top, each with a cross that takes just that one away; the
         // last one gone is all the work again, and the bar goes with it.
-        list = mixed.filter(it => bySlug[it.p].d.some(k => ds.includes(k)));
+        list = projects.filter(p => p.d.some(k => ds.includes(k)));
         label = ds.map(k => discName[k]).join(' + ');
         viewHref = filterHref(ds);
         const b = document.createElement('p');
@@ -737,9 +791,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         });
         main.append(b);
       }
-      renderWall(list);
-      snapHeights();
-      document.body.className = 'mode-wall';
+      if (ds.length) renderColumn(list);
+      else { renderWall(list); snapHeights(); }
+      document.body.className = ds.length ? 'mode-wall mode-filter' : 'mode-wall';
     }
 
     viewEl.textContent = label;
