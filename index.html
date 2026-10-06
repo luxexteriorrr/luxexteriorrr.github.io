@@ -403,7 +403,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-06c"></script>
+<script src="assets/works.js?v=2026-10-06e"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -426,29 +426,25 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   const discName = Object.fromEntries(DISCIPLINES);
   const EXPORT = 'export/';
 
-  // The wall draws from a pool: every plate unless marked `wall: 0` (the pool
-  // gets curated later), in a fresh order on every load. Each next plate comes
-  // from a project picked at random, weighted by how many of its plates are
-  // left and never the one just shown (while there is another), so the work
-  // spreads evenly down the page. Shuffled with Fisher–Yates, not
-  // sort(() => rand() - 0.5): that depends on each browser's sort, and gave
-  // Chrome and Safari different walls from the same seed (6 Oct).
-  const shuffle = a => {
-    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
-    return a;
-  };
-  const queues = projects.map(p => shuffle(items.filter(it => it.p === p.slug && it.wall !== 0)));
+  // Mixed order: round-robin across projects so neighbours come from
+  // different work, with a seeded shuffle of each round so it does not read
+  // as a pattern. Same seed every load, so the wall is stable and can be tuned.
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const queues = projects.map(p => items.filter(i => i.p === p.slug));
   const mixed = [];
   let last = null;
   while (queues.some(q => q.length)) {
-    let open = queues.filter(q => q.length && q[0].p !== last);
-    if (!open.length) open = queues.filter(q => q.length);
-    let r = Math.random() * open.reduce((n, q) => n + q.length, 0);
-    const q = open.find(q => (r -= q.length) < 0) || open[open.length - 1];
-    const it = q.shift();
-    mixed.push(it);
-    last = it.p;
+    const round = queues.filter(q => q.length).sort(() => rand() - 0.5);
+    if (round.length > 1 && round[0][0].p === last) round.push(round.shift());
+    for (const q of round) { const it = q.shift(); mixed.push(it); last = it.p; }
   }
+  // Zerko Grotesk opens the wall in every browser. The shuffle above sorts
+  // with a random comparison, which each browser's sort answers differently:
+  // Safari opened on Zerko, Chrome on As Seen In (6 Oct). The first Zerko
+  // plate moves to the front; in Safari it already is the front.
+  const opener = mixed.findIndex(it => it.p === 'zerko-grotesk');
+  if (opener > 0) mixed.unshift(...mixed.splice(opener, 1));
 
   const ar = it => it.w / it.h;
   // An SVG is a mark (wordmark, lettering) unless flagged as a plate: the
