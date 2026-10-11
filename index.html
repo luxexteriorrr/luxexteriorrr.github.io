@@ -36,9 +36,12 @@
   --head-h: 40px;           /* measured from the header in the script */
   --gcap-h: 34px;           /* the gallery's caption line on a phone */
   /* One curve for every movement on the site, the page transition's (from
-     the Framer reference); Info runs it faster than the 1.5s page change. */
+     the Framer reference); Info runs it a little faster than the page change. */
   --ease: cubic-bezier(0.76, 0, 0.24, 1);
   --info-t: 0.7s;
+  --page-t: 0.9s;           /* the page change; was 1.5s, the reference's own
+                               length, which felt like waiting by the third
+                               project in a row (11 Oct) */
 }
 @media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
 
@@ -101,9 +104,9 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
    (on a project the slot is capped to a reading measure and stops short). */
 .head .info-toggle { margin-left: auto; }   /* always at the right edge */
 .head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
-.head .info-toggle:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .info-toggle:hover, .head .info-toggle:active { text-decoration: underline; text-underline-offset: 0.18em; }
 .info .theme { margin-top: 1.28em; }
-.info .theme button:hover, .info .theme button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+.info .theme button:hover, .info .theme button:active, .info .theme button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
 /* On a phone the header is a fixed grid, so nothing jumps between pages:
    name and Info always share the first row; the page you are on (and the
    counter in the gallery) sits on the second; object and year on a third,
@@ -155,7 +158,8 @@ html.info-instant .info, html.info-instant .content { transition: none !importan
 
 /* Page transition, taken from the Framer reference's own settings
    (noravale.framer.website, global page effect, read from its code 5 Oct):
-   both views move at once over 1.5s on cubic-bezier(.76,0,.24,1).
+   both views move at once over 1.5s on cubic-bezier(.76,0,.24,1)
+   (here --page-t, shortened to 0.9s on 11 Oct).
    Exit: the old view fades out, shrinks to 95% and drifts up 10%.
    Enter: the new view rises from 10% below and is revealed by a hard-edged
    wipe from the bottom up (their mask: wipe, angle 270, width 0%), no fade.
@@ -171,15 +175,18 @@ html.info-instant .info, html.info-instant .content { transition: none !importan
   content: ""; position: absolute; left: 0; right: 0; bottom: 100%;
   height: 160px; background: var(--bg); pointer-events: none;
 }
-::view-transition { background: var(--bg); }
+/* Clicks pass through the moving picture to the new page underneath, so a
+   second click mid-change is not lost: it starts the next change, which
+   ends the first (11 Oct; the page used to ignore input until it finished). */
+::view-transition { background: var(--bg); pointer-events: none; }
 /* Trial 5 Oct: exit without the fade (the reference fades to 0). */
 @keyframes vt-exit { to { transform: translateY(-10%) scale(0.95); } }
 @keyframes vt-enter {
   from { transform: translateY(10%); clip-path: inset(100% 0 0 0); }
   to   { transform: none; clip-path: inset(0 0 0 0); }
 }
-::view-transition-old(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-exit; }
-::view-transition-new(root) { animation: 1.5s cubic-bezier(0.76, 0, 0.24, 1) both vt-enter; }
+::view-transition-old(root) { animation: var(--page-t) cubic-bezier(0.76, 0, 0.24, 1) both vt-exit; }
+::view-transition-new(root) { animation: var(--page-t) cubic-bezier(0.76, 0, 0.24, 1) both vt-enter; }
 ::view-transition-group(head) { animation-duration: 0.6s; }
 /* Going back up (a project to the wall or a filter) runs it the other way:
    the old view sinks and the new one comes down from above, wiped in from
@@ -212,12 +219,17 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
    drawn, moving and growing from where the other one was. */
 ::view-transition-old(plate) { animation: none; opacity: 0; }
 ::view-transition-new(plate) { animation: none; }
+/* Reduced motion: nothing slides, grows or wipes, but the views still
+   crossfade briefly, so moving between pages reads as a change and not a
+   jump (11 Oct; it used to switch with no transition at all). */
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  ::view-transition-group(*) { animation: none !important; }
+  ::view-transition-old(*) { animation: 0.2s ease both vt-fade-out !important; }
+  ::view-transition-new(*) { animation: 0.2s ease both vt-fade-in !important; }
 }
 .info h2 { font: inherit; margin: 0 0 1.28em; }
 .info p, .info ul { margin: 0; padding: 0; list-style: none; }
-.info a:hover, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
+.info a:hover, .info a:active, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
 .info .ask { margin-top: 1.28em; }
 @media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
 
@@ -266,6 +278,23 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .gallery.out { cursor: zoom-out; }   /* beside the plate: a click closes */
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .gallery .mark { width: 100%; height: auto; max-height: 100%; }
+/* The swipe (11 Oct): the plate follows the finger and its neighbour waits
+   just off screen on that side (.peek, laid out exactly like the plate), so a
+   release carries one out and the other in. Vertical drags stay the
+   browser's (pan-y); sideways ones are the script's. */
+.gallery { position: relative; overflow: hidden; touch-action: pan-y; }
+.gallery .peek { position: absolute; inset: 0; padding: inherit; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+
+/* Tap areas (11 Oct): on a touch screen the small text controls get an
+   invisible margin of touch around them, nearer Apple's 44pt, without moving
+   anything. (The stacked lists in Info sit too close for this: a bigger
+   area would overlap the next line.) */
+@media (pointer: coarse) {
+  .head .info-toggle, .ptitle .clear, .info .theme button { position: relative; }
+  .head .info-toggle::after, .gclose::after { content: ""; position: absolute; inset: -12px -14px -11px; }
+  .ptitle .clear::after { content: ""; position: absolute; inset: -12px -10px; }
+  .info .theme button::after { content: ""; position: absolute; inset: -12px -0.3em; }
+}
 /* One system on every screen (5 Oct): the header is only name and Info.
    What a page is about sits with the work: a title block above a filter or
    a contact sheet, and a caption line under the plate in the gallery. (The
@@ -301,7 +330,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
   transition: transform var(--info-t) var(--ease);
 }
 .ptitle.filters.away { transform: translateY(calc(-100% - var(--head-h))); }
-.ptitle .clear:hover { opacity: 0.55; }
+.ptitle .clear:hover, .ptitle .clear:active { opacity: 0.55; }
 .ptitle .t + .d { display: block; margin-top: 0.6em; }
 
 /* Gallery: the plate fills what is left of the screen above its caption.
@@ -320,7 +349,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
    plate starts a line lower, so a tall one does not run under the word. */
 .mode-gallery main { position: relative; }
 .gclose { position: absolute; top: 12px; right: var(--pad); z-index: 1; }
-.gclose:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.gclose:hover, .gclose:active { text-decoration: underline; text-underline-offset: 0.18em; }
 @media (max-width: 700px) { .mode-gallery .gallery { padding-top: calc(12px + var(--lead) + 8px); } }
 .gcap a, .ptitle a.ext, .gdesc a.ext { text-decoration: underline; text-underline-offset: 0.18em; }
 .gdesc { display: none; }
@@ -524,6 +553,29 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     return img;
   }
 
+  // A spring in Apple's own terms (Designing Fluid Interfaces, WWDC 2018):
+  // `response` is roughly how long it takes, in seconds; damping 1 settles
+  // without overshoot. It starts at velocity v (px/s), so a released plate
+  // carries on at the finger's speed instead of starting from rest. Returns
+  // a stop function, so a new touch can catch the plate mid-flight.
+  function spring(from, to, v, { response = 0.35, damping = 1 } = {}, update, done) {
+    const k = (2 * Math.PI / response) ** 2, c = 4 * Math.PI * damping / response;
+    let x = from, last = performance.now(), raf = 0;
+    const tick = now => {
+      const h = Math.min((now - last) / 1000, 1 / 30) / 4;
+      last = now;
+      for (let s = 0; s < 4; s++) { v += (-k * (x - to) - c * v) * h; x += v * h; }
+      if (Math.abs(x - to) < 0.5 && Math.abs(v) < 10) { update(to); return done && done(); }
+      update(x);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }
+  // Where a flick would come to rest, by Apple's projection (the sample
+  // code's scroll deceleration, 0.998 per millisecond), not where it let go.
+  const project = v => (v / 1000) * 0.998 / (1 - 0.998);
+
   // A project's live address after its description, with a note in
   // brackets (AWW90s: "aww90s.com (client edited)"). Opens in a new tab.
   function appendLink(el, p) {
@@ -646,7 +698,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const g = document.createElement('div');
     g.className = 'gallery' + (list.length < 2 ? ' single' : '');
     const it = list[i - 1];
-    const m = media(it, { eager: true });
+    // After a slide the plate that came in is the very element already on
+    // screen (carried over from .peek), so the change has no seam or reload.
+    const m = carried && carried.src === it.src ? carried.el : media(it, { eager: true });
+    carried = null;
     if (isMark(it)) m.classList.add('mark');
     g.append(m);
     // Where Close goes: the contact sheet, or the wall for a one-plate
@@ -660,19 +715,100 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     });
     g.addEventListener('click', e => { if (off(e)) go(closeHref); });
     if (list.length > 1) {
-      const step = d => go(`?p=${p.slug}&i=${(i - 1 + d + list.length) % list.length + 1}`, true);
-      g.addEventListener('click', e => { if (!off(e)) step(e.clientX < innerWidth / 2 ? -1 : 1); });
-      // Swipe on a phone: a mostly sideways drag of 40px or more. A tap still
-      // lands as a click on either half.
-      let x0 = null, y0 = null;
-      g.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+      const at = d => (i - 1 + d + list.length) % list.length;   // a neighbour's place in the list
+      const step = d => go(`?p=${p.slug}&i=${at(d) + 1}`, true);
+      // Steps slide (11 Oct, after Apple's Designing Fluid Interfaces): the
+      // plate leaves the way it is pushed and its neighbour comes in behind
+      // it, on a spring. A swipe tracks the finger 1:1 and hands its speed to
+      // the spring; a click or an arrow key slides from rest, in the same
+      // direction. With reduced motion asked for, the plate just changes.
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let x = 0, peek = null, peekDir = 0, stop = null;
+      const W = () => g.clientWidth;
+      const place = () => {
+        m.style.transform = x ? `translateX(${x}px)` : '';
+        if (peek) peek.style.transform = `translateX(${x + peekDir * W()}px)`;
+      };
+      // The neighbour on the side the plate is moving away from (dir 1: the
+      // next one, waiting on the right).
+      const showPeek = dir => {
+        if (peekDir === dir) return;
+        if (peek) peek.remove();
+        const n = list[at(dir)];
+        const pm = media(n, { eager: true });
+        if (isMark(n)) pm.classList.add('mark');
+        peek = document.createElement('div');
+        peek.className = 'peek';
+        peek.append(pm);
+        g.append(peek);
+        peekDir = dir;
+      };
+      const slide = (dir, v = 0) => {
+        if (still) return step(dir);
+        if (stop) stop();
+        showPeek(dir);
+        stop = spring(x, -dir * W(), v, { response: 0.35 }, nx => { x = nx; place(); }, () => {
+          carried = { src: list[at(dir)].src, el: peek.firstChild };
+          step(dir);
+        });
+      };
+      // Not far or fast enough: back to the middle, at the finger's speed.
+      const settle = v => {
+        if (still) { x = 0; return; }
+        if (stop) stop();
+        stop = spring(x, 0, v, { response: 0.3 }, nx => { x = nx; place(); }, () => {
+          stop = null;
+          if (peek) { peek.remove(); peek = null; peekDir = 0; }
+        });
+      };
+      // A click on either half steps, with a mouse only: on a phone a tap on
+      // the plate does nothing and only a swipe moves on (11 Oct), so a stray
+      // touch never changes the picture.
+      let touchedAt = -1e9;
+      g.addEventListener('click', e => {
+        if (off(e) || performance.now() - touchedAt < 800) return;
+        slide(e.clientX < innerWidth / 2 ? -1 : 1);
+      });
+      // Swipe on a phone. Nothing moves until the finger has gone 10px, then
+      // a mostly sideways drag is the plate's and a mostly upright one is the
+      // page's scroll. On release the plate goes where the flick would carry
+      // it: past 30% of the width it moves on, short of that it comes back.
+      let x0 = null, y0 = 0, axis = null, base = 0, hist = [];
+      g.addEventListener('touchstart', e => {
+        touchedAt = performance.now();
+        if (e.touches.length > 1) return;
+        if (stop) { stop(); stop = null; }        // caught mid-flight: it stays under the finger
+        x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+        axis = null; base = x; hist = [{ t: e.timeStamp, x: x0 }];
+      }, { passive: true });
+      g.addEventListener('touchmove', e => {
+        if (x0 === null) return;
+        const cx = e.touches[0].clientX, dx = cx - x0, dy = e.touches[0].clientY - y0;
+        if (!axis) {
+          if (Math.hypot(dx, dy) < 10) return;
+          axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        }
+        if (axis !== 'x') return;
+        x = base + dx;
+        // With reduced motion the plate stays still while the finger moves;
+        // the swipe is only read on release.
+        if (!still) { if (x) showPeek(x < 0 ? 1 : -1); place(); }
+        hist.push({ t: e.timeStamp, x: cx });
+        while (hist.length > 2 && e.timeStamp - hist[0].t > 100) hist.shift();
+      }, { passive: true });
       g.addEventListener('touchend', e => {
         if (x0 === null) return;
-        const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
         x0 = null;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); step(dx < 0 ? 1 : -1); }
+        if (axis !== 'x') { if (x) settle(0); return; }
+        e.preventDefault();                       // a drag is not also a click
+        const a = hist[0], b = hist[hist.length - 1];
+        const v = b.t > a.t ? (b.x - a.x) / (b.t - a.t) * 1000 : 0;
+        const end = x + project(v);
+        if (Math.abs(end) > W() * 0.3) slide(end < 0 ? 1 : -1, v);
+        else settle(v);
       });
-      gallerySteps = step;
+      g.addEventListener('touchcancel', () => { if (x0 !== null) { x0 = null; settle(0); } });
+      gallerySteps = slide;
       // Fetch the neighbours ahead of the click.
       [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
     }
@@ -729,6 +865,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   }
 
   let gallerySteps = null;
+  let carried = null;   // the plate a slide brought in, handed to the next render
 
   function render() {
     const q = new URLSearchParams(location.search);
@@ -1078,7 +1215,12 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // Smooth wheel, same setting as the live index (lerp 0.12). It eases the
   // wheel into the native scroll, so sticky and touch are untouched. The Info
   // panel scrolls on its own (data-lenis-prevent).
-  if (window.Lenis) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
+  // Not for visitors who asked for reduced motion (11 Oct): they get the
+  // browser's own scrolling, with no easing behind the wheel.
+  if (window.Lenis && !matchMedia('(prefers-reduced-motion: reduce)').matches) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
+  // iOS only shows :active (the pressed state) on a page that listens for
+  // touches; this empty listener is the usual way to switch it on.
+  document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 </script>
 </body>
