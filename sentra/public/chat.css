@@ -125,6 +125,13 @@ html, body {
   height: 100%;
   background-color: var(--black);
 }
+/* On the phone the ground is white: iOS paints the status bar strip of the
+ * Home Screen app with the page's background (it came out black on the
+ * iPhone 17 Pro, 12 Oct), and every screen meets it in white: the
+ * statements, the chat nav. Black stays for the sides on a wider screen. */
+@media (max-width: 414px) {
+  html, body { background-color: var(--white); }
+}
 /* Buttons and inputs do not inherit type. Without this they set in the
  * system face at the browser's size. */
 button, input, textarea {
@@ -587,10 +594,13 @@ body.is-idle nav { display: none !important; }
   justify-content: space-between;
   align-items: flex-end;                 /* the send square stays on the last line */
   gap: var(--s1);
-  padding: 0 var(--margin);
+  /* The white runs under the home indicator; the field keeps clear of it.
+   * While typing the keyboard covers that strip, so the gap goes. */
+  padding: 0 var(--margin) env(safe-area-inset-bottom);
   background-color: var(--white);
   z-index: 4;
 }
+.input-form:focus-within { padding-bottom: 0; }
 #SystemInput {
   flex: 1;
   display: block;
