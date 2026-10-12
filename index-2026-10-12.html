@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kirill Konstantinov</title>
+<!-- Frozen 12 Oct 2026: the wall as it was before justified rows by date (4 columns, mixed order). Not linked; kept to compare. -->
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="description" content="Kirill Konstantinov is a graphic designer based in London, working in editorial, identity and type.">
+<link rel="preload" href="assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/zerko.css">
+<!-- Theme chosen with the toggle, applied before first paint so the page does
+     not flash the other colours. No choice stored = follow the system. -->
+<script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<!-- The homepage since 5 Oct 2026 (was the image-wall trial at /wall/), after Ohlman Consorti: every plate from every
+     project on one mixed wall, a 4-column module with quarter / half / full
+     widths, marks at the same weight as photographs. The URL is the filter:
+     ?d=editorial for a discipline, ?p=as-seen-in for a project, so an
+     application can link straight to the view that fits the studio.
+
+     A project opens as a contact sheet (all its plates in equal square cells),
+     and a plate opens alone in a gallery (?p=as-seen-in&i=3). The header carries
+     what the wall leaves out: project, object, year, and the one line. -->
+<style>
+:root {
+  --fg: #111;
+  --bg: #fff;
+  --size: 13px;
+  --lead: 17px;             /* whole pixels: 1.28 × 13 gave a 40.63px header,
+                               and every plate under it started mid-pixel */
+  --track: 0.022em;
+  --pad: 14px;
+  --cols: 4;
+  --sheet-cols: 4;
+  --head-h: 40px;           /* measured from the header in the script */
+  --gcap-h: 34px;           /* the gallery's caption line on a phone */
+  /* One curve for every movement on the site, the page transition's (from
+     the Framer reference); Info runs it a little faster than the page change. */
+  --ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --info-t: 0.7s;
+  --page-t: 0.9s;           /* the page change; was 1.5s, the reference's own
+                               length, which felt like waiting by the third
+                               project in a row (11 Oct) */
+}
+@media (max-width: 700px) { :root { --size: 12px; --lead: 15px; --cols: 2; --sheet-cols: 2; } }
+
+/* Dark mode follows the visitor's system setting, as on the Framer reference
+   (noravale.framer.website): no toggle, one block that swaps the two colours.
+   Values from the reference: #111 ground, #f7f7f7 text. */
+:root { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; }
+  :root:not([data-theme="light"]) img.mono { filter: invert(1); }
+}
+/* The header toggle overrides the system either way. */
+:root[data-theme="dark"] { color-scheme: dark; --fg: #f7f7f7; --bg: #111; }
+/* Lettering that is pure black (COMFORT, DRENCHED, the JRAY mark: `mono` in
+   the data) turns white in dark mode. Coloured lettering (MACRAMÉ, the
+   tracklist) shows as it is in both modes. None of it gets a background. */
+:root[data-theme="dark"] img.mono { filter: invert(1); }
+:root[data-theme="light"] { color-scheme: light; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Scrolling as on the live site (floating-nav): no scrollbar, no bounce past
+   either end, and Lenis easing the wheel into the native scroll. */
+html, body { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+html { overscroll-behavior-y: none; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+::selection { background: transparent; color: #e6007e; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+body {
+  font-family: 'Zerko', sans-serif;
+  font-weight: 500;
+  font-size: var(--size);
+  line-height: var(--lead);
+  letter-spacing: var(--track);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.u { text-decoration: underline; text-underline-offset: 0.18em; }
+
+/* Header: name, the view you are in, then a slot that names the plate under
+   the cursor on the wall, and carries object, year and the line on a project. */
+.head {
+  position: sticky; top: 0; z-index: 10;
+  min-height: 40px;
+  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 2em; row-gap: 0.2em;
+  padding: 12px var(--pad) 11px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--fg);
+}
+.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .slot { flex: 1; min-width: 0; }
+.mode-wall .head .slot { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mode-project .head .slot { max-width: 52em; }
+.head .count:empty { display: none; }
+/* Counter and Info always sit at the right edge, whatever the slot's width
+   (on a project the slot is capped to a reading measure and stops short). */
+.head .info-toggle { margin-left: auto; }   /* always at the right edge */
+.head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .info-toggle:hover, .head .info-toggle:active { text-decoration: underline; text-underline-offset: 0.18em; }
+.info .theme { margin-top: 1.28em; }
+.info .theme button:hover, .info .theme button:active, .info .theme button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+/* On a phone the header is a fixed grid, so nothing jumps between pages:
+   name and Info always share the first row; the page you are on (and the
+   counter in the gallery) sits on the second; object and year on a third,
+   on project pages only. It used to wrap as it pleased, and on a long title
+   Info dropped to the second row. */
+@media (max-width: 700px) {
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1em; row-gap: 0.15em; }
+  .head > a:first-child { grid-area: 1 / 1; justify-self: start; }
+  .head .info-toggle { grid-area: 1 / 2; justify-self: end; margin-left: 0; }
+  .head .view { grid-area: 2 / 1; justify-self: start; }
+  .head .count { grid-area: 2 / 2; justify-self: end; margin-left: 0; }
+  .head .slot { grid-area: 3 / 1 / 4 / 3; }
+  .mode-wall .head .slot { display: none; }
+  /* Contact sheet tighter on a phone: two across, a 4px inset instead of the
+     page margin, so the plates are bigger and read as one set. */
+  /* Rows as tall as their tallest plate rather than square cells, which left
+     a landscape plate floating in 50px of air above and below. Tall plates
+     are capped at 70vw so a poster does not take the screen. */
+  body .sheet a { padding: 4px; aspect-ratio: auto; container-type: normal; display: flex; align-items: center; justify-content: center; }
+  body .sheet img, body .sheet video { width: auto; height: auto; max-width: 100%; max-height: 70vw; }
+  body .sheet .mark img { width: 100%; }
+}
+/* No label on the main wall: there it only said "Selected Works", which the
+   page already is. Filters and projects keep theirs, it names where you are. */
+.head .view.is-home { display: none; }
+
+/* Info, after Ohlman's "agency services": opening it slides everything under
+   the header down by the panel's height, and the panel comes down from behind
+   the header into the room that leaves. The header stays put; nothing is
+   covered, the work is pushed. Half a second, as on the reference. Works from
+   any scroll position, since the push is a transform, not a margin. */
+.info {
+  position: fixed; inset: var(--head-h) 0 auto 0; z-index: 9;   /* behind the header */
+  max-height: calc(100svh - var(--head-h)); overflow: auto;
+  overscroll-behavior: contain; scrollbar-width: none;
+  background: var(--bg);
+  padding: var(--pad) var(--pad) calc(2 * var(--pad));
+  border-bottom: 1px solid var(--fg);
+  display: grid; grid-template-columns: 2fr 1fr 1.4fr 1fr; gap: 2em;
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform var(--info-t) var(--ease), visibility 0s linear var(--info-t);
+}
+.info.open { transform: none; visibility: visible; transition: transform var(--info-t) var(--ease); }
+.content { flex: 1; display: flex; flex-direction: column; transition: transform var(--info-t) var(--ease); }
+.content.pushed { transform: translateY(var(--info-h)); }
+@media (prefers-reduced-motion: reduce) { .info, .info.open, .content { transition: none; } }
+html.info-instant .info, html.info-instant .content { transition: none !important; }
+
+/* Page transition, taken from the Framer reference's own settings
+   (noravale.framer.website, global page effect, read from its code 5 Oct):
+   both views move at once over 1.5s on cubic-bezier(.76,0,.24,1)
+   (here --page-t, shortened to 0.9s on 11 Oct).
+   Exit: the old view fades out, shrinks to 95% and drifts up 10%.
+   Enter: the new view rises from 10% below and is revealed by a hard-edged
+   wipe from the bottom up (their mask: wipe, angle 270, width 0%), no fade.
+   Built on the browser's View Transitions API, as Framer does. The header has
+   its own name, so it holds still while the work changes under it. Browsers
+   without the API just switch. The gallery steps without it. */
+.head { view-transition-name: head; }
+/* The header's own still layer during a transition also covers the strip
+   above it: on an iPhone the transition area reaches up under the status
+   bar, and the moving page showed through between it and the header (5 Oct).
+   Off screen the rest of the time (no overscroll bounce to reveal it). */
+.head::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 100%;
+  height: 160px; background: var(--bg); pointer-events: none;
+}
+/* Clicks pass through the moving picture to the new page underneath, so a
+   second click mid-change is not lost: it starts the next change, which
+   ends the first (11 Oct; the page used to ignore input until it finished). */
+::view-transition { background: var(--bg); pointer-events: none; }
+/* Trial 5 Oct: exit without the fade (the reference fades to 0). */
+@keyframes vt-exit { to { transform: translateY(-10%) scale(0.95); } }
+@keyframes vt-enter {
+  from { transform: translateY(10%); clip-path: inset(100% 0 0 0); }
+  to   { transform: none; clip-path: inset(0 0 0 0); }
+}
+::view-transition-old(root) { animation: var(--page-t) cubic-bezier(0.76, 0, 0.24, 1) both vt-exit; }
+::view-transition-new(root) { animation: var(--page-t) cubic-bezier(0.76, 0, 0.24, 1) both vt-enter; }
+::view-transition-group(head) { animation-duration: 0.6s; }
+/* Going back up (a project to the wall or a filter) runs it the other way:
+   the old view sinks and the new one comes down from above, wiped in from
+   the top. Same length and curve. */
+@keyframes vt-exit-back { to { transform: translateY(10%) scale(0.95); } }
+@keyframes vt-enter-back {
+  from { transform: translateY(-10%); clip-path: inset(0 0 100% 0); }
+  to   { transform: none; clip-path: inset(0 0 0 0); }
+}
+html.vt-back::view-transition-old(root) { animation-name: vt-exit-back; }
+html.vt-back::view-transition-new(root) { animation-name: vt-enter-back; }
+/* Adding or dropping a filter is the same wall refiltered, so no wipe: a
+   short crossfade on the same curve. */
+html.vt-filter::view-transition-old(root) { animation: 0.45s var(--ease) both vt-fade-out; }
+html.vt-filter::view-transition-new(root) { animation: 0.45s var(--ease) both vt-fade-in; }
+
+/* Contact sheet <-> one plate: the plate grows out of its thumbnail into the
+   gallery (and shrinks back into it), while the rest of the view crossfades.
+   The clicked plate carries the name "plate" in both views, so the browser
+   morphs one into the other; object-fit keeps it from stretching between the
+   square cell and the plate's own shape. */
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+/* One crossfade, same start and length on both sides: the first pass let
+   the sheet go before the gallery arrived, and the ground showed through. */
+html.vt-zoom::view-transition-old(root) { animation: 0.5s ease both vt-fade-out; }
+html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; }
+::view-transition-group(plate) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1); }
+/* The plate does not crossfade with itself: only the arriving picture is
+   drawn, moving and growing from where the other one was. */
+::view-transition-old(plate) { animation: none; opacity: 0; }
+::view-transition-new(plate) { animation: none; }
+/* Reduced motion: nothing slides, grows or wipes, but the views still
+   crossfade briefly, so moving between pages reads as a change and not a
+   jump (11 Oct; it used to switch with no transition at all). */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) { animation: none !important; }
+  ::view-transition-old(*) { animation: 0.2s ease both vt-fade-out !important; }
+  ::view-transition-new(*) { animation: 0.2s ease both vt-fade-in !important; }
+}
+.info h2 { font: inherit; margin: 0 0 1.28em; }
+.info p, .info ul { margin: 0; padding: 0; list-style: none; }
+.info a:hover, .info a:active, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
+.info .ask { margin-top: 1.28em; }
+@media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
+
+/* The wall. Rows of a 4-column module, no gutters: plates touch, as on the
+   reference. A row that does not fill leaves its gap as white space. */
+.row { display: grid; grid-template-columns: repeat(var(--cols), 1fr); align-items: start; }
+.cell { display: block; position: relative; }
+/* Heights are set in whole pixels by snapHeights() (object-fit covers the
+   sub-pixel difference), so rows meet without a hairline between them. */
+.cell img, .cell video { display: block; width: 100%; height: auto; object-fit: cover; }
+/* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
+   wordmark does not become a thin strip across the screen. */
+/* Wordmarks run all but edge to edge: a hair of room at either end. */
+.cell.mark { aspect-ratio: var(--box); display: flex; align-items: center; justify-content: center; padding: 1.5%; }
+.cell.mark img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Contact sheet: every plate of one project in equal square cells, each
+   plate contained and centred in its cell. 4 across, so a project of three
+   to eight plates fills the screen the way fifty fill the reference's 8. */
+.sheet { display: grid; grid-template-columns: repeat(var(--sheet-cols), 1fr); }
+/* Each cell is a size container, so the plate can be fitted with cq units and
+   its own box is exactly the visible image (object-fit left an empty frame
+   around it, which made the thumbnail-to-plate zoom start from the wrong
+   shape). Inset by the page margin. */
+.sheet a { aspect-ratio: 1; display: grid; place-items: center; padding: var(--pad); container-type: size; }
+/* The plate fills the cell's box and is contained inside it: a percentage
+   max-height does not resolve in an aspect-ratio box, so tall posters used
+   to run out of their cell (RADA Corsica, 5 Oct). */
+/* Inset by the page margin: at 4 across the cells are big, and with no inset
+   two landscapes side by side read as one image, and a tall poster touches
+   the header rule. */
+.sheet img, .sheet video { display: block; width: auto; height: auto; max-width: 100cqw; max-height: 100cqh; }
+.sheet .mark img { width: 100cqw; max-height: 100cqh; }
+
+/* Contact sheets as justified rows (12 Oct), after Bänziger Hug's journal.
+   Every plate starts at one height and its own width; a row takes plates
+   until the next one would overflow, keeps it, and the whole row shrinks to
+   end flush at both margins. So a row's plates share one height (never more
+   than --row-h) and a tall phone screen is narrow, not shrunk into a square.
+   The last row keeps --row-h. layoutRows() sets the sizes. ?grid=squares
+   shows the square cells above. */
+:root { --row-h: 400px; --row-gap: 10px; }   /* 400 (12 Oct, Kirill); Bänziger Hug use 600, 550 on a tablet */
+body .rows { display: flex; flex-wrap: wrap; gap: var(--row-gap); padding: 0 var(--pad) var(--pad); }
+body .rows a { flex: none; aspect-ratio: auto; padding: 0; container-type: normal; display: block; }
+body .rows img, body .rows video { width: 100%; height: 100%; max-width: none; max-height: none; }
+/* A wordmark fills its (at most 4:1) cell and sits in it, contained. The
+   square sheet's rule sizes marks in cq units, which in a row resolve to
+   the whole page and ran the lettering over its neighbours (LOTV, 12 Oct). */
+body .rows .mark img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; }
+
+/* Gallery: one plate, as large as the screen allows under the header. Left
+   half of the screen goes back, right half goes on. */
+.gallery {
+  height: calc(100svh - var(--head-h));
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--pad);
+  cursor: e-resize;
+  user-select: none;
+}
+.gallery.back { cursor: w-resize; }
+.gallery.single { cursor: default; }
+.gallery.out { cursor: zoom-out; }   /* beside the plate: a click closes */
+.gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.gallery .mark { width: 100%; height: auto; max-height: 100%; }
+/* The swipe (11 Oct): the plate follows the finger and its neighbour waits
+   just off screen on that side (.peek, laid out exactly like the plate), so a
+   release carries one out and the other in. Vertical drags stay the
+   browser's (pan-y); sideways ones are the script's. */
+.gallery { position: relative; overflow: hidden; touch-action: pan-y; }
+.gallery .peek { position: absolute; inset: 0; padding: inherit; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+
+/* Tap areas (11 Oct): on a touch screen the small text controls get an
+   invisible margin of touch around them, nearer Apple's 44pt, without moving
+   anything. (The stacked lists in Info sit too close for this: a bigger
+   area would overlap the next line.) */
+@media (pointer: coarse) {
+  .head .info-toggle, .ptitle .clear, .info .theme button { position: relative; }
+  .head .info-toggle::after, .gclose::after { content: ""; position: absolute; inset: -12px -14px -11px; }
+  .ptitle .clear::after { content: ""; position: absolute; inset: -12px -10px; }
+  .info .theme button::after { content: ""; position: absolute; inset: -12px -0.3em; }
+}
+/* One system on every screen (5 Oct): the header is only name and Info.
+   What a page is about sits with the work: a title block above a filter or
+   a contact sheet, and a caption line under the plate in the gallery. (The
+   header's project, object/year, line and counter came out; the slot stays
+   for the hover caption on the wall, desk only.) */
+.head .view, .head .count { display: none; }
+.mode-project .head .slot { display: none; }
+
+/* Filter: one column, flush left, one plate per project with its line
+   underneath (renderColumn). */
+.col { padding: 0 var(--pad) var(--pad); }
+.cplate { margin: 0 0 5em; }
+.cplate a { display: block; width: min(var(--w), calc(80svh * var(--ar))); }
+.cplate img, .cplate video { display: block; width: 100%; height: auto; }
+.cplate figcaption { margin-top: 0.5em; max-width: 44em; font-weight: 400; }
+.cplate figcaption .n { font-weight: 500; }
+@media (max-width: 700px) { .cplate a { width: min(100%, calc(70svh * var(--ar))); } }
+
+/* Title block above a filter or a contact sheet: name, object and year,
+   then the description. Scrolls away with the page. */
+.ptitle { margin: 0; padding: var(--pad) var(--pad) calc(1.5 * var(--pad)); max-width: 44em; }
+.ptitle .t { display: block; }
+/* The cross a size up from the text, sitting on the same line, with a
+   larger tap area than it looks. */
+.ptitle .clear { margin-left: 0.3em; padding: 0.2em 0.3em; font-size: 1.2em; line-height: 0; vertical-align: -0.04em; }
+.ptitle.filters { display: flex; flex-wrap: wrap; column-gap: 1.6em; row-gap: 0.2em; }
+/* The filter bar stays to hand: sticky under the header, it slides away as
+   you scroll down into the work and comes back as soon as you scroll up.
+   Behind the header (z 5 < 10), so "away" tucks it up under it. */
+.ptitle.filters {
+  position: sticky; top: var(--head-h); z-index: 5;
+  max-width: none; background: var(--bg);
+  transition: transform var(--info-t) var(--ease);
+}
+.ptitle.filters.away { transform: translateY(calc(-100% - var(--head-h))); }
+.ptitle .clear:hover, .ptitle .clear:active { opacity: 0.55; }
+.ptitle .t + .d { display: block; margin-top: 0.6em; }
+
+/* Gallery: the plate fills what is left of the screen above its caption.
+   Caption: project (back to its sheet), piece or object and year, and on a
+   desk the description; the counter on the right. */
+/* The gallery's height is set outright (screen, less header, less the
+   caption as measured): a flex layout let tall plates run past the screen. */
+.mode-gallery main { min-height: 0; }
+.mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-real, var(--gcap-h))); }
+/* On a desk the plate sits inside the page with air on every side, not edge
+   to edge: a wide plate (Zerko, 16:9) filled the screen to the caption. */
+@media (min-width: 701px) { .mode-gallery .gallery { padding: 6vh 10vw; } }
+.gcap { display: flex; align-items: baseline; gap: 2em; padding: 0 var(--pad) 12px; }
+.gcap .t { flex: 1; min-width: 0; }   /* across the page; counter at the right edge */
+/* Close, in the top right corner of the gallery, under Info. On a phone the
+   plate starts a line lower, so a tall one does not run under the word. */
+.mode-gallery main { position: relative; }
+.gclose { position: absolute; top: 12px; right: var(--pad); z-index: 1; }
+.gclose:hover, .gclose:active { text-decoration: underline; text-underline-offset: 0.18em; }
+@media (max-width: 700px) { .mode-gallery .gallery { padding-top: calc(12px + var(--lead) + 8px); } }
+.gcap a, .ptitle a.ext, .gdesc a.ext { text-decoration: underline; text-underline-offset: 0.18em; }
+.gdesc { display: none; }
+@media (max-width: 700px) {
+  /* Phone: one line, cut with an ellipsis, so the plate's room is fixed; the
+     description goes one scroll down instead (.gdesc). */
+  .mode-gallery .gallery { height: calc(100svh - var(--head-h) - var(--gcap-h)); }
+  .gcap { align-items: center; gap: 1em; height: var(--gcap-h); padding: 0 var(--pad); }
+  .gcap .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gcap .d { display: none; }
+  .gdesc { display: block; margin: 0; padding: 0 var(--pad) calc(2 * var(--pad)); max-width: 44em; }
+}
+
+/* The footer sits at the bottom of the window on a short page (a contact
+   sheet of four), and after the plates on a long one. */
+body { min-height: 100svh; display: flex; flex-direction: column; }
+/* The work always fills at least a whole screen, so the footer is never on
+   the first one: on a short project (JRAY, four plates) it used to sit at the
+   bottom of the window, half under Safari's toolbar. lvh, the screen with the
+   toolbars hidden, so it stays out of view when they collapse too. */
+main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
+.mode-gallery main { min-height: 0; }
+.page { flex: 1; display: flex; flex-direction: column; }
+/* Plenty of room before the footer, so the last plates end the page rather
+   than run into the small print. Text at full colour. */
+.foot { padding: 14em var(--pad) var(--pad); }
+.foot p { margin: 0; max-width: 44em; }
+.mode-gallery .foot { display: none; }
+</style>
+</head>
+<body class="mode-wall">
+
+<section class="info" id="info" inert data-lenis-prevent>
+  <div class="bio">
+  <p>Kirill Konstantinov [Moscow, 1999] is a graphic designer and art director based in London. His work is a dialogue between research and the object being made: books, identities, typefaces and websites. He holds an MA in <a href="https://www.rca.ac.uk/study/programme-finder/digital-narrative-arts-ma-mfa/" target="_blank" rel="noopener">Digital Direction</a> and an MRes in Communication Design, both from the Royal College of Art.</p>
+    <!-- Light / dark: remembered in this browser; with no choice stored the
+         page follows the system setting. -->
+    <p class="theme"><button type="button" data-theme-set="light">Light</button> / <button type="button" data-theme-set="dark">Dark</button></p>
+  </div>
+  <section>
+    <h2>Practice</h2>
+    <ul id="disciplines"></ul>
+  </section>
+  <section>
+    <h2>Selected Works</h2>
+    <ul id="projects"></ul>
+  </section>
+  <section>
+    <h2>Contact</h2>
+    <p><a href="mailto:lux.exteriorrr@gmail.com">Mail</a><br>
+       <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">Instagram</a><br>
+       <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
+       <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
+       <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
+    <!-- As on the previous site: one link for both, since they are one ask.
+         Swap the mailto for the PDF once it exists. -->
+    <p class="ask"><a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
+  </section>
+</section>
+
+<div class="page" id="page">
+<header class="head" id="head">
+  <a href="./" data-nav>Kirill Konstantinov</a>
+  <a href="./" class="view" data-nav id="view">Selected Works</a>
+  <span class="slot" id="slot" aria-live="off"></span>
+  <span class="count" id="count"></span>
+  <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
+</header>
+
+<!-- Everything under the header: what Info pushes down. -->
+<div class="content" id="content">
+<main id="main" aria-label="Selected works"></main>
+<!-- Wording carried over from the previous site (floating-nav). -->
+<footer class="foot"><p>&copy; 2026 Kirill Konstantinov. All work shown remains the property of the author and its respective clients. Images may not be reproduced without permission.</p></footer>
+</div>
+</div>
+
+<!-- Lenis 1.3.26, vendored, the same file the live index loads. -->
+<script src="assets/lenis.min.js"></script>
+<!-- The ?v= changes whenever works.js does, so a cached old copy is never
+     paired with a new page (5 Oct: phones kept the old file and the lettering
+     did not flip in dark mode). -->
+<script src="assets/works.js?v=2026-10-06e"></script>
+<script>
+(() => {
+  // A project can be a client (LOTV, RADA) holding several pieces; a plate
+  // then carries `piece`, and the gallery names the piece, not the client.
+  // A project marked hidden stays in the data but is left off the site:
+  // not on the wall, not in Info, and its address falls back to the wall.
+  const shown = new Set(window.WORKS.projects.filter(p => !p.hidden).map(p => p.slug));
+  const projects = window.WORKS.projects.filter(p => shown.has(p.slug));
+  const items = window.WORKS.items.filter(it => shown.has(it.p));
+  // Contact sheets are justified rows since 12 Oct; ?grid=squares shows the
+  // old square cells.
+  const SHEET_ROWS = new URLSearchParams(location.search).get('grid') !== 'squares';
+  const pieces = window.WORKS.pieces || {};
+  const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
+  const DISCIPLINES = [
+    ['editorial', 'Editorial Design'],
+    ['art-direction', 'Art Direction'],
+    ['identity', 'Identity'],
+    ['type', 'Type Design'],
+    ['graphic-design', 'Graphic Design'],
+    ['web', 'Web'],
+  ];
+  const discName = Object.fromEntries(DISCIPLINES);
+  const EXPORT = 'export/';
+
+  // Mixed order: round-robin across projects so neighbours come from
+  // different work, with a seeded shuffle of each round so it does not read
+  // as a pattern. Same seed every load, so the wall is stable and can be tuned.
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const queues = projects.map(p => items.filter(i => i.p === p.slug));
+  const mixed = [];
+  let last = null;
+  while (queues.some(q => q.length)) {
+    const round = queues.filter(q => q.length).sort(() => rand() - 0.5);
+    if (round.length > 1 && round[0][0].p === last) round.push(round.shift());
+    for (const q of round) { const it = q.shift(); mixed.push(it); last = it.p; }
+  }
+  // Zerko Grotesk opens the wall in every browser. The shuffle above sorts
+  // with a random comparison, which each browser's sort answers differently:
+  // Safari opened on Zerko, Chrome on As Seen In (6 Oct). The first Zerko
+  // plate moves to the front; in Safari it already is the front.
+  const opener = mixed.findIndex(it => it.p === 'zerko-grotesk');
+  if (opener > 0) mixed.unshift(...mixed.splice(opener, 1));
+
+  const ar = it => it.w / it.h;
+  // An SVG is a mark (wordmark, lettering) unless flagged as a plate: the
+  // Zerko specimen plates are full-bleed SVGs and show like any image.
+  const isMark = it => it.src.endsWith('.svg') && !it.plate;
+  const pad2 = n => String(n).padStart(2, '0');
+
+  // Span in quarters of the width. Each shape has a set of allowed sizes and
+  // the wall cycles through them, so the rhythm varies without being random.
+  let turn = 0;
+  function span(it, cols) {
+    const a = ar(it);
+    let opts;
+    if (isMark(it)) opts = a > 4 ? [4, 2] : [2, 1];
+    else if (a >= 1.25) opts = [4, 2, 4, 2, 2];
+    else if (a >= 0.8) opts = [2, 1, 2];
+    else opts = [2, 1, 2, 1, 1];
+    const s = opts[turn++ % opts.length];
+    // On a phone (2 columns): quarters become halves, halves and fulls go full.
+    return cols === 2 ? (s >= 2 ? 2 : 1) : s;
+  }
+
+  // Pack into rows. A row closes when the next plate does not fit; whatever
+  // is left becomes white space, sometimes before the plates, sometimes after.
+  function pack(list, cols) {
+    turn = 0;
+    const rows = [];
+    let row = [], used = 0;
+    for (const it of list) {
+      const s = span(it, cols);
+      if (used + s > cols && row.length) { rows.push({ row, used }); row = []; used = 0; }
+      row.push({ it, s }); used += s;
+    }
+    if (row.length) rows.push({ row, used });
+    return rows;
+  }
+
+  const main = document.getElementById('main');
+  const slot = document.getElementById('slot');
+  const count = document.getElementById('count');
+  const viewEl = document.getElementById('view');
+  const caption = p => p.meta ? `${p.title}, ${p.meta}` : p.title;
+  // What a plate is: its piece if it has one, otherwise its project.
+  const about = it => pieces[it.piece] || bySlug[it.p];
+  const wallCaption = it => it.piece ? `${bySlug[it.p].title}, ${caption(pieces[it.piece])}` : caption(bySlug[it.p]);
+
+  // One plate as an element: an image, or a video for the moving ones.
+  // `still` gives the poster instead of the video (for the contact sheet).
+  // `sizes` is how wide the plate shows (e.g. '25vw'): with it the browser
+  // takes the 1600px copy for a tile and the full plate when it fills the
+  // screen. Full-size plates decoded mid-scroll made the wall stutter.
+  const srcOf = (file, hasSm) => hasSm ? `${EXPORT}1600/${file}` : EXPORT + file;
+  function media(it, { eager = false, still = false, sizes = '100vw' } = {}) {
+    const p = bySlug[it.p];
+    if (it.video && !still) {
+      const v = document.createElement('video');
+      Object.assign(v, { src: EXPORT + it.src, poster: srcOf(it.poster, it.posterSm), muted: true, loop: true, autoplay: true, playsInline: true, preload: 'metadata' });
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.width = it.w; v.height = it.h;
+      v.setAttribute('aria-label', p.title);
+      return v;
+    }
+    const img = new Image(it.w, it.h);
+    const file = it.video ? it.poster : it.src, hasSm = it.video ? it.posterSm : it.sm;
+    img.src = EXPORT + file;
+    if (hasSm) {
+      // Each file's own pixel width: the copy is 1600 on its long edge.
+      const smW = it.w >= it.h ? 1600 : Math.round(1600 * it.w / it.h);
+      img.srcset = `${EXPORT}1600/${file} ${smW}w, ${EXPORT}${file} ${it.w}w`;
+      img.sizes = sizes;
+    }
+    img.alt = it.alt || p.title;
+    img.decoding = 'async';
+    img.draggable = false;
+    if (it.mono) img.classList.add('mono');
+    if (!eager) img.loading = 'lazy';
+    return img;
+  }
+
+  // A spring in Apple's own terms (Designing Fluid Interfaces, WWDC 2018):
+  // `response` is roughly how long it takes, in seconds; damping 1 settles
+  // without overshoot. It starts at velocity v (px/s), so a released plate
+  // carries on at the finger's speed instead of starting from rest. Returns
+  // a stop function, so a new touch can catch the plate mid-flight.
+  function spring(from, to, v, { response = 0.35, damping = 1 } = {}, update, done) {
+    const k = (2 * Math.PI / response) ** 2, c = 4 * Math.PI * damping / response;
+    let x = from, last = performance.now(), raf = 0;
+    const tick = now => {
+      const h = Math.min((now - last) / 1000, 1 / 30) / 4;
+      last = now;
+      for (let s = 0; s < 4; s++) { v += (-k * (x - to) - c * v) * h; x += v * h; }
+      if (Math.abs(x - to) < 0.5 && Math.abs(v) < 10) { update(to); return done && done(); }
+      update(x);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }
+  // Where a flick would come to rest, by Apple's projection (the sample
+  // code's scroll deceleration, 0.998 per millisecond), not where it let go.
+  const project = v => (v / 1000) * 0.998 / (1 - 0.998);
+
+  // A project's live address after its description, with a note in
+  // brackets (AWW90s: "aww90s.com (client edited)"). Opens in a new tab.
+  function appendLink(el, p) {
+    if (!p || !p.link) return;
+    const a = document.createElement('a');
+    a.href = p.link.href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'ext';
+    a.textContent = p.link.text;
+    el.append(' ', a);
+    if (p.link.note) el.append(` ${p.link.note}`);
+  }
+
+  // Title block above a filter or a contact sheet.
+  function titleBlock(title, desc, p = null) {
+    const b = document.createElement('p');
+    b.className = 'ptitle';
+    const t = document.createElement('span');
+    t.className = 't';
+    t.textContent = title;
+    b.append(t);
+    if (desc) {
+      const d = document.createElement('span');
+      d.className = 'd';
+      d.textContent = desc;
+      appendLink(d, p);
+      b.append(d);
+    }
+    return b;
+  }
+
+  // Filters in the address: ?d=editorial,identity. Kept in the Info order,
+  // so the same set always has the same address.
+  const selectedFilters = search => (new URLSearchParams(search).get('d') || '').split(',').filter(k => discName[k]);
+  const filterHref = set => {
+    const keep = DISCIPLINES.map(([k]) => k).filter(k => set.includes(k));
+    return keep.length ? `?d=${keep.join(',')}` : './';
+  };
+
+  function renderWall(list) {
+    const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
+    let n = 0;
+    pack(list, cols).forEach(({ row, used }, r) => {
+      const el = document.createElement('div');
+      el.className = 'row';
+      // Leftover columns: alternate between leading and trailing white space.
+      let start = used < cols && r % 2 ? cols - used + 1 : 1;
+      for (const { it, s } of row) {
+        const a = document.createElement('a');
+        a.className = 'cell';
+        a.href = `?p=${it.p}`;
+        a.dataset.nav = '';
+        a.dataset.caption = wallCaption(it);
+        a.style.gridColumn = `${start} / span ${s}`;
+        if (isMark(it)) { const r = s >= 4 ? 4 : s >= 2 ? 2 : 1; a.classList.add('mark'); a.dataset.ratio = r; a.style.setProperty('--box', `${r} / 1`); }
+        a.append(media(it, { eager: n++ < 4, sizes: `${Math.round(s / cols * 100)}vw` }));
+        start += s;
+        el.append(a);
+      }
+      main.append(el);
+    });
+  }
+
+  // A filter reads rather than shows: one column, flush left, one plate per
+  // project (its key plate: the one marked `key`, or else its first), in the
+  // Info order, each with its line underneath (after CD HQ). Width steps by
+  // shape, capped so a tall plate still fits the screen. A plate opens its
+  // project's contact sheet.
+  function renderColumn(list) {
+    const col = document.createElement('div');
+    col.className = 'col';
+    for (const p of list) {
+      const own = items.filter(i => i.p === p.slug);
+      const it = own.find(i => i.key) || own[0];
+      if (!it) continue;
+      const f = document.createElement('figure');
+      f.className = 'cplate';
+      const a = document.createElement('a');
+      a.href = `?p=${p.slug}`;
+      a.dataset.nav = '';
+      const r = ar(it);
+      const w = isMark(it) ? (r > 4 ? 60 : 40) : r >= 1.25 ? 60 : r >= 0.6 ? 40 : 20;
+      a.style.setProperty('--w', w + '%');
+      a.style.setProperty('--ar', r);
+      a.append(media(it, { sizes: `${w}vw` }));
+      const c = document.createElement('figcaption');
+      // The name in Medium, what it is in Regular.
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = p.title;
+      c.append(n, p.meta ? `, ${p.meta}` : '');
+      f.append(a, c);
+      col.append(f);
+    }
+    main.append(col);
+  }
+
+  // Justified rows, as Bänziger Hug's rowgrid: add plates at the row height
+  // until the row overflows, then scale that row down to the width. Widths
+  // are floored and the last plate in a row takes the remainder, so a row
+  // never wraps on a rounding error. On a phone (420 and under) one plate per
+  // row, full width. Re-run when the width changes.
+  function layoutRows(grid, list) {
+    // A wordmark gets a box no wider than 4:1 and sits in it, contained.
+    const ar = it => isMark(it) ? Math.min(it.w / it.h, 4) : it.w / it.h;
+    const run = () => {
+      const cs = getComputedStyle(grid);
+      const W = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const H = parseFloat(cs.getPropertyValue('--row-h')) || 400;
+      const gap = parseFloat(cs.columnGap) || 0;
+      const cells = [...grid.children];
+      const size = (a, w, h) => { a.style.width = w + 'px'; a.style.height = h + 'px'; };
+      if (innerWidth <= 420) { cells.forEach((a, k) => size(a, W, W / ar(list[k]))); return; }
+      let row = [], sum = 0;
+      cells.forEach((a, k) => {
+        row.push([a, ar(list[k])]); sum += ar(list[k]) * H;
+        const free = W - gap * (row.length - 1);
+        if (sum <= free) return;
+        const h = Math.round(H * free / sum);
+        let left = free;
+        row.forEach(([c, r], n) => {
+          const w = n === row.length - 1 ? left : Math.floor(r * H * free / sum);
+          left -= w; size(c, w, h);
+        });
+        row = []; sum = 0;
+      });
+      row.forEach(([c, r]) => size(c, Math.floor(r * H), H));
+    };
+    let lastW = 0;
+    new ResizeObserver(() => { if (grid.clientWidth !== lastW) { lastW = grid.clientWidth; requestAnimationFrame(run); } }).observe(grid);
+  }
+
+  function renderSheet(p, list) {
+    const grid = document.createElement('div');
+    grid.className = 'sheet' + (SHEET_ROWS ? ' rows' : '');
+    const sheetCols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-cols')) || 4;
+    const sizes = `${Math.round(100 / sheetCols)}vw`;
+    list.forEach((it, k) => {
+      const a = document.createElement('a');
+      a.href = `?p=${p.slug}&i=${k + 1}`;
+      a.dataset.nav = '';
+      if (isMark(it)) a.classList.add('mark');
+      // Videos play here too (muted, looping), as on the wall.
+      a.append(media(it, { eager: true, sizes }));
+      grid.append(a);
+    });
+    // The sheet opens with project, object and year, and the description.
+    main.append(titleBlock(p.meta ? `${p.title}, ${p.meta}` : p.title, p.desc, p));
+    main.append(grid);
+    if (SHEET_ROWS) layoutRows(grid, list);
+
+  }
+
+  function renderGallery(p, list, i) {
+    const g = document.createElement('div');
+    g.className = 'gallery' + (list.length < 2 ? ' single' : '');
+    const it = list[i - 1];
+    // After a slide the plate that came in is the very element already on
+    // screen (carried over from .peek), so the change has no seam or reload.
+    const m = carried && carried.src === it.src ? carried.el : media(it, { eager: true });
+    carried = null;
+    if (isMark(it)) m.classList.add('mark');
+    g.append(m);
+    // Where Close goes: the contact sheet, or the wall for a one-plate
+    // project (whose sheet would open the plate again). A click on the plate
+    // steps (left half back, right half on); a click beside it closes.
+    const closeHref = list.length > 1 ? `?p=${p.slug}` : './';
+    const off = e => e.target !== m;
+    g.addEventListener('mousemove', e => {
+      g.classList.toggle('out', off(e));
+      g.classList.toggle('back', !off(e) && e.clientX < innerWidth / 2);
+    });
+    g.addEventListener('click', e => { if (off(e)) go(closeHref); });
+    if (list.length > 1) {
+      const at = d => (i - 1 + d + list.length) % list.length;   // a neighbour's place in the list
+      const step = d => go(`?p=${p.slug}&i=${at(d) + 1}`, true);
+      // Steps slide (11 Oct, after Apple's Designing Fluid Interfaces): the
+      // plate leaves the way it is pushed and its neighbour comes in behind
+      // it, on a spring. A swipe tracks the finger 1:1 and hands its speed to
+      // the spring; a click or an arrow key slides from rest, in the same
+      // direction. With reduced motion asked for, the plate just changes.
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let x = 0, peek = null, peekDir = 0, stop = null;
+      const W = () => g.clientWidth;
+      const place = () => {
+        m.style.transform = x ? `translateX(${x}px)` : '';
+        if (peek) peek.style.transform = `translateX(${x + peekDir * W()}px)`;
+      };
+      // The neighbour on the side the plate is moving away from (dir 1: the
+      // next one, waiting on the right).
+      const showPeek = dir => {
+        if (peekDir === dir) return;
+        if (peek) peek.remove();
+        const n = list[at(dir)];
+        const pm = media(n, { eager: true });
+        if (isMark(n)) pm.classList.add('mark');
+        peek = document.createElement('div');
+        peek.className = 'peek';
+        peek.append(pm);
+        g.append(peek);
+        peekDir = dir;
+      };
+      const slide = (dir, v = 0) => {
+        if (still) return step(dir);
+        if (stop) stop();
+        showPeek(dir);
+        stop = spring(x, -dir * W(), v, { response: 0.35 }, nx => { x = nx; place(); }, () => {
+          carried = { src: list[at(dir)].src, el: peek.firstChild };
+          step(dir);
+        });
+      };
+      // Not far or fast enough: back to the middle, at the finger's speed.
+      const settle = v => {
+        if (still) { x = 0; return; }
+        if (stop) stop();
+        stop = spring(x, 0, v, { response: 0.3 }, nx => { x = nx; place(); }, () => {
+          stop = null;
+          if (peek) { peek.remove(); peek = null; peekDir = 0; }
+        });
+      };
+      // A click on either half steps, with a mouse only: on a phone a tap on
+      // the plate does nothing and only a swipe moves on (11 Oct), so a stray
+      // touch never changes the picture.
+      let touchedAt = -1e9;
+      g.addEventListener('click', e => {
+        if (off(e) || performance.now() - touchedAt < 800) return;
+        slide(e.clientX < innerWidth / 2 ? -1 : 1);
+      });
+      // Swipe on a phone. Nothing moves until the finger has gone 10px, then
+      // a mostly sideways drag is the plate's and a mostly upright one is the
+      // page's scroll. On release the plate goes where the flick would carry
+      // it: past 30% of the width it moves on, short of that it comes back.
+      let x0 = null, y0 = 0, axis = null, base = 0, hist = [];
+      g.addEventListener('touchstart', e => {
+        touchedAt = performance.now();
+        if (e.touches.length > 1) return;
+        if (stop) { stop(); stop = null; }        // caught mid-flight: it stays under the finger
+        x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+        axis = null; base = x; hist = [{ t: e.timeStamp, x: x0 }];
+      }, { passive: true });
+      g.addEventListener('touchmove', e => {
+        if (x0 === null) return;
+        const cx = e.touches[0].clientX, dx = cx - x0, dy = e.touches[0].clientY - y0;
+        if (!axis) {
+          if (Math.hypot(dx, dy) < 10) return;
+          axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        }
+        if (axis !== 'x') return;
+        x = base + dx;
+        // With reduced motion the plate stays still while the finger moves;
+        // the swipe is only read on release.
+        if (!still) { if (x) showPeek(x < 0 ? 1 : -1); place(); }
+        hist.push({ t: e.timeStamp, x: cx });
+        while (hist.length > 2 && e.timeStamp - hist[0].t > 100) hist.shift();
+      }, { passive: true });
+      g.addEventListener('touchend', e => {
+        if (x0 === null) return;
+        x0 = null;
+        if (axis !== 'x') { if (x) settle(0); return; }
+        e.preventDefault();                       // a drag is not also a click
+        const a = hist[0], b = hist[hist.length - 1];
+        const v = b.t > a.t ? (b.x - a.x) / (b.t - a.t) * 1000 : 0;
+        const end = x + project(v);
+        if (Math.abs(end) > W() * 0.3) slide(end < 0 ? 1 : -1, v);
+        else settle(v);
+      });
+      g.addEventListener('touchcancel', () => { if (x0 !== null) { x0 = null; settle(0); } });
+      gallerySteps = slide;
+      // Fetch the neighbours ahead of the click.
+      [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
+    }
+    main.append(g);
+
+    // The phone caption line: project (back to its sheet), piece or object
+    // and year, and the counter.
+    const cap = document.createElement('div');
+    cap.className = 'gcap';
+    const t = document.createElement('span');
+    t.className = 't';
+    const back = document.createElement('a');
+    back.href = `?p=${p.slug}`;
+    back.dataset.nav = '';
+    back.textContent = p.title;
+    t.append(back, `, ${it.piece ? caption(pieces[it.piece]) : p.meta}`);
+    // On a desk the description follows in the caption; on a phone it sits
+    // one scroll down (.gdesc) and this part is hidden.
+    const line = about(it).desc;
+    if (line) {
+      const dd = document.createElement('span');
+      dd.className = 'd';
+      dd.textContent = `. ${line}`;
+      if (!it.piece) appendLink(dd, p);
+      t.append(dd);
+    }
+    cap.append(t);
+    if (list.length > 1) {
+      const n = document.createElement('span');
+      n.textContent = `${pad2(i)}/${pad2(list.length)}`;
+      cap.append(n);
+    }
+    main.append(cap);
+    // Close, outside the gallery element, so a click on it does not also step.
+    const x = document.createElement('a');
+    x.className = 'gclose';
+    x.href = closeHref;
+    x.dataset.nav = '';
+    x.textContent = 'Close';
+    main.append(x);
+    // The caption wraps on a desk; the plate's room is what it leaves.
+    const fitCap = () => document.documentElement.style.setProperty('--gcap-real', cap.offsetHeight + 'px');
+    fitCap();
+    new ResizeObserver(fitCap).observe(cap);
+
+    const desc = about(it).desc;
+    if (desc) {
+      const d = document.createElement('p');
+      d.className = 'gdesc';
+      d.textContent = desc;
+      if (!it.piece) appendLink(d, p);
+      main.append(d);
+    }
+  }
+
+  let gallerySteps = null;
+  let carried = null;   // the plate a slide brought in, handed to the next render
+
+  function render() {
+    const q = new URLSearchParams(location.search);
+    const pr = q.get('p');
+    const ds = selectedFilters(location.search);
+    const p = bySlug[pr];
+    main.replaceChildren();
+    gallerySteps = null;
+    slot.textContent = '';
+    count.textContent = '';
+
+    let label = 'Selected Works', viewHref = './', mode = 'wall';
+    if (p) {
+      // The project's own order, not the wall's.
+      const list = items.filter(it => it.p === p.slug);
+      let i = parseInt(q.get('i')) || 0;
+      if (list.length === 1) i = 1;          // one plate: straight to it
+      i = Math.min(Math.max(i, 0), list.length);
+      label = p.title;
+      viewHref = `?p=${p.slug}`;
+      mode = 'project';
+      if (i) {
+        renderGallery(p, list, i);
+        // A grouped project names the piece this plate belongs to.
+        const it = list[i - 1], a = about(it);
+        slot.textContent = it.piece ? caption(a) : a.meta;
+        if (a.desc) {
+          const d = document.createElement('span');
+          d.className = 'd';
+          d.textContent = `. ${a.desc}`;
+          slot.append(d);
+        }
+        if (list.length > 1) count.textContent = `${pad2(i)}/${pad2(list.length)}`;
+        document.body.className = 'mode-project mode-gallery';
+      } else {
+        renderSheet(p, list);
+        sizeSheet();
+        slot.textContent = p.meta;
+        document.body.className = 'mode-project mode-sheet';
+      }
+    } else {
+      let list = mixed;
+      if (ds.length) {
+        // Several filters at once: work in any of them. They name themselves
+        // at the top, each with a cross that takes just that one away; the
+        // last one gone is all the work again, and the bar goes with it.
+        list = projects.filter(p => p.d.some(k => ds.includes(k)));
+        label = ds.map(k => discName[k]).join(' + ');
+        viewHref = filterHref(ds);
+        const b = document.createElement('p');
+        b.className = 'ptitle filters';
+        ds.forEach(k => {
+          const f = document.createElement('span');
+          f.className = 'f';
+          f.textContent = discName[k];
+          const x = document.createElement('a');
+          x.href = filterHref(ds.filter(o => o !== k));
+          x.dataset.nav = '';
+          x.className = 'clear';
+          x.setAttribute('aria-label', `Remove the ${discName[k]} filter`);
+          x.textContent = '×';
+          f.append(x);
+          b.append(f);
+        });
+        main.append(b);
+      }
+      if (ds.length) renderColumn(list);
+      else { renderWall(list); snapHeights(); }
+      document.body.className = ds.length ? 'mode-wall mode-filter' : 'mode-wall';
+    }
+
+    viewEl.textContent = label;
+    viewEl.classList.toggle('is-home', label === 'Selected Works');
+    viewEl.setAttribute('href', viewHref);
+    document.title = label === 'Selected Works' ? 'Kirill Konstantinov' : `${label} | Kirill Konstantinov`;
+    // Info: each discipline toggles itself in or out of the current set
+    // (from a project, it starts a new one); All clears them.
+    document.querySelectorAll('#disciplines a[data-k]').forEach(a => {
+      const k = a.dataset.k, on = !p && ds.includes(k);
+      a.setAttribute('href', on ? filterHref(ds.filter(o => o !== k)) : filterHref([...(p ? [] : ds), k]));
+      on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('.info a[data-nav]:not([data-k])').forEach(a => {
+      const h = a.getAttribute('href');
+      const here = h === './' ? !ds.length && !p : h === `?p=${pr}`;
+      here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+    });
+    measureHead();
+    shownProject = p ? p.slug : null;
+    shownIndex = p ? indexOf(location.search) && Math.min(indexOf(location.search), items.filter(it => it.p === p.slug).length) || (items.filter(it => it.p === p.slug).length === 1 ? 1 : 0) : 0;
+  }
+
+  // Info lists: disciplines and projects, each a filter link.
+  const li = (href, text) => `<li><a href="${href}" data-nav>${text}</a></li>`;
+  document.getElementById('disciplines').innerHTML =
+    li('./', 'All') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
+  document.getElementById('projects').innerHTML =
+    projects.map(p => li(`?p=${p.slug}`, p.title)).join('');
+
+  const toggle = document.querySelector('.info-toggle');
+  const info = document.getElementById('info');
+  const content = document.getElementById('content');
+  let infoOpen = false;
+  const setInfo = open => {
+    infoOpen = open;
+    // The page moves down by exactly the panel's height (capped at a screen).
+    document.documentElement.style.setProperty('--info-h', Math.min(info.scrollHeight, innerHeight - document.getElementById('head').offsetHeight) + 'px');
+    info.classList.toggle('open', open);
+    content.classList.toggle('pushed', open);
+    info.inert = !open;
+    toggle.setAttribute('aria-expanded', open);
+  };
+  toggle.addEventListener('click', () => setInfo(!infoOpen));
+  // Shut Info with no slide (for navigation, inside a page transition).
+  function closeInfoNow() {
+    if (!infoOpen) return;
+    document.documentElement.classList.add('info-instant');
+    setInfo(false);
+    setTimeout(() => document.documentElement.classList.remove('info-instant'), 80);
+  }
+  // While Info is open, a click anywhere on the pushed-down work closes it
+  // rather than opening a plate underneath.
+  content.addEventListener('click', e => {
+    if (!infoOpen) return;
+    e.preventDefault(); e.stopPropagation();
+    setInfo(false);
+  }, true);
+
+  // Links change the URL without a reload. Stepping through the gallery
+  // replaces the history entry, so Back leaves the gallery in one press.
+  // Every change of view goes through a view transition where the browser
+  // has one (Chrome, Safari); elsewhere it just switches.
+  // A transition the browser skips (hidden tab, a second click mid-animation)
+  // rejects its promises; the view still changes, so those are ignored.
+  // `back` plays it in reverse (leaving a project for the wall or a filter).
+  // Scroll positions are ours to set (see inProject); the browser's own
+  // restoration on Back would land somewhere else first.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  // `kind` picks a lighter treatment ('filter': a crossfade, see CSS).
+  const transition = (swap, back = false, kind = null) => {
+    if (!document.startViewTransition || document.hidden) return swap();
+    document.documentElement.classList.toggle('vt-back', back);
+    document.documentElement.classList.toggle('vt-filter', kind === 'filter');
+    const t = document.startViewTransition(swap);
+    t.ready.catch(() => {});
+    t.finished.catch(() => {}).finally(() => document.documentElement.classList.remove('vt-back', 'vt-filter'));
+  };
+  // Leaving a project for a wall view (all, or a filter) is going back up.
+  const goingUp = search => !!shownProject && !projectOf(search);
+
+  // Inside one project (contact sheet <-> one plate) the view changes in
+  // place, like stepping through the gallery: opening a plate is zooming in,
+  // not a new page. The page transition is kept for moving between pages.
+  const projectOf = search => new URLSearchParams(search).get('p');
+  const indexOf = search => parseInt(new URLSearchParams(search).get('i')) || 0;
+  let shownIndex = indexOf(location.search);
+  const thumb = i => document.querySelector(`.sheet a:nth-child(${i}) img, .sheet a:nth-child(${i}) video`);
+  const plate = () => document.querySelector('.gallery > img, .gallery > video');
+
+  // The thumbnail-to-plate morph. `from` is the element now on screen, `to`
+  // finds its counterpart once the new view is rendered.
+  function zoom(swap, from, to) {
+    if (!document.startViewTransition || document.hidden || !from) return swap();
+    from.style.viewTransitionName = 'plate';
+    document.documentElement.classList.add('vt-zoom');
+    const t = document.startViewTransition(() => {
+      swap();
+      const el = to();
+      if (el) el.style.viewTransitionName = 'plate';
+    });
+    t.ready.catch(() => {});
+    t.finished.catch(() => {}).finally(() => {
+      document.documentElement.classList.remove('vt-zoom');
+      const el = to();
+      if (el) el.style.viewTransitionName = '';
+    });
+  }
+  // Sheet -> plate, or plate -> sheet, within one project. `swap` only
+  // renders; the scroll is handled here, inside the transition, so the sheet
+  // is already where it should be when the browser captures it. Going in, the
+  // sheet's place is remembered; coming back, it is restored, and if the plate
+  // you stepped to has its thumbnail out of view, that thumbnail is centred.
+  // Otherwise the plate shrank towards a thumbnail off screen (5 Oct).
+  let sheetScroll = 0;
+  // Lenis caches the page height and re-measures a moment after it changes;
+  // coming back from the (one-screen) gallery it still thought the page was
+  // short and refused to scroll down to the plate. So: measure, then scroll.
+  const scrollNow = y => {
+    if (!window.lenis) return scrollTo(0, y);
+    window.lenis.resize();
+    window.lenis.scrollTo(y, { immediate: true, force: true });
+  };
+  function bringIntoView(i) {
+    scrollNow(sheetScroll);
+    const t = thumb(i);
+    if (!t) return;
+    const r = t.getBoundingClientRect(), top = document.getElementById('head').offsetHeight;
+    if (r.top >= top && r.bottom <= innerHeight) return;
+    scrollNow(scrollY + r.top - (top + (innerHeight - top - r.height) / 2));
+  }
+  function inProject(swap, search) {
+    const next = indexOf(search);
+    if (next && !shownIndex) {
+      sheetScroll = scrollY;
+      return zoom(() => { swap(); scrollNow(0); }, thumb(next), plate);
+    }
+    if (!next && shownIndex) {
+      const back = shownIndex;
+      return zoom(() => { swap(); bringIntoView(back); }, plate(), () => thumb(back));
+    }
+    swap();
+  }
+  let shownProject = projectOf(location.search);
+  const sameProject = search => !!shownProject && projectOf(search) === shownProject;
+  // Adding or dropping a filter is the same wall, refiltered: it switches in
+  // place, without the page transition.
+  const wallToWall = search => !shownProject && !projectOf(search);
+
+  function go(href, replace = false) {
+    const url = href === './' ? location.pathname : href;
+    const inPlace = replace || sameProject(new URL(url, location.href).search);
+    replace ? history.replaceState(null, '', url) : history.pushState(null, '', url);
+    // Info closes inside the swap, not before it: the page transition then
+    // starts from what is on screen (Info open) and ends on the new page with
+    // Info shut, instead of Info's own slide running under the wipe (5 Oct).
+    const closingRender = () => { closeInfoNow(); render(); };
+    const swap = () => {
+      closingRender();
+      if (!replace) window.lenis ? window.lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
+    };
+    // Stepping through the gallery (replace) changes the plate in place, as
+    // before; only moving between views gets the page transition.
+    if (replace) swap();                                   // gallery steps
+    else if (wallToWall(new URL(url, location.href).search)) {
+      // A filter picked in Info: Info simply slides up on its own curve and
+      // the refiltered wall is already there underneath. From the bar (Info
+      // shut), the short crossfade.
+      if (infoOpen) {
+        render();
+        if (window.lenis) window.lenis.scrollTo(0, { immediate: true }); else scrollTo(0, 0);
+        setInfo(false);
+      } else transition(swap, false, 'filter');
+    }
+    else if (inPlace) inProject(closingRender, new URL(url, location.href).search);
+    else transition(swap, goingUp(new URL(url, location.href).search));
+  }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-nav]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    go(a.getAttribute('href'));
+  });
+  addEventListener('popstate', () => wallToWall(location.search) ? transition(render, false, 'filter')
+    : sameProject(location.search) ? inProject(render, location.search)
+    : transition(render, goingUp(location.search)));
+
+  // Light / dark, in Info. The current mode is underlined. The choice is
+  // remembered in this browser; with none stored the page follows the system.
+  const sysDark = matchMedia('(prefers-color-scheme: dark)');
+  const themeBtns = document.querySelectorAll('[data-theme-set]');
+  const currentTheme = () => document.documentElement.dataset.theme || (sysDark.matches ? 'dark' : 'light');
+  const markTheme = () => themeBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.themeSet === currentTheme()));
+  themeBtns.forEach(b => b.addEventListener('click', () => {
+    document.documentElement.dataset.theme = b.dataset.themeSet;
+    try { localStorage.setItem('theme', b.dataset.themeSet); } catch (e) {}
+    markTheme();
+  }));
+  sysDark.addEventListener('change', markTheme);
+  markTheme();
+
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (infoOpen) return setInfo(false);
+      const q = new URLSearchParams(location.search);
+      const x = document.querySelector('.gclose');
+      if (x) go(x.getAttribute('href'));
+    }
+    if (gallerySteps && e.key === 'ArrowRight') gallerySteps(1);
+    if (gallerySteps && e.key === 'ArrowLeft') gallerySteps(-1);
+  });
+
+  // On the wall, the plate under the cursor names itself in the header.
+  main.addEventListener('mouseover', e => {
+    if (!document.body.classList.contains('mode-wall')) return;
+    const c = e.target.closest('.cell'); slot.textContent = c ? c.dataset.caption : '';
+  });
+  main.addEventListener('mouseleave', () => { if (document.body.classList.contains('mode-wall')) slot.textContent = ''; });
+
+  // The header's height varies (the line wraps on a phone); the gallery and
+  // the Info panel are sized against it.
+  function measureHead() {
+    document.documentElement.style.setProperty('--head-h', document.getElementById('head').offsetHeight + 'px');
+  }
+  new ResizeObserver(measureHead).observe(document.getElementById('head'));
+
+  // Re-pack when the column count changes (4 on a desk, 2 on a phone).
+  // Plate heights in whole pixels. Left to the browser they come out as
+  // fractions (1232.55px), each row then starts mid-pixel, and the blended
+  // edge shows as a faint line between rows.
+  // Contact-sheet thumbnails sized up front, from the plate's own width and
+  // height, so each one holds its exact place before it has loaded. Left to
+  // the browser, an unloaded image is 0px tall: rows opened as the plates
+  // came in and the page grew (Zerko, 14 plates, 5 Oct). The limits match the
+  // CSS: the cell's inner box on a desk, the cell's width and 70vw on a phone.
+  function sizeSheet() {
+    const phone = matchMedia('(max-width: 700px)').matches;
+    // Justified rows size their own cells; the plate just fills its cell.
+    main.querySelectorAll('.sheet:not(.rows) a').forEach(a => {
+      const img = a.querySelector('img, video');
+      if (!img) return;
+      const cs = getComputedStyle(a);
+      const boxW = a.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const boxH = phone ? innerWidth * 0.7 : a.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const ar = img.getAttribute('width') / img.getAttribute('height');
+      let w = a.classList.contains('mark') ? boxW : Math.min(boxW, boxH * ar);
+      let h = w / ar;
+      if (h > boxH) { h = boxH; w = h * ar; }
+      img.style.width = Math.round(w) + 'px';
+      img.style.height = Math.round(h) + 'px';
+    });
+  }
+
+  function snapHeights() {
+    main.querySelectorAll('.cell').forEach(c => {
+      const w = c.getBoundingClientRect().width;
+      if (c.classList.contains('mark')) { c.style.height = Math.round(w / parseFloat(c.dataset.ratio)) + 'px'; return; }
+      const m = c.firstElementChild;
+      m.style.height = Math.round(w * m.getAttribute('height') / m.getAttribute('width')) + 'px';
+    });
+  }
+  let snapTimer;
+  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(() => { snapHeights(); sizeSheet(); }, 100); });
+
+  matchMedia('(max-width: 700px)').addEventListener('change', render);
+  render();
+
+  // Filter bar: away while scrolling down, back while scrolling up. A few
+  // pixels of slack so a trackpad's jitter does not flick it.
+  let lastY = scrollY;
+  addEventListener('scroll', () => {
+    const bar = main.querySelector('.ptitle.filters');
+    const y = scrollY, dy = y - lastY;
+    if (bar && Math.abs(dy) > 4) bar.classList.toggle('away', dy > 0 && y > bar.offsetHeight);
+    if (Math.abs(dy) > 4) lastY = y;
+  }, { passive: true });
+
+  // Smooth wheel, same setting as the live index (lerp 0.12). It eases the
+  // wheel into the native scroll, so sticky and touch are untouched. The Info
+  // panel scrolls on its own (data-lenis-prevent).
+  // Not for visitors who asked for reduced motion (11 Oct): they get the
+  // browser's own scrolling, with no easing behind the wheel.
+  if (window.Lenis && !matchMedia('(prefers-reduced-motion: reduce)').matches) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
+  // iOS only shows :active (the pressed state) on a page that listens for
+  // touches; this empty listener is the usual way to switch it on.
+  document.addEventListener('touchstart', () => {}, { passive: true });
+})();
+</script>
+</body>
+</html>

@@ -14,12 +14,14 @@
      not flash the other colours. No choice stored = follow the system. -->
 <script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <!-- The homepage since 5 Oct 2026 (was the image-wall trial at /wall/), after Ohlman Consorti: every plate from every
-     project on one mixed wall, a 4-column module with quarter / half / full
-     widths, marks at the same weight as photographs. The URL is the filter:
+     project on one wall, marks at the same weight as photographs. Since 12 Oct
+     the wall runs project by project, newest first, in justified rows after
+     Bänziger Hug's journal (the 4-column mixed wall is frozen in
+     index-2026-10-12.html). The URL is the filter:
      ?d=editorial for a discipline, ?p=as-seen-in for a project, so an
      application can link straight to the view that fits the studio.
 
-     A project opens as a contact sheet (all its plates in equal square cells),
+     A project opens as a contact sheet (all its plates, in the same rows),
      and a plate opens alone in a gallery (?p=as-seen-in&i=3). The header carries
      what the wall leaves out: project, object, year, and the one line. -->
 <style>
@@ -233,12 +235,9 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .info .ask { margin-top: 1.28em; }
 @media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
 
-/* The wall. Rows of a 4-column module, no gutters: plates touch, as on the
-   reference. A row that does not fill leaves its gap as white space. */
-.row { display: grid; grid-template-columns: repeat(var(--cols), 1fr); align-items: start; }
+/* The wall's cells. Since 12 Oct they sit in justified rows (.rows, below);
+   the 4-column module before it is frozen in index-2026-10-12.html. */
 .cell { display: block; position: relative; }
-/* Heights are set in whole pixels by snapHeights() (object-fit covers the
-   sub-pixel difference), so rows meet without a hairline between them. */
 .cell img, .cell video { display: block; width: 100%; height: auto; object-fit: cover; }
 /* Marks (very wide SVGs) sit in a box with room around them, so a 245 × 25
    wordmark does not become a thin strip across the screen. */
@@ -279,6 +278,8 @@ body .rows img, body .rows video { width: 100%; height: 100%; max-width: none; m
    square sheet's rule sizes marks in cq units, which in a row resolve to
    the whole page and ran the lettering over its neighbours (LOTV, 12 Oct). */
 body .rows .mark img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; }
+/* The wall in the same rows (12 Oct), a margin under the header. */
+body .rows.wallrows { padding-top: var(--pad); }
 
 /* Gallery: one plate, as large as the screen allows under the header. Left
    half of the screen goes back, right half goes on. */
@@ -474,61 +475,21 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   const discName = Object.fromEntries(DISCIPLINES);
   const EXPORT = 'export/';
 
-  // Mixed order: round-robin across projects so neighbours come from
-  // different work, with a seeded shuffle of each round so it does not read
-  // as a pattern. Same seed every load, so the wall is stable and can be tuned.
-  let seed = 7;
-  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const queues = projects.map(p => items.filter(i => i.p === p.slug));
-  const mixed = [];
-  let last = null;
-  while (queues.some(q => q.length)) {
-    const round = queues.filter(q => q.length).sort(() => rand() - 0.5);
-    if (round.length > 1 && round[0][0].p === last) round.push(round.shift());
-    for (const q of round) { const it = q.shift(); mixed.push(it); last = it.p; }
-  }
-  // Zerko Grotesk opens the wall in every browser. The shuffle above sorts
-  // with a random comparison, which each browser's sort answers differently:
-  // Safari opened on Zerko, Chrome on As Seen In (6 Oct). The first Zerko
-  // plate moves to the front; in Safari it already is the front.
-  const opener = mixed.findIndex(it => it.p === 'zerko-grotesk');
-  if (opener > 0) mixed.unshift(...mixed.splice(opener, 1));
+  // The wall's order since 12 Oct: project by project, newest first, each
+  // project's plates together in its own order (after Bänziger Hug's journal).
+  // The year is the last one in the meta line (2025–2026 counts as 2026,
+  // RCA2025 as 2025); the same year keeps the Info order. The seeded mixed
+  // order it replaced is frozen with the 4-column wall in index-2026-10-12.html.
+  const lastYear = p => Math.max(0, ...(p.meta.match(/(?:19|20)\d\d/g) || []).map(Number));
+  const chrono = projects.map((p, k) => [p, k])
+    .sort(([a, i], [b, j]) => lastYear(b) - lastYear(a) || i - j)
+    .flatMap(([p]) => items.filter(it => it.p === p.slug));
 
   const ar = it => it.w / it.h;
   // An SVG is a mark (wordmark, lettering) unless flagged as a plate: the
   // Zerko specimen plates are full-bleed SVGs and show like any image.
   const isMark = it => it.src.endsWith('.svg') && !it.plate;
   const pad2 = n => String(n).padStart(2, '0');
-
-  // Span in quarters of the width. Each shape has a set of allowed sizes and
-  // the wall cycles through them, so the rhythm varies without being random.
-  let turn = 0;
-  function span(it, cols) {
-    const a = ar(it);
-    let opts;
-    if (isMark(it)) opts = a > 4 ? [4, 2] : [2, 1];
-    else if (a >= 1.25) opts = [4, 2, 4, 2, 2];
-    else if (a >= 0.8) opts = [2, 1, 2];
-    else opts = [2, 1, 2, 1, 1];
-    const s = opts[turn++ % opts.length];
-    // On a phone (2 columns): quarters become halves, halves and fulls go full.
-    return cols === 2 ? (s >= 2 ? 2 : 1) : s;
-  }
-
-  // Pack into rows. A row closes when the next plate does not fit; whatever
-  // is left becomes white space, sometimes before the plates, sometimes after.
-  function pack(list, cols) {
-    turn = 0;
-    const rows = [];
-    let row = [], used = 0;
-    for (const it of list) {
-      const s = span(it, cols);
-      if (used + s > cols && row.length) { rows.push({ row, used }); row = []; used = 0; }
-      row.push({ it, s }); used += s;
-    }
-    if (row.length) rows.push({ row, used });
-    return rows;
-  }
 
   const main = document.getElementById('main');
   const slot = document.getElementById('slot');
@@ -635,28 +596,25 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     return keep.length ? `?d=${keep.join(',')}` : './';
   };
 
+  // The wall (12 Oct): justified rows, as the contact sheets. Each plate is
+  // a cell that opens its project; the hover label reads data-caption/title.
+  // The 4-column packing it replaced is frozen in index-2026-10-12.html.
   function renderWall(list) {
-    const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cols')) || 4;
-    let n = 0;
-    pack(list, cols).forEach(({ row, used }, r) => {
-      const el = document.createElement('div');
-      el.className = 'row';
-      // Leftover columns: alternate between leading and trailing white space.
-      let start = used < cols && r % 2 ? cols - used + 1 : 1;
-      for (const { it, s } of row) {
-        const a = document.createElement('a');
-        a.className = 'cell';
-        a.href = `?p=${it.p}`;
-        a.dataset.nav = '';
-        a.dataset.caption = wallCaption(it);
-        a.style.gridColumn = `${start} / span ${s}`;
-        if (isMark(it)) { const r = s >= 4 ? 4 : s >= 2 ? 2 : 1; a.classList.add('mark'); a.dataset.ratio = r; a.style.setProperty('--box', `${r} / 1`); }
-        a.append(media(it, { eager: n++ < 4, sizes: `${Math.round(s / cols * 100)}vw` }));
-        start += s;
-        el.append(a);
-      }
-      main.append(el);
+    const g = document.createElement('div');
+    g.className = 'rows wallrows';
+    list.forEach((it, n) => {
+      const a = document.createElement('a');
+      a.className = 'cell';
+      if (isMark(it)) a.classList.add('mark');
+      a.href = `?p=${it.p}`;
+      a.dataset.nav = '';
+      a.dataset.caption = wallCaption(it);
+      a.dataset.title = bySlug[it.p].title;
+      a.append(media(it, { eager: n < 8, sizes: '(max-width: 420px) 100vw, 40vw' }));
+      g.append(a);
     });
+    main.append(g);
+    layoutRows(g, list);
   }
 
   // A filter reads rather than shows: one column, flush left, one plate per
@@ -962,7 +920,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         document.body.className = 'mode-project mode-sheet';
       }
     } else {
-      let list = mixed;
+      let list = chrono;
       if (ds.length) {
         // Several filters at once: work in any of them. They name themselves
         // at the top, each with a cross that takes just that one away; the
@@ -988,7 +946,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         main.append(b);
       }
       if (ds.length) renderColumn(list);
-      else { renderWall(list); snapHeights(); }
+      else renderWall(list);
       document.body.className = ds.length ? 'mode-wall mode-filter' : 'mode-wall';
     }
 
@@ -1244,16 +1202,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     });
   }
 
-  function snapHeights() {
-    main.querySelectorAll('.cell').forEach(c => {
-      const w = c.getBoundingClientRect().width;
-      if (c.classList.contains('mark')) { c.style.height = Math.round(w / parseFloat(c.dataset.ratio)) + 'px'; return; }
-      const m = c.firstElementChild;
-      m.style.height = Math.round(w * m.getAttribute('height') / m.getAttribute('width')) + 'px';
-    });
-  }
   let snapTimer;
-  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(() => { snapHeights(); sizeSheet(); }, 100); });
+  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(sizeSheet, 100); });
 
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
