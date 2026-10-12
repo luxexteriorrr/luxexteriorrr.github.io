@@ -1,616 +1,643 @@
+/* Sentra — phone. Foundation pass, 12 Oct 2026.
+ *
+ * Read as Bänziger Hug would set it: one grotesque in two weights, four sizes,
+ * one margin, one left edge. Colour only ever arrives as a solid field. Every
+ * value below comes from a token; nothing is set by eye at the call site. */
+
 :root {
-  /* color variables */
-  --pink:#FD02B2;
-  --orange:#FD9600;
-  --purple:#9751BD;
-  --green:#54A100;
-  --blue:#058CFC;
-  --grey:#E8E2DF;
-  --black:#000000;
-  --white:#FFFFFF;
-  --lilac: #9B9AFC;
-  --peachy: #FC82C5;
-  --yellow: #D8FD28;
-     
+  /* Colour. One value per name, and the same values as the billboards
+   * (billbord1.js), so the phone and the wall are one system. The mark in
+   * index.html takes its fills from here too — it used to be #f78f1e/#dad9d9,
+   * the print conversions, which put the logo out of step with the interface
+   * it sat on. */
+  --pink:   #FD02B2;
+  --orange: #FD9600;
+  --purple: #9751BD;
+  --green:  #688600;           /* was #54A100 here; the wall has always used #688600 */
+  --blue:   #058CFC;
+  --light:  #D9D9D9;           /* the one light grey: type on colour, the mark, bands.
+                                  #E8E2DF and #dad9d9 both retired into it */
+  --black:  #000000;
+  --white:  #FFFFFF;
+  --dim:    #333333;
 
-  /* Tracking. The IRP boards set -5% on display and -3% on text, which read as
-   * condensed on screen; `normal` read as loose. These sit at roughly a third
-   * of the board values — tight enough to hold the line together, not so tight
-   * the words start touching. Change here, not at the call sites. */
-  --track-display: -0.02em;
-  --track-text: -0.01em;
+  /* Theme. The mark comes in five colours; whichever one is chosen decides
+   * the accent for the whole phone: the mark's field, Proceed, Continue, the
+   * send square, Sentra's voice in the chat. --other is the second voice
+   * (the visitor's messages, New chat), always a colour that isn't the accent.
+   * Pick with ?theme=orange|pink|purple|blue|green; orange is the default.
+   * The *-rgb triplets let the 25% fields be built from the same value. */
+  --accent: var(--orange);  --accent-rgb: 253 150 0;
+  --other:  var(--purple);  --other-rgb:  151 81 189;           /* on black: the hairline above the input, the send square at rest */
+  --muted: #8A8A8A;            /* the subhead under the headline: a step back from black,
+                                  3.4:1 on white, passes for large text (26 px) */
+  --secondary: #6B6B6B;        /* small print on white: 5.3:1, passes at 12 px. The one grey for
+                                  text; colour stays reserved for fields */
 
-  /* typography */
-  --small: 10px;
-  --body: 16px;
-  --H6: 26px;
-  --H5: 42px;
-  --H4: 68px;
-  --H3: 110px;
-  --H2: 177px;
-  --H1: 287px;
+  /* Space. An 8-pt grid, and one margin. 4 is the only half-step, for the gap
+   * between a sender's name and their words. */
+  --s-half: 4px;
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s6: 48px;
+  --margin: 16px;              /* every screen, every edge — was 6 on the nav and 8 elsewhere */
+  --tap: 44px;                 /* the smallest thing a finger is asked to hit (Apple HIG) */
+  --press: 100ms;              /* pressed-state timing: feedback lands on touch-down */
+
+  /* Type. Four sizes, each with its own leading and tracking, set as a pair.
+   * Leading runs inversely to size: tight on the display line, open on the
+   * text people actually have to read (body was 16/15 and 16/16; it is 16/22).
+   * Tracking runs the same way: tightened as it grows, untouched at body,
+   * opened a touch at the smallest size. */
+  --t-small: 12px;   --lh-small: 16px;   --tr-small: 0;
+  --t-body: 16px;    --lh-body: 22px;    --tr-body: -0.01em;
+  --t-title: 26px;   --lh-title: 28px;   --tr-title: -0.02em;
+  --t-display: 42px; --lh-display: 40px; --tr-display: -0.03em;
+  /* Tracking a step tighter across the scale (12 Oct), still size-specific. */
+
+  /* Two weights: Medium and Bold (12 Oct — Regular read a touch thin on
+   * screen). Bold is the boards' weight, so the welcome lines and the wall
+   * still match; everything else is Medium. */
+  --medium: 500;
+  --bold: 700;
+  --heavy: 800;                /* display headlines only: "What is Sentra?", the idle question */
 }
 
-/*typography added*/
-@font-face {
-  font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Thin-Trial.woff') format('woff');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Light-Trial.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Diatype';
-  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC Diatype IRP/ABCDiatype-Regular-Trial.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* The five themes, one per colour of the mark. Screen values, the same as
+ * the billboards. --other is chosen so the two voices in the chat never share
+ * a colour and both read on black. */
+:root[data-theme="pink"]   { --accent: var(--pink);   --accent-rgb: 253 2 178;  --other: var(--purple); --other-rgb: 151 81 189; }
+:root[data-theme="purple"] { --accent: var(--purple); --accent-rgb: 151 81 189; --other: var(--orange); --other-rgb: 253 150 0; }
+:root[data-theme="blue"]   { --accent: var(--blue);   --accent-rgb: 5 140 252;  --other: var(--orange); --other-rgb: 253 150 0; }
+:root[data-theme="green"]  { --accent: var(--green);  --accent-rgb: 104 134 0;  --other: var(--purple); --other-rgb: 151 81 189; }
 
 @font-face {
   font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Medium-Trial.woff') format('woff');
+  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Medium-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC Diatype IRP/ABCDiatype-Medium-Trial.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Bold-Trial.woff') format('woff');
+  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Heavy-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC Diatype IRP/ABCDiatype-Heavy-Trial.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Diatype';
+  src: url('/assets/type/ABC Diatype IRP/ABCDiatype-Bold-Trial.woff2') format('woff2'),
+       url('/assets/type/ABC Diatype IRP/ABCDiatype-Bold-Trial.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Heavy-Trial.woff') format('woff');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
+/* The design is drawn at 414 × 736 (iPhone 8 Plus) and that is still the size
+ * it is checked at. It is no longer the only size it exists at: the exact-size
+ * media query that wrapped this whole file is gone, so a pixel of Safari
+ * toolbar, another phone or a capture window no longer drops it to unstyled
+ * Times. On anything wider the column holds at phone width, centred on black. */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  font-family: 'Diatype', sans-serif;
+  font-weight: var(--medium);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--black);
+}
+/* Buttons and inputs do not inherit type. Without this they set in the
+ * system face at the browser's size. */
+button, input {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+.PageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 414px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  overflow: hidden;
 }
 
-@font-face {
-  font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Black-Trial.woff') format('woff');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
+/* ---- NAV ----------------------------------------------------------------
+ * Off on "What is Sentra?", back in the chat (12 Oct, Kirill). chat.js adds
+ * body.in-chat when the visitor proceeds. */
+nav {
+  display: none !important;
+  flex: 0 0 auto;
+  height: 44px;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--margin);
+  background-color: var(--white);
+  z-index: 4;
+}
+body.in-chat nav { display: flex !important; }
+#infoLink {
+  display: none;
+}
+#infoHeading {
+  color: var(--black);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  font-weight: var(--bold);
+}
+#home {
+  width: 56px;
+  height: auto;
+}
+#home svg { display: block; }
+#home .cls-1 { fill: var(--accent); }
+#home .cls-2 { fill: var(--light); }
+
+/* ---- INTRO --------------------------------------------------------------
+ * White, as billboard 2: the mark alone, centred, its field cutting through
+ * the five colours every 200 ms (the billboard's timing), then settling on
+ * this visitor's colour and fading away over "What is Sentra?" underneath. */
+.IntroWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  padding: 0 var(--margin);
+  cursor: pointer;
+  transition: opacity 600ms ease-out;
+}
+.IntroWrapper.is-leaving { opacity: 0; pointer-events: none; }
+.IntroWrapper[hidden] { display: none; }
+.IntroWrapper svg { display: block; width: 112px; height: auto; }
+.IntroWrapper .cls-1 { fill: var(--mark, var(--accent)); }
+.IntroWrapper .cls-2 { fill: var(--light); }
+/* The brand line under the mark: Medium 16, black, centred, held to a short
+ * measure so it sets in two or three lines. Hidden while the mark cycles;
+ * fades in when it lands on this visitor's colour. */
+.introLine {
+  max-width: 240px;
+  text-align: center;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  font-weight: var(--medium);
+  color: var(--black);
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+.IntroWrapper.has-line .introLine { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .IntroWrapper { transition-duration: 300ms; }
 }
 
-@font-face {
-  font-family: 'Diatype';
-  src: url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff2') format('woff2'),
-       url('/assets/type/ABC\ Diatype\ IRP/ABCDiatype-Ultra-Trial.woff') format('woff');
-  font-weight: 950;
-  font-style: normal;
-  font-display: swap;
+/* ---- WELCOME ------------------------------------------------------------
+ * Black, one line at a time, centred. The line is a coloured block with the
+ * type knocked out of it in the light grey — the same relationship the
+ * billboard has, so the first screen and the wall are visibly one system. */
+.WelcomeWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background-color: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s4);
+  padding: var(--s2) var(--margin) var(--s6);
+}
+.WelcomeWrapper[hidden] { display: none; }
+
+.welcomeLine {
+  text-align: center;
+  min-height: var(--s3);
+}
+.welcomeBlock {
+  display: inline-block;
+  font-weight: var(--bold);              /* Diatype Bold, as the boards */
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  color: var(--light);
+  padding: 1px var(--s1);                /* 22 + 2 = a 24 band */
+  background-color: transparent;
+  /* Only the colour moves between lines. No fade: the boards cut, they do
+   * not dissolve, and a fade here would read as a loading state. */
+  transition: background-color 120ms linear;
 }
 
-/* iPhone 8 Plus, 414×736 — still the only size this is drawn for, and still
- * the target. But matched on width/height rather than device-width/device-height.
+/* ---- ONBOARDING --------------------------------------------------------- */
+.OnboardingWrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Bottom inset = the side margin, so the band sits as close to the foot of
+   * the screen as it does to its sides. */
+  padding: var(--s2) var(--margin) max(var(--margin), env(safe-area-inset-bottom));
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+.OnboardingWrapper[hidden] { display: none; }
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s1);                        /* headline and subhead read as one statement */
+}
+h1 {
+  font-size: var(--t-display);           /* 42 */
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+  font-weight: var(--heavy);             /* Heavy for the headline, Medium for everything under it (12 Oct) */
+  color: var(--black);
+}
+.orange { color: var(--orange); }
+.pink   { color: var(--pink); }
+.accent { color: var(--accent); }
+
+.onboardingP {
+  font-size: var(--t-title);             /* 26 */
+  line-height: var(--lh-title);          /* 28, was 24 */
+  letter-spacing: var(--tr-title);
+  font-weight: var(--medium);
+  color: var(--muted);
+}
+
+
+/* The disclaimer is the ethical layer and stays on the screen, but in the
+ * register it belongs to: small print, directly above the button it qualifies
+ * ("by continuing…"). It was the largest block on the page — six lines of pink,
+ * louder than the pitch. */
+#dislaimer {
+  font-size: var(--t-small);
+  line-height: var(--lh-small);
+  letter-spacing: var(--tr-small);
+  font-weight: var(--medium);
+  color: var(--secondary);
+}
+.disclaimerWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);                        /* small print and its button read as one group */
+  width: 100%;
+}
+
+/* ---- BUTTONS ------------------------------------------------------------
+ * Every button is one shape: a square-cornered band, full width between the
+ * margins, the colour as a field at 25% with the type in the full colour,
+ * label centred. (Tried as Alex Hunting-style capsules on 12 Oct; back to
+ * the band, which is Sentra's own shape.)
  *
- * device-width matches the PHYSICAL panel, not the window, so every rule below
- * this line applied on precisely one handset and nowhere else — no window size
- * and no DevTools emulation could satisfy it.
- *
- * This is still an exact 414×736 match and still renders as unstyled Times on
- * black at any other size. What changes is that the size is now the window's,
- * so it can be met: resize a browser to 414×736, pick the device in DevTools,
- * or capture at it, and the design appears. Identical on the phone itself. */
-@media screen
-and (width:414px)
-and (height: 736px) {
+ * 44 tall for the thumb. The fill is translucent and blurs whatever passes
+ * under it, so a band over the chat reads as a layer, not a hole. */
+.cta,
+#proceed,
+#SystemSubmit,
+#continueButton,
+#resetButton,
+#closeInfo {
+  --field: rgb(var(--accent-rgb) / 0.25);   /* the accent at 25% */
+  --field-pressed: rgb(var(--accent-rgb) / 0.4);
+  --ink: var(--accent);
 
-  *, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    /* word-spacing: -1px was here, pulling every word a pixel closer to the
-     * next on every element in the app. With the negative letter-spacing gone
-     * it was the last thing still tightening the setting. */
-  }
-  html, body {
-    font-family: 'Diatype';
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    /*overflow: hidden; /* disables scrolling */
-    /*position: fixed;   /* fixes viewport in place */
-    /*overscroll-behavior: none; /* prevents iOS rubber-band scrolling */
-  }
-  .PageWrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-  nav {
-    height: 36px;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px;
-    background-color: var(--white);
-    z-index: 4;
-  }
-
-  #infoLink {
-    display: none;
-    width: auto;
-    height: auto;
-  }
-  #infoHeading {
-    color: var(--black);
-    font-size: var(--body);
-    font-weight: 800;
-    line-height: var(--body);
-  }
-  #home {
-    width: 56px;
-    height: auto;
-  }
-
-  /* ---- WELCOME ------------------------------------------------------------
-   * Black, one line at a time, centred. The line is a coloured block with the
-   * type knocked out of it in #D9D9D9 — the same relationship the billboard
-   * has, so the first screen and the wall are visibly one system.
-   * Size is set so the longest line ("Your presence here brightens this
-   * silence") still holds on one line at 414. */
-  .WelcomeWrapper {
-    position: absolute;
-    inset: 0;
-    z-index: 6;
-    background-color: var(--black);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-    padding: 16px 8px 48px;
-  }
-  .WelcomeWrapper[hidden] { display: none; }
-
-  .welcomeLine {
-    margin: 0;
-    text-align: center;
-    min-height: 24px;
-  }
-  .welcomeBlock {
-    display: inline-block;
-    font-family: 'Diatype', sans-serif;
-    font-weight: 700;              /* Diatype Bold, as the boards */
-    font-size: 17px;
-    line-height: 24px;
-    letter-spacing: var(--track-text);
-    color: #D9D9D9;
-    padding: 1px 6px;
-    background-color: transparent;
-    /* Only the colour moves between lines. No fade: the boards cut, they do
-     * not dissolve, and a fade here would read as a loading state. */
-    transition: background-color 120ms linear;
-  }
-
-  .titleWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  /* Values below are measured off Home Page Iphone 13 (398:895), not eyeballed.
-   * Tracking there is set in percent, so it is em here — it has to hold at any
-   * size, and -2px meant something different on the 42px head and the 26px sub. */
-  h1 {
-    font-size: var(--H5);          /* 42 */
-    line-height: 40px;
-    color: var(--black);           /* was --grey, which put the headline at #E8E2DF */
-    letter-spacing: var(--track-display);
-    height: fit-content;
-    font-weight: 800;              /* Diatype Heavy */
-  }
-  .orange {
-    color: var(--orange);
-    font-size: inherit;
-    line-height: inherit;
-    letter-spacing: inherit;
-  }
-  .pink {
-    color: var(--pink);
-    font-size: inherit;
-    line-height: inherit;
-    letter-spacing: inherit;
-  }
-  .onboardingP {
-    font-weight: 500;              /* Diatype Medium */
-    color: var(--black);
-    font-size: var(--H6);          /* 26 */
-    line-height: 24px;
-    letter-spacing: var(--track-text);
-  }
-
-  /* The withheld half, revealed by Read more. Set as the subhead so the screen
-   * grows rather than changing register when it opens. */
-  .onboardingMore {
-    font-weight: 500;
-    color: var(--black);
-    font-size: var(--H6);
-    line-height: 24px;
-    letter-spacing: var(--track-text);
-    margin: 0;
-  }
-  .onboardingMore[hidden] { display: none; }
-
-  /* Read more — 10px Bold on a #E8E2DF band, sized to its own text. Small and
-   * quiet: it is an offer, not a call to action. */
-  .chip {
-    align-self: flex-start;
-    font-family: 'Diatype', sans-serif;
-    font-size: var(--small);       /* 10 */
-    line-height: 8px;
-    letter-spacing: normal;
-    font-weight: 700;              /* Diatype Bold */
-    color: var(--pink);
-    background-color: var(--grey);
-    border: none;
-    /* appearance:none or the browser's own button rendering survives underneath
-     * everything set here — rounded corners, its own font metrics, a grey it
-     * picked. That is what made these read as browser buttons rather than as
-     * the bands they are. */
-    -webkit-appearance: none;
-    appearance: none;
-    box-sizing: border-box;
-    width: 126px;
-    height: 16px;
-    padding: 2px 8px;
-    display: flex;
-    align-items: center;
-    text-align: left;
-    cursor: pointer;
-  }
-  #dislaimer {
-    font-size: var(--body);        /* 16 */
-    line-height: 15px;
-    letter-spacing: var(--track-text);
-    font-weight: 500;              /* Diatype Medium */
-    color: var(--pink);
-  }
-  /* Pink at 25% carrying pink type at full, rather than a solid pink slab with
-   * grey type on it. The band reads as a field the words sit in — the same
-   * relationship the billboard has — instead of as a button stuck to the page. */
-  /* The way in, on both screens. Set at body size rather than 26 — it is the
-   * quietest thing that still has to be found, and at H6 it was competing with
-   * the headline for the same job. Type sits left, like everything else on the
-   * page; the band runs full width, so the words start at the same margin the
-   * headline does instead of floating in the middle of a stripe.
-   *
-   * A button does NOT inherit font-family — without it this set in Arial. */
-  .cta,
-  #proceed {
-    font-family: 'Diatype', sans-serif;
-    font-weight: 400;              /* Diatype Regular */
-    font-size: var(--body);        /* 16, was 26 */
-    line-height: 16px;
-    letter-spacing: var(--track-text);
-    height: 32px;
-    width: 100%;
-    background-color: rgba(253, 2, 178, 0.25);
-    color: var(--pink);
-    border: none;
-    -webkit-appearance: none;
-    appearance: none;
-    box-sizing: border-box;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.3em;
-    cursor: pointer;
-  }
-  .cta[hidden] { display: none; }
-
-  /* The arrow is Black where the word is Regular — it is the only part of the
-   * button doing any pointing. */
-  #proceed #black,
-  .cta .arrow {
-    font-weight: 900;              /* Diatype Black */
-    color: inherit;
-  }
-  #black {
-    font-weight: 900;
-  }
-  .disclaimerWrapper{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 100%;
-  }
-
-  .OnboardingWrapper {
-    padding: 16px 8px 48px;        /* measured off 398:895 */
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    box-sizing: border-box;
-  }
-
-
-
-
-
-
-  .ChatWrapper {
-    width: 100%;
-    height: 100%;
-    background-color: var(--black);
-    display: none;
-    flex-direction: column;
-    color: black;
-  }
-  .message.user {
-    color: var(--purple);
-  }
-  .message.sentra {
-    color: var(--orange);
-  }
-  .message {
-    color: inherit;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    position: static;
-    z-index: 2;
-  }
-  .messageDetails {
-    flex: 0.8;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .timeStamp {
-    color: inherit;
-    font-weight: 400;
-  }
-
-  .messageBlock {
-    background-color: inherit;
-    width: 14px;
-    height: 14px;
-    position: sticky;
-    top: 0;
-  }
-  /* The square takes its colour from here rather than from an inline style in
-   * chat.js, which hardcoded #FFA500 — the CSS named orange, not the #FD9600
-   * this project uses. One value out of the system is one too many when the
-   * whole piece is about a company with a consistent surface. */
-  .message.user .messageBlock   { background-color: var(--purple); }
-  .message.sentra .messageBlock { background-color: var(--orange); }
-  .senderID {
-    font-size: var(--body);
-    font-weight: 500;
-    letter-spacing: -1px;
-    line-height: 14px;
-  }
-  .messageContent {
-    font-size: var(--body);
-    font-weight: 400;
-    line-height: 16px;
-  }
-
-
-
-  .chat-container {
-    width: 100%;
-    flex: 1;
-    overflow-y: scroll;
-    min-height: 0; /* important for flex children to shrink */
-    padding: 12px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-bottom: 70px;
-    z-index: 3;
-  }
-
-  .input-form {
-    height: 58px;
-    font-family: 'Diatype';
-    flex: 0.1;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    display: flex;
-    background-color: var(--white);
-    z-index: 4;
-  }
-
-  #SystemInput {
-    font-family: 'Diatype';
-    font-size: var(--body);
-    font-weight: 300;
-    border: none;
-    height: 100%;
-    width: 100%;
-    padding: 16px 8px;
-  }
-  #SystemInput:focus {
-    outline: none;
-    box-shadow: none;
-  }
-
-  #SystemInput::placeholder {
-    color: var(--purple); /* or try a solid color like #9751BD to test */
-    font-weight: 400;
-    font-size: var(--body);
-    opacity: 0.5;
-  }
-  #SystemSubmit {
-    font-size: var(--body);
-    line-height: 14px;
-    color: var(--grey);
-    background-color: var(--orange);
-    font-weight: 500;
-    padding: 4px 4px;
-    width: fit-content;
-    border: none;
-    margin-right: 8px;
-  }
-
-  .idle-overlay {
-    position: fixed;
-    bottom: 0; left: 0;
-    width: 100vw;
-    height: 96%;
-    background-color: var(--white);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    z-index: 999;
-    transition: opacity 0.4s ease;
-  }
-  
-  .idle-overlay.hidden {
-    display: none;
-  }
-  
-  .idle-overlay p {
-    font-size: var(--H5);
-    line-height: var(--H5);
-    color: var(--grey);
-    letter-spacing: -1px;
-    height: fit-content;
-    letter-spacing: -2px;
-    font-weight: 800;
-    padding: 6px;
-  }
-  .buttonWrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    padding: 6px;
-    gap: 12px;
-
-  }
-  #resetButton {
-    line-height: 24px;
-    height: 32px;
-    width: 100%;
-    background-color: var(--orange);
-    font-size: var(--H6);
-    color: var(--grey);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #continueButton {
-    line-height: 24px;
-    height: 32px;
-    width: 100%;
-    background-color: #FD02B2;
-    font-size: var(--H6);
-    color: var(--grey);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #diclaimerIdle {
-    letter-spacing: normal;
-    font-weight: 500;
-    color: var(--black);
-    font-size: var(--H6);
-    line-height: 26px;
-  }
-
-  .idleCountdown {
-    letter-spacing: normal;
-    font-weight: 500;
-    color: var(--black);
-    font-size: var(--H6);
-    line-height: 26px;
-  }
-  
-  .infoOverlay {
-    position: static;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100%;
-    background-color: var(--white);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    z-index: 999;
-    transition: opacity 0.4s ease;
-    padding: 6px;
-    z-index: 10;
-  }
-  .infoOverlay.hidden {
-    display: none;
-  }
-  .infoText {
-    letter-spacing: normal;
-    font-weight: 500;
-    color: var(--black);
-    font-size: var(--H6);
-    line-height: 26px;
-  }
-  .infoButton {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-  }
-  #closeInfo {
-    line-height: 24px;
-    height: 32px;
-    width: 100%;
-    background-color: #FD02B2;
-    font-size: var(--H6);
-    color: var(--grey);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .hidden {
-    display: none !important;
-  }
-  
-
-
-  
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;               /* label centred in the band (12 Oct) */
+  /* Optical centring. The cap height is dead centre, but a label is mostly
+   * lowercase and Diatype's x-height sits low in the line, so the word's mass
+   * read ~1.6 px below the middle of the band. One pixel up evens it out. */
+  align-self: stretch;
+  flex: 1 1 auto;
+  gap: 0.3em;
+  height: var(--tap);
+  width: 100%;
+  padding: 0 var(--s1) 2px;              /* 2px under = the optical lift described above */
+  border-radius: 0;
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  font-weight: var(--medium);
+  white-space: nowrap;
+  color: var(--ink);
+  background-color: var(--field);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--press) ease-out,
+              transform var(--press) ease-out;
 }
+/* New chat is the one band in the second colour: it ends Sentra's turn and
+ * hands the phone to someone else. Everything else is the accent. */
+#resetButton {
+  --field: rgb(var(--other-rgb) / 0.25);
+  --field-pressed: rgb(var(--other-rgb) / 0.4);
+  --ink: var(--other);
+}
+/* Pressed: on touch-down the field deepens and the band gives a little. */
+.cta:active,
+#proceed:active,
+#SystemSubmit:active,
+#continueButton:active,
+#resetButton:active,
+#closeInfo:active {
+  background-color: var(--field-pressed);
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta, #proceed, #SystemSubmit, #continueButton, #resetButton, #closeInfo { transition: background-color var(--press) ease-out; }
+  .cta:active, #proceed:active, #SystemSubmit:active,
+  #continueButton:active, #resetButton:active, #closeInfo:active { transform: none; }
+}
+.cta[hidden] { display: none; }
+.input-form #SystemSubmit {
+  /* Send is not a band but Sentra's square (12 Oct): the same mark that sits
+   * next to Sentra's name, at the right of the bar. 20 px to see, 44 px to
+   * hit. Grey while the field is empty; orange once there is something to
+   * send — the button is only "on" when it can do something. */
+  align-self: center;
+  flex: 0 0 auto;
+  width: var(--tap);
+  height: var(--tap);
+  margin-right: calc((var(--tap) - 20px) / -2);   /* the square, not its tap area, sits on the margin */
+  padding: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  --field-pressed: transparent;
+}
+.input-form #SystemSubmit::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: var(--light);
+  transition: background-color 150ms ease-out;
+}
+.input-form #SystemSubmit:not(:disabled)::before { background-color: var(--accent); }
+.input-form #SystemSubmit:disabled { cursor: default; }
+.input-form #SystemSubmit:active { background: transparent; }
+/* The arrow is Bold where the word is Regular — it is the only part of the
+ * button doing any pointing. */
+#proceed #black,
+.cta .arrow {
+  font-weight: var(--bold);
+  color: inherit;
+}
+
+/* ---- CHAT ---------------------------------------------------------------
+ * One ground for nav, chat and input bar (it was a black chat between two
+ * white bars, three parts stacked). Black since 12 Oct — see body.in-chat below.
+ *
+ * Each message is an index entry: a head line (■ name · time) and the text
+ * under it at the full measure, ~50 characters a line. Each voice keeps its
+ * colour: the square, the name and the words. */
+.ChatWrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background-color: var(--white);
+  display: none;
+  flex-direction: column;
+  position: relative;
+}
+.chat-container {
+  flex: 1;
+  min-height: 0;                         /* lets the flex child shrink and scroll */
+  width: 100%;
+  overflow-y: auto;
+  padding: var(--s2) var(--margin);
+  padding-bottom: calc(56px + var(--s3));   /* clears the input bar */
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);                        /* entries apart, head and text together */
+  z-index: 3;
+}
+.message {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-half);
+  animation: message-in 200ms ease-out both;
+}
+.messageHead {
+  display: flex;
+  align-items: center;
+  gap: var(--s1);
+}
+.messageBlock {
+  flex: 0 0 auto;
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+.message.user .messageBlock   { background-color: var(--other); }
+.message.sentra .messageBlock,
+.typing .messageBlock         { background-color: var(--accent); }
+.senderID {
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  font-weight: var(--bold);
+  color: var(--black);
+}
+.timeStamp {
+  color: var(--muted);                   /* the time is metadata, not anyone's voice */
+  font-size: var(--t-small);
+  line-height: var(--lh-small);
+  letter-spacing: var(--tr-small);
+  font-weight: var(--medium);
+  font-variant-numeric: tabular-nums;
+}
+.messageContent {
+  font-size: var(--t-body);
+  line-height: 20px;                     /* a touch tighter than body (22) in the conversation, 12 Oct */
+  letter-spacing: var(--tr-body);
+  font-weight: var(--medium);
+  color: var(--black);
+}
+/* Colour back on the words (12 Oct): each voice in its own colour, as in the
+ * exhibited version — the name and the text, the time stays grey. */
+.message.user   .senderID,
+.message.user   .messageContent { color: var(--other); }
+.message.sentra .senderID,
+.message.sentra .messageContent { color: var(--accent); }
+
+/* Sentra replying: its square, pulsing where its next entry will start. */
+.typing {
+  height: var(--lh-body);
+  display: flex;
+  align-items: center;
+}
+.typing .messageBlock {
+  animation: typing-pulse 600ms ease-in-out infinite alternate;
+}
+
+/* Black, again (12 Oct): the chat runs on black, as exhibited — nav, chat and
+ * input bar all on the one ground, so it is still one surface, not three.
+ * "What is Sentra?" stays white; the change of ground is the step inside. */
+body.in-chat .PageWrapper,
+body.in-chat .ChatWrapper { background-color: var(--black); }
+/* The nav and the input bar stay white over the black chat, as on the IRP
+ * boards: the company's header above the conversation, the place you type
+ * below it. */
+body.in-chat nav { background-color: var(--white); }
+body.in-chat #SystemInput { caret-color: var(--accent); }
+/* The idle screen takes the whole phone: no nav while the conversation is on hold. */
+body.is-idle nav { display: none !important; }
+
+@keyframes message-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes typing-pulse {
+  from { opacity: 1; }
+  to   { opacity: 0.25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .message { animation-name: message-fade; }
+}
+@keyframes message-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.input-form {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s1);
+  padding: 0 var(--margin);
+  background-color: var(--white);
+  border-top: 1px solid var(--light);    /* the one line on the screen: where the conversation ends and you type */
+  z-index: 4;
+}
+#SystemInput {
+  flex: 1;
+  height: 100%;
+  font-size: var(--t-body);              /* 16 — anything smaller and iOS zooms on focus */
+  font-weight: var(--medium);
+  border: none;
+  background: transparent;
+  color: var(--black);
+}
+#SystemInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+#SystemInput::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+/* ---- IDLE ---------------------------------------------------------------
+ * The same composition as "What is Sentra?": white, the statement at the top
+ * (headline, then the grey line under it, 8 apart), the two ways out side by
+ * side at the foot, 16 from the bottom like Proceed. It covers
+ * the whole screen (the nav hides, body.is-idle) — the conversation is on
+ * hold behind it. */
+.idle-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: var(--s2) var(--margin) max(var(--margin), env(safe-area-inset-bottom));
+  z-index: 999;
+  animation: idle-in 200ms ease-out both;
+}
+.idle-overlay.hidden { display: none; }
+@keyframes idle-in { from { opacity: 0; } to { opacity: 1; } }
+
+.idletextwrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+#idleTitle {
+  font-size: var(--t-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+  font-weight: var(--heavy);             /* same role as "What is Sentra?", same weight */
+  color: var(--black);                   /* was the light grey: near-invisible on white */
+}
+#diclaimerIdle {
+  font-size: var(--t-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--tr-title);
+  font-weight: var(--medium);
+  color: var(--muted);
+}
+.buttonWrapper {
+  display: flex;
+  flex-direction: row;                   /* side by side, splitting the width between the margins */
+  gap: var(--s1);
+  width: 100%;
+}
+.buttonWrapper > button { flex: 1 1 0; width: auto; }
+
+/* ---- INFO (hidden; kept until the voice pass decides its fate) ---------- */
+.infoOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--s2) var(--margin) var(--s6);
+  z-index: 10;
+}
+.infoOverlay.hidden { display: none; }
+.infoText {
+  font-size: var(--t-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--tr-title);
+  font-weight: var(--medium);
+  color: var(--black);
+}
+.infoButton {
+  display: flex;
+  width: 100%;
+}
+
+.hidden { display: none !important; }

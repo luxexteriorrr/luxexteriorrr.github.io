@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Oracle™ Poster</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Sentra</title>
   <link rel="stylesheet" href="chat.css">
   
   <script src="/socket.io/socket.io.js"></script>
@@ -15,20 +17,12 @@
 
     <!--main navigation of app-->
     <nav class="Nav">      
-      <a href="index.html" id="homeLink">
+      <!-- The mark is not a link: it used to point at index.html, so a tap on it
+           mid-conversation reloaded the app and wiped the chat. -->
+      <a id="homeLink" aria-label="Sentra">
         <div id="home">
           <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 97.54 29.97">
-            <defs>
-              <style>
-                .cls-1 {
-                  fill: #f78f1e;
-                }
-          
-                .cls-2 {
-                  fill: #dad9d9;
-                }
-              </style>
-            </defs>
+            <!-- Fills come from chat.css (#home .cls-1 / .cls-2), so the mark uses the interface's colours. -->
             <g id="Master_logo_export" data-name="Master logo export">
               <g>
                 <rect class="cls-1" y="9.59" width="97.54" height="19.84"/>
@@ -80,6 +74,14 @@
          knows why you are here. Text is #D9D9D9 on the colour, exactly as on
          the billboard — the words are cut out of the block rather than written
          on the screen. -->
+    <!-- INTRO. The mark cutting through its five colours, as on billboard 2,
+         then settling on this visitor's colour (the theme) and fading into
+         "What is Sentra?". The mark itself is cloned in from the nav by chat.js. -->
+    <div class="IntroWrapper" id="intro" aria-hidden="true">
+      <!-- The brand line, from the IRP presentation. Appears once the mark lands. -->
+      <p class="introLine">Media systems that see you, feel you, and respond in real time.</p>
+    </div>
+
     <div class="WelcomeWrapper" id="welcome">
       <p class="welcomeLine" id="welcomeLine"><span class="welcomeBlock" id="welcomeBlock"></span></p>
       <button id="enter" class="cta" type="button" hidden>proceed <span class="arrow">&rarr;</span></button>
@@ -92,23 +94,16 @@
         <h1>What is Sentra?</h1>
         <p class="onboardingP">We could simply tell you, but it wouldn't make sense yet.</p>
 
-        <!-- The rest of the pitch is behind Read more. The screen opens on one
-             withheld sentence and a way to ask for the rest — which is the
-             behaviour the whole piece is about, performed before you have said
-             anything to it. -->
-        <button id="readMore" class="chip" type="button"
-                aria-expanded="false" aria-controls="onboardingMore">Read more</button>
-
-        <p class="onboardingMore" id="onboardingMore" hidden>
-          Have a conversation to find out what Sentra does.
-          The more you share, the better Sentra can demonstrate what it actually does.
-          Each conversation is different because each of us are different.
-          We are genuinely curious to learn about your world!</p>
+        <!-- Read more removed 12 Oct; its text is kept for a separate page:
+             "Have a conversation to find out what Sentra does. The more you
+             share, the better Sentra can demonstrate what it actually does.
+             Each conversation is different because each of us are different.
+             We are genuinely curious to learn about your world!" -->
       </div>
 
         <div class="disclaimerWrapper">
           <p id="dislaimer">Please note: This is an experimental AI system for artistic purposes. Don't share sensitive personal information, financial details, or private data. Conversations may be used for academic research. This system is not intended for medical, legal, or professional advice.</p>
-          <button id="proceed"> proceed <span id="black">→</span> </button>
+          <button id="proceed">Proceed</button>
         </div>
     </div>
 
@@ -125,28 +120,27 @@
         <form class="input-form" id="mainform">
           <input type="text"
           id="SystemInput"
-          placeholder="Ask Sentra..."
+          placeholder="Ask Sentra…"
           autocomplete="off"
+          enterkeyhint="send"
           required>
           <!-- submit button -->
-          <button type="submit" id="SystemSubmit"> submit→ </button>
+          <!-- Send is Sentra's square: grey while the field is empty, orange once there is something to send. -->
+          <button type="submit" id="SystemSubmit" aria-label="Send" disabled></button>
         </form>
 
-        <div id="idleOverlay" class="idle-overlay hidden">
+        <!-- IDLE. Laid out as "What is Sentra?": the statement at the top, the
+             two ways out at the bottom. The copy keeps Sentra's guilt trip — it
+             is one more piece of the manipulation — with the typos out. -->
+        <div id="idleOverlay" class="idle-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="idleTitle">
           <div class="idletextwrapper">
-            <p>Are you the next <br>
-              <span class="orange">Sentra</span> user?</p>
-              <p id="diclaimerIdle">Hey stranger — it looks like you've are away. Our conversation will reset... We will lose all of our memories together.
-                If you want to continue, press <span class="pink"> continue</span> button.
-                I’ll hate to see you go — but you can press <span class="orange">new chat</span> button to reset the chat for the next user.
-              </p>
-
-          
+            <h2 id="idleTitle">Are you the next <span class="accent">Sentra</span> user?</h2>
+            <p id="diclaimerIdle">Hey stranger, it looks like you've been away. If we reset now, we'll lose everything we shared. I'd hate to see you go, but if you're done, start a new chat for the next person.</p>
           </div>
 
-            <div class="buttonWrapper">
-              <button id="continueButton">←continue old</button>
-              <button id="resetButton"> new chat→</button>   
+          <div class="buttonWrapper">
+            <button id="continueButton" type="button">Continue</button>
+            <button id="resetButton" type="button">New chat</button>
           </div>
         </div>
 

@@ -1,3 +1,21 @@
+// Theme: the colour of the mark sets the accent everywhere (chat.css).
+// Every load is a different Sentra: with no ?theme in the URL, a colour is
+// drawn at random, never the same as the last one — so New chat (which
+// reloads) hands the next visitor a different-coloured company.
+// ?theme=orange|pink|purple|blue|green pins one, for checks and captures.
+;(() => {
+  const THEMES = ['orange', 'pink', 'purple', 'blue', 'green']
+  let theme = new URLSearchParams(location.search).get('theme')
+  if (!THEMES.includes(theme)) {
+    let last = null
+    try { last = localStorage.getItem('sentra-theme') } catch (e) {}
+    const pool = THEMES.filter(t => t !== last)
+    theme = pool[Math.floor(Math.random() * pool.length)]
+    try { localStorage.setItem('sentra-theme', theme) } catch (e) {}
+  }
+  if (theme !== 'orange') document.documentElement.dataset.theme = theme
+})()
+
 document.addEventListener("DOMContentLoaded", () => {
   // Selectors
   const input = document.getElementById('SystemInput');
@@ -12,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     onboarding.hidden = true
     onboarding.style.display = 'none'
     chatWrapper.style.display = 'flex'
+    document.body.classList.add('in-chat')   // brings the nav back (see chat.css)
   })
 
   // ---- WELCOME -------------------------------------------------------------
@@ -37,7 +56,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const welcomeBlock = document.getElementById('welcomeBlock')
   const enter = document.getElementById('enter')
 
-  if (welcome && welcomeBlock && enter) {
+  // ---- INTRO ---------------------------------------------------------------
+  // The billboard's logo cycle, on the phone, before "What is Sentra?": the
+  // mark's field cuts through the five colours every 200 ms (billboard 2's
+  // order and timing), three rounds, then lands on this visitor's colour with
+  // the brand line under it, holds long enough to read, and fades. Tap anywhere to skip. Reduced motion: no cycling — the
+  // mark appears in its colour and fades.
+  const SHOW_INTRO = true
+  const intro = document.getElementById('intro')
+  const skipIntro = new URLSearchParams(location.search).has('screen')
+  if (intro && SHOW_INTRO && !skipIntro) {
+    intro.insertBefore(document.querySelector('#home svg').cloneNode(true), intro.firstChild)
+    const CYCLE = ['--orange', '--purple', '--pink', '--green', '--blue']
+    const STEP = 200, ROUNDS = 3, HOLD = 2600    // the hold is long enough to read the line
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const timers = []
+    const setMark = v => intro.style.setProperty('--mark', `var(${v})`)
+    const leave = () => {
+      timers.forEach(clearTimeout)
+      intro.style.removeProperty('--mark')       // ends on the accent
+      intro.classList.add('is-leaving')
+      setTimeout(() => { intro.hidden = true }, 650)
+    }
+    let t = 0
+    if (!still) {
+      for (let r = 0; r < ROUNDS; r++) {
+        CYCLE.forEach(c => { timers.push(setTimeout(() => setMark(c), t)); t += STEP })
+      }
+    }
+    timers.push(setTimeout(() => {
+      intro.style.removeProperty('--mark')       // land on this visitor's colour
+      intro.classList.add('has-line')            // and the brand line comes up under it
+    }, t))
+    timers.push(setTimeout(leave, t + HOLD))
+    intro.addEventListener('click', leave, { once: true })
+  } else if (intro) {
+    intro.hidden = true
+  }
+
+  // Off for now (12 Oct): open straight on "What is Sentra?". Set to true to
+  // bring the welcome sequence back.
+  const SHOW_WELCOME = false
+
+  if (!SHOW_WELCOME && welcome) {
+    welcome.hidden = true
+    onboarding.hidden = false
+  } else if (welcome && welcomeBlock && enter) {
     let i = 0
     const show = () => {
       const line = WELCOME[i]
@@ -54,21 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
       onboarding.hidden = false
     })
   }
-
-  // Read more reveals the rest of the pitch. The screen opens holding most of
-  // it back and offering to tell you — which is what Sentra does to you a
-  // minute later, running in the other direction.
-  const readMore = document.getElementById('readMore')
-  const onboardingMore = document.getElementById('onboardingMore')
-  if (readMore && onboardingMore) {
-    readMore.addEventListener('click', () => {
-      const open = !onboardingMore.hidden
-      onboardingMore.hidden = open
-      readMore.setAttribute('aria-expanded', String(!open))
-      readMore.textContent = open ? 'Read more' : 'Read less'
-    })
-  }
-
 
   // socket handling
   const socket = io();
@@ -138,9 +187,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // trimm input
     input.value = '';
+    syncSend();
 
-    // Loading state
-    addMessageToChat('sentra', 'Sentra is thinking…');
+    // Loading state: an orange square pulsing where Sentra's next entry will
+    // start. It used to be a real message ("Sentra is thinking…", with a time
+    // and a sender) that was then deleted.
+    showTyping();
 
     // API call
     try {
@@ -170,8 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("response data:", data);
       console.log("reply:", reply);
 
-      // Remove placeholder
-      removeLastMessage();
+      hideTyping();
 
       // Add Sentra's reply
       addMessageToChat('sentra', reply);
@@ -182,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       console.error("Error in fetch:", error);
-      removeLastMessage();
+      hideTyping();
       addMessageToChat('sentra', 'I seem to be having connection issues. Please try again.');
     }
   });
@@ -207,72 +258,80 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.emit('conversation_fragments', { fragments, timestamp: Date.now() });
   }
 
-  // Adding message on the chat UI
+  // Send lights up only when there is something to send.
+  const sendButton = document.getElementById('SystemSubmit');
+  function syncSend() { sendButton.disabled = !input.value.trim(); }
+  input.addEventListener('input', syncSend);
+  syncSend();
+
+  // Adding message on the chat UI.
+  //
+  // Each message is an index entry: a head line (the sender's square, their
+  // name, the time) and under it the text, full width. The colour lives in the
+  // square only; the words are black for Sentra and grey for the visitor, so
+  // Sentra is the voice on the page. Plain <p>/<span>/<time>, not <h6>: these
+  // were all headings to a screen reader.
   function addMessageToChat(sender, text) {
     if (!text) {
       console.warn("No text provided to addMessageToChat()");
       return;
     }
-  
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', sender); // Adds both 'message' and 'user' or 'sentra'
-  
-    // --- Time stamp
-    const timeStamp = document.createElement('h6');
-    timeStamp.classList.add('timeStamp');
-    const now = new Date();
-    timeStamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
-    // --- Sender square block. Colour comes from chat.css, keyed off the
-    // .user / .sentra class already on the message, rather than an inline
-    // style set here — the hardcoded value was #FFA500, the CSS named orange,
-    // which is not the #FD9600 the rest of the project is built from.
-    const messageBlock = document.createElement('div');
-    messageBlock.classList.add('messageBlock');
-  
-    // --- Message content
-    const messageDetails = document.createElement('div');
-    messageDetails.classList.add('messageDetails');
-  
-    const senderID = document.createElement('h6');
-    senderID.classList.add('senderID');
-    senderID.textContent = sender === 'user' ? 'You' : 'Sentra';
-  
-    const messageContent = document.createElement('h6');
-    messageContent.classList.add('messageContent');
-    messageContent.textContent = text;
-  
-    messageDetails.appendChild(senderID);
-    messageDetails.appendChild(messageContent);
-  
-    // --- Assemble message
-    msgDiv.appendChild(timeStamp);
-    msgDiv.appendChild(messageBlock);
-    msgDiv.appendChild(messageDetails);
-  
-    // --- Add to chat container
-    chatContainer.appendChild(msgDiv);
 
-    // Scroll AFTER layout, not on the line following appendChild. Read there,
-    // scrollHeight does not yet account for the message just added — the text
-    // has not wrapped — so it scrolls to where the bottom used to be, and the
-    // taller the reply the further short it falls. Sentra's replies are all
-    // long, which made the message that mattered most the one nobody could
-    // read. Two frames: the first lets style and layout run, the second is
-    // measured against the finished box.
+    const msg = document.createElement('div');
+    msg.classList.add('message', sender);     // 'message user' / 'message sentra'
+
+    const head = document.createElement('div');
+    head.classList.add('messageHead');
+
+    const square = document.createElement('span');
+    square.classList.add('messageBlock');    // colour from chat.css, keyed off .user / .sentra
+    square.setAttribute('aria-hidden', 'true');
+
+    const name = document.createElement('span');
+    name.classList.add('senderID');
+    name.textContent = sender === 'user' ? 'You' : 'Sentra';
+
+    const now = new Date();
+    const time = document.createElement('time');
+    time.classList.add('timeStamp');
+    time.dateTime = now.toISOString();
+    time.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    head.append(square, name, time);
+
+    const body = document.createElement('p');
+    body.classList.add('messageContent');
+    body.textContent = text;
+
+    msg.append(head, body);
+    chatContainer.appendChild(msg);
+    scrollToEnd();
+  }
+
+  // Scroll AFTER layout, not on the line following appendChild. Read there,
+  // scrollHeight does not yet account for the message just added — the text
+  // has not wrapped — so it scrolls to where the bottom used to be, and the
+  // taller the reply the further short it falls. Two frames: the first lets
+  // style and layout run, the second is measured against the finished box.
+  function scrollToEnd() {
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+      chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
     }));
   }
-  
-  
-  
 
-  function removeLastMessage() {
-    const messages = chatContainer.querySelectorAll('.message');
-    if (messages.length > 0) {
-      messages[messages.length - 1].remove();
-    }
+  function showTyping() {
+    hideTyping();
+    const typing = document.createElement('div');
+    typing.className = 'typing';
+    typing.setAttribute('role', 'status');
+    typing.setAttribute('aria-label', 'Sentra is replying');
+    typing.innerHTML = '<span class="messageBlock"></span>';
+    chatContainer.appendChild(typing);
+    scrollToEnd();
+  }
+
+  function hideTyping() {
+    chatContainer.querySelectorAll('.typing').forEach(el => el.remove());
   }
 
     /// Reset conversation after inactivity (iPhone-focused)
@@ -306,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showIdleMessage() {
     const overlay = document.getElementById('idleOverlay');
     overlay.classList.remove('hidden');
+    document.body.classList.add('is-idle');   // hides the nav (chat.css)
   }
   
   document.getElementById('resetButton').addEventListener('click', () => {
@@ -325,6 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // CONTINUE OLD CHAT
   continueButton.addEventListener('click', () => {
     idleOverlay.classList.add('hidden');       // Hide overlay
+    document.body.classList.remove('is-idle'); // nav back
     resetInactivityTimer();                    // Restart idle timer
     console.log('User chose to continue old conversation');
   });
@@ -350,25 +411,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  const nav = document.querySelector('.Nav');
-
-  // Function to hide nav when onboarding is visible
-  function toggleNavVisibility() {
-    if (!onboarding.classList.contains('hidden')) {
-      nav.classList.add('hidden');
-    } else {
-      nav.classList.remove('hidden');
-    }
+  // Open one screen on its own, for design checks and captures:
+  //   /?screen=chat   straight into the chat
+  //   /?screen=idle   the idle screen, over the chat
+  const screen = new URLSearchParams(location.search).get('screen')
+  if (screen === 'chat' || screen === 'idle') {
+    proceed.click()
+    if (screen === 'idle') showIdleMessage()
   }
 
-  // Run on page load
-  toggleNavVisibility();
-
-  // Also re-run after onboarding is hidden (e.g. after clicking "proceed"
-  proceed.addEventListener('click', () => {
-    onboarding.classList.add('hidden');
-    toggleNavVisibility(); // show nav again
-  });
+  // The nav is off on "What is Sentra?" and back in the chat (12 Oct): chat.css,
+  // keyed off body.in-chat, set by the proceed handler at the top.
 
 
   
