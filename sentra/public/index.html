@@ -38,30 +38,7 @@
         </div>
       </a>
 
-      <a id="infoLink">
-        <h6 id="infoHeading"> Info</h6>
-      </a>
-
-      <div class="infoOverlay hidden">
-
-        <div class="infoText">
-          <p id="infoMain">
-            Sentra is a responsive system that listens, adapts, and designs.
-            Sentra mimics emotional logic found in branding and UI, staging conversation as performance. It responds like a system that knows you — or wants you to think it does.
-
-            This project explores:
-            How machines simulate intimacy
-            How interfaces perform care
-            How your disclosures become data
-            What you say becomes visual.
-            What you feel becomes campaign.
-          </p>
-        </div>
-
-        <div class="infoButton">
-          <button id="closeInfo">close</button>
-        </div>
-      </div>
+      <button id="infoLink" type="button" aria-controls="info">Info</button>
 
     </nav>
 
@@ -86,6 +63,30 @@
       <p class="welcomeLine" id="welcomeLine"><span class="welcomeBlock" id="welcomeBlock"></span></p>
       <button id="enter" class="cta" type="button" hidden>proceed <span class="arrow">&rarr;</span></button>
     </div>
+
+    <!-- INFO. The honest layer behind the fiction, one tap from the chat nav:
+         what Sentra is, what happens to what you type, who made it. Same
+         composition as "What is Sentra?"; Close returns to the conversation
+         as it was. -->
+    <section class="InfoPage hidden" id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+      <!-- Statement at the top, as "What is Sentra?", then everything else as
+           running text at one size; Close at the foot. -->
+      <div class="infoBody">
+        <div class="infoStatement">
+          <h2 id="infoTitle">Sentra is not a company.</h2>
+          <p class="infoLead">It is a project about how AI persuades.</p>
+        </div>
+        <div class="infoText">
+          <p>Sentra is a speculative AI company with no product except you. It learns what you care about, then claims it has always done exactly that. What you say in private appears on the screens beside you.</p>
+          <p>Your conversation is not kept. Messages go to OpenAI to write the replies and are cleared with every new chat.</p>
+        </div>
+      </div>
+      <!-- Credits as small print with Close, as the disclaimer sits with Proceed. -->
+      <div class="infoFoot">
+        <p class="infoCredits">Made by Kirill Konstantinov, with Anton Blackledge. MA Digital Direction, Royal College of Art, with tutors Dr Claude Dutson and Carlotta Auon. First shown at RCA2025, White City, July 2025.</p>
+        <button id="closeInfo" type="button">Close</button>
+      </div>
+    </section>
 
     <!--onboarding chat-->
     <div class="OnboardingWrapper" hidden>

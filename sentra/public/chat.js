@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // order and timing), three rounds, then lands on this visitor's colour with
   // the brand line under it, holds long enough to read, and fades. Tap anywhere to skip. Reduced motion: no cycling — the
   // mark appears in its colour and fades.
-  const SHOW_INTRO = true
+  const SHOW_INTRO = false     // off (12 Oct); set to true to bring the intro back
   const intro = document.getElementById('intro')
   const skipIntro = new URLSearchParams(location.search).has('screen')
   if (intro && SHOW_INTRO && !skipIntro) {
@@ -344,6 +344,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isVisible) return;
     
       clearTimeout(idleTimeout);
+      // Reading Info is not being away: the idle timer is paused while it is
+      // open (and restarted on Close), so the conversation is never reset
+      // behind it.
+      if (document.body.classList.contains('is-info')) return;
       idleTimeout = setTimeout(() => {
         console.log("iPhone idle for 3 minutes — show idle screen");
         showIdleMessage();
@@ -400,24 +404,31 @@ document.addEventListener("DOMContentLoaded", () => {
   //info overlay
   const infoLink = document.getElementById('infoLink');
   const closeInfo = document.getElementById('closeInfo');
-  const infoOverlay = document.querySelector('.infoOverlay'); // or whatever the overlay's ID is
+  const infoPage = document.getElementById('info');
 
   infoLink.addEventListener('click', () => {
-    infoOverlay.classList.remove('hidden');
+    infoPage.classList.remove('hidden');
+    infoPage.scrollTop = 0;
+    document.body.classList.add('is-info');      // hides the nav (chat.css)
+    clearTimeout(idleTimeout);                     // pause idle while reading
   });
 
   closeInfo.addEventListener('click', () => {
-    infoOverlay.classList.add('hidden');
+    infoPage.classList.add('hidden');
+    document.body.classList.remove('is-info');
+    resetInactivityTimer();                        // the clock starts again from Close
   });
 
 
   // Open one screen on its own, for design checks and captures:
   //   /?screen=chat   straight into the chat
   //   /?screen=idle   the idle screen, over the chat
+  //   /?screen=info   the Info page
   const screen = new URLSearchParams(location.search).get('screen')
-  if (screen === 'chat' || screen === 'idle') {
+  if (screen === 'chat' || screen === 'idle' || screen === 'info') {
     proceed.click()
     if (screen === 'idle') showIdleMessage()
+    if (screen === 'info') document.getElementById('infoLink').click()
   }
 
   // The nav is off on "What is Sentra?" and back in the chat (12 Oct): chat.css,
