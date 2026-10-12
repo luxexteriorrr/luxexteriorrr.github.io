@@ -69,22 +69,17 @@
          composition as "What is Sentra?"; Close returns to the conversation
          as it was. -->
     <section class="InfoPage hidden" id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
-      <!-- Statement at the top, as "What is Sentra?", then everything else as
-           running text at one size; Close at the foot. -->
+      <!-- Set exactly as "What is Sentra?": Heavy headline with Sentra in the
+           visitor's colour, one continuous grey paragraph, credits as small
+           print at the foot, and the band. -->
       <div class="infoBody">
-        <div class="infoStatement">
-          <h2 id="infoTitle">Sentra is not a company.</h2>
-          <p class="infoLead">It is a project about how AI persuades.</p>
-        </div>
-        <div class="infoText">
-          <p>Sentra is a speculative AI company with no product except you. It learns what you care about, then claims it has always done exactly that. What you say in private appears on the screens beside you.</p>
-          <p>Your conversation is not kept. Messages go to OpenAI to write the replies and are cleared with every new chat.</p>
-        </div>
+        <h2 id="infoTitle"><span class="accent">Sentra</span> is not a company.</h2>
+        <p class="infoLead">It is a project about how AI persuades: a speculative company with no product except you. It learns what you care about, then claims it has always done exactly that, and what you say in private appears on the screens beside you. Your conversation is not kept; messages go to OpenAI to write the replies and are cleared with every new chat.</p>
       </div>
-      <!-- Credits as small print with Close, as the disclaimer sits with Proceed. -->
+
       <div class="infoFoot">
         <p class="infoCredits">Made by Kirill Konstantinov, with Anton Blackledge. MA Digital Direction, Royal College of Art, with tutors Dr Claude Dutson and Carlotta Auon. First shown at RCA2025, White City, July 2025.</p>
-        <button id="closeInfo" type="button">Close</button>
+        <button id="closeInfo" type="button">keep talking<span class="arrow" aria-hidden="true">→</span></button>
       </div>
     </section>
 
@@ -92,8 +87,8 @@
     <div class="OnboardingWrapper" hidden>
 
       <div class="titleWrapper">
-        <h1>What is Sentra?</h1>
-        <p class="onboardingP">We could simply tell you, but it wouldn't make sense yet.</p>
+        <h1>What is <span class="accent">Sentra</span>?</h1>
+        <p class="onboardingP">We could simply tell you, but it wouldn't make sense yet. Sentra adapts—the more you share about your work, your interests, your challenges, the better Sentra can demonstrate what it actually does. Each conversation is different because each person is different. We are genuinely curious to learn about your world!</p>
 
         <!-- Read more removed 12 Oct; its text is kept for a separate page:
              "Have a conversation to find out what Sentra does. The more you
@@ -104,7 +99,7 @@
 
         <div class="disclaimerWrapper">
           <p id="dislaimer">Please note: This is an experimental AI system for artistic purposes. Don't share sensitive personal information, financial details, or private data. Conversations may be used for academic research. This system is not intended for medical, legal, or professional advice.</p>
-          <button id="proceed">Proceed</button>
+          <button id="proceed">proceed<span class="arrow" aria-hidden="true">→</span></button>
         </div>
     </div>
 
@@ -136,12 +131,12 @@
         <div id="idleOverlay" class="idle-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="idleTitle">
           <div class="idletextwrapper">
             <h2 id="idleTitle">Are you the next <span class="accent">Sentra</span> user?</h2>
-            <p id="diclaimerIdle">Hey stranger, it looks like you've been away. If we reset now, we'll lose everything we shared. I'd hate to see you go, but if you're done, start a new chat for the next person.</p>
+            <p id="diclaimerIdle">I'd hate to lose everything we shared.</p>
           </div>
 
           <div class="buttonWrapper">
-            <button id="continueButton" type="button">Continue</button>
-            <button id="resetButton" type="button">New chat</button>
+            <button id="continueButton" type="button">keep talking</button>
+            <button id="resetButton" type="button">new chat</button>
           </div>
         </div>
 

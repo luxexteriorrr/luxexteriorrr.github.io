@@ -28,7 +28,11 @@
    * Pick with ?theme=orange|pink|purple|blue|green; orange is the default.
    * The *-rgb triplets let the 25% fields be built from the same value. */
   --accent: var(--orange);  --accent-rgb: 253 150 0;
-  --other:  var(--purple);  --other-rgb:  151 81 189;           /* on black: the hairline above the input, the send square at rest */
+  --other:  var(--purple);  --other-rgb:  151 81 189;
+  /* Label colour on a solid accent / other band: black wherever it passes
+   * 4.5:1, white on purple (black on purple is only 4.2). */
+  --on-accent: var(--black);
+  --on-other:  var(--white);           /* on black: the hairline above the input, the send square at rest */
   --muted: #8A8A8A;            /* the subhead under the headline: a step back from black,
                                   3.4:1 on white, passes for large text (26 px) */
   --secondary: #6B6B6B;        /* small print on white: 5.3:1, passes at 12 px. The one grey for
@@ -68,10 +72,10 @@
 /* The five themes, one per colour of the mark. Screen values, the same as
  * the billboards. --other is chosen so the two voices in the chat never share
  * a colour and both read on black. */
-:root[data-theme="pink"]   { --accent: var(--pink);   --accent-rgb: 253 2 178;  --other: var(--purple); --other-rgb: 151 81 189; }
-:root[data-theme="purple"] { --accent: var(--purple); --accent-rgb: 151 81 189; --other: var(--orange); --other-rgb: 253 150 0; }
-:root[data-theme="blue"]   { --accent: var(--blue);   --accent-rgb: 5 140 252;  --other: var(--orange); --other-rgb: 253 150 0; }
-:root[data-theme="green"]  { --accent: var(--green);  --accent-rgb: 104 134 0;  --other: var(--purple); --other-rgb: 151 81 189; }
+:root[data-theme="pink"]   { --accent: var(--pink);   --accent-rgb: 253 2 178;  --other: var(--purple); --other-rgb: 151 81 189; --on-accent: var(--black); --on-other: var(--white); }
+:root[data-theme="purple"] { --accent: var(--purple); --accent-rgb: 151 81 189; --other: var(--orange); --other-rgb: 253 150 0;  --on-accent: var(--white); --on-other: var(--black); }
+:root[data-theme="blue"]   { --accent: var(--blue);   --accent-rgb: 5 140 252;  --other: var(--orange); --other-rgb: 253 150 0;  --on-accent: var(--black); --on-other: var(--black); }
+:root[data-theme="green"]  { --accent: var(--green);  --accent-rgb: 104 134 0;  --other: var(--purple); --other-rgb: 151 81 189; --on-accent: var(--black); --on-other: var(--white); }
 
 @font-face {
   font-family: 'Diatype';
@@ -158,7 +162,7 @@ nav {
   background-color: var(--white);
   z-index: 4;
 }
-body.in-chat nav { display: flex !important; }
+body.in-chat nav { display: flex !important; height: 40px; }   /* a slim header over the conversation (12 Oct; was 56) */
 /* Info, at the right of the nav: plain Medium text, black, a full 44 px to
  * tap. Opens the Info page. */
 #infoLink {
@@ -330,43 +334,46 @@ h1 {
  * label centred. (Tried as Alex Hunting-style capsules on 12 Oct; back to
  * the band, which is Sentra's own shape.)
  *
- * 44 tall for the thumb. The fill is translucent and blurs whatever passes
- * under it, so a band over the chat reads as a layer, not a hole. */
+ * 44 tall for the thumb. Solid fields since 12 Oct: the accent at full
+ * strength with a black (or, on purple, white) label. The 25% tint with
+ * accent type was 1.7–3.5:1 depending on the theme, and read soft. */
 .cta,
 #proceed,
 #SystemSubmit,
 #continueButton,
 #resetButton,
 #closeInfo {
-  --field: rgb(var(--accent-rgb) / 0.25);   /* the accent at 25% */
-  --field-pressed: rgb(var(--accent-rgb) / 0.4);
+  /* Matched to the Figma band (12 Oct): the accent at 45%, the label in the
+   * full accent, 26 px, lowercase, 32 tall, 1 px corners. */
+  --field: rgb(var(--accent-rgb) / 0.45);
+  --field-pressed: rgb(var(--accent-rgb) / 0.6);
   --ink: var(--accent);
 
   display: flex;
   align-items: center;
   justify-content: center;               /* label centred in the band (12 Oct) */
+
   /* Optical centring. The cap height is dead centre, but a label is mostly
    * lowercase and Diatype's x-height sits low in the line, so the word's mass
    * read ~1.6 px below the middle of the band. One pixel up evens it out. */
   align-self: stretch;
   flex: 1 1 auto;
-  gap: 0.3em;
-  height: var(--tap);
+  gap: 0.25em;                           /* a word-space between the label and its arrow */
+  position: relative;
+  height: var(--s4);                     /* 32, as drawn */
   width: 100%;
   padding: 0 var(--s1) 2px;              /* 2px under = the optical lift described above */
-  border-radius: 0;
+  border-radius: 1px;
   border: none;
   -webkit-appearance: none;
   appearance: none;
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
-  letter-spacing: var(--tr-body);
+  font-size: var(--t-title);             /* 26, as drawn */
+  line-height: var(--s4);
+  letter-spacing: -0.035em;              /* tighter than the 26 subhead (-0.02em): button labels set close */
   font-weight: var(--medium);
   white-space: nowrap;
   color: var(--ink);
   background-color: var(--field);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--press) ease-out,
@@ -375,9 +382,16 @@ h1 {
 /* New chat is the one band in the second colour: it ends Sentra's turn and
  * hands the phone to someone else. Everything else is the accent. */
 #resetButton {
-  --field: rgb(var(--other-rgb) / 0.25);
-  --field-pressed: rgb(var(--other-rgb) / 0.4);
+  --field: rgb(var(--other-rgb) / 0.45);
+  --field-pressed: rgb(var(--other-rgb) / 0.6);
   --ink: var(--other);
+}
+/* The band is drawn 32 tall; an invisible 6 px above and below makes the
+ * thing a thumb actually hits 44. */
+.cta::after, #proceed::after, #continueButton::after, #resetButton::after, #closeInfo::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
 }
 /* Pressed: on touch-down the field deepens and the band gives a little. */
 .cta:active,
@@ -409,7 +423,7 @@ h1 {
   background: transparent;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
-  --field-pressed: transparent;
+  --field: transparent;
 }
 .input-form #SystemSubmit::before {
   content: '';
@@ -424,7 +438,22 @@ h1 {
 .input-form #SystemSubmit:active { background: transparent; }
 /* The arrow is Bold where the word is Regular — it is the only part of the
  * button doing any pointing. */
-#proceed #black,
+/* A band with an arrow splits: the word on the left edge of the band, the
+ * arrow on the right edge. */
+#proceed,
+#closeInfo,
+.cta {
+  justify-content: space-between;
+  /* Optical centring, measured: the word's x-height sat 1.7 px below the
+   * band's middle and the arrow 1.2 px above it. 5 px under lifts the word
+   * onto the middle; the arrow then drops 2.8 px to meet it (below). */
+  padding: 0 var(--s1) 5px;
+}
+#proceed .arrow,
+#closeInfo .arrow,
+.cta .arrow { transform: translateY(2.8px); }
+#proceed .arrow,
+#closeInfo .arrow,
 .cta .arrow {
   font-weight: var(--bold);
   color: inherit;
@@ -557,7 +586,6 @@ body.is-idle nav { display: none !important; }
   gap: var(--s1);
   padding: 0 var(--margin);
   background-color: var(--white);
-  border-top: 1px solid var(--light);    /* the one line on the screen: where the conversation ends and you type */
   z-index: 4;
 }
 #SystemInput {
@@ -627,8 +655,9 @@ body.is-idle nav { display: none !important; }
 .buttonWrapper > button { flex: 1 1 0; width: auto; }
 
 /* ---- INFO ---------------------------------------------------------------
- * The statement at the top (Heavy, then the grey line), the rest as running
- * text at body size under it, Close at the foot. Scrolls as a whole if a
+ * Set exactly as "What is Sentra?": the Heavy headline with Sentra in the
+ * visitor's colour, then one continuous grey paragraph (8 below), and at the
+ * foot the credits as small print over the band. Scrolls as a whole if a
  * small screen needs it. */
 .InfoPage {
   position: absolute;
@@ -638,13 +667,13 @@ body.is-idle nav { display: none !important; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--s4);
+  gap: var(--s2);
   overflow-y: auto;
   padding: var(--s2) var(--margin) max(var(--margin), env(safe-area-inset-bottom));
   animation: idle-in 200ms ease-out both;
 }
 .InfoPage.hidden { display: none; }
-.infoStatement {
+.infoBody {
   display: flex;
   flex-direction: column;
   gap: var(--s1);
@@ -663,18 +692,6 @@ body.is-idle nav { display: none !important; }
   font-weight: var(--medium);
   color: var(--muted);
 }
-.infoBody {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s2);                        /* the text follows the statement closely: one block */
-}
-.infoText {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s1);                        /* paragraphs tight, held apart by a half-line */
-}
-/* Foot: credits as small print directly above Close — the disclaimer/Proceed
- * pairing from "What is Sentra?". */
 .infoFoot {
   flex: 0 0 auto;
   display: flex;
@@ -687,13 +704,6 @@ body.is-idle nav { display: none !important; }
   letter-spacing: var(--tr-small);
   font-weight: var(--medium);
   color: var(--secondary);
-}
-.infoText p {                            /* one size for all of it: body, Medium, black */
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
-  letter-spacing: var(--tr-body);
-  font-weight: var(--medium);
-  color: var(--black);
 }
 body.is-info nav { display: none !important; }
 .InfoPage #closeInfo { flex: 0 0 auto; }   /* a 44 band, not stretched to fill the column */
