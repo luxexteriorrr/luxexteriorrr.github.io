@@ -188,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // trimm input
     input.value = '';
     syncSend();
+    fitInput();
 
     // Loading state: an orange square pulsing where Sentra's next entry will
     // start. It used to be a real message ("Sentra is thinking…", with a time
@@ -263,6 +264,27 @@ document.addEventListener("DOMContentLoaded", () => {
   function syncSend() { sendButton.disabled = !input.value.trim(); }
   input.addEventListener('input', syncSend);
   syncSend();
+
+  // The field grows with what is typed, line by line, up to five lines, then
+  // scrolls inside itself. The bar grows with it and the conversation above
+  // makes room.
+  function fitInput() {
+    input.style.height = 'auto';
+    const max = parseFloat(getComputedStyle(input).maxHeight);
+    const h = Math.min(input.scrollHeight, max);
+    input.style.height = h + 'px';
+    input.classList.toggle('is-full', input.scrollHeight > max);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+  input.addEventListener('input', fitInput);
+
+  // Return sends (enterkeyhint="send"); Shift+Return is a new line.
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+      e.preventDefault();
+      if (input.value.trim()) form.requestSubmit();
+    }
+  });
 
   // Adding message on the chat UI.
   //

@@ -114,12 +114,14 @@
         
         <!-- form fields-->
         <form class="input-form" id="mainform">
-          <input type="text"
-          id="SystemInput"
+          <!-- A textarea, one line to start, that grows with what you type
+               (up to five lines) — Return sends, as on the phone keyboard. -->
+          <textarea id="SystemInput"
+          rows="1"
           placeholder="Ask Sentra…"
           autocomplete="off"
           enterkeyhint="send"
-          required>
+          required></textarea>
           <!-- submit button -->
           <!-- Send is Sentra's square: grey while the field is empty, orange once there is something to send. -->
           <button type="submit" id="SystemSubmit" aria-label="Send" disabled></button>

@@ -127,7 +127,7 @@ html, body {
 }
 /* Buttons and inputs do not inherit type. Without this they set in the
  * system face at the browser's size. */
-button, input {
+button, input, textarea {
   font: inherit;
   letter-spacing: inherit;
   color: inherit;
@@ -410,11 +410,12 @@ h1 {
 }
 .cta[hidden] { display: none; }
 .input-form #SystemSubmit {
+  align-self: flex-end;
+  margin-bottom: 6px;                    /* (56 − 44) / 2: centred on the last line */
   /* Send is not a band but Sentra's square (12 Oct): the same mark that sits
    * next to Sentra's name, at the right of the bar. 20 px to see, 44 px to
    * hit. Grey while the field is empty; orange once there is something to
    * send — the button is only "on" when it can do something. */
-  align-self: center;
   flex: 0 0 auto;
   width: var(--tap);
   height: var(--tap);
@@ -481,7 +482,7 @@ h1 {
   width: 100%;
   overflow-y: auto;
   padding: var(--s2) var(--margin);
-  padding-bottom: calc(56px + var(--s3));   /* clears the input bar */
+  padding-bottom: var(--s3);
   display: flex;
   flex-direction: column;
   gap: var(--s3);                        /* entries apart, head and text together */
@@ -524,6 +525,8 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 .messageContent {
+  overflow-wrap: anywhere;               /* a string with no spaces still breaks at the edge instead of running off it */
+  min-width: 0;
   font-size: var(--t-body);
   line-height: 20px;                     /* a touch tighter than body (22) in the conversation, 12 Oct */
   letter-spacing: var(--tr-body);
@@ -574,15 +577,15 @@ body.is-idle nav { display: none !important; }
 @keyframes message-fade { from { opacity: 0; } to { opacity: 1; } }
 
 .input-form {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 56px;
+  /* The last row of the chat column, not an overlay: it grows upward as the
+   * field does, and the conversation above shrinks to make room. */
+  flex: 0 0 auto;
+  position: relative;
+  min-height: 56px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;                 /* the send square stays on the last line */
   gap: var(--s1);
   padding: 0 var(--margin);
   background-color: var(--white);
@@ -590,13 +593,24 @@ body.is-idle nav { display: none !important; }
 }
 #SystemInput {
   flex: 1;
-  height: 100%;
+  display: block;
+  resize: none;
+  overflow-y: hidden;
+  /* One line sits centred in the 56 bar: (56 − 22) / 2 = 17 above and below. */
+  padding: 17px 0;
+  height: 56px;                          /* chat.js sets it to the content, up to five lines */
+  max-height: calc(5 * var(--lh-body) + 34px);
   font-size: var(--t-body);              /* 16 — anything smaller and iOS zooms on focus */
+  line-height: var(--lh-body);
   font-weight: var(--medium);
   border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
   background: transparent;
   color: var(--black);
 }
+#SystemInput.is-full { overflow-y: auto; }   /* past five lines it scrolls inside itself */
 #SystemInput:focus {
   outline: none;
   box-shadow: none;
