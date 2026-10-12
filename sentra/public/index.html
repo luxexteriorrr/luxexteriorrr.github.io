@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#FFFFFF">
   <title>Sentra</title>
+  <!-- Home Screen app: Share → Add to Home Screen opens Sentra full-screen,
+       with no Safari bars, under its own icon and name. The status bar stays
+       white with dark text, over the white page. -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Sentra">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/icon.svg">
   <link rel="stylesheet" href="chat.css">
   
   <script src="/socket.io/socket.io.js"></script>
