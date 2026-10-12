@@ -264,6 +264,19 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .sheet img, .sheet video { display: block; width: auto; height: auto; max-width: 100cqw; max-height: 100cqh; }
 .sheet .mark img { width: 100cqw; max-height: 100cqh; }
 
+/* Contact sheets as justified rows (12 Oct), after Bänziger Hug's journal.
+   Every plate starts at one height and its own width; a row takes plates
+   until the next one would overflow, keeps it, and the whole row shrinks to
+   end flush at both margins. So a row's plates share one height (never more
+   than --row-h) and a tall phone screen is narrow, not shrunk into a square.
+   The last row keeps --row-h. layoutRows() sets the sizes. ?grid=squares
+   shows the square cells above. */
+:root { --row-h: 400px; --row-gap: 10px; }   /* 400 (12 Oct, Kirill); Bänziger Hug use 600, 550 on a tablet */
+body .rows { display: flex; flex-wrap: wrap; gap: var(--row-gap); padding: 0 var(--pad) var(--pad); }
+body .rows a { flex: none; aspect-ratio: auto; padding: 0; container-type: normal; display: block; }
+body .rows img, body .rows video { width: 100%; height: 100%; max-width: none; max-height: none; }
+body .rows .mark img { object-fit: contain; }
+
 /* Gallery: one plate, as large as the screen allows under the header. Left
    half of the screen goes back, right half goes on. */
 .gallery {
@@ -442,6 +455,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   const shown = new Set(window.WORKS.projects.filter(p => !p.hidden).map(p => p.slug));
   const projects = window.WORKS.projects.filter(p => shown.has(p.slug));
   const items = window.WORKS.items.filter(it => shown.has(it.p));
+  // Contact sheets are justified rows since 12 Oct; ?grid=squares shows the
+  // old square cells.
+  const SHEET_ROWS = new URLSearchParams(location.search).get('grid') !== 'squares';
   const pieces = window.WORKS.pieces || {};
   const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
   const DISCIPLINES = [
@@ -674,9 +690,44 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     main.append(col);
   }
 
+  // Justified rows, as Bänziger Hug's rowgrid: add plates at the row height
+  // until the row overflows, then scale that row down to the width. Widths
+  // are floored and the last plate in a row takes the remainder, so a row
+  // never wraps on a rounding error. On a phone (420 and under) one plate per
+  // row, full width. Re-run when the width changes.
+  function layoutRows(grid, list) {
+    // A wordmark gets a box no wider than 4:1 and sits in it, contained.
+    const ar = it => isMark(it) ? Math.min(it.w / it.h, 4) : it.w / it.h;
+    const run = () => {
+      const cs = getComputedStyle(grid);
+      const W = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const H = parseFloat(cs.getPropertyValue('--row-h')) || 400;
+      const gap = parseFloat(cs.columnGap) || 0;
+      const cells = [...grid.children];
+      const size = (a, w, h) => { a.style.width = w + 'px'; a.style.height = h + 'px'; };
+      if (innerWidth <= 420) { cells.forEach((a, k) => size(a, W, W / ar(list[k]))); return; }
+      let row = [], sum = 0;
+      cells.forEach((a, k) => {
+        row.push([a, ar(list[k])]); sum += ar(list[k]) * H;
+        const free = W - gap * (row.length - 1);
+        if (sum <= free) return;
+        const h = Math.round(H * free / sum);
+        let left = free;
+        row.forEach(([c, r], n) => {
+          const w = n === row.length - 1 ? left : Math.floor(r * H * free / sum);
+          left -= w; size(c, w, h);
+        });
+        row = []; sum = 0;
+      });
+      row.forEach(([c, r]) => size(c, Math.floor(r * H), H));
+    };
+    let lastW = 0;
+    new ResizeObserver(() => { if (grid.clientWidth !== lastW) { lastW = grid.clientWidth; requestAnimationFrame(run); } }).observe(grid);
+  }
+
   function renderSheet(p, list) {
     const grid = document.createElement('div');
-    grid.className = 'sheet';
+    grid.className = 'sheet' + (SHEET_ROWS ? ' rows' : '');
     const sheetCols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-cols')) || 4;
     const sizes = `${Math.round(100 / sheetCols)}vw`;
     list.forEach((it, k) => {
@@ -691,6 +742,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     // The sheet opens with project, object and year, and the description.
     main.append(titleBlock(p.meta ? `${p.title}, ${p.meta}` : p.title, p.desc, p));
     main.append(grid);
+    if (SHEET_ROWS) layoutRows(grid, list);
 
   }
 
@@ -1173,7 +1225,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // CSS: the cell's inner box on a desk, the cell's width and 70vw on a phone.
   function sizeSheet() {
     const phone = matchMedia('(max-width: 700px)').matches;
-    main.querySelectorAll('.sheet a').forEach(a => {
+    // Justified rows size their own cells; the plate just fills its cell.
+    main.querySelectorAll('.sheet:not(.rows) a').forEach(a => {
       const img = a.querySelector('img, video');
       if (!img) return;
       const cs = getComputedStyle(a);
