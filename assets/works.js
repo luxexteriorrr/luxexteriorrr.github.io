@@ -13,7 +13,8 @@
 // AWW90s prototype recordings 18–21 (phone, 5 Oct): editorial scrolls, shop/filter flow, product photo swipe.
 // LOTV WASTE! hand-lettered announcement (lotv-waste-06) and the flat thesis cover (zerko-thesis-37) added 6 Oct.
 // Sentra (13 Oct): the old phone interface (02, 03, 04) replaced by the redesign: loops 10–14 (recorded on the Mac at the
-// iPhone 17 Pro's 1206 × 2436, no 1600 copies) and iPhone screenshots 06–09 as taken. Billboards (01, 05) and posters stay.
+// iPhone 17 Pro's 1206 × 2436, no 1600 copies) and stills 15–18 captured from the same
+// recording window (lossless PNG, replacing the iPhone screenshots 06–09). Billboards (01, 05) and posters stay.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -792,17 +793,17 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-06.jpg",
+   "src": "sentra-15.png",
    "w": 1206,
    "h": 2436,
-   "alt": "The opening screen on an iPhone 17 Pro: What is Sentra?, with Sentra in green, a grey paragraph promising that it adapts to whatever you share, the small-print notice at the foot, and a pale green band reading proceed."
+   "alt": "The opening screen: What is Sentra?, with Sentra in orange, a grey paragraph promising that it adapts to whatever you share, the small-print notice at the foot, and a pale orange band reading proceed."
   },
   {
    "p": "sentra",
-   "src": "sentra-07.jpg",
+   "src": "sentra-16.png",
    "w": 1206,
    "h": 2436,
-   "alt": "The chat: a white bar with the mark and Info over a black conversation. You asked how; Sentra, in pink, answers absolutely, then asks about your situation and your challenges before it will say anything more."
+   "alt": "The chat: a white bar with the mark and Info over a black conversation. Told that you work in type and editorial design, Sentra, in orange, says it has a rich history in exactly that, founded by people passionate about visual communication."
   },
   {
    "p": "sentra",
@@ -822,10 +823,10 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-08.jpg",
+   "src": "sentra-17.png",
    "w": 1206,
    "h": 2436,
-   "alt": "Info: Sentra is not a company. A grey paragraph explains the project, that what you say in private appears on the screens beside you, with the credits in small print and a pink band reading keep talking."
+   "alt": "Info: Sentra is not a company. A grey paragraph explains the project, that what you say in private appears on the screens beside you, with the credits in small print and an orange band reading keep talking."
   },
   {
    "p": "sentra",
@@ -845,10 +846,10 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-09.png",
+   "src": "sentra-18.png",
    "w": 1206,
    "h": 2436,
-   "alt": "The idle screen: Are you the next Sentra user? I'd hate to lose everything we shared. Two bands at the foot, keep talking in pink and new chat in purple."
+   "alt": "The idle screen: Are you the next Sentra user? I'd hate to lose everything we shared. Two bands at the foot, keep talking in orange and new chat in purple."
   },
   {
    "p": "sentra",
