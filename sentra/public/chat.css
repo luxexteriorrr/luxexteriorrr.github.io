@@ -315,6 +315,15 @@ body.in-chat nav { display: flex !important; height: 40px; }   /* a slim header 
   gap: var(--s2);
 }
 .OnboardingWrapper[hidden] { display: none; }
+/* While the chat slides over it (push and back, chat.js), the start screen
+ * lies underneath, out of the flow, so the two can share the screen. */
+.OnboardingWrapper.is-under {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+nav, .ChatWrapper, .OnboardingWrapper, .InfoPage { will-change: transform; }
 .titleWrapper {
   display: flex;
   flex-direction: column;
@@ -608,6 +617,8 @@ body.is-idle nav { display: none !important; }
   .message { animation-name: message-fade; }
 }
 @keyframes message-fade { from { opacity: 0; } to { opacity: 1; } }
+/* A streamed word (chat.js): fades in as it arrives. */
+.messageContent .w { animation: message-fade 220ms ease-out both; }
 
 .input-form {
   /* The last row of the chat column, not an overlay: it grows upward as the
@@ -720,7 +731,10 @@ body.is-idle nav { display: none !important; }
   gap: var(--s2);
   overflow-y: auto;
   padding: var(--s2) var(--margin) max(var(--margin), env(safe-area-inset-bottom));
-  animation: idle-in 200ms ease-out both;
+  /* Moves as a sheet (chat.js); with Reduce Motion it fades instead. */
+}
+@media (prefers-reduced-motion: reduce) {
+  .InfoPage { animation: idle-in 200ms ease-out both; }
 }
 .InfoPage.hidden { display: none; }
 .infoBody {

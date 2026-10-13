@@ -47,23 +47,94 @@ document.addEventListener("DOMContentLoaded", () => {
     fit();
   }
 
-  proceed.addEventListener('click', () => {
-    onboarding.hidden = true
-    onboarding.style.display = 'none'
+  // ---- MOTION --------------------------------------------------------------
+  // Screens move on springs, after Apple's Designing Fluid Interfaces: damping
+  // 1 (settles without overshoot), response ~0.4 s. A spring always starts
+  // from where the thing is on screen and how fast it is going, so a tap
+  // mid-transition turns it round smoothly instead of waiting for the end.
+  // With Reduce Motion on, screens just change.
+  const calmMotion = matchMedia('(prefers-reduced-motion: reduce)')
+  function makeSpring(apply, response = 0.4) {
+    const k = (2 * Math.PI / response) ** 2, c = 4 * Math.PI / response
+    const s = { x: 0, v: 0, raf: 0, target: 0, done: null }
+    s.set = x => { cancelAnimationFrame(s.raf); s.raf = 0; s.x = s.target = x; s.v = 0; apply(x) }
+    s.to = (target, done) => {
+      s.target = target; s.done = done
+      if (calmMotion.matches) { s.set(target); if (done) done(); return }
+      if (s.raf) return                        // already moving: it re-aims from here
+      let last = performance.now()
+      const step = now => {
+        const dt = Math.min((now - last) / 1000, 1 / 30); last = now
+        s.v += (-k * (s.x - s.target) - c * s.v) * dt
+        s.x += s.v * dt
+        if (Math.abs(s.x - s.target) < 0.5 && Math.abs(s.v) < 20) {
+          s.raf = 0; s.x = s.target; s.v = 0; apply(s.x)
+          if (s.done) s.done()
+          return
+        }
+        apply(s.x)
+        s.raf = requestAnimationFrame(step)
+      }
+      s.raf = requestAnimationFrame(step)
+    }
+    return s
+  }
+  const pageWrapper = document.querySelector('.PageWrapper')
+  const nav = document.querySelector('nav')
+  const width = () => pageWrapper.clientWidth
+
+  // "What is Sentra?" → chat is an iOS push: the chat (nav and conversation)
+  // slides in from the right over the start screen, which moves a third of
+  // the way left underneath. The mark reverses it along the same path.
+  const shift = x => x ? `translate3d(${x}px,0,0)` : ''
+  const chatSlide = makeSpring(x => { nav.style.transform = chatWrapper.style.transform = shift(x) })
+  const startSlide = makeSpring(x => { onboarding.style.transform = shift(x) })
+  let onChat = false
+
+  function showChat(instant = false) {
+    onChat = true
+    const fresh = !document.body.classList.contains('in-chat')
     chatWrapper.style.display = 'flex'
     document.body.classList.add('in-chat')   // brings the nav back (see chat.css)
-  })
+    const settle = () => {
+      if (!onChat) return
+      onboarding.hidden = true
+      onboarding.style.display = 'none'
+      onboarding.classList.remove('is-under')
+      startSlide.set(0)
+    }
+    if (instant || calmMotion.matches) { chatSlide.set(0); settle(); return }
+    onboarding.classList.add('is-under')
+    if (fresh) chatSlide.set(width())
+    chatSlide.to(0, settle)
+    startSlide.to(-width() / 3)
+  }
+
+  function showStart() {
+    onChat = false
+    input.blur()                               // the keyboard goes with the chat
+    onboarding.hidden = false
+    onboarding.style.display = ''
+    const settle = () => {
+      if (onChat) return
+      chatWrapper.style.display = 'none'
+      document.body.classList.remove('in-chat')
+      onboarding.classList.remove('is-under')
+      chatSlide.set(0)
+    }
+    if (calmMotion.matches) { settle(); return }
+    onboarding.classList.add('is-under')
+    if (!startSlide.raf && startSlide.x === 0) startSlide.set(-width() / 3)
+    chatSlide.to(width(), settle)
+    startSlide.to(0)
+  }
+
+  proceed.addEventListener('click', () => showChat())
 
   // The mark in the nav goes back to "What is Sentra?" (13 Oct). Only the
   // screen changes: the conversation stays, and proceed returns to it.
   const homeLink = document.getElementById('homeLink')
-  const goHome = () => {
-    input.blur()                               // the keyboard goes with the chat
-    chatWrapper.style.display = 'none'
-    onboarding.hidden = false
-    onboarding.style.display = ''
-    document.body.classList.remove('in-chat')
-  }
+  const goHome = () => showStart()
   homeLink.addEventListener('click', goHome)
   homeLink.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome() } })
 
@@ -359,7 +430,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const body = document.createElement('p');
     body.classList.add('messageContent');
-    body.textContent = text;
+    const streaming = sender === 'sentra' && !calmMotion.matches;
+    if (!streaming) body.textContent = text;
 
     msg.append(head, body);
     // A reply takes the replying square's place, so nothing collapses and
@@ -367,7 +439,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const typing = chatContainer.querySelector('.typing');
     if (typing) typing.replaceWith(msg);
     else chatContainer.appendChild(msg);
-    scrollToEnd();
+    if (streaming) streamInto(body, text, msg);
+    else scrollToEnd();
+  }
+
+  // Sentra's replies arrive a word at a time, at about reading speed, as the
+  // assistants it stands next to stream theirs (13 Oct). Each word fades in.
+  // The conversation follows the text down until the reply's first line
+  // reaches the top, unless the visitor has scrolled away to read.
+  const WORD_MS = 38;
+  let following = true;
+  ['touchstart', 'wheel'].forEach(evt =>
+    chatContainer.addEventListener(evt, () => { following = false; }, { passive: true }));
+
+  function streamInto(body, text, msg) {
+    following = true;
+    const parts = text.split(/(\s+)/);
+    const pad = parseFloat(getComputedStyle(chatContainer).paddingTop) || 0;
+    let i = 0;
+    const timer = setInterval(() => {
+      // the next word, and the space before it
+      while (i < parts.length && !parts[i].trim()) body.append(parts[i++]);
+      if (i < parts.length) {
+        const w = document.createElement('span');
+        w.className = 'w';
+        w.textContent = parts[i++];
+        body.append(w);
+      }
+      if (following) {
+        const end = chatContainer.scrollHeight - chatContainer.clientHeight;
+        chatContainer.scrollTop = Math.max(chatContainer.scrollTop, Math.min(end, msg.offsetTop - pad));
+      }
+      if (i >= parts.length) {
+        clearInterval(timer);
+        setTimeout(() => { body.textContent = text; }, 400);   // plain text again once the last word has faded in
+      }
+    }, WORD_MS);
   }
 
   // Scroll AFTER layout, not on the line following appendChild. Read there,
@@ -483,16 +590,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeInfo = document.getElementById('closeInfo');
   const infoPage = document.getElementById('info');
 
+  // Info is a sheet: it rises from the foot of the screen over the chat and
+  // keep talking takes it back down the same way.
+  const height = () => pageWrapper.clientHeight;
+  const sheet = makeSpring(y => { infoPage.style.transform = y ? `translate3d(0,${y}px,0)` : ''; });
+  let infoOpen = false;
+
   infoLink.addEventListener('click', () => {
-    infoPage.classList.remove('hidden');
-    infoPage.scrollTop = 0;
-    document.body.classList.add('is-info');      // hides the nav (chat.css)
+    infoOpen = true;
+    input.blur();
+    if (infoPage.classList.contains('hidden')) {
+      infoPage.classList.remove('hidden');
+      infoPage.scrollTop = 0;
+      sheet.set(height());
+    }
+    sheet.to(0, () => { if (infoOpen) document.body.classList.add('is-info'); });   // nav off once covered (chat.css)
     clearTimeout(idleTimeout);                     // pause idle while reading
   });
 
   closeInfo.addEventListener('click', () => {
-    infoPage.classList.add('hidden');
+    infoOpen = false;
     document.body.classList.remove('is-info');
+    sheet.to(height(), () => { if (!infoOpen) infoPage.classList.add('hidden'); });
     resetInactivityTimer();                        // the clock starts again from Close
   });
 
@@ -503,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //   /?screen=info   the Info page
   const screen = new URLSearchParams(location.search).get('screen')
   if (screen === 'chat' || screen === 'idle' || screen === 'info') {
-    proceed.click()
+    showChat(true)
     if (screen === 'idle') showIdleMessage()
     if (screen === 'info') document.getElementById('infoLink').click()
   }
