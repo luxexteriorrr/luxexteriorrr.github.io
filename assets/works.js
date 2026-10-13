@@ -15,7 +15,7 @@
 // Sentra (13 Oct): the old phone interface (02, 03, 04) replaced by the redesign: loops 10–14 (recorded on the Mac at the
 // iPhone 17 Pro's 1206 × 2436, no 1600 copies) and stills 15–18 captured from the same
 // recording window (lossless PNG, replacing the iPhone screenshots 06–09). Billboards (01, 05) and posters stay.
-// Sentra opens on the logo loop 23 (2412 × 2436, twice the phone's width; the mark through the five colours).
+// Sentra opens on the logo loop 24 (2412 × 2436, twice the phone’s width; the mark through the five colours, 0.4 s each).
 // Sentra interface order (13 Oct, Kirill): start screen 15, the start screen through the five colours 19, the long
 // conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10, a scroll up a long conversation 22. Out: the claim still 16 and the short loops 12–14.
 // Disciplines and the two group lines are provisional.
@@ -771,11 +771,11 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-23.mp4",
+   "src": "sentra-24.mp4",
    "w": 2412,
    "h": 2436,
    "video": 1,
-   "poster": "sentra-23-poster.webp"
+   "poster": "sentra-24-poster.webp"
   },
   {
    "p": "sentra",
