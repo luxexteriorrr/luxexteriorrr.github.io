@@ -26,6 +26,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const onboarding = document.querySelector('.OnboardingWrapper')
   const chatWrapper = document.querySelector('.ChatWrapper')
 
+  // ---- KEYBOARD ------------------------------------------------------------
+  // iOS doesn't resize the page when the keyboard opens: it shrinks the
+  // visual viewport and scrolls the page up under the status bar, nav and
+  // all. Instead the app takes the visible height (--app-h, chat.css), the
+  // page is put back at the top, and the newest message stays in view.
+  const vv = window.visualViewport;
+  if (vv) {
+    const fit = () => {
+      const h = Math.round(vv.height);
+      if (document.documentElement.style.getPropertyValue('--app-h') !== h + 'px') {
+        document.documentElement.style.setProperty('--app-h', h + 'px');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+      if (window.scrollY || vv.offsetTop) window.scrollTo(0, 0);
+    };
+    vv.addEventListener('resize', fit);
+    vv.addEventListener('scroll', fit);
+    fit();
+  }
+
   proceed.addEventListener('click', () => {
     onboarding.hidden = true
     onboarding.style.display = 'none'

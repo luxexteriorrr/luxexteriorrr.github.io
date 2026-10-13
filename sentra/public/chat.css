@@ -132,6 +132,10 @@ html, body {
 @media (max-width: 414px) {
   html, body { background-color: var(--white); }
 }
+/* The page itself never scrolls: only the conversation does. Without this
+ * iOS scrolled the whole page up to make room for the keyboard and the nav
+ * slid off under the status bar (recording, 12 Oct). */
+html, body { overflow: hidden; overscroll-behavior: none; }
 /* Buttons and inputs do not inherit type. Without this they set in the
  * system face at the browser's size. */
 button, input, textarea {
@@ -145,6 +149,10 @@ button, input, textarea {
   max-width: 414px;
   height: 100vh;
   height: 100dvh;
+  /* While the keyboard is up, the app is the height of what is left above it
+   * (chat.js sets --app-h from the visual viewport), so the nav stays at the
+   * top and the input sits on the keyboard, as in a native app. */
+  height: var(--app-h, 100dvh);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
