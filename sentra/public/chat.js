@@ -28,18 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- KEYBOARD ------------------------------------------------------------
   // iOS doesn't resize the page when the keyboard opens: it shrinks the
-  // visual viewport and scrolls the page up under the status bar, nav and
-  // all. Instead the app takes the visible height (--app-h, chat.css), the
-  // page is put back at the top, and the newest message stays in view.
+  // visual viewport and pans it down the page. The app (fixed, chat.css)
+  // follows that visible area — its height and its offset — so the nav stays
+  // at the top and the input sits on the keyboard. It used to scroll the page
+  // back to the top instead, which fought iOS's own animation (13 Oct).
+  // The conversation keeps its bottom edge where it was, as in Messages.
   const vv = window.visualViewport;
   if (vv) {
+    const root = document.documentElement.style;
     const fit = () => {
-      const h = Math.round(vv.height);
-      if (document.documentElement.style.getPropertyValue('--app-h') !== h + 'px') {
-        document.documentElement.style.setProperty('--app-h', h + 'px');
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
-      if (window.scrollY || vv.offsetTop) window.scrollTo(0, 0);
+      const fromEnd = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
+      root.setProperty('--app-h', vv.height + 'px');
+      root.setProperty('--app-top', vv.offsetTop + 'px');
+      chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
     };
     vv.addEventListener('resize', fit);
     vv.addEventListener('scroll', fit);
@@ -256,9 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("response data:", data);
       console.log("reply:", reply);
 
-      hideTyping();
-
-      // Add Sentra's reply
+      // Add Sentra's reply, in the replying square's place
       addMessageToChat('sentra', reply);
       messageHistory.push({ role: 'assistant', content: reply });
 
@@ -267,7 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       console.error("Error in fetch:", error);
-      hideTyping();
       addMessageToChat('sentra', 'I seem to be having connection issues. Please try again.');
     }
   });
@@ -302,12 +300,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // scrolls inside itself. The bar grows with it and the conversation above
   // makes room.
   function fitInput() {
+    const before = input.offsetHeight;
+    const fromEnd = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
     input.style.height = 'auto';
     const max = parseFloat(getComputedStyle(input).maxHeight);
     const h = Math.min(input.scrollHeight, max);
     input.style.height = h + 'px';
     input.classList.toggle('is-full', input.scrollHeight > max);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    // Only when a line is added or taken away, and then the conversation keeps
+    // its bottom edge. It used to snap to the very end on every letter.
+    if (input.offsetHeight !== before)
+      chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
   }
   input.addEventListener('input', fitInput);
 
@@ -359,7 +362,11 @@ document.addEventListener("DOMContentLoaded", () => {
     body.textContent = text;
 
     msg.append(head, body);
-    chatContainer.appendChild(msg);
+    // A reply takes the replying square's place, so nothing collapses and
+    // regrows under the reader (13 Oct).
+    const typing = chatContainer.querySelector('.typing');
+    if (typing) typing.replaceWith(msg);
+    else chatContainer.appendChild(msg);
     scrollToEnd();
   }
 
@@ -368,9 +375,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // has not wrapped — so it scrolls to where the bottom used to be, and the
   // taller the reply the further short it falls. Two frames: the first lets
   // style and layout run, the second is measured against the finished box.
+  //
+  // One scroll at a time: sending adds your message and the replying square
+  // together, and two smooth scrolls started a frame apart made it stutter.
+  // A reply taller than the screen stops at its first line, so you read it
+  // from the top, as in Messages, rather than landing on its last line.
+  let scrollQueued = false;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
   function scrollToEnd() {
+    if (scrollQueued) return;
+    scrollQueued = true;
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+      scrollQueued = false;
+      const last = chatContainer.lastElementChild;
+      const pad = parseFloat(getComputedStyle(chatContainer).paddingTop) || 0;
+      let top = chatContainer.scrollHeight - chatContainer.clientHeight;
+      if (last && last.classList.contains('sentra') && last.offsetHeight > chatContainer.clientHeight - 2 * pad)
+        top = last.offsetTop - pad;
+      chatContainer.scrollTo({ top, behavior: calm.matches ? 'auto' : 'smooth' });
     }));
   }
 

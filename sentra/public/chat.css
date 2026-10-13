@@ -144,14 +144,17 @@ button, input, textarea {
   color: inherit;
 }
 .PageWrapper {
-  position: relative;
   width: 100%;
   max-width: 414px;
   height: 100vh;
   height: 100dvh;
-  /* While the keyboard is up, the app is the height of what is left above it
-   * (chat.js sets --app-h from the visual viewport), so the nav stays at the
+  /* The app is fixed to the visible area: chat.js sets --app-h and --app-top
+   * from the visual viewport, so while the keyboard is up the nav stays at the
    * top and the input sits on the keyboard, as in a native app. */
+  position: fixed;
+  top: var(--app-top, 0px);
+  left: 0;
+  right: 0;
   height: var(--app-h, 100dvh);
   margin: 0 auto;
   display: flex;
@@ -509,6 +512,8 @@ h1 {
   min-height: 0;                         /* lets the flex child shrink and scroll */
   width: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;          /* its scroll stops at its ends, never moves the page */
+  position: relative;                    /* message offsetTop is measured from here (chat.js) */
   padding: var(--s2) var(--margin);
   padding-bottom: var(--s3);
   display: flex;
