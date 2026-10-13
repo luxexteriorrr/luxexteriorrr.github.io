@@ -53,6 +53,19 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add('in-chat')   // brings the nav back (see chat.css)
   })
 
+  // The mark in the nav goes back to "What is Sentra?" (13 Oct). Only the
+  // screen changes: the conversation stays, and proceed returns to it.
+  const homeLink = document.getElementById('homeLink')
+  const goHome = () => {
+    input.blur()                               // the keyboard goes with the chat
+    chatWrapper.style.display = 'none'
+    onboarding.hidden = false
+    onboarding.style.display = ''
+    document.body.classList.remove('in-chat')
+  }
+  homeLink.addEventListener('click', goHome)
+  homeLink.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome() } })
+
   // ---- WELCOME -------------------------------------------------------------
   // Five lines from the IRP boards, one at a time on black, each on its own
   // colour, ending on the greeting and the way in. Text and colour are the only

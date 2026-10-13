@@ -198,6 +198,19 @@ body.in-chat nav { display: flex !important; height: 40px; }   /* a slim header 
   transition: opacity var(--press) ease-out;
 }
 #infoLink:active { opacity: 0.4; }
+/* The mark, at the left of the nav: back to "What is Sentra?". A full 44 px
+ * to tap, pressed like Info. */
+#homeLink {
+  display: flex;
+  align-items: center;
+  height: var(--tap);
+  margin-left: calc(-1 * var(--s1));
+  padding: 0 var(--s1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--press) ease-out;
+}
+#homeLink:active { opacity: 0.4; }
 #home {
   width: 56px;
   height: auto;
