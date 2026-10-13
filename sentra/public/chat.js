@@ -26,6 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const onboarding = document.querySelector('.OnboardingWrapper')
   const chatWrapper = document.querySelector('.ChatWrapper')
 
+  // ?record: recording the phone screens on the Mac (13 Oct), in a window the
+  // size of the iPhone 17 Pro's screen — no pointer and no Mac scrollbars,
+  // neither of which a phone shows.
+  if (new URLSearchParams(location.search).has('record')) document.documentElement.classList.add('recording')
+
   // ---- KEYBOARD ------------------------------------------------------------
   // iOS doesn't resize the page when the keyboard opens: it shrinks the
   // visual viewport. The app is fixed (chat.css) and takes that height, so the

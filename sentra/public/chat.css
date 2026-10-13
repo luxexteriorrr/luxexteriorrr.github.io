@@ -136,6 +136,9 @@ html, body {
  * iOS scrolled the whole page up to make room for the keyboard and the nav
  * slid off under the status bar (recording, 12 Oct). */
 html, body { overflow: hidden; overscroll-behavior: none; }
+/* ?record (chat.js): on the Mac, for screen recordings. */
+html.recording, html.recording * { cursor: none !important; scrollbar-width: none; }
+html.recording ::-webkit-scrollbar { display: none; }
 @media (prefers-reduced-motion: reduce) { .PageWrapper { transition: none; } }
 /* Buttons and inputs do not inherit type. Without this they set in the
  * system face at the browser's size. */
