@@ -364,20 +364,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   input.addEventListener('input', fitInput);
 
-  // The floating box's height goes to chat.css (--composer-h), which leaves
-  // that much room at the foot of the conversation; the conversation keeps
-  // its bottom edge while the box grows or shrinks.
-  const fitComposer = () => {
-    const h = form.offsetHeight + 'px';
-    if (document.documentElement.style.getPropertyValue('--composer-h') === h) return;
-    const fromEnd = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
-    document.documentElement.style.setProperty('--composer-h', h);
-    chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
-  };
-  new ResizeObserver(fitComposer).observe(form);
-  input.addEventListener('input', fitComposer);         // after fitInput, so the new height is in
-  proceed.addEventListener('click', () => requestAnimationFrame(fitComposer));
-
   // Return sends (enterkeyhint="send"); Shift+Return is a new line.
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
