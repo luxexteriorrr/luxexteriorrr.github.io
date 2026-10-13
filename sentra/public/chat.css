@@ -136,6 +136,7 @@ html, body {
  * iOS scrolled the whole page up to make room for the keyboard and the nav
  * slid off under the status bar (recording, 12 Oct). */
 html, body { overflow: hidden; overscroll-behavior: none; }
+@media (prefers-reduced-motion: reduce) { .PageWrapper { transition: none; } }
 /* Buttons and inputs do not inherit type. Without this they set in the
  * system face at the browser's size. */
 button, input, textarea {
@@ -153,6 +154,8 @@ button, input, textarea {
    * the keyboard, as in a native app. */
   position: fixed;
   top: 0;
+  /* Eased like the iOS keyboard, so the input bar moves with it (chat.js). */
+  transition: height var(--kb, 380ms) cubic-bezier(0.32, 0.72, 0, 1);
   left: 0;
   right: 0;
   height: var(--app-h, 100dvh);
@@ -442,8 +445,8 @@ h1 {
 }
 .cta[hidden] { display: none; }
 .input-form #SystemSubmit {
-  align-self: flex-end;
-  margin-bottom: 6px;                    /* (56 − 44) / 2: centred on the last line */
+  align-self: flex-end;                  /* its own row, at the bottom right */
+  margin-bottom: 0;
   /* Send is not a band but Sentra's square (12 Oct): the same mark that sits
    * next to Sentra's name, at the right of the bar. 20 px to see, 44 px to
    * hit. Grey while the field is empty; orange once there is something to
@@ -516,7 +519,9 @@ h1 {
   overscroll-behavior: contain;          /* its scroll stops at its ends, never moves the page */
   position: relative;                    /* message offsetTop is measured from here (chat.js) */
   padding: var(--s2) var(--margin);
-  padding-bottom: var(--s3);
+  /* Room at the foot for the floating box (its height from chat.js) and
+   * the gap under it, so the last message ends above it, not under it. */
+  padding-bottom: calc(var(--composer-h, 44px) + var(--s1) + env(safe-area-inset-bottom) + var(--s3));
   display: flex;
   flex-direction: column;
   gap: var(--s3);                        /* entries apart, head and text together */
@@ -613,32 +618,55 @@ body.is-idle nav { display: none !important; }
 .messageContent .w { animation: message-fade 220ms ease-out both; }
 
 .input-form {
-  /* The last row of the chat column, not an overlay: it grows upward as the
-   * field does, and the conversation above shrinks to make room. */
-  flex: 0 0 auto;
-  position: relative;
-  min-height: 56px;
+  /* A floating box (13 Oct, after the Claude app, in Sentra's terms): white
+   * over the black conversation, 8 in from the sides and the foot, the band's
+   * 1 px corners. Two rows, as the Claude app's: the text on top, the send
+   * square on its own row at the bottom right. Inside, 8 of padding, so the
+   * text starts on the same 16 px edge as the messages and the square sits
+   * 8 from the box's edge. It grows upward as the field does; the
+   * conversation scrolls under it. */
+  position: absolute;
+  left: var(--s1);
+  right: var(--s1);
+  bottom: calc(var(--s1) + env(safe-area-inset-bottom));
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;                 /* the send square stays on the last line */
-  gap: var(--s1);
-  /* The white runs under the home indicator; the field keeps clear of it.
-   * While typing the keyboard covers that strip, so the gap goes. */
-  padding: 0 var(--margin) env(safe-area-inset-bottom);
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--s2) var(--s1) 0;
   background-color: var(--white);
+  border-radius: 1px;
   z-index: 4;
 }
-.input-form:focus-within { padding-bottom: 0; }
+/* While typing the keyboard covers the home indicator: 8 above the keyboard. */
+.input-form:focus-within { bottom: var(--s1); }
+.ChatWrapper:has(.input-form:focus-within) .chat-container {
+  padding-bottom: calc(var(--composer-h, 44px) + var(--s1) + var(--s3));
+}
+.ChatWrapper:has(.input-form:focus-within)::after {
+  height: calc(var(--composer-h, 44px) + var(--s3) + var(--s1));
+}
+/* The conversation fades out just above the box, so text doesn't run into
+ * its edge as it scrolls under. */
+.ChatWrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--composer-h, 44px) + var(--s3) + var(--s1) + env(safe-area-inset-bottom));
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0), var(--black) var(--s3));
+  pointer-events: none;
+  z-index: 3;
+}
 #SystemInput {
-  flex: 1;
+  flex: 0 0 auto;                        /* its own height, set by chat.js (flex: 1 pinned it to one line in the column) */
   display: block;
   resize: none;
   overflow-y: hidden;
-  /* One line sits centred in the 56 bar: (56 − 22) / 2 = 17 above and below. */
-  padding: 17px 0;
-  height: 56px;                          /* chat.js sets it to the content, up to five lines */
-  max-height: calc(5 * var(--lh-body) + 34px);
+  /* The top row: one line to start, 16 under the box's top edge. */
+  padding: 0;
+  height: var(--lh-body);                /* chat.js sets it to the content, up to five lines */
+  max-height: calc(5 * var(--lh-body));
   font-size: var(--t-body);              /* 16 — anything smaller and iOS zooms on focus */
   line-height: var(--lh-body);
   font-weight: var(--medium);

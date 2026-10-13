@@ -38,13 +38,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const vv = window.visualViewport;
   if (vv) {
     const root = document.documentElement.style;
+    // TEMPORARY probe (13 Oct): sends what iOS reports to the Mac's log.
+    const t0 = performance.now();
+    const probe = tag => {
+      const r = document.querySelector('.PageWrapper').getBoundingClientRect(), n = document.querySelector('nav').getBoundingClientRect();
+      fetch('/debug', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        tag, ms: Math.round(performance.now() - t0), vvH: Math.round(vv.height), vvTop: Math.round(vv.offsetTop),
+        vvPageTop: Math.round(vv.pageTop), scrollY: Math.round(window.scrollY), innerH: innerHeight,
+        docScroll: document.documentElement.scrollTop, bodyScroll: document.body.scrollTop,
+        pwTop: Math.round(r.top), pwH: Math.round(r.height), navTop: Math.round(n.top), focused: document.activeElement && document.activeElement.id
+      }) }).catch(() => {});
+    };
+    vv.addEventListener('resize', () => probe('vv-resize'));
+    vv.addEventListener('scroll', () => probe('vv-scroll'));
+    window.addEventListener('scroll', () => probe('win-scroll'));
+    input.addEventListener('focus', () => { probe('focus'); [100, 300, 600, 1000].forEach(d => setTimeout(() => probe('after-' + d), d)); });
+    input.addEventListener('blur', () => { probe('blur'); [300, 1000].forEach(d => setTimeout(() => probe('blur-after-' + d), d)); });
+    // iOS reports the new height in one step, ~80 ms after the tap, while the
+    // keyboard takes about a third of a second to come up (measured 13 Oct).
+    // The height change is eased over the same time (chat.css, --kb), so the
+    // field rides up with the keyboard instead of jumping ahead of it, and the
+    // conversation keeps its bottom edge on every frame of the way.
+    let anchorRaf = 0;
     const fit = () => {
       const fromEnd = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
       root.setProperty('--app-h', vv.height + 'px');
-      chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
+      cancelAnimationFrame(anchorRaf);
+      const until = performance.now() + 450;
+      const hold = now => {
+        chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
+        if (now < until) anchorRaf = requestAnimationFrame(hold);
+      };
+      hold(performance.now());
     };
     vv.addEventListener('resize', fit);
     fit();
+
+    // iOS scrolls the whole page up by the keyboard's height when a field at
+    // the foot of the screen is focused, even with nothing to scroll; the app
+    // went up out of sight with it (the white screen, measured on the phone,
+    // 13 Oct: scrollY 403 = the keyboard). A tap on the field is taken over
+    // here and the field focused without scrolling, so iOS never moves the page.
+    input.addEventListener('touchend', e => {
+      if (document.activeElement === input) return;   // already typing: leave the caret to iOS
+      e.preventDefault();
+      input.focus({ preventScroll: true });
+      probe('tap-focus');
+    });
+    // Should iOS scroll the page anyway, put it straight back.
+    window.addEventListener('scroll', () => { if (window.scrollY) { probe('undo-scroll'); window.scrollTo(0, 0); } });
   }
 
   // Screens change in a cut (13 Oct: the push and the sheet were tried and
@@ -321,6 +363,20 @@ document.addEventListener("DOMContentLoaded", () => {
       chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
   }
   input.addEventListener('input', fitInput);
+
+  // The floating box's height goes to chat.css (--composer-h), which leaves
+  // that much room at the foot of the conversation; the conversation keeps
+  // its bottom edge while the box grows or shrinks.
+  const fitComposer = () => {
+    const h = form.offsetHeight + 'px';
+    if (document.documentElement.style.getPropertyValue('--composer-h') === h) return;
+    const fromEnd = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
+    document.documentElement.style.setProperty('--composer-h', h);
+    chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
+  };
+  new ResizeObserver(fitComposer).observe(form);
+  input.addEventListener('input', fitComposer);         // after fitInput, so the new height is in
+  proceed.addEventListener('click', () => requestAnimationFrame(fitComposer));
 
   // Return sends (enterkeyhint="send"); Shift+Return is a new line.
   input.addEventListener('keydown', e => {
