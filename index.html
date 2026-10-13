@@ -270,7 +270,7 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
    than --row-h) and a tall phone screen is narrow, not shrunk into a square.
    The last row keeps --row-h. layoutRows() sets the sizes. ?grid=squares
    shows the square cells above. */
-:root { --row-h: 400px; --row-gap: 10px; }   /* 400 (12 Oct, Kirill); Bänziger Hug use 600, 550 on a tablet */
+:root { --row-h: 480px; --row-gap: 10px; }   /* 480 (13 Oct, Kirill: slightly bigger; was 400); Bänziger Hug use 600, 550 on a tablet */
 body .rows { display: flex; flex-wrap: wrap; gap: var(--row-gap); padding: 0 var(--pad) var(--pad); }
 body .rows a { flex: none; aspect-ratio: auto; padding: 0; container-type: normal; display: block; }
 body .rows img, body .rows video { width: 100%; height: 100%; max-width: none; max-height: none; }
@@ -662,7 +662,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const run = () => {
       const cs = getComputedStyle(grid);
       const W = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      const H = parseFloat(cs.getPropertyValue('--row-h')) || 400;
+      const H = parseFloat(cs.getPropertyValue('--row-h')) || 480;
       const gap = parseFloat(cs.columnGap) || 0;
       const cells = [...grid.children];
       const size = (a, w, h) => { a.style.width = w + 'px'; a.style.height = h + 'px'; };
