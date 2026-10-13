@@ -12,6 +12,8 @@
 // AWW90s entry page as a screen recording (17, 5 Oct), in place of the still entry (16).
 // AWW90s prototype recordings 18–21 (phone, 5 Oct): editorial scrolls, shop/filter flow, product photo swipe.
 // LOTV WASTE! hand-lettered announcement (lotv-waste-06) and the flat thesis cover (zerko-thesis-37) added 6 Oct.
+// Sentra (13 Oct): the old phone interface (02, 03, 04) replaced by the redesign: loops 10–14 (recorded on the Mac at the
+// iPhone 17 Pro's 1206 × 2436, no 1600 copies) and iPhone screenshots 06–09 as taken. Billboards (01, 05) and posters stay.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -782,28 +784,71 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-03.mp4",
-   "w": 1242,
-   "h": 2208,
+   "src": "sentra-10.mp4",
+   "w": 1206,
+   "h": 2436,
    "video": 1,
-   "poster": "sentra-03-poster.webp",
-   "posterSm": 1
+   "poster": "sentra-10-poster.webp"
   },
   {
    "p": "sentra",
-   "src": "sentra-02.webp",
-   "w": 1242,
-   "h": 2208,
-   "alt": "The phone mid-session: timestamps in a left gutter, a purple square for You and orange for Sentra, and a reply that answers a mention of artist books by claiming a deep appreciation for such niche fields.",
-   "sm": 1
+   "src": "sentra-06.jpg",
+   "w": 1206,
+   "h": 2436,
+   "alt": "The opening screen on an iPhone 17 Pro: What is Sentra?, with Sentra in green, a grey paragraph promising that it adapts to whatever you share, the small-print notice at the foot, and a pale green band reading proceed."
   },
   {
    "p": "sentra",
-   "src": "sentra-04.webp",
-   "w": 1242,
-   "h": 2208,
-   "alt": "The opening screen: What is Sentra? — we could simply tell you, but it wouldn't make sense yet. Below it a notice warning against sharing anything personal, and the way in.",
-   "sm": 1
+   "src": "sentra-07.jpg",
+   "w": 1206,
+   "h": 2436,
+   "alt": "The chat: a white bar with the mark and Info over a black conversation. You asked how; Sentra, in pink, answers absolutely, then asks about your situation and your challenges before it will say anything more."
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-11.mp4",
+   "w": 1206,
+   "h": 2436,
+   "video": 1,
+   "poster": "sentra-11-poster.webp"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-12.mp4",
+   "w": 1206,
+   "h": 2436,
+   "video": 1,
+   "poster": "sentra-12-poster.webp"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-08.jpg",
+   "w": 1206,
+   "h": 2436,
+   "alt": "Info: Sentra is not a company. A grey paragraph explains the project, that what you say in private appears on the screens beside you, with the credits in small print and a pink band reading keep talking."
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-13.mp4",
+   "w": 1206,
+   "h": 2436,
+   "video": 1,
+   "poster": "sentra-13-poster.webp"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-14.mp4",
+   "w": 1206,
+   "h": 2436,
+   "video": 1,
+   "poster": "sentra-14-poster.webp"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-09.png",
+   "w": 1206,
+   "h": 2436,
+   "alt": "The idle screen: Are you the next Sentra user? I'd hate to lose everything we shared. Two bands at the foot, keep talking in pink and new chat in purple."
   },
   {
    "p": "sentra",
