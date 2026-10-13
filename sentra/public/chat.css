@@ -148,11 +148,11 @@ button, input, textarea {
   max-width: 414px;
   height: 100vh;
   height: 100dvh;
-  /* The app is fixed to the visible area: chat.js sets --app-h and --app-top
-   * from the visual viewport, so while the keyboard is up the nav stays at the
-   * top and the input sits on the keyboard, as in a native app. */
+  /* The app is fixed and as tall as the visible area (--app-h, chat.js), so
+   * while the keyboard is up the nav stays at the top and the input sits on
+   * the keyboard, as in a native app. */
   position: fixed;
-  top: var(--app-top, 0px);
+  top: 0;
   left: 0;
   right: 0;
   height: var(--app-h, 100dvh);
@@ -315,15 +315,7 @@ body.in-chat nav { display: flex !important; height: 40px; }   /* a slim header 
   gap: var(--s2);
 }
 .OnboardingWrapper[hidden] { display: none; }
-/* While the chat slides over it (push and back, chat.js), the start screen
- * lies underneath, out of the flow, so the two can share the screen. */
-.OnboardingWrapper.is-under {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-nav, .ChatWrapper, .OnboardingWrapper, .InfoPage { will-change: transform; }
+
 .titleWrapper {
   display: flex;
   flex-direction: column;
@@ -731,10 +723,7 @@ body.is-idle nav { display: none !important; }
   gap: var(--s2);
   overflow-y: auto;
   padding: var(--s2) var(--margin) max(var(--margin), env(safe-area-inset-bottom));
-  /* Moves as a sheet (chat.js); with Reduce Motion it fades instead. */
-}
-@media (prefers-reduced-motion: reduce) {
-  .InfoPage { animation: idle-in 200ms ease-out both; }
+  animation: idle-in 200ms ease-out both;
 }
 .InfoPage.hidden { display: none; }
 .infoBody {

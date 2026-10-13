@@ -28,105 +28,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- KEYBOARD ------------------------------------------------------------
   // iOS doesn't resize the page when the keyboard opens: it shrinks the
-  // visual viewport and pans it down the page. The app (fixed, chat.css)
-  // follows that visible area — its height and its offset — so the nav stays
-  // at the top and the input sits on the keyboard. It used to scroll the page
-  // back to the top instead, which fought iOS's own animation (13 Oct).
-  // The conversation keeps its bottom edge where it was, as in Messages.
+  // visual viewport. The app is fixed (chat.css) and takes that height, so the
+  // nav stays at the top and the input sits on the keyboard. Only the height:
+  // on iOS 26 a fixed element already stays with the visible area, and adding
+  // the viewport's offset as well slid the whole app down the screen while
+  // the keyboard opened (recording, 13 Oct). Scrolling the page back to the
+  // top instead fought iOS's own animation. The conversation keeps its
+  // bottom edge where it was, as in Messages.
   const vv = window.visualViewport;
   if (vv) {
     const root = document.documentElement.style;
     const fit = () => {
       const fromEnd = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
       root.setProperty('--app-h', vv.height + 'px');
-      root.setProperty('--app-top', vv.offsetTop + 'px');
       chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight - fromEnd;
     };
     vv.addEventListener('resize', fit);
-    vv.addEventListener('scroll', fit);
     fit();
   }
 
-  // ---- MOTION --------------------------------------------------------------
-  // Screens move on springs, after Apple's Designing Fluid Interfaces: damping
-  // 1 (settles without overshoot), response ~0.4 s. A spring always starts
-  // from where the thing is on screen and how fast it is going, so a tap
-  // mid-transition turns it round smoothly instead of waiting for the end.
-  // With Reduce Motion on, screens just change.
+  // Screens change in a cut (13 Oct: the push and the sheet were tried and
+  // taken out). Only the replies move: they stream in, word by word.
   const calmMotion = matchMedia('(prefers-reduced-motion: reduce)')
-  function makeSpring(apply, response = 0.4) {
-    const k = (2 * Math.PI / response) ** 2, c = 4 * Math.PI / response
-    const s = { x: 0, v: 0, raf: 0, target: 0, done: null }
-    s.set = x => { cancelAnimationFrame(s.raf); s.raf = 0; s.x = s.target = x; s.v = 0; apply(x) }
-    s.to = (target, done) => {
-      s.target = target; s.done = done
-      if (calmMotion.matches) { s.set(target); if (done) done(); return }
-      if (s.raf) return                        // already moving: it re-aims from here
-      let last = performance.now()
-      const step = now => {
-        const dt = Math.min((now - last) / 1000, 1 / 30); last = now
-        s.v += (-k * (s.x - s.target) - c * s.v) * dt
-        s.x += s.v * dt
-        if (Math.abs(s.x - s.target) < 0.5 && Math.abs(s.v) < 20) {
-          s.raf = 0; s.x = s.target; s.v = 0; apply(s.x)
-          if (s.done) s.done()
-          return
-        }
-        apply(s.x)
-        s.raf = requestAnimationFrame(step)
-      }
-      s.raf = requestAnimationFrame(step)
-    }
-    return s
-  }
-  const pageWrapper = document.querySelector('.PageWrapper')
-  const nav = document.querySelector('nav')
-  const width = () => pageWrapper.clientWidth
 
-  // "What is Sentra?" → chat is an iOS push: the chat (nav and conversation)
-  // slides in from the right over the start screen, which moves a third of
-  // the way left underneath. The mark reverses it along the same path.
-  const shift = x => x ? `translate3d(${x}px,0,0)` : ''
-  const chatSlide = makeSpring(x => { nav.style.transform = chatWrapper.style.transform = shift(x) })
-  const startSlide = makeSpring(x => { onboarding.style.transform = shift(x) })
-  let onChat = false
-
-  function showChat(instant = false) {
-    onChat = true
-    const fresh = !document.body.classList.contains('in-chat')
+  function showChat() {
+    onboarding.hidden = true
+    onboarding.style.display = 'none'
     chatWrapper.style.display = 'flex'
     document.body.classList.add('in-chat')   // brings the nav back (see chat.css)
-    const settle = () => {
-      if (!onChat) return
-      onboarding.hidden = true
-      onboarding.style.display = 'none'
-      onboarding.classList.remove('is-under')
-      startSlide.set(0)
-    }
-    if (instant || calmMotion.matches) { chatSlide.set(0); settle(); return }
-    onboarding.classList.add('is-under')
-    if (fresh) chatSlide.set(width())
-    chatSlide.to(0, settle)
-    startSlide.to(-width() / 3)
   }
 
   function showStart() {
-    onChat = false
     input.blur()                               // the keyboard goes with the chat
+    chatWrapper.style.display = 'none'
     onboarding.hidden = false
     onboarding.style.display = ''
-    const settle = () => {
-      if (onChat) return
-      chatWrapper.style.display = 'none'
-      document.body.classList.remove('in-chat')
-      onboarding.classList.remove('is-under')
-      chatSlide.set(0)
-    }
-    if (calmMotion.matches) { settle(); return }
-    onboarding.classList.add('is-under')
-    if (!startSlide.raf && startSlide.x === 0) startSlide.set(-width() / 3)
-    chatSlide.to(width(), settle)
-    startSlide.to(0)
+    document.body.classList.remove('in-chat')
   }
 
   proceed.addEventListener('click', () => showChat())
@@ -590,28 +527,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeInfo = document.getElementById('closeInfo');
   const infoPage = document.getElementById('info');
 
-  // Info is a sheet: it rises from the foot of the screen over the chat and
-  // keep talking takes it back down the same way.
-  const height = () => pageWrapper.clientHeight;
-  const sheet = makeSpring(y => { infoPage.style.transform = y ? `translate3d(0,${y}px,0)` : ''; });
-  let infoOpen = false;
-
   infoLink.addEventListener('click', () => {
-    infoOpen = true;
     input.blur();
-    if (infoPage.classList.contains('hidden')) {
-      infoPage.classList.remove('hidden');
-      infoPage.scrollTop = 0;
-      sheet.set(height());
-    }
-    sheet.to(0, () => { if (infoOpen) document.body.classList.add('is-info'); });   // nav off once covered (chat.css)
+    infoPage.classList.remove('hidden');
+    infoPage.scrollTop = 0;
+    document.body.classList.add('is-info');      // hides the nav (chat.css)
     clearTimeout(idleTimeout);                     // pause idle while reading
   });
 
   closeInfo.addEventListener('click', () => {
-    infoOpen = false;
+    infoPage.classList.add('hidden');
     document.body.classList.remove('is-info');
-    sheet.to(height(), () => { if (!infoOpen) infoPage.classList.add('hidden'); });
     resetInactivityTimer();                        // the clock starts again from Close
   });
 
@@ -622,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //   /?screen=info   the Info page
   const screen = new URLSearchParams(location.search).get('screen')
   if (screen === 'chat' || screen === 'idle' || screen === 'info') {
-    showChat(true)
+    showChat()
     if (screen === 'idle') showIdleMessage()
     if (screen === 'info') document.getElementById('infoLink').click()
   }
