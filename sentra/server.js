@@ -29,7 +29,14 @@ const io = socketIo(server, {
   allowEIO3: true 
 });
 
-sentra.use(express.static('public'));
+// Never cached: the phone runs Sentra as a Home Screen app, which held on to
+// old copies of chat.js/chat.css after changes (13 Oct). Every open fetches
+// the files fresh; on a local network that costs nothing.
+sentra.use(express.static('public', {
+  etag: false,
+  lastModified: false,
+  setHeaders: res => res.set('Cache-Control', 'no-store')
+}));
 sentra.use(bodyParser.json());
 
 
