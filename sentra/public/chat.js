@@ -101,6 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   proceed.addEventListener('click', () => showChat())
+  // Return on "What is Sentra?" proceeds, as the band would (13 Oct; handy when recording on the Mac).
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !onboarding.hidden && getComputedStyle(onboarding).display !== 'none') {
+      e.preventDefault()
+      proceed.click()
+      if (RECORDING) requestAnimationFrame(() => input.focus())   // straight on to typing
+    }
+  })
 
   // The mark in the nav goes back to "What is Sentra?" (13 Oct). Only the
   // screen changes: the conversation stays, and proceed returns to it.
