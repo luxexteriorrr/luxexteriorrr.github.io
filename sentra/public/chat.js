@@ -256,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
     input.value = '';
     syncSend();
     fitInput();
+    input.blur();   // the keyboard goes once the message is sent, so the reply has the screen (13 Oct)
 
     // Loading state: an orange square pulsing where Sentra's next entry will
     // start. It used to be a real message ("Sentra is thinking…", with a time
