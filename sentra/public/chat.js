@@ -587,8 +587,8 @@ document.addEventListener("DOMContentLoaded", () => {
     resetInactivityTimer();                        // the clock starts again from Close
   });
 
-  // Keys, for working and recording on the Mac (13 Oct): Shift+I opens Info
-  // from the chat (only when not typing, so a message can still say "I");
+  // Keys, for working and recording on the Mac (13 Oct): Cmd+I opens Info
+  // from the chat, typing or not;
   // Esc leaves the field; on Info, Return or Esc is keep talking.
   document.addEventListener('keydown', e => {
     const infoOpen = !infoPage.classList.contains('hidden');
@@ -598,8 +598,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (RECORDING) input.focus();
     } else if (e.key === 'Escape' && document.activeElement === input) {
       input.blur();
-    } else if (e.key === 'I' && e.shiftKey && !infoOpen && document.activeElement !== input
-               && document.body.classList.contains('in-chat') && !e.metaKey && !e.ctrlKey) {
+    } else if (e.metaKey && !e.shiftKey && (e.key === 'i' || e.key === 'I') && !infoOpen
+               && document.body.classList.contains('in-chat')) {
       e.preventDefault();
       infoLink.click();
     }
