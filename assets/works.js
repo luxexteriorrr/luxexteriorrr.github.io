@@ -15,6 +15,8 @@
 // Sentra (13 Oct): the old phone interface (02, 03, 04) replaced by the redesign: loops 10–14 (recorded on the Mac at the
 // iPhone 17 Pro's 1206 × 2436, no 1600 copies) and stills 15–18 captured from the same
 // recording window (lossless PNG, replacing the iPhone screenshots 06–09). Billboards (01, 05) and posters stay.
+// Sentra interface order (13 Oct, Kirill): start screen 15, the start screen through the five colours 19, the long
+// conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10. Out: the claim still 16 and the short loops 12–14.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -785,14 +787,6 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-10.mp4",
-   "w": 1206,
-   "h": 2436,
-   "video": 1,
-   "poster": "sentra-10-poster.webp"
-  },
-  {
-   "p": "sentra",
    "src": "sentra-15.png",
    "w": 1206,
    "h": 2436,
@@ -800,10 +794,11 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-16.png",
+   "src": "sentra-19.mp4",
    "w": 1206,
    "h": 2436,
-   "alt": "The chat: a white bar with the mark and Info over a black conversation. Told that you work in type and editorial design, Sentra, in orange, says it has a rich history in exactly that, founded by people passionate about visual communication."
+   "video": 1,
+   "poster": "sentra-19-poster.webp"
   },
   {
    "p": "sentra",
@@ -815,41 +810,25 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-12.mp4",
+   "src": "sentra-20.png",
+   "w": 1206,
+   "h": 2436,
+   "alt": "Info, in pink: Sentra is not a company. A grey paragraph explains the project, that what you say in private appears on the screens beside you, with the credits in small print and a pink band reading keep talking."
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-21.png",
+   "w": 1206,
+   "h": 2436,
+   "alt": "The idle screen, in green: Are you the next Sentra user? I'd hate to lose everything we shared. Two bands at the foot, keep talking in green and new chat in purple."
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-10.mp4",
    "w": 1206,
    "h": 2436,
    "video": 1,
-   "poster": "sentra-12-poster.webp"
-  },
-  {
-   "p": "sentra",
-   "src": "sentra-17.png",
-   "w": 1206,
-   "h": 2436,
-   "alt": "Info: Sentra is not a company. A grey paragraph explains the project, that what you say in private appears on the screens beside you, with the credits in small print and an orange band reading keep talking."
-  },
-  {
-   "p": "sentra",
-   "src": "sentra-13.mp4",
-   "w": 1206,
-   "h": 2436,
-   "video": 1,
-   "poster": "sentra-13-poster.webp"
-  },
-  {
-   "p": "sentra",
-   "src": "sentra-14.mp4",
-   "w": 1206,
-   "h": 2436,
-   "video": 1,
-   "poster": "sentra-14-poster.webp"
-  },
-  {
-   "p": "sentra",
-   "src": "sentra-18.png",
-   "w": 1206,
-   "h": 2436,
-   "alt": "The idle screen: Are you the next Sentra user? I'd hate to lose everything we shared. Two bands at the foot, keep talking in orange and new chat in purple."
+   "poster": "sentra-10-poster.webp"
   },
   {
    "p": "sentra",
