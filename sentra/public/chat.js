@@ -38,22 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const vv = window.visualViewport;
   if (vv) {
     const root = document.documentElement.style;
-    // TEMPORARY probe (13 Oct): sends what iOS reports to the Mac's log.
-    const t0 = performance.now();
-    const probe = tag => {
-      const r = document.querySelector('.PageWrapper').getBoundingClientRect(), n = document.querySelector('nav').getBoundingClientRect();
-      fetch('/debug', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-        tag, ms: Math.round(performance.now() - t0), vvH: Math.round(vv.height), vvTop: Math.round(vv.offsetTop),
-        vvPageTop: Math.round(vv.pageTop), scrollY: Math.round(window.scrollY), innerH: innerHeight,
-        docScroll: document.documentElement.scrollTop, bodyScroll: document.body.scrollTop,
-        pwTop: Math.round(r.top), pwH: Math.round(r.height), navTop: Math.round(n.top), focused: document.activeElement && document.activeElement.id
-      }) }).catch(() => {});
-    };
-    vv.addEventListener('resize', () => probe('vv-resize'));
-    vv.addEventListener('scroll', () => probe('vv-scroll'));
-    window.addEventListener('scroll', () => probe('win-scroll'));
-    input.addEventListener('focus', () => { probe('focus'); [100, 300, 600, 1000].forEach(d => setTimeout(() => probe('after-' + d), d)); });
-    input.addEventListener('blur', () => { probe('blur'); [300, 1000].forEach(d => setTimeout(() => probe('blur-after-' + d), d)); });
     // iOS reports the new height in one step, ~80 ms after the tap, while the
     // keyboard takes about a third of a second to come up (measured 13 Oct).
     // The height change is eased over the same time (chat.css, --kb), so the
@@ -83,10 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (document.activeElement === input) return;   // already typing: leave the caret to iOS
       e.preventDefault();
       input.focus({ preventScroll: true });
-      probe('tap-focus');
     });
     // Should iOS scroll the page anyway, put it straight back.
-    window.addEventListener('scroll', () => { if (window.scrollY) { probe('undo-scroll'); window.scrollTo(0, 0); } });
+    window.addEventListener('scroll', () => { if (window.scrollY) window.scrollTo(0, 0); });
   }
 
   // Screens change in a cut (13 Oct: the push and the sheet were tried and
