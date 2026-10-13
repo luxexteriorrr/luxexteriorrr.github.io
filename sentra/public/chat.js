@@ -68,6 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       input.focus({ preventScroll: true });
     });
+    // A tap on the conversation closes the keyboard, as in Messages. A tap,
+    // not a drag: 'click' doesn't fire when the finger scrolls.
+    chatContainer.addEventListener('click', () => { if (document.activeElement === input) input.blur(); });
     // Should iOS scroll the page anyway, put it straight back.
     window.addEventListener('scroll', () => { if (window.scrollY) window.scrollTo(0, 0); });
   }
