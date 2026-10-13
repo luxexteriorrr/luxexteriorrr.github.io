@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // ?record: recording the phone screens on the Mac (13 Oct), in a window the
   // size of the iPhone 17 Pro's screen — no pointer and no Mac scrollbars,
   // neither of which a phone shows.
-  if (new URLSearchParams(location.search).has('record')) document.documentElement.classList.add('recording')
+  const RECORDING = new URLSearchParams(location.search).has('record')
+  if (RECORDING) document.documentElement.classList.add('recording')
 
   // ---- KEYBOARD ------------------------------------------------------------
   // iOS doesn't resize the page when the keyboard opens: it shrinks the
@@ -264,7 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
     input.value = '';
     syncSend();
     fitInput();
-    input.blur();   // the keyboard goes once the message is sent, so the reply has the screen (13 Oct)
+    // The keyboard goes once the message is sent, so the reply has the screen
+    // (13 Oct). Not when recording on the Mac: there is no keyboard to put
+    // away, and the field stays ready for the next line.
+    if (!RECORDING) input.blur();
 
     // Loading state: an orange square pulsing where Sentra's next entry will
     // start. It used to be a real message ("Sentra is thinking…", with a time
