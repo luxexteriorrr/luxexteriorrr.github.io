@@ -16,7 +16,7 @@
 // iPhone 17 Pro's 1206 × 2436, no 1600 copies) and stills 15–18 captured from the same
 // recording window (lossless PNG, replacing the iPhone screenshots 06–09). Billboards (01, 05) and posters stay.
 // Sentra interface order (13 Oct, Kirill): start screen 15, the start screen through the five colours 19, the long
-// conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10. Out: the claim still 16 and the short loops 12–14.
+// conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10, a scroll up a long conversation 22. Out: the claim still 16 and the short loops 12–14.
 // Disciplines and the two group lines are provisional.
 window.WORKS = {
  "projects": [
@@ -829,6 +829,14 @@ window.WORKS = {
    "h": 2436,
    "video": 1,
    "poster": "sentra-10-poster.webp"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-22.mp4",
+   "w": 1206,
+   "h": 2436,
+   "video": 1,
+   "poster": "sentra-22-poster.webp"
   },
   {
    "p": "sentra",
