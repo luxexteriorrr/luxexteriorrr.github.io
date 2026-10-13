@@ -15,6 +15,8 @@
 // Sentra (13 Oct): the old phone interface (02, 03, 04) replaced by the redesign: loops 10–14 (recorded on the Mac at the
 // iPhone 17 Pro's 1206 × 2436, no 1600 copies) and stills 15–18 captured from the same
 // recording window (lossless PNG, replacing the iPhone screenshots 06–09). Billboards (01, 05) and posters stay.
+// Sentra's three print pieces as flats (25 A1 poster, 26 invoice, 27 dossier; from the 400 ppi export and the KK_v1
+// originals, 5600 px) in place of the folded mockups mu-01..03 (13 Oct).
 // Sentra opens on the logo loop 24 (2412 × 2436, twice the phone’s width; the mark through the five colours, 0.4 s each).
 // Sentra interface order (13 Oct, Kirill): start screen 15, the start screen through the five colours 19, the long
 // conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10, a scroll up a long conversation 22. Out: the claim still 16 and the short loops 12–14.
@@ -849,26 +851,26 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-mu-02.webp",
-   "w": 2400,
-   "h": 1803,
-   "alt": "The A1 explainer poster, folded: What is Sentra? set large in orange on pink, and a short block of text low on the sheet describing a system that turns conversation into campaign and your disclosures into design.",
+   "src": "sentra-25.webp",
+   "w": 3955,
+   "h": 5600,
+   "alt": "The A1 explainer poster, flat: What is Sentra? set large in orange on pink, and blocks of text describing a system that turns conversation into campaign and your disclosures into design.",
    "sm": 1
   },
   {
    "p": "sentra",
-   "src": "sentra-mu-03.webp",
-   "w": 2400,
-   "h": 1803,
-   "alt": "An invoice from Sentra Corp., folded. Session number, date and client code, usage terms set as an unreadable black block, and a subtotal and total with no figures against them.",
+   "src": "sentra-26.webp",
+   "w": 3960,
+   "h": 5600,
+   "alt": "An invoice from Sentra Corp., flat. Session number, date and client code, usage terms set as an unreadable black block, and a subtotal and total with no figures against them.",
    "sm": 1
   },
   {
    "p": "sentra",
-   "src": "sentra-mu-01.webp",
-   "w": 2400,
-   "h": 1803,
-   "alt": "The session dossier, folded. The logged conversation runs down the left in colour-blocked type; the right-hand column is the system's reading of it — trust indicators, vulnerability markers, a data-extraction timeline, and an estimated lifetime value for the person who was talking.",
+   "src": "sentra-27.webp",
+   "w": 3959,
+   "h": 5600,
+   "alt": "The session dossier, flat. The logged conversation runs down the left in colour-blocked type; the right-hand column is the system's reading of it — trust indicators, vulnerability markers, a data-extraction timeline, and an estimated lifetime value for the person who was talking.",
    "sm": 1
   },
   {
