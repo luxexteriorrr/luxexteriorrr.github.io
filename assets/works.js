@@ -69,7 +69,7 @@ window.WORKS = {
    "d": [
     "editorial"
    ],
-   "desc": "A photobook of paired images, with a monoline COMFORT wordmark and a geometric spiral drawing."
+   "desc": "A zine made with Anna Korosteleva in an RCA unit on working with archives. Where the feed already archives everything you like and flattens curation, this is a small, partly invented archive of two, built as a correspondence: each spread pairs one image from each author, and an index at the back names the comfort each image held. The first edition is Comfort."
   },
   {
    "slug": "jray",
@@ -531,47 +531,123 @@ window.WORKS = {
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-30.webp",
-   "w": 2048,
-   "h": 1536,
-   "alt": "Around A Memory as an object: a saddle-stitched booklet in dusty pink, the COMFORT wordmark printed small on the cover, staples visible at the spine.",
+   "src": "around-a-memory-02.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "The preface spread: two columns of essay text on white.",
    "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-31.webp",
-   "w": 2048,
-   "h": 1536,
-   "alt": "The booklet opened: the pink cover against a translucent interior page carrying a large ghosted letterform and the line TRY PUTTING YOUR ARMS AROUND THIS.",
+   "src": "around-a-memory-03.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a figure in a long black knit with the face covered, against a close-up of shattered blue glass.",
    "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-32.webp",
-   "w": 1170,
-   "h": 874,
-   "alt": "A spread from Around A Memory: a man holding up a decayed red garment, faced by a grey text page beginning YOU SEEK IT, I SEEK IT."
+   "src": "around-a-memory-04.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: two figures walking down a snowy forest track, against paint-spattered jeans.",
+   "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-33.webp",
-   "w": 1170,
-   "h": 871,
-   "alt": "A spread pairing a portrait in a Nordic knitted sweater with a blue-cast photograph of a young face."
+   "src": "around-a-memory-05.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a woman in a knitted headband with a horse motif, against a ghostly blue-grey building.",
+   "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-34.webp",
-   "w": 1170,
-   "h": 875,
-   "alt": "A spread pairing a night street under floodlight with a face painted as a skull."
+   "src": "around-a-memory-06.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a man holding up a decayed red garment, against a grey page of all-caps text beginning YOU SEEK IT, I SEEK IT.",
+   "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-35.webp",
-   "w": 1170,
-   "h": 872,
-   "alt": "The essay spread: a large blue Y drawn across the page against two columns of body text."
+   "src": "around-a-memory-07.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a performer in a grey top on a stage, against a pale blue spiral drawing.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-08.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: dry grass lit by the sun, against a lightning strike at night.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-09.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: an empty room of rows of chairs, against a halftone image of daisies.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-10.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: two people sitting back to back in Nordic knits, against an empty white room.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-11.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a stone stairwell, against a pale halftone of flowers.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-12.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a lit cross on a church at night, against a man with his face painted.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-13.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a parked car with a yellow cover, against a pink and yellow graphic of a chair.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-14.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a close-up of fur, against a metal-clad tower.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-15.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "A pair: a red cabin under a bare tree, against a gilded cathedral dome.",
+   "sm": 1
+  },
+  {
+   "p": "around-a-memory",
+   "src": "around-a-memory-16.webp",
+   "w": 3497,
+   "h": 2481,
+   "alt": "The index: all fifty images listed by number, owner and caption.",
+   "sm": 1
   },
   {
    "p": "jray",
