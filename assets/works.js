@@ -627,7 +627,8 @@ window.WORKS = {
    "h": 3024,
    "alt": "Three posters flyposted over a billboard.",
    "piece": "rada-corsica",
-   "sm": 1
+   "sm": 1,
+   "key": 1
   },
   {
    "p": "rada",
