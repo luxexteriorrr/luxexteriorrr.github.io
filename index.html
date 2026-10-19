@@ -147,7 +147,7 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
   background: var(--bg);
   padding: var(--pad) var(--pad) calc(2 * var(--pad));
   border-bottom: 1px solid var(--fg);
-  display: grid; grid-template-columns: 2fr 1fr 1.4fr 1fr; gap: 2em;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--pad); row-gap: calc(2 * var(--lead));
   transform: translateY(-100%);
   visibility: hidden;
   transition: transform var(--info-t) var(--ease), visibility 0s linear var(--info-t);
@@ -233,7 +233,15 @@ html.vt-zoom::view-transition-new(root) { animation: 0.5s ease both vt-fade-in; 
 .info p, .info ul { margin: 0; padding: 0; list-style: none; }
 .info a:hover, .info a:active, .info a[aria-current] { text-decoration: underline; text-underline-offset: 0.18em; }
 .info .ask { margin-top: 1.28em; }
-@media (max-width: 700px) { .info { grid-template-columns: 1fr 1fr; } .info .bio { grid-column: 1 / -1; } }
+/* Stacked Info (19 Oct trial): two sizes only, the label smaller than the
+   item, on one line height; one line between groups. */
+.info .stack { grid-column: 4 / 5; grid-row: 1; }
+.info .stack section + section { margin-top: var(--lead); }
+.info h2 { font-size: calc(var(--size) * 0.77); margin: 0; }
+.info .stack .ask, .info .stack .theme { margin-top: 0; }
+.info .bio { grid-column: 1 / 3; grid-row: 1; }
+.info .bio .avail { margin-top: var(--lead); }
+@media (max-width: 700px) { .info { grid-template-columns: 1fr; } .info .stack, .info .bio { grid-column: 1 / -1; grid-row: auto; } }
 
 /* The wall's cells. Since 12 Oct they sit in justified rows (.rows, below);
    the 4-column module before it is frozen in index-2026-10-12.html. */
@@ -400,31 +408,34 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <body class="mode-wall">
 
 <section class="info" id="info" inert data-lenis-prevent>
-  <div class="bio">
-  <p>Kirill Konstantinov [Moscow, 1999] is a graphic designer and art director based in London. His work is a dialogue between research and the object being made: books, identities, typefaces and websites. He holds an MA in <a href="https://www.rca.ac.uk/study/programme-finder/digital-narrative-arts-ma-mfa/" target="_blank" rel="noopener">Digital Direction</a> and an MRes in Communication Design, both from the Royal College of Art.</p>
-    <!-- Light / dark: remembered in this browser; with no choice stored the
-         page follows the system setting. -->
-    <p class="theme"><button type="button" data-theme-set="light">Light</button> / <button type="button" data-theme-set="dark">Dark</button></p>
+  <!-- After severinweber.ch (19 Oct trial): one narrow column of labelled
+       groups, read top to bottom; the bio sits apart, under it. -->
+  <div class="stack">
+    <section>
+      <h2>Practice</h2>
+      <ul id="disciplines"></ul>
+    </section>
+    <section>
+      <h2>Selected Works</h2>
+      <ul id="projects"></ul>
+    </section>
+    <section>
+      <h2>Contact</h2>
+      <p><a href="mailto:lux.exteriorrr@gmail.com">lux.exteriorrr@gmail.com</a><br>
+         <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">@lux.exteriorrr</a><br>
+         <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
+         <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a></p>
+      <p class="ask"><a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
+    </section>
+    <section>
+      <h2>Appearance</h2>
+      <p class="theme"><button type="button" data-theme-set="light">Light</button> / <button type="button" data-theme-set="dark">Dark</button></p>
+    </section>
   </div>
-  <section>
-    <h2>Practice</h2>
-    <ul id="disciplines"></ul>
-  </section>
-  <section>
-    <h2>Selected Works</h2>
-    <ul id="projects"></ul>
-  </section>
-  <section>
-    <h2>Contact</h2>
-    <p><a href="mailto:lux.exteriorrr@gmail.com">Mail</a><br>
-       <a href="https://instagram.com/lux.exteriorrr" target="_blank" rel="me noopener">Instagram</a><br>
-       <a href="https://www.linkedin.com/in/kirill-konstantinov/" target="_blank" rel="me noopener">LinkedIn</a><br>
-       <a href="https://www.are.na/kirill-konstantinov-yx6dm9_zqzc" target="_blank" rel="me noopener">Are.na</a><br>
-       <a href="https://github.com/luxexteriorrr" target="_blank" rel="me noopener">GitHub</a></p>
-    <!-- As on the previous site: one link for both, since they are one ask.
-         Swap the mailto for the PDF once it exists. -->
-    <p class="ask"><a href="mailto:lux.exteriorrr@gmail.com?subject=Portfolio%20and%20CV">Portfolio and CV on request</a></p>
-  </section>
+  <div class="bio">
+    <p>Kirill Konstantinov [Moscow, 1999] is a graphic designer and art director based in London. His work is a dialogue between research and the object being made: books, identities, typefaces and websites. He holds an MA in <a href="https://www.rca.ac.uk/study/programme-finder/digital-narrative-arts-ma-mfa/" target="_blank" rel="noopener">Digital Direction</a> and an MRes in Communication Design, both from the Royal College of Art.</p>
+    <p class="avail">Available for editorial design and art direction roles in London.</p>
+  </div>
 </section>
 
 <div class="page" id="page">
@@ -885,6 +896,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const pr = q.get('p');
     const ds = selectedFilters(location.search);
     const p = bySlug[pr];
+    // Home reads as an ordered column (19 Oct trial); the wall is one click away at ?view=wall.
+    const wallView = !pr && !ds.length && q.get('view') === 'wall';
     main.replaceChildren();
     gallerySteps = null;
     slot.textContent = '';
@@ -945,9 +958,24 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         });
         main.append(b);
       }
-      if (ds.length) renderColumn(list);
-      else renderWall(list);
-      document.body.className = ds.length ? 'mode-wall mode-filter' : 'mode-wall';
+      if (wallView) {
+        renderWall(list);
+        label = 'All images';
+        viewHref = '?view=wall';
+      } else {
+        renderColumn(ds.length ? list : projects);
+        if (!ds.length) {
+          const more = document.createElement('p');
+          more.className = 'ptitle allimages';
+          const a = document.createElement('a');
+          a.href = '?view=wall';
+          a.dataset.nav = '';
+          a.textContent = 'All images';
+          more.append(a);
+          main.append(more);
+        }
+      }
+      document.body.className = wallView ? 'mode-wall' : 'mode-wall mode-filter';
     }
 
     viewEl.textContent = label;
@@ -963,7 +991,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     });
     document.querySelectorAll('.info a[data-nav]:not([data-k])').forEach(a => {
       const h = a.getAttribute('href');
-      const here = h === './' ? !ds.length && !p : h === `?p=${pr}`;
+      const here = h === './' ? !ds.length && !p && !wallView : h === '?view=wall' ? wallView : h === `?p=${pr}`;
       here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     });
     measureHead();
@@ -974,7 +1002,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // Info lists: disciplines and projects, each a filter link.
   const li = (href, text) => `<li><a href="${href}" data-nav>${text}</a></li>`;
   document.getElementById('disciplines').innerHTML =
-    li('./', 'All') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
+    li('./', 'All') + li('?view=wall', 'All images') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
   document.getElementById('projects').innerHTML =
     projects.map(p => li(`?p=${p.slug}`, p.title)).join('');
 
