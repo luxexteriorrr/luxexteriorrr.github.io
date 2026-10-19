@@ -315,6 +315,15 @@ window.WORKS = {
   },
   {
    "p": "zerko-grotesk",
+   "src": "zerko-grotesk-117.webp",
+   "w": 5600,
+   "h": 2076,
+   "alt": "Artwork for a black acrylic panel: the word light in hundreds of languages, set in Zerko Grotesk in grey on black.",
+   "key": 1,
+   "sm": 1
+  },
+  {
+   "p": "zerko-grotesk",
    "src": "zerko-grotesk-07.svg",
    "w": 5625,
    "h": 3165,
