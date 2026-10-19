@@ -523,130 +523,43 @@ window.WORKS = {
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-01.svg",
-   "w": 2160,
-   "h": 100,
-   "alt": "COMFORT wordmark, drawn as a monoline outline.",
-   "mono": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-02.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "The preface spread: two columns of essay text on white.",
+   "src": "around-a-memory-20.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "The closed zine on a white sill: dusty pink cover, the COMFORT wordmark set small at the right, black thread at the spine.",
+   "key": 1,
    "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-03.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a figure in a long black knit with the face covered, against a close-up of shattered blue glass.",
+   "src": "around-a-memory-21.webp",
+   "w": 1500,
+   "h": 2000,
+   "alt": "Close-up of an open spread: stage truss in a grainy photograph meets a pale blue spiral drawing across the stapled gutter.",
    "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-04.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: two figures walking down a snowy forest track, against paint-spattered jeans.",
+   "src": "around-a-memory-22.webp",
+   "w": 3024,
+   "h": 3024,
+   "alt": "Close-up of two pages lifting: a stone stairwell and a halftone of flowers, the dots of the print visible.",
    "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-05.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a woman in a knitted headband with a horse motif, against a ghostly blue-grey building.",
+   "src": "around-a-memory-23.webp",
+   "w": 4032,
+   "h": 3024,
+   "alt": "An open spread: a lit cross outside a church at night facing a man with his face painted, the print grain visible.",
    "sm": 1
   },
   {
    "p": "around-a-memory",
-   "src": "around-a-memory-06.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a man holding up a decayed red garment, against a grey page of all-caps text beginning YOU SEEK IT, I SEEK IT.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-07.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a performer in a grey top on a stage, against a pale blue spiral drawing.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-08.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: dry grass lit by the sun, against a lightning strike at night.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-09.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: an empty room of rows of chairs, against a halftone image of daisies.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-10.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: two people sitting back to back in Nordic knits, against an empty white room.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-11.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a stone stairwell, against a pale halftone of flowers.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-12.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a lit cross on a church at night, against a man with his face painted.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-13.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a parked car with a yellow cover, against a pink and yellow graphic of a chair.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-14.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a close-up of fur, against a metal-clad tower.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-15.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "A pair: a red cabin under a bare tree, against a gilded cathedral dome.",
-   "sm": 1
-  },
-  {
-   "p": "around-a-memory",
-   "src": "around-a-memory-16.webp",
-   "w": 3497,
-   "h": 2481,
-   "alt": "The index: all fifty images listed by number, owner and caption.",
+   "src": "around-a-memory-24.webp",
+   "w": 1500,
+   "h": 2000,
+   "alt": "Close-up of a spread: brown fur on one page, a metal-clad tower on the other, its sky broken into blue patches by the print.",
    "sm": 1
   },
   {
