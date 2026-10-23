@@ -25,12 +25,25 @@
 // and its address falls back to home (LOTV, 23 Oct: the contrast caps wordmark as its key plate).
 // year: for the wall's order when the meta line carries no year (LOTV).
 // Sentra's key plate (home cover) is 19, the start screen with its proceed button through the five colours (23 Oct).
-// Depo (23 Oct): square gothic typeface in progress (working name was Brok); one specimen plate for now.
-// Zerko Grotesk's key plate is the character set (SVG, 23 Oct); the acrylic light panel 117 follows it.
+// Depo (23 Oct): square gothic typeface in progress (working name was Brok); one specimen plate for now. First in Info and on home (Kirill, 23 Oct).
+// cw: a fixed width (%) for the project's plate on home, in place of the varied one.
+// Zerko Grotesk's key plate is the character set (SVG, 23 Oct); then the weight loop (Zerko / Grotesk, Thin to Black
+// and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
 window.WORKS = {
  "projects": [
   {
+   "slug": "depo",
+   "title": "Depo",
+   "meta": "Typeface (WIP)",
+   "year": 2026,
+   "cw": 60,
+   "d": [
+    "type"
+   ]
+  },
+  {
    "slug": "lotv",
+   "cw": 60,
    "title": "LILIESOFTHEVALLEY",
    "meta": "Branding and identity",
    "year": 2026,
@@ -53,21 +66,13 @@ window.WORKS = {
   },
   {
    "slug": "zerko-grotesk",
+   "cw": 60,
    "title": "Zerko Grotesk",
    "meta": "Typeface, 2026",
    "d": [
     "type"
    ],
    "desc": "Zerko Grotesk is a rationalist family spanning Latin and Cyrillic, made for prolonged reading and display in complex multilingual environments. It runs in six weights with corresponding obliques. Designed simultaneously across both scripts, Zerko balances structural difference while preserving the conventions internal to each script."
-  },
-  {
-   "slug": "depo",
-   "title": "Depo",
-   "meta": "Typeface (WIP)",
-   "year": 2026,
-   "d": [
-    "type"
-   ]
   },
   {
    "slug": "as-seen-in",
@@ -355,6 +360,14 @@ window.WORKS = {
    "alt": "Zerko Grotesk character set: ABCDEFGHIJKLMNOPQRSTUVWXYZ, abcdefghijklmnopqrstuvwxyz and 0123456789 on three lines.",
    "key": 1,
    "mono": 1
+  },
+  {
+   "p": "zerko-grotesk",
+   "src": "zerko-grotesk-weight.mp4",
+   "w": 3840,
+   "h": 2160,
+   "video": 1,
+   "poster": "zerko-grotesk-weight-poster.webp"
   },
   {
    "p": "zerko-grotesk",
