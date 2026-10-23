@@ -331,8 +331,11 @@ body .rows.wallrows { padding-top: var(--pad); }
 /* Filter: one column, flush left, one plate per project with its line
    underneath (renderColumn). */
 .col { padding: 0 var(--pad) var(--pad); }
+/* Home (the column with no filter bar above it) opens on white: the first
+   plate starts about a third of the way down (after CD HQ, 23 Oct). */
+.col:first-child { padding-top: calc(33svh - var(--head-h)); }
 .cplate { margin: 0 0 5em; }
-.cplate a { display: block; width: min(var(--w), calc(80svh * var(--ar))); }
+.cplate a { display: block; width: min(var(--w), calc(150svh * var(--ar))); }   /* tall plates may run past the screen, as on CD HQ */
 .cplate img, .cplate video { display: block; width: 100%; height: auto; }
 .cplate figcaption { margin-top: 0.5em; max-width: 44em; font-weight: 400; }
 .cplate figcaption .n { font-weight: 500; }
@@ -460,7 +463,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-19d"></script>
+<script src="assets/works.js?v=2026-10-23a"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -491,7 +494,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // The year is the last one in the meta line (2025–2026 counts as 2026,
   // RCA2025 as 2025); the same year keeps the Info order. The seeded mixed
   // order it replaced is frozen with the 4-column wall in index-2026-10-12.html.
-  const lastYear = p => Math.max(0, ...(p.meta.match(/(?:19|20)\d\d/g) || []).map(Number));
+  const lastYear = p => p.year || Math.max(0, ...(p.meta.match(/(?:19|20)\d\d/g) || []).map(Number));
   const chrono = projects.map((p, k) => [p, k])
     .sort(([a, i], [b, j]) => lastYear(b) - lastYear(a) || i - j)
     .flatMap(([p]) => items.filter(it => it.p === p.slug));
@@ -509,7 +512,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   const caption = p => p.meta ? `${p.title}, ${p.meta}` : p.title;
   // What a plate is: its piece if it has one, otherwise its project.
   const about = it => pieces[it.piece] || bySlug[it.p];
-  const wallCaption = it => it.piece ? `${bySlug[it.p].title}, ${caption(pieces[it.piece])}` : caption(bySlug[it.p]);
+  const wip = p => p.wip ? ` (${p.wip})` : '';
+  const wallCaption = it => (it.piece ? `${bySlug[it.p].title}, ${caption(pieces[it.piece])}` : caption(bySlug[it.p])) + wip(bySlug[it.p]);
 
   // One plate as an element: an image, or a video for the moving ones.
   // `still` gives the poster instead of the video (for the contact sheet).
@@ -617,8 +621,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const a = document.createElement('a');
       a.className = 'cell';
       if (isMark(it)) a.classList.add('mark');
-      a.href = `?p=${it.p}`;
-      a.dataset.nav = '';
+      // A project marked wip shows but opens nothing yet (no href: no link).
+      if (!bySlug[it.p].wip) { a.href = `?p=${it.p}`; a.dataset.nav = ''; }
       a.dataset.caption = wallCaption(it);
       a.dataset.title = bySlug[it.p].title;
       a.append(media(it, { eager: n < 8, sizes: '(max-width: 420px) 100vw, 40vw' }));
@@ -630,10 +634,20 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 
   // A filter reads rather than shows: one column, flush left, one plate per
   // project (its key plate: the one marked `key`, or else its first), in the
-  // Info order, each with its line underneath (after CD HQ). Width steps by
-  // shape, capped so a tall plate still fits the screen. A plate opens its
-  // project's contact sheet.
+  // Info order, each with its line underneath (after CD HQ). Widths vary as
+  // on CD HQ (23 Oct): steps of 20% from 20 to 100, picked per project from
+  // the steps its shape allows, never the same twice in a row, and the same
+  // on every load. A plate opens its project's contact sheet.
+  const STEPS = it => {
+    const r = ar(it);
+    if (isMark(it)) return r > 4 ? [60, 80] : [40, 60];   // type a step up (23 Oct)
+    if (r < 0.6) return [20, 40];               // phone recordings
+    if (r < 1) return [20, 40, 60, 80];          // portrait
+    return [40, 60, 80, 100];                    // landscape
+  };
+  const seed = str => [...str].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
   function renderColumn(list) {
+    let prev = 0;
     const col = document.createElement('div');
     col.className = 'col';
     for (const p of list) {
@@ -643,10 +657,12 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const f = document.createElement('figure');
       f.className = 'cplate';
       const a = document.createElement('a');
-      a.href = `?p=${p.slug}`;
-      a.dataset.nav = '';
+      if (!p.wip) { a.href = `?p=${p.slug}`; a.dataset.nav = ''; }
       const r = ar(it);
-      const w = isMark(it) ? (r > 4 ? 60 : 40) : r >= 1.25 ? 60 : r >= 0.6 ? 40 : 20;
+      const steps = STEPS(it);
+      let k = seed(p.slug) % steps.length;
+      if (steps[k] === prev) k = (k + 1) % steps.length;
+      const w = prev = steps[k];
       a.style.setProperty('--w', w + '%');
       a.style.setProperty('--ar', r);
       a.append(media(it, { sizes: `${w}vw` }));
@@ -655,7 +671,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const n = document.createElement('span');
       n.className = 'n';
       n.textContent = p.title;
-      c.append(n, p.meta ? `, ${p.meta}` : '');
+      c.append(n, p.meta ? `, ${p.meta}` : '', wip(p));
       f.append(a, c);
       col.append(f);
     }
@@ -895,7 +911,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const q = new URLSearchParams(location.search);
     const pr = q.get('p');
     const ds = selectedFilters(location.search);
-    const p = bySlug[pr];
+    const p = bySlug[pr] && !bySlug[pr].wip ? bySlug[pr] : undefined;   // a wip project's address shows home
     // Home reads as an ordered column (19 Oct trial); the wall is one click away at ?view=wall.
     const wallView = !pr && !ds.length && q.get('view') === 'wall';
     main.replaceChildren();
@@ -1004,7 +1020,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   document.getElementById('disciplines').innerHTML =
     li('./', 'All') + li('?view=wall', 'All images') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
   document.getElementById('projects').innerHTML =
-    projects.map(p => li(`?p=${p.slug}`, p.title)).join('');
+    projects.map(p => p.wip ? `<li>${p.title}${wip(p)}</li>` : li(`?p=${p.slug}`, p.title)).join('');
 
   const toggle = document.querySelector('.info-toggle');
   const info = document.getElementById('info');

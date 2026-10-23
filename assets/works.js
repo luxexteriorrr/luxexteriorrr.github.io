@@ -21,17 +21,25 @@
 // Sentra interface order (13 Oct, Kirill): start screen 15, the start screen through the five colours 19, the long
 // conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10, a scroll up a long conversation 22. Out: the claim still 16 and the short loops 12–14.
 // Disciplines and the two group lines are provisional.
+// wip: a project shown but not opened yet: its plates open nothing, the text is added in brackets after its line,
+// and its address falls back to home (LOTV, 23 Oct: the contrast caps wordmark as its key plate).
+// year: for the wall's order when the meta line carries no year (LOTV).
+// Sentra's key plate (home cover) is 19, the start screen with its proceed button through the five colours (23 Oct).
+// Depo (23 Oct): square gothic typeface in progress (working name was Brok); one specimen plate for now.
+// Zerko Grotesk's key plate is the character set (SVG, 23 Oct); the acrylic light panel 117 follows it.
 window.WORKS = {
  "projects": [
   {
    "slug": "lotv",
    "title": "LILIESOFTHEVALLEY",
-   "meta": "Identity, signage and art direction, 2025–2026",
+   "meta": "Branding and identity",
+   "year": 2026,
    "d": [
     "identity",
     "art-direction"
    ],
-   "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter."
+   "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter.",
+   "wip": "ongoing, under construction"
   },
   {
    "slug": "zerko-thesis",
@@ -51,6 +59,15 @@ window.WORKS = {
     "type"
    ],
    "desc": "Zerko Grotesk is a rationalist family spanning Latin and Cyrillic, made for prolonged reading and display in complex multilingual environments. It runs in six weights with corresponding obliques. Designed simultaneously across both scripts, Zerko balances structural difference while preserving the conventions internal to each script."
+  },
+  {
+   "slug": "depo",
+   "title": "Depo",
+   "meta": "Typeface (WIP)",
+   "year": 2026,
+   "d": [
+    "type"
+   ]
   },
   {
    "slug": "as-seen-in",
@@ -152,6 +169,23 @@ window.WORKS = {
   }
  },
  "items": [
+  {
+   "p": "depo",
+   "src": "depo-01.webp",
+   "w": 2000,
+   "h": 2000,
+   "alt": "Depo specimen: NIGHT SERVICE ONLY on three lines in wide square capitals with small caps, bright blue on deep navy.",
+   "key": 1
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-wordmark.svg",
+   "w": 1570,
+   "h": 117,
+   "alt": "LILIESOFTHEVALLEY set in capitals in a high-contrast grotesk.",
+   "key": 1,
+   "mono": 1
+  },
   {
    "p": "lotv",
    "src": "lotv-waste-01.webp",
@@ -315,11 +349,19 @@ window.WORKS = {
   },
   {
    "p": "zerko-grotesk",
+   "src": "zerko-grotesk-alphabet.svg",
+   "w": 1474,
+   "h": 238,
+   "alt": "Zerko Grotesk character set: ABCDEFGHIJKLMNOPQRSTUVWXYZ, abcdefghijklmnopqrstuvwxyz and 0123456789 on three lines.",
+   "key": 1,
+   "mono": 1
+  },
+  {
+   "p": "zerko-grotesk",
    "src": "zerko-grotesk-117.webp",
    "w": 5600,
    "h": 2076,
    "alt": "Artwork for a black acrylic panel: the word light in hundreds of languages, set in Zerko Grotesk in grey on black.",
-   "key": 1,
    "sm": 1
   },
   {
@@ -808,7 +850,8 @@ window.WORKS = {
    "w": 1206,
    "h": 2436,
    "video": 1,
-   "poster": "sentra-19-poster.webp"
+   "poster": "sentra-19-poster.webp",
+   "key": 1
   },
   {
    "p": "sentra",
