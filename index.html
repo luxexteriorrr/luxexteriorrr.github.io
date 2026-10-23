@@ -331,9 +331,9 @@ body .rows.wallrows { padding-top: var(--pad); }
 /* Filter: one column, flush left, one plate per project with its line
    underneath (renderColumn). */
 .col { padding: 0 var(--pad) var(--pad); }
-/* Home (the column with no filter bar above it) opens on white: the first
-   plate starts about a third of the way down (after CD HQ, 23 Oct). */
-.col:first-child { padding-top: calc(33svh - var(--head-h)); }
+/* Home (the column with no filter bar above it): a small gap under the
+   header before the first plate (23 Oct; the third-of-a-screen gap was too much). */
+.col:first-child { padding-top: var(--pad); }
 .cplate { margin: 0 0 5em; }
 .cplate a { display: block; width: min(var(--w), calc(150svh * var(--ar))); }   /* tall plates may run past the screen, as on CD HQ */
 .cplate img, .cplate video { display: block; width: 100%; height: auto; }
@@ -463,7 +463,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-23c"></script>
+<script src="assets/works.js?v=2026-10-23d"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
