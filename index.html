@@ -63,6 +63,14 @@
 :root[data-theme="dark"] img.mono { filter: invert(1); }
 :root[data-theme="light"] { color-scheme: light; }
 
+/* Keyline (28 Oct, after theagencyservices.nl): projects marked `edge` in the
+   data (the thesis, As Seen In) draw a light grey hairline just inside each
+   plate, so a white page keeps its shape on the white site. */
+:root { --edge: #d4d4d4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --edge: #3a3a3a; } }
+:root[data-theme="dark"] { --edge: #3a3a3a; }
+img.edge { outline: 1px solid var(--edge); outline-offset: -1px; }
+
 *, *::before, *::after { box-sizing: border-box; }
 
 /* Scrolling as on the live site (floating-nav): no scrollbar, no bounce past
@@ -463,7 +471,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-23d"></script>
+<script src="assets/works.js?v=2026-10-28a"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -544,6 +552,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     img.decoding = 'async';
     img.draggable = false;
     if (it.mono) img.classList.add('mono');
+    if (p.edge) img.classList.add('edge');
     if (!eager) img.loading = 'lazy';
     return img;
   }

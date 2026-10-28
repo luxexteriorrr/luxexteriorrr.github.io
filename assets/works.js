@@ -20,6 +20,9 @@
 // Sentra opens on the logo loop 24 (2412 × 2436, twice the phone’s width; the mark through the five colours, 0.4 s each).
 // Sentra interface order (13 Oct, Kirill): start screen 15, the start screen through the five colours 19, the long
 // conversation 11, Info 20 (pink), idle 21 (green), a second conversation 10, a scroll up a long conversation 22. Out: the claim still 16 and the short loops 12–14.
+// Thesis and As Seen In (28 Oct, Kirill, after theagencyservices.nl): the mockups and single-image crops replaced by the real flat
+// spreads, about ten each (thesis 37 cover, 04 07 12 13 14 17 22 23 24 25 28; As Seen In 09 01 05 11 13 16 20 33 37 46 48).
+// edge: 1 on a project = a light grey hairline just inside each of its plates, so white pages keep their edge on the white site.
 // Disciplines and the two group lines are provisional.
 // wip: a project shown but not opened yet: its plates open nothing, the text is added in brackets after its line,
 // and its address falls back to home (LOTV, 23 Oct: the contrast caps wordmark as its key plate).
@@ -63,7 +66,8 @@ window.WORKS = {
     "editorial",
     "type"
    ],
-   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other."
+   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other.",
+   "edge": 1
   },
   {
    "slug": "zerko-grotesk",
@@ -83,7 +87,8 @@ window.WORKS = {
     "editorial",
     "art-direction"
    ],
-   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction."
+   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction.",
+   "edge": 1
   },
   {
    "slug": "around-a-memory",
@@ -291,22 +296,6 @@ window.WORKS = {
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-03.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "Chapter 2 spread: a page of text on Cyrillic in the contemporary, facing a full character set of a Soviet-era face printed small in rows.",
-   "sm": 1
-  },
-  {
-   "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-cover.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "The thesis cover: black uncoated stock, the title set small in white across the top, Royal College of Art along the bottom, and a small hand-drawn figure with its arms out alone in the middle of the field.",
-   "sm": 1
-  },
-  {
-   "p": "zerko-thesis",
    "src": "zerko-thesis-37.webp",
    "w": 2480,
    "h": 3508,
@@ -315,50 +304,90 @@ window.WORKS = {
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-01.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "The introduction spread: justified text in the left column, and the research question set enormous and rotated up the right-hand page — how can the making of a Latin–Cyrillic rationalist grotesk family test script parity as a design condition?",
+   "src": "zerko-thesis-04.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "The introduction: text in the left column, and the research question set large and rotated up the right-hand page.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-02.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "Plates of Cyrillic drawings: script exercises in pink and green on the left page, the same forms flooded in yellow on the right.",
+   "src": "zerko-thesis-07.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Cyrillic drawing exercises: script studies in pink and green across the left page, the same forms flooded in yellow on the right.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-04.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "Coverage spread: one paragraph on the Soviet precedent for coverage at scale, set three times in English, Russian and German, all in bold caps.",
+   "src": "zerko-thesis-12.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Chapter 2: text and a Soviet magazine masthead on the left, a full Cyrillic alphabet in capitals, lowercase and figures on the right.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-05.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "Reading the page: two dense text pages, the Latin on the left and the same passage in Cyrillic on the right, with the footnotes and running heads aligned.",
+   "src": "zerko-thesis-13.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Chapter 2: a grid of Soviet design magazine covers, Техническая эстетика, laid out across both pages.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-06.webp",
-   "w": 2400,
-   "h": 1600,
+   "src": "zerko-thesis-14.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "The chapter opening set twice: a paragraph of German across the top of the spread, the same passage in Ukrainian across the foot, the pages open between them.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-17.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Coverage at scale: one paragraph on the Soviet precedent, set in English, Russian and German in bold capitals.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-22.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Latin K and Cyrillic К set large side by side, facing rows of K construction drawings.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-23.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Two citation panels for Maxim Zhukov, The Peculiarities of Cyrillic Letterforms (Typography Papers 1, 1996): the English in white on brown, the Russian in white on grey.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-24.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Section 2.3, Sameness and Harmonisation: text on the left, and on the right a run of Д and the ИНПЦ module with pencil notes.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-25.webp",
+   "w": 4961,
+   "h": 3508,
    "alt": "Word list: Arête, Хребет, Hřeben, Höhenzug, Ґрунт set large down the left page, and the two-script spacing string nodosonndoso facing it.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-mu-07.webp",
-   "w": 2400,
-   "h": 1600,
-   "alt": "Section 2.3, Sameness and Harmonisation: text on the left, and on the right a run of Д and the ИНПЦ module in Bold with pencil notes around them.",
+   "src": "zerko-thesis-28.webp",
+   "w": 4961,
+   "h": 3508,
+   "alt": "Reading the page: two dense text pages, the Latin on the left and the same passage in Cyrillic on the right.",
    "sm": 1
   },
   {
@@ -508,34 +537,10 @@ window.WORKS = {
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-10.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with a striped stone relief mirrored on its own reflection: the photograph on white, then washed out on pale blue.",
-   "sm": 1
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-27.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread 52–53: two tall strips of a layered grey and ochre landscape, and two columns of text with words picked out in pink and blue.",
-   "sm": 1
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-37.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page.",
-   "sm": 1
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-59.webp",
+   "src": "as-seen-in-01.webp",
    "w": 2362,
    "h": 3071,
-   "alt": "Full-bleed aerial page from As Seen In.",
+   "alt": "The colophon page: As Seen In, Royal College of Art, the credits and a note that the publication engages with AI systems, set small at the foot of an empty white page.",
    "sm": 1
   },
   {
@@ -548,50 +553,66 @@ window.WORKS = {
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-58.webp",
-   "w": 3071,
-   "h": 2362,
-   "alt": "USER INTERFACE ADDRESS CITY CLOUD EARTH, set large in blue on magenta.",
-   "sm": 1
-  },
-  {
-   "p": "as-seen-in",
-   "src": "as-seen-in-60.webp",
+   "src": "as-seen-in-11.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "INTERACTION INTERFACE DATA set as a row of chevron forms.",
+   "alt": "Two columns of text on the left, and USER INTERFACE ADDRESS CITY CLOUD EARTH set large and rotated in pale blue up a magenta page.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-14.webp",
+   "src": "as-seen-in-13.webp",
    "w": 4724,
    "h": 3071,
-   "alt": "A row of seven stone images across a spread.",
+   "alt": "Two short blocks of text over a row of black chevron forms running the full width of the spread.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-61.webp",
-   "w": 2362,
+   "src": "as-seen-in-16.webp",
+   "w": 4724,
    "h": 3071,
-   "alt": "The loop mark drawn as overlapping letterforms.",
+   "alt": "The loop mark drawn large in black on the left page, facing two columns of text.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-62.webp",
-   "w": 3461,
-   "h": 3461,
-   "alt": "Sedimented strata, pale, with a red seam.",
+   "src": "as-seen-in-20.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Text on the left page, and on the right a photograph of red, ochre and blue rock strata folding across the page.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-67.webp",
-   "w": 3461,
-   "h": 3461,
-   "alt": "Aerial fields in ochre and blue.",
+   "src": "as-seen-in-33.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Two columns of text facing a photograph of a bare back with a tattooed cross.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-37.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-46.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "WORK SCRAPED, MODEL TRAINING and MIMICRY set in pale blue round a circle on a magenta page, the rest of the spread empty.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-48.webp",
+   "w": 4724,
+   "h": 3071,
+   "alt": "Two drawings of Mickey Mouse, one in magenta outline and one in pale blue, side by side across the spread.",
    "sm": 1
   },
   {
