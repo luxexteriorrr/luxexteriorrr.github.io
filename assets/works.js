@@ -27,6 +27,7 @@
 // wip: a project shown but not opened yet: its plates open nothing, the text is added in brackets after its line,
 // and its address falls back to home (LOTV, 23 Oct: the contrast caps wordmark as its key plate).
 // year: for the wall's order when the meta line carries no year (LOTV).
+// Sentra 28–30 (29 Oct): the poster, invoice and dossier printed and hung (kk_poster_A mockup), after their flats 25–27.
 // Sentra's key plate (home cover) is 19, the start screen with its proceed button through the five colours (23 Oct).
 // Depo (23 Oct): square gothic typeface in progress (working name was Brok); cover = depo-02, a 5 s DrawBot loop of NIGHT SERVICE ONLY moving
 // corner to corner through weight and contrast, blue on black; then the navy specimen still. First in Info and on home (Kirill, 23 Oct).
@@ -956,6 +957,30 @@ window.WORKS = {
    "w": 3959,
    "h": 5600,
    "alt": "The session dossier, flat. The logged conversation runs down the left in colour-blocked type; the right-hand column is the system's reading of it — trust indicators, vulnerability markers, a data-extraction timeline, and an estimated lifetime value for the person who was talking.",
+   "sm": 1
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-28.webp",
+   "w": 3584,
+   "h": 4480,
+   "alt": "The A1 explainer poster hung on a white wall, slightly cockled: What is Sentra? in orange on a pink block at the top, the purple-highlighted text across the middle.",
+   "sm": 1
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-29.webp",
+   "w": 3584,
+   "h": 4480,
+   "alt": "The Sentra invoice printed as a poster and hung on a white wall: black headings, orange rules and bar, the usage terms as a black block, and a grey double arrow underneath.",
+   "sm": 1
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-30.webp",
+   "w": 3584,
+   "h": 4480,
+   "alt": "The session dossier printed as a poster and hung on a white wall: the session header in grey caps, the purple conversation down the left, the system's reading in black on the right, and black arrows at the foot.",
    "sm": 1
   },
   {
