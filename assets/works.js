@@ -36,6 +36,8 @@
 // and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
 // As Seen In (30 Oct): photographs of the printed book (as-seen-in-photo-01–15, Lightroom-graded, WebP q96)
 // replace the 11 flat spreads on the site; the flat files stay in export/.
+// Zerko thesis (30 Oct): photographs of the printed thesis (zerko-thesis-photo-NN, Lightroom-graded, WebP q96)
+// replace the 12 flat spreads on the site; the flat files stay in export/.
 window.WORKS = {
  "projects": [
   {
@@ -299,98 +301,130 @@ window.WORKS = {
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-37.webp",
-   "w": 2480,
-   "h": 3508,
-   "alt": "The thesis cover flat: Zerko Grotesk: Script Parity as a Design Condition set small in white at the top of a black A4 page, Royal College of Art at the foot, and the small hand-drawn figure with its arms out in the centre.",
+   "src": "zerko-thesis-photo-46.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "The thesis open on a steel table at the research question, set large: RQ: How can the making of a Latin–Cyrillic rationalist grotesk family test script parity as a design condition?",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-04.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "The introduction: text in the left column, and the research question set large and rotated up the right-hand page.",
+   "src": "zerko-thesis-photo-45.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "The table of contents on a right-hand page, chapters and sections in a narrow column.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-07.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Cyrillic drawing exercises: script studies in pink and green across the left page, the same forms flooded in yellow on the right.",
+   "src": "zerko-thesis-photo-41.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "An open spread of dense running text in two columns, with a facing page of notes and a small table.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-12.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Chapter 2: text and a Soviet magazine masthead on the left, a full Cyrillic alphabet in capitals, lowercase and figures on the right.",
+   "src": "zerko-thesis-photo-40.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of PolyType character-set specimens: Latin and Cyrillic alphabets, and the names Надя, Fortuna, Везенберг, Жонглеры set large.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-13.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Chapter 2: a grid of Soviet design magazine covers, Техническая эстетика, laid out across both pages.",
+   "src": "zerko-thesis-photo-35.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A spread with a grid of eighteen Soviet design magazine covers, Техническая эстетика, with a caption list.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-14.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "The chapter opening set twice: a paragraph of German across the top of the spread, the same passage in Ukrainian across the foot, the pages open between them.",
+   "src": "zerko-thesis-photo-38.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a spread: interview text beside a cross-shaped Cyrillic poster and a red concentric heart.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-17.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Coverage at scale: one paragraph on the Soviet precedent, set in English, Russian and German in bold capitals.",
+   "src": "zerko-thesis-photo-37.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A spread with the cover of Техническая эстетика 56, a factory line of blue lorries, facing text and diagrams.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-22.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Latin K and Cyrillic К set large side by side, facing rows of K construction drawings.",
+   "src": "zerko-thesis-photo-25.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A brown citation panel for Maxim Zhukov, The Peculiarities of Cyrillic Letterforms, Typography Papers 1 (1996).",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-23.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Two citation panels for Maxim Zhukov, The Peculiarities of Cyrillic Letterforms (Typography Papers 1, 1996): the English in white on brown, the Russian in white on grey.",
+   "src": "zerko-thesis-photo-32.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A spread of chapter text facing a full Soviet phototypesetting character set.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-24.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Section 2.3, Sameness and Harmonisation: text on the left, and on the right a run of Д and the ИНПЦ module with pencil notes.",
+   "src": "zerko-thesis-photo-29.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "The Soviet coverage paragraph set in English, Russian and German in heavy capitals across a right-hand page.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-25.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Word list: Arête, Хребет, Hřeben, Höhenzug, Ґрунт set large down the left page, and the two-script spacing string nodosonndoso facing it.",
+   "src": "zerko-thesis-photo-24.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a page: large Cyrillic ИНП and Д set in outline sizes, with captions on proportion and weight.",
    "sm": 1
   },
   {
    "p": "zerko-thesis",
-   "src": "zerko-thesis-28.webp",
-   "w": 4961,
-   "h": 3508,
-   "alt": "Reading the page: two dense text pages, the Latin on the left and the same passage in Cyrillic on the right.",
+   "src": "zerko-thesis-photo-23.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Arête, Хребет, Hřeben, Höhenzug, Ґрунт set large down a page, with nodosonndoso in Latin and Cyrillic beside it.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-photo-26.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Latin K and Cyrillic К set large side by side, facing rows of outlined К forms.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-photo-27.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "The Latin and Cyrillic alphabets set large in Zerko, a few letters picked out in pink.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-photo-19.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Ĥжф, ①βb and kë7* set very large on ruled baselines, facing a column of text.",
+   "sm": 1
+  },
+  {
+   "p": "zerko-thesis",
+   "src": "zerko-thesis-photo-17.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "The bibliography: an open spread of dense reference lists in small type.",
    "sm": 1
   },
   {
