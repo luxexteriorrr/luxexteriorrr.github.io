@@ -34,6 +34,8 @@
 // cw: a fixed width (%) for the project's plate on home, in place of the varied one.
 // Zerko Grotesk's key plate is the character set (SVG, 23 Oct); then the weight loop (Zerko / Grotesk, Thin to Black
 // and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
+// As Seen In (30 Oct): photographs of the printed book (as-seen-in-photo-01–15, Lightroom-graded, WebP q96)
+// replace the 11 flat spreads on the site; the flat files stay in export/.
 window.WORKS = {
  "projects": [
   {
@@ -530,90 +532,122 @@ window.WORKS = {
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-09.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with the same carved stone relief twice: washed white on violet on the left, in its own ochre and rust on white on the right.",
+   "src": "as-seen-in-photo-13.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "As Seen In open at pages 52–53 on a steel table, seen at an angle: two tall strips of a grey and ochre landscape facing two short columns of text.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-01.webp",
-   "w": 2362,
-   "h": 3071,
-   "alt": "The colophon page: As Seen In, Royal College of Art, the credits and a note that the publication engages with AI systems, set small at the foot of an empty white page.",
+   "src": "as-seen-in-photo-15.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Spread 8–9 laid flat on dark steel: three columns of text crossed by INTERFACE in pink outline capitals.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-05.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread from As Seen In.",
+   "src": "as-seen-in-photo-14.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Spread 16–17 laid flat on dark steel: a carved stone relief washed white on blue, facing the same relief in ochre on white.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-11.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Two columns of text on the left, and USER INTERFACE ADDRESS CITY CLOUD EARTH set large and rotated in pale blue up a magenta page.",
+   "src": "as-seen-in-photo-12.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A spread open at an angle on dark steel, rows of distorted black INTERACTION and INTERFACE lettering running through the text.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-13.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Two short blocks of text over a row of black chevron forms running the full width of the spread.",
+   "src": "as-seen-in-photo-09.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Pages 54–55 at an angle on steel: text on the left, a sand-coloured hexagonal relief on the right.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-16.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "The loop mark drawn large in black on the left page, facing two columns of text.",
+   "src": "as-seen-in-photo-05.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a page: a grey striped hexagon carved into stone.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-20.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Text on the left page, and on the right a photograph of red, ochre and blue rock strata folding across the page.",
+   "src": "as-seen-in-photo-11.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A row of small square stone reliefs running across the gutter of an open spread.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-33.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Two columns of text facing a photograph of a bare back with a tattooed cross.",
+   "src": "as-seen-in-photo-07.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of large black percentages, 84, 96, 64 and 89, with blue capital captions over faint grey line drawings.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-37.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Spread with a full-height generated image of a blurred figure in amber and blue folds, facing an empty white page.",
+   "src": "as-seen-in-photo-03.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a spread: a layered grey, white and ochre landscape facing the same forms washed out on pale blue.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-46.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "WORK SCRAPED, MODEL TRAINING and MIMICRY set in pale blue round a circle on a magenta page, the rest of the spread empty.",
+   "src": "as-seen-in-photo-04.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of the layered landscape in colour, below the same forms washed into pale blue.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-48.webp",
-   "w": 4724,
-   "h": 3071,
-   "alt": "Two drawings of Mickey Mouse, one in magenta outline and one in pale blue, side by side across the spread.",
+   "src": "as-seen-in-photo-02.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a spread of photographs of a whitewashed church interior: a red-leaded window, a niche with a small crucifix.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-photo-08.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a page: a woven OCCULT bracelet set round a silver coin on a wrist, beside a short paragraph.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-photo-10.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a full page of grey layered stone, the edge of the book and the steel table at the corner.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-photo-01.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "A spread with two photographs side by side: bare trees at the edge of a field, and a tangle of coloured wires.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-photo-06.webp",
+   "w": 5712,
+   "h": 4284,
+   "alt": "Close view of a page edge with a meadow of pink and white flowers.",
    "sm": 1
   },
   {
