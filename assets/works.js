@@ -31,6 +31,7 @@
 // Sentra's key plate (home cover) is 19, the start screen with its proceed button through the five colours (23 Oct).
 // Depo (23 Oct): square gothic typeface in progress (working name was Brok); cover = depo-02, a 5 s DrawBot loop of NIGHT SERVICE ONLY moving
 // corner to corner through weight and contrast, blue on black; then the navy specimen still. First in Info and on home (Kirill, 23 Oct).
+// 30 Oct: cover is now depo-04, the kerned loop in periwinkle with a 6 px red keyline, bigger type and tighter leading (Kirill picked 6 px over 3 px).
 // cw: a fixed width (%) for the project's plate on home, in place of the varied one.
 // Zerko Grotesk's key plate is the character set (SVG, 23 Oct); then the weight loop (Zerko / Grotesk, Thin to Black
 // and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
@@ -38,12 +39,16 @@
 // replace the 11 flat spreads on the site; the flat files stay in export/.
 // Zerko thesis (30 Oct): photographs of the printed thesis (zerko-thesis-photo-NN, Lightroom-graded, WebP q96)
 // replace the 12 flat spreads on the site; the flat files stay in export/.
+// No keyline (30 Oct): the thesis and As Seen In are photographs now, not white flats, so `edge` is off them.
+// Coming Soon (30 Oct): Depo (soon: it still opens) and Lilies of the Valley (wip: it does not) say Coming Soon after their line,
+// in the selection magenta. LOTV is spelt Lilies of the Valley in captions (was LILIESOFTHEVALLEY); the wordmark keeps its caps.
 window.WORKS = {
  "projects": [
   {
    "slug": "depo",
    "title": "Depo",
-   "meta": "Typeface (WIP)",
+   "meta": "Typeface",
+   "soon": "Coming Soon",
    "year": 2026,
    "cw": 60,
    "d": [
@@ -53,7 +58,7 @@ window.WORKS = {
   {
    "slug": "lotv",
    "cw": 60,
-   "title": "LILIESOFTHEVALLEY",
+   "title": "Lilies of the Valley",
    "meta": "Branding and identity",
    "year": 2026,
    "d": [
@@ -61,7 +66,7 @@ window.WORKS = {
     "art-direction"
    ],
    "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter.",
-   "wip": "ongoing, under construction"
+   "wip": "Coming Soon"
   },
   {
    "slug": "zerko-thesis",
@@ -71,8 +76,7 @@ window.WORKS = {
     "editorial",
     "type"
    ],
-   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other.",
-   "edge": 1
+   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other."
   },
   {
    "slug": "zerko-grotesk",
@@ -92,8 +96,7 @@ window.WORKS = {
     "editorial",
     "art-direction"
    ],
-   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction.",
-   "edge": 1
+   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction."
   },
   {
    "slug": "around-a-memory",
@@ -187,11 +190,11 @@ window.WORKS = {
  "items": [
   {
    "p": "depo",
-   "src": "depo-02.mp4",
+   "src": "depo-04.mp4",
    "w": 3840,
    "h": 2160,
    "video": 1,
-   "poster": "depo-02-poster.webp",
+   "poster": "depo-04-poster.webp",
    "key": 1
   },
   {

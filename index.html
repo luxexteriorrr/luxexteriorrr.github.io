@@ -82,6 +82,7 @@ html { overscroll-behavior-y: none; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 ::selection { background: transparent; color: #e6007e; }
+.soon { color: #e6007e; }   /* Coming Soon, in the selection's magenta (30 Oct) */
 html, body { margin: 0; background: var(--bg); color: var(--fg); }
 body {
   font-family: 'Zerko', sans-serif;
@@ -95,41 +96,101 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 .u { text-decoration: underline; text-underline-offset: 0.18em; }
 
-/* Header: name, the view you are in, then a slot that names the plate under
-   the cursor on the wall, and carries object, year and the line on a project. */
+/* Header (wall-row trial, 24 Oct): one line of pills in the style of the
+   floating-nav dock (square, no border, the 40% grey laid over the ground,
+   3px by 12px round the word). Pages on the left, the page you are on
+   filled in ink; the name in the middle, which opens Info (the plaque,
+   below); Invert on the right (30 Oct; it was Light / Dark as a pair). No ground or rule behind
+   them: the header is clear and the work passes under the pills. The slot
+   that names the plate under the cursor on the All images wall hangs
+   under the name. (First pass, same day: a bracketed list after Studio
+   Henry Wilson's shop.) */
+:root { --mute: color-mix(in srgb, var(--fg) 38%, var(--bg)); --pill: linear-gradient(rgba(128, 128, 128, 0.40), rgba(128, 128, 128, 0.40)), var(--bg); --pill-hover: linear-gradient(rgba(128, 128, 128, 0.62), rgba(128, 128, 128, 0.62)), var(--bg); }
+.pill, .hnav .hn, .hthm button { display: inline-block; padding: 3px 12px; background: var(--pill); color: #fff; white-space: nowrap; }   /* white on the grey (29 Oct) */
+.hnav .hn:hover, .hthm button:hover { background: var(--pill-hover); }
+.hnav .hn:is([aria-current], [aria-pressed="true"]), .hthm button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+/* In the header the type is black and multiplied on the grey (29 Oct); the
+   current page keeps its own inverted pill, unblended. */
+/* The header is blended onto the page by difference (29 Oct; multiply was
+   tried first and vanished over dark plates). The blend sits on the header
+   itself: a sticky header is its own layer, and type blended inside it only
+   meets the pill behind it. Colours are set for the blend: a mid-grey pill
+   with black type reads as grey with white type on the white page, and as
+   grey with black type over a dark plate; the current page's white pill
+   reads black. Off while the name box is open, so its panel reads. */
+/* ?blend=off drops it for this browser (29 Oct test: iPhone Safari drew a
+   dark band at the top and torn pills, which may be the blend). */
+html:not(.no-blend) .head { mix-blend-mode: difference; }
+html:not(.no-blend) .head:has(.plaque.open) { mix-blend-mode: normal; }
+/* The pill's shade (30 Oct, "a bit more welcoming"). Under the difference
+   blend the page shows each colour turned over, so the values here are the
+   inverse of what reads on the white page: --hp is the pill, --hh its hover,
+   --ht the type. ?pill= picks one to compare: b (default, Kirill 30 Oct) a
+   light neutral grey, a a light warm grey, c a mid warm grey, old the 29 Oct mid grey.
+   Over a dark plate each reads as the colour written here. */
+:root { --hp: #262626; --hh: #363636; --ht: #eeeeee; --hr: #d9d9d9; }   /* b (picked 30 Oct): reads #d9d9d9, type near black */
+:root.pill-a { --hp: #191c22; --hh: #2a2d33; --ht: #eeeeee; --hr: #e6e3dd; }   /* a: reads #e6e3dd, warm */
+:root.pill-c { --hp: #4a4f57; --hh: #5a5f67; --ht: #eeeeee; --hr: #b5b0a8; }   /* c: reads #b5b0a8 */
+:root.pill-old { --hp: #808080; --hh: #999; --ht: #000; --hr: #7f7f7f; } /* reads #7f7f7f, type white */
+html:not(.no-blend) .head .hnav .hn, html:not(.no-blend) .head .hthm button, html:not(.no-blend) .head .pill { background: var(--hp); color: var(--ht); }
+html:not(.no-blend) .head .hnav .hn:hover, html:not(.no-blend) .head .hthm button:hover { background: var(--hh); }
+html:not(.no-blend) .head .hnav .hn:is([aria-current], [aria-pressed="true"]), html:not(.no-blend) .head .hthm button[aria-pressed="true"] { background: #fff; color: #000; }
+html:not(.no-blend) .plaque:not(.open) { --plq-fill: var(--hp); }
+html:not(.no-blend) .plaque:not(.open) .plaque-bar .pt { color: var(--ht); }
+/* Pink (30 Oct, Kirill: pink for the pill you are on, black for the rest).
+   Out of the blend: the pills are solid, so they read over any plate, and
+   pink blended by difference turns green over a dark one. Black pills with
+   white type, the other way round on the dark page; the name box black too
+   (.plq-black). ?pill=b brings back the blended grey. */
+:root.pill-pink .head { --pk: #e6007e; --pk-t: #fff; --pill: var(--fg); --pill-t: var(--bg); --pill-hover: color-mix(in srgb, var(--fg) 78%, var(--bg)); }
+:root.pill-pink .pill, :root.pill-pink .hnav .hn, :root.pill-pink .hthm button { color: var(--pill-t); }
+:root.pill-pink .hnav .hn:is([aria-current], [aria-pressed="true"]), :root.pill-pink .hthm button[aria-pressed="true"] { background: var(--pk); color: var(--pk-t); }
+:root.pill-pink .hfil > .hn { background: var(--pk); color: var(--pk-t); }   /* Filter itself always pink (Kirill, 30 Oct) */
+:root.pill-pink.plq-black .head { --plq-fill: var(--pk); --plq-ink: var(--pk-t); --plq-on: var(--pk); }   /* and the name box, closed and open */
+/* While the box is open the header is out of the blend, so the pills take
+   the colours they read as when blended (30 Oct: they turned over, Work
+   white and All images black). Light page: the pill shade with near-black
+   type, the current one black. Dark page: as the blend gives it there. */
+:root { --hpo: var(--hr); --hpo-t: #111; --hpo-c: #000; --hpo-ct: #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hpo: #151515; --hpo-t: #ddd; --hpo-c: #eee; --hpo-ct: #111; } }
+:root[data-theme="dark"] { --hpo: #151515; --hpo-t: #ddd; --hpo-c: #eee; --hpo-ct: #111; }
+html:not(.no-blend) .head:has(.plaque.open) .hnav .hn, html:not(.no-blend) .head:has(.plaque.open) .hthm button, html:not(.no-blend) .head:has(.plaque.open) .pill { background: var(--hpo); color: var(--hpo-t); }
+html:not(.no-blend) .head:has(.plaque.open) .hnav .hn:is([aria-current], [aria-pressed="true"]), html:not(.no-blend) .head:has(.plaque.open) .hthm button[aria-pressed="true"] { background: var(--hpo-c); color: var(--hpo-ct); }
+/* Open, the box is out of the blend: on the light page it takes the shade
+   the pill reads as, so it grows in the same colour. */
+:root:not(.no-blend) .plaque.open { --plq-fill: var(--hr); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]):not(.no-blend) .plaque.open { --plq-fill: linear-gradient(var(--dock-tint), var(--dock-tint)), var(--bg); } }
+:root[data-theme="dark"]:not(.no-blend) .plaque.open { --plq-fill: linear-gradient(var(--dock-tint), var(--dock-tint)), var(--bg); }
 .head {
   position: sticky; top: 0; z-index: 10;
-  min-height: 40px;
-  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 2em; row-gap: 0.2em;
-  padding: 12px var(--pad) 11px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--fg);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; column-gap: 2em;
+  padding: 10px var(--pad);
+  background: none; pointer-events: none;
 }
-.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
-.head .slot { flex: 1; min-width: 0; }
+.head > * { pointer-events: auto; }
+.hnav { grid-area: 1 / 1; display: flex; gap: 4px; justify-self: start; }
+/* Filter (30 Oct): the pill opens its list straight under it, one pill per
+   line, flush left. */
+.hfil { position: relative; }
+/* The filters in force sit next to it, each a pill that takes itself off. */
+.hnav { flex-wrap: wrap; }
+.hsel { display: contents; }
+.hsel .hn i { font-style: normal; margin-left: 0.5em; }
+.hfil-list { position: absolute; top: calc(100% + 4px); left: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.hfil-list[hidden] { display: none; }
+.head .slot { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); max-width: 40em; color: var(--mute); pointer-events: none; }
+.head .slot:empty { display: none; }
 .mode-wall .head .slot { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mode-project .head .slot { max-width: 52em; }
-.head .count:empty { display: none; }
-/* Counter and Info always sit at the right edge, whatever the slot's width
-   (on a project the slot is capped to a reading measure and stops short). */
-.head .info-toggle { margin-left: auto; }   /* always at the right edge */
-.head .info-toggle[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
-.head .info-toggle:hover, .head .info-toggle:active { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .hthm { grid-area: 1 / 3; justify-self: end; margin: 0; display: flex; }
 .info .theme { margin-top: 1.28em; }
 .info .theme button:hover, .info .theme button:active, .info .theme button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
-/* On a phone the header is a fixed grid, so nothing jumps between pages:
-   name and Info always share the first row; the page you are on (and the
-   counter in the gallery) sits on the second; object and year on a third,
-   on project pages only. It used to wrap as it pleased, and on a long title
-   Info dropped to the second row. */
+/* On a phone: the name and Light / Dark on the first line, the pages on
+   the second. */
 @media (max-width: 700px) {
-  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1em; row-gap: 0.15em; }
-  .head > a:first-child { grid-area: 1 / 1; justify-self: start; }
-  .head .info-toggle { grid-area: 1 / 2; justify-self: end; margin-left: 0; }
-  .head .view { grid-area: 2 / 1; justify-self: start; }
-  .head .count { grid-area: 2 / 2; justify-self: end; margin-left: 0; }
-  .head .slot { grid-area: 3 / 1 / 4 / 3; }
-  .mode-wall .head .slot { display: none; }
+  .head { grid-template-columns: minmax(0, 1fr) auto; column-gap: 1em; row-gap: 4px; padding-top: 8px; }
+  .head .hthm { grid-area: 1 / 2; }
+  .hnav { grid-area: 2 / 1 / 3 / 3; }
+  .head .slot { display: none; }
   /* Contact sheet tighter on a phone: two across, a 4px inset instead of the
      page margin, so the plates are bigger and read as one set. */
   /* Rows as tall as their tallest plate rather than square cells, which left
@@ -296,6 +357,11 @@ body .rows img, body .rows video { width: 100%; height: 100%; max-width: none; m
 body .rows .mark img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; }
 /* The wall in the same rows (12 Oct), a margin under the header. */
 body .rows.wallrows { padding-top: var(--pad); }
+/* Each project on the wall opens with a cell the size of a plate (30 Oct):
+   its name and line, then its description, from the top left. */
+body .rows .cell.intro { display: flex; flex-direction: column; overflow: hidden; }
+.cell.intro .n { font-weight: 500; }
+.cell.intro .d { display: block; margin-top: 0.6em; max-width: 30em; }
 
 /* Gallery: one plate, as large as the screen allows under the header. Left
    half of the screen goes back, right half goes on. */
@@ -348,6 +414,68 @@ body .rows.wallrows { padding-top: var(--pad); }
 .cplate figcaption { margin-top: 0.5em; max-width: 44em; font-weight: 400; }
 .cplate figcaption .n { font-weight: 500; }
 @media (max-width: 700px) { .cplate a { width: min(100%, calc(70svh * var(--ar))); } }
+
+/* The plaque, in the header in the name's place: the dock of floating-nav
+   as it was styled there (its "pill" mode): square, no border, the 40%
+   mid-grey fill, 3px by 12px round the name. There it was glass with white
+   type over full-bleed plates; on this white page the same grey is laid
+   over the ground as a solid and the type takes the page colour, so it
+   reads on white and over a plate alike. It opens as it did: the width
+   first, then the height, the content rising in behind; it shuts the other
+   way round, on the dock's own curve and timings. The slot keeps the bar's
+   place in the header; the box grows down out of it over the page. */
+:root { --dock-w-dur: 240ms; --dock-h-dur: 320ms; --dock-ease: cubic-bezier(0.22, 1, 0.36, 1); --dock-tint: rgba(128, 128, 128, 0.40); }
+/* The dock's grey; ?plaque=black tries it in the page's ink (24 Oct, after
+   the KABK reading bar; Kirill: the black did not work up here). */
+:root { --plq-fill: linear-gradient(var(--dock-tint), var(--dock-tint)), var(--bg); --plq-ink: #000; --plq-on: #fff; }   /* black on the grey, as the header pills (29 Oct); a picked chip is black with white type */
+:root.plq-black { --plq-fill: var(--fg); --plq-ink: var(--bg); --plq-on: var(--fg); }
+.plq-slot { grid-area: 1 / 2; justify-self: center; position: relative; width: var(--plq-w); height: var(--plq-h); }
+.plaque {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 11;
+  width: var(--plq-w); height: var(--plq-h);
+  background: var(--plq-fill); color: var(--plq-ink);
+  overflow: hidden;
+  /* Shutting: the height goes first, then the width. */
+  transition: height var(--dock-h-dur) var(--dock-ease) 0ms, width var(--dock-w-dur) var(--dock-ease) var(--dock-h-dur);
+}
+.plaque.open {
+  width: var(--plq-open-w); height: var(--plq-open-h);
+  /* Opening: the width goes first, at once, then the height. */
+  transition: width var(--dock-w-dur) var(--dock-ease) 0ms, height var(--dock-h-dur) var(--dock-ease) var(--dock-w-dur);
+}
+/* The bar stays centred in the box, so the name does not move as it widens. */
+.plaque-bar {
+  display: block; width: max-content; margin: 0 auto;
+  max-width: min(44em, calc(100vw - 2 * 15em));
+  padding: 3px 12px; text-align: center; font-weight: 500; letter-spacing: 0.02em;
+}
+.plaque-body { width: var(--plq-open-w); max-height: calc(var(--plq-open-h) - var(--plq-h)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.plaque-body::-webkit-scrollbar { display: none; }
+.plaque-inner { padding: 0.85em 0.85em 1.1em; display: grid; gap: 1.3em; font-weight: 400; }
+.plaque-inner section { margin: 0; }
+.plaque-inner h2 { font: inherit; text-transform: uppercase; letter-spacing: 0.09em; opacity: 0.38; margin: 0 0 0.35em; }
+.plaque-inner p { margin: 0; }
+.plaque-inner section:first-child p + p { margin-top: 0.65em; }
+.plaque-inner a { text-decoration: underline; text-underline-offset: 0.18em; }
+/* Content rises in behind the box, and leaves all at once. */
+.plaque-inner > * { opacity: 0; transform: translateY(8px); transition: opacity .22s var(--dock-ease), transform .22s var(--dock-ease); }
+.plaque.open .plaque-inner > * { opacity: 1; transform: none; }
+.plaque.open .plaque-inner > :nth-child(1) { transition-delay: calc(var(--dock-w-dur) + 110ms); }
+.plaque.open .plaque-inner > :nth-child(2) { transition-delay: calc(var(--dock-w-dur) + 160ms); }
+.plaque.open .plaque-inner > :nth-child(3) { transition-delay: calc(var(--dock-w-dur) + 210ms); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { padding: 2px 8px 1px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--plq-ink) 40%, transparent); }
+.chip:hover { box-shadow: inset 0 0 0 1px var(--plq-ink); }
+.chip[aria-pressed="true"] { background: var(--plq-ink); color: var(--plq-on); box-shadow: none; }
+@media (max-width: 700px) {
+  .plq-slot { grid-area: 1 / 1; justify-self: start; }
+  .plaque { left: 0; transform: none; }
+  .plaque-bar { margin: 0; max-width: calc(100vw - 2 * var(--pad) - 5em); text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) { .plaque, .plaque.open, .plaque-inner > * { transition: none; animation: none; transform: none; } }
+
+.hpos { margin-right: 4px; font-variant-numeric: tabular-nums; }
+.hpos:empty { display: none; }
 
 /* Title block above a filter or a contact sheet: name, object and year,
    then the description. Scrolls away with the page. */
@@ -451,11 +579,23 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 
 <div class="page" id="page">
 <header class="head" id="head">
-  <a href="./" data-nav>Kirill Konstantinov</a>
+  <nav class="hnav" aria-label="Site">
+    <div class="hfil" id="hfil">
+      <button type="button" class="hn" aria-expanded="false" aria-controls="hfil-list"><span id="hfil-name">All work</span></button>
+      <div class="hfil-list" id="hfil-list" hidden></div>
+    </div>
+    <span class="hsel" id="hsel"></span>
+  </nav>
+  <div class="plq-slot">
+    <div class="plaque" id="plaque" data-lenis-prevent>
+      <button type="button" class="plaque-bar info-toggle" aria-expanded="false" aria-controls="plaque-body"><span class="pt">Kirill Konstantinov</span></button>
+      <div class="plaque-body" id="plaque-body" inert></div>
+    </div>
+  </div>
   <a href="./" class="view" data-nav id="view">Selected Works</a>
   <span class="slot" id="slot" aria-live="off"></span>
   <span class="count" id="count"></span>
-  <button type="button" class="info-toggle" aria-expanded="false" aria-controls="info">Info</button>
+  <p class="hthm theme"><span class="pill hpos" id="hpos"></span><button type="button" data-theme-flip><span>Invert</span></button></p>
 </header>
 
 <!-- Everything under the header: what Info pushes down. -->
@@ -471,7 +611,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-30b"></script>
+<script src="assets/works.js?v=2026-10-30h"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -484,6 +624,21 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // Contact sheets are justified rows since 12 Oct; ?grid=squares shows the
   // old square cells.
   const SHEET_ROWS = new URLSearchParams(location.search).get('grid') !== 'squares';
+  (() => {
+    const b = new URLSearchParams(location.search).get('blend');
+    let off = b === 'off';
+    try { if (b) localStorage.setItem('kk-blend', b); off = (b || localStorage.getItem('kk-blend')) === 'off'; } catch (e) {}
+    document.documentElement.classList.toggle('no-blend', off);
+  })();
+  // ?pill=a|b|c|old tries another header shade (see --hp; b is the grey
+  // picked 30 Oct); remembered here. With none, the pink (see .pill-pink).
+  (() => {
+    let v = new URLSearchParams(location.search).get('pill');
+    try { if (v) localStorage.setItem('kk-pill', v); v = v || localStorage.getItem('kk-pill'); } catch (e) {}
+    const r = document.documentElement.classList;
+    if (['a', 'c', 'old'].includes(v)) r.add('pill-' + v);
+    else if (v !== 'b') r.add('pill-pink', 'no-blend', 'plq-black');   // pink, the default since 30 Oct (multiply and difference tried, not kept)
+  })();
   const pieces = window.WORKS.pieces || {};
   const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
   const DISCIPLINES = [
@@ -520,7 +675,16 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   const caption = p => p.meta ? `${p.title}, ${p.meta}` : p.title;
   // What a plate is: its piece if it has one, otherwise its project.
   const about = it => pieces[it.piece] || bySlug[it.p];
-  const wip = p => p.wip ? ` (${p.wip})` : '';
+  // A project not finished yet: `wip` (it opens nothing) or `soon` (it
+  // opens) adds its note after the line, in the selection magenta (30 Oct).
+  const wip = p => p.wip || p.soon ? ` (${p.wip || p.soon})` : '';
+  const soonEl = p => {
+    if (!p.wip && !p.soon) return '';
+    const s = document.createElement('span');
+    s.className = 'soon';
+    s.textContent = `(${p.wip || p.soon})`;
+    return s;
+  };
   const wallCaption = it => (it.piece ? `${bySlug[it.p].title}, ${caption(pieces[it.piece])}` : caption(bySlug[it.p])) + wip(bySlug[it.p]);
 
   // One plate as an element: an image, or a video for the moving ones.
@@ -626,7 +790,17 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   function renderWall(list) {
     const g = document.createElement('div');
     g.className = 'rows wallrows';
+    // A wip project shows only its key plate here (30 Oct, Kirill: LOTV is
+    // its cover on All images until it opens). Each project opens with a
+    // cell the size of a plate: its name and line, then its description.
+    const seq = [];
+    list.filter(it => !bySlug[it.p].wip || it.key).forEach(it => {
+      if (!seq.length || seq[seq.length - 1].p !== it.p) seq.push({ p: it.p, src: '', w: 1, h: 1, intro: 1 });
+      seq.push(it);
+    });
+    list = seq;
     list.forEach((it, n) => {
+      if (it.intro) return g.append(introCell(bySlug[it.p]));
       const a = document.createElement('a');
       a.className = 'cell';
       if (isMark(it)) a.classList.add('mark');
@@ -639,6 +813,25 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     });
     main.append(g);
     layoutRows(g, list);
+  }
+  function introCell(p) {
+    const a = document.createElement('a');
+    a.className = 'cell intro';
+    if (!p.wip) { a.href = `?p=${p.slug}`; a.dataset.nav = ''; }
+    a.dataset.caption = '';
+    const t = document.createElement('span');
+    const n = document.createElement('span');
+    n.className = 'n';
+    n.textContent = p.title;
+    t.append(n, p.meta ? `, ${p.meta} ` : ' ', soonEl(p));
+    a.append(t);
+    if (p.desc) {
+      const d = document.createElement('span');
+      d.className = 'd';
+      d.textContent = p.desc;
+      a.append(d);
+    }
+    return a;
   }
 
   // A filter reads rather than shows: one column, flush left, one plate per
@@ -680,12 +873,122 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const n = document.createElement('span');
       n.className = 'n';
       n.textContent = p.title;
-      c.append(n, p.meta ? `, ${p.meta}` : '', wip(p));
+      c.append(n, p.meta ? `, ${p.meta} ` : ' ', soonEl(p));
       f.append(a, c);
       col.append(f);
     }
     main.append(col);
   }
+
+  // The plaque (from the wall-row trial, 24 Oct; on the live column 30 Oct),
+  // after the floating dock of the previous site (floating-nav): one square
+  // grey box in the header, in the name's place, that widens and then grows
+  // out of itself into a panel, and shuts the other way round. It takes over
+  // from the Info panel: it holds the bio and the contact lines, copied from
+  // the Info markup so the words live in one place. (Its Practice chips moved
+  // to the Filter pill, 30 Oct.)
+  let homeDs = [], plaqueOpen = false;
+  if (new URLSearchParams(location.search).get('plaque') === 'black') document.documentElement.classList.add('plq-black');
+  const plaque = document.getElementById('plaque');
+  const pBar = plaque.querySelector('.plaque-bar'), pBody = plaque.querySelector('.plaque-body');
+  (() => {
+    const sec = (label, ...nodes) => {
+      const d = document.createElement('section');
+      if (label) { const h = document.createElement('h2'); h.textContent = label; d.append(h); }
+      d.append(...nodes);
+      return d;
+    };
+    const bio = [...document.querySelectorAll('.info .bio p')].map(n => n.cloneNode(true));
+    const contactSrc = [...document.querySelectorAll('.info .stack section')].find(s => s.querySelector('h2')?.textContent === 'Contact');
+    const contact = contactSrc ? [...contactSrc.querySelectorAll('p')].map(n => n.cloneNode(true)) : [];
+    const inner = document.createElement('div');
+    inner.className = 'plaque-inner';
+    inner.append(sec(null, ...bio), sec('Contact', ...contact));
+    pBody.append(inner);
+    pBar.addEventListener('click', () => setPlaque(!plaqueOpen));
+  })();
+  // The name, and the filters in force after it while there are any.
+  const plaqueName = () => 'Kirill Konstantinov';   // the filters show by the Filter pill since 30 Oct
+  function markPlaque(text = plaqueName()) {
+    plaque.querySelector('.pt').textContent = text;
+    sizePlaque();
+  }
+  // The box's closed and open sizes, measured, so CSS can ease between
+  // them (as on floating-nav: fit-content will not animate). Closed it is
+  // the bar; open, the panel's width and the bar plus the panel's content,
+  // never past the bottom of the screen.
+  function sizePlaque() {
+    const pad = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad'));
+    const b = pBar.getBoundingClientRect();
+    // On a phone it opens to the page margins.
+    const openW = Math.min(560, innerWidth - 2 * pad);
+    plaque.style.setProperty('--plq-open-w', openW + 'px');
+    plaque.style.setProperty('--plq-w', Math.ceil(b.width) + 'px');
+    plaque.style.setProperty('--plq-h', Math.ceil(b.height) + 'px');
+    const top = plaque.getBoundingClientRect().top;
+    plaque.style.setProperty('--plq-open-h', Math.min(Math.ceil(b.height) + pBody.firstElementChild.scrollHeight, innerHeight - top - pad) + 'px');
+  }
+  function setPlaque(open) {
+    plaqueOpen = open;
+    markPlaque();
+    plaque.classList.toggle('open', open);
+    pBar.setAttribute('aria-expanded', open);
+    pBody.inert = !open;
+  }
+  document.fonts && document.fonts.ready.then(sizePlaque);
+  addEventListener('resize', sizePlaque);
+  // Click outside the open plaque closes it.
+  document.addEventListener('click', e => {
+    if (plaqueOpen && !e.target.closest('.plaque')) setPlaque(false);
+  });
+
+  // Filter (30 Oct, Kirill: Work becomes a filter with the categories in
+  // it, and All images sits inside it too). The pill opens a list under it:
+  // All work, All images, then each discipline in use. Any number can be on at once (the column, with its bar), and the
+  // list stays open while you pick. Click outside or Escape shuts it.
+  let filterOpen = false;
+  const fBtn = document.querySelector('#hfil > button'), fList = document.getElementById('hfil-list');
+  fList.innerHTML = `<button type="button" class="hn" data-k=""><span>All work</span></button>` +
+    `<button type="button" class="hn" data-wall><span>All images</span></button>` +
+    DISCIPLINES.filter(([k]) => projects.some(p => p.d.includes(k)))
+      .map(([k, v]) => `<button type="button" class="hn" data-k="${k}"><span>${v}</span></button>`).join('');
+  function setFilter(open) {
+    filterOpen = open;
+    fList.hidden = !open;
+    fBtn.setAttribute('aria-expanded', open);
+  }
+  // All work is on for the plain column, All images on the wall, each
+  // discipline while it is in force. The pill names the view (All images on
+  // the wall, All work everywhere else), and the filters in force sit next
+  // to it, each one a pill that takes itself off (30 Oct; they were a bar
+  // at the top of the page and a suffix to the name).
+  const fName = document.getElementById('hfil-name'), fSel = document.getElementById('hsel');
+  fSel.addEventListener('click', e => {
+    const b = e.target.closest('[data-k]');
+    if (b) go(filterHref(selectedFilters(location.search).filter(o => o !== b.dataset.k)));
+  });
+  function markFilter() {
+    const cl = document.body.classList;
+    const all = !homeDs.length && cl.contains('mode-filter');
+    fList.querySelectorAll('[data-k]').forEach(b => b.setAttribute('aria-pressed', b.dataset.k ? homeDs.includes(b.dataset.k) : all));
+    const wall = cl.contains('mode-wall') && !cl.contains('mode-filter');
+    fList.querySelector('[data-wall]').setAttribute('aria-pressed', wall);
+    fName.textContent = wall ? 'All images' : 'All work';
+    fSel.innerHTML = homeDs.map(k => `<button type="button" class="hn" data-k="${k}" aria-pressed="true" aria-label="Remove the ${discName[k]} filter">${discName[k]}<i aria-hidden="true">×</i></button>`).join('');
+  }
+  fBtn.addEventListener('click', () => setFilter(!filterOpen));
+  fList.addEventListener('click', e => {
+    if (e.target.closest('[data-wall]')) return go('?view=wall');
+    const b = e.target.closest('[data-k]');
+    if (!b) return;
+    // From the address, not homeDs: a second pick made while the page is
+    // still changing would otherwise drop the first.
+    const k = b.dataset.k, on = selectedFilters(location.search);
+    go(filterHref(!k ? [] : on.includes(k) ? on.filter(o => o !== k) : [...on, k]));
+  });
+  document.addEventListener('click', e => {
+    if (filterOpen && !e.target.closest('.hfil')) setFilter(false);
+  });
 
   // Justified rows, as Bänziger Hug's rowgrid: add plates at the row height
   // until the row overflows, then scale that row down to the width. Widths
@@ -924,6 +1227,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     // Home reads as an ordered column (19 Oct trial); the wall is one click away at ?view=wall.
     const wallView = !pr && !ds.length && q.get('view') === 'wall';
     main.replaceChildren();
+    // A new page shuts the plaque; only home (the column) has filters in force.
+    if (plaqueOpen) setPlaque(false);
+    homeDs = !p && !wallView ? ds : [];
     gallerySteps = null;
     slot.textContent = '';
     count.textContent = '';
@@ -966,22 +1272,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         list = projects.filter(p => p.d.some(k => ds.includes(k)));
         label = ds.map(k => discName[k]).join(' + ');
         viewHref = filterHref(ds);
-        const b = document.createElement('p');
-        b.className = 'ptitle filters';
-        ds.forEach(k => {
-          const f = document.createElement('span');
-          f.className = 'f';
-          f.textContent = discName[k];
-          const x = document.createElement('a');
-          x.href = filterHref(ds.filter(o => o !== k));
-          x.dataset.nav = '';
-          x.className = 'clear';
-          x.setAttribute('aria-label', `Remove the ${discName[k]} filter`);
-          x.textContent = '×';
-          f.append(x);
-          b.append(f);
-        });
-        main.append(b);
+        // They name themselves next to the Filter pill (markFilter).
       }
       if (wallView) {
         renderWall(list);
@@ -1019,6 +1310,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       const here = h === './' ? !ds.length && !p && !wallView : h === '?view=wall' ? wallView : h === `?p=${pr}`;
       here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     });
+    markPlaque();
+    markFilter();
     measureHead();
     shownProject = p ? p.slug : null;
     shownIndex = p ? indexOf(location.search) && Math.min(indexOf(location.search), items.filter(it => it.p === p.slug).length) || (items.filter(it => it.p === p.slug).length === 1 ? 1 : 0) : 0;
@@ -1044,7 +1337,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     info.inert = !open;
     toggle.setAttribute('aria-expanded', open);
   };
-  toggle.addEventListener('click', () => setInfo(!infoOpen));
+  // The plaque is Info since 30 Oct; the panel stays as the source of its words.
   // Shut Info with no slide (for navigation, inside a page transition).
   function closeInfoNow() {
     if (!infoOpen) return;
@@ -1200,11 +1493,23 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     try { localStorage.setItem('theme', b.dataset.themeSet); } catch (e) {}
     markTheme();
   }));
-  sysDark.addEventListener('change', markTheme);
-  markTheme();
+  // One pill in the header, Invert (30 Oct; it was Light / Dark): it flips
+  // whichever theme is showing, and stays filled while the page is dark.
+  const flip = document.querySelector('[data-theme-flip]');
+  const markFlip = () => flip && flip.setAttribute('aria-pressed', currentTheme() === 'dark');
+  flip && flip.addEventListener('click', () => {
+    const t = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem('theme', t); } catch (e) {}
+    markTheme(); markFlip();
+  });
+  sysDark.addEventListener('change', () => { markTheme(); markFlip(); });
+  markTheme(); markFlip();
 
   addEventListener('keydown', e => {
     if (e.key === 'Escape') {
+      if (plaqueOpen) return setPlaque(false);
+      if (filterOpen) return setFilter(false);
       if (infoOpen) return setInfo(false);
       const q = new URLSearchParams(location.search);
       const x = document.querySelector('.gclose');
