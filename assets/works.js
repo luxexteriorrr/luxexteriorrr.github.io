@@ -43,6 +43,7 @@
 // Coming Soon (30 Oct): Depo (soon: it still opens) and Lilies of the Valley (wip: it does not) say Coming Soon after their line,
 // in the selection magenta. LOTV is spelt Lilies of the Valley in captions (was LILIESOFTHEVALLEY); the wordmark keeps its caps.
 // Sentra's lead image (19, the cover) carries `frame` (31 Oct, Kirill): it shows small in a grey box; the other screens stay bare for now.
+// …with `plaque` (31 Oct, Kirill): the RCA2025 sticker (export/rca2025-plaque.png), small, top right in the box.
 window.WORKS = {
  "projects": [
   {
@@ -968,7 +969,8 @@ window.WORKS = {
    "video": 1,
    "poster": "sentra-19-poster.webp",
    "key": 1,
-   "frame": 1
+   "frame": 1,
+   "plaque": 1
   },
   {
    "p": "sentra",
