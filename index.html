@@ -655,7 +655,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-31k"></script>
+<script src="assets/works.js?v=2026-10-31q"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -672,7 +672,10 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   const FRAME_AR = 4 / 5, FRAME_H = 0.62;   // 0.55 first; slightly larger (31 Oct)
   for (const it of items) if (it.frame) {
     it.sw = it.w; it.sh = it.h;
-    it.h = Math.round(it.sh / FRAME_H); it.w = Math.round(it.h * FRAME_AR);
+    // a landscape screen (a website) takes a box of its own proportions, the screen filling most of it,
+    // so a white page does not get lost on the white wall (31 Oct, LOTV)
+    it.fh = it.sw > it.sh ? 0.86 : FRAME_H;
+    it.h = Math.round(it.sh / it.fh); it.w = it.sw > it.sh ? Math.round(it.h * it.sw / it.sh) : Math.round(it.h * FRAME_AR);
   }
   // Contact sheets are justified rows since 12 Oct; ?grid=squares shows the
   // old square cells.
@@ -753,7 +756,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     f.className = 'frame' + (it.plaque ? ' rca' : '');   // not .plaque: that is the name box's class
     f.style.setProperty('--ar', it.w / it.h);
     f.style.setProperty('--sar', `${it.sw} / ${it.sh}`);
-    f.style.setProperty('--fh', FRAME_H * 100 + '%');
+    f.style.setProperty('--fh', it.fh * 100 + '%');
     f.append(bare({ ...it, w: it.sw, h: it.sh }, opts));
     return f;
   }

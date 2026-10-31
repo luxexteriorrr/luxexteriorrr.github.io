@@ -50,8 +50,10 @@
 // after the phone screens. Masters in _export/sentra (p2026_sentra_scan-*), q90 with 1600 (and 3000 for 41) copies.
 // Sentra (31 Oct, Kirill): the billboards 01, 05 and the logo loop 24 are off for now (files stay); the billboards are to be recorded again.
 // LOTV's key plate is the WASTE shopfront (waste-05) since 31 Oct (Kirill), in place of the caps wordmark: the wall had enough type.
-// Its fixed width (cw 60, for the wordmark) is off, then held at 70 (Kirill: bigger than the 40 it drew), between Depo's 60 and the thesis's 80; the thesis is held at 80 (as before) so it is not 60 beside Zerko Grotesk's.
+// Its fixed width (cw 60, for the wordmark) is off, then held at 70 (Kirill: bigger than the 40 it drew), and at 100 since the website became its cover; the thesis is held at 80 (as before) so it is not 60 beside Zerko Grotesk's.
 // As Seen In's home plate is held at 90% (31 Oct, Kirill: a tiny bit smaller than its 100), and RADA's the same.
+// LOTV's key plate is now the website (lotv-web-01, 31 Oct, Kirill): the home page on a desktop, captured 31 Oct from the theme
+// preview of the main branch, as live (7603564; LOTV/web/captures/2026-10-31/home_desktop_main-7603564_solid-header.png, 1440 × 900 at 2×), with the header held solid (its see-through state over the hero turned off for the shot, Kirill), bare, no device frame, and full width on home (cw 100), as CD HQ shows websites (Kirill, 31 Oct; the grey box was tried and dropped).
 window.WORKS = {
  "projects": [
   {
@@ -76,7 +78,7 @@ window.WORKS = {
    ],
    "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter.",
    "wip": "Coming Soon",
-   "cw": 70
+   "cw": 100
   },
   {
    "slug": "zerko-thesis",
@@ -219,6 +221,15 @@ window.WORKS = {
   },
   {
    "p": "lotv",
+   "src": "lotv-web-01.webp",
+   "w": 2880,
+   "h": 1800,
+   "alt": "The Lilies of the Valley website, home page on a desktop: the autumn/winter campaign photograph full bleed, the caps wordmark across the top.",
+   "sm": 1,
+   "key": 1
+  },
+  {
+   "p": "lotv",
    "src": "lotv-wordmark.svg",
    "w": 1570,
    "h": 117,
@@ -258,8 +269,7 @@ window.WORKS = {
    "h": 2925,
    "alt": "The full shopfront with knitwear hung against the glass and the dates and web address set along the lower panes.",
    "piece": "lotv-waste",
-   "sm": 1,
-   "key": 1
+   "sm": 1
   },
   {
    "p": "lotv",
