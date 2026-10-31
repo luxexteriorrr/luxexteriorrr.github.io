@@ -54,18 +54,20 @@
 // As Seen In's home plate is held at 90% (31 Oct, Kirill: a tiny bit smaller than its 100), and RADA's the same.
 // LOTV's key plate is now the website (lotv-web-01, 31 Oct, Kirill): the home page on a desktop, captured 31 Oct from the theme
 // preview of the main branch, as live (7603564; LOTV/web/captures/2026-10-31/home_desktop_main-7603564_solid-header.png, 1440 × 900 at 2×), with the header held solid (its see-through state over the hero turned off for the shot, Kirill), bare, no device frame, and full width on home (cw 100), as CD HQ shows websites (Kirill, 31 Oct; the grey box was tried and dropped).
+// Descriptions (31 Oct, Kirill: put the project descriptions in): Depo, JRAY, RADA, AWW90s and Sentra written from the Notion
+// catalogue, the Depo page and the Sentra case-study draft; Depo's Coming Soon is off (LOTV keeps it).
 window.WORKS = {
  "projects": [
   {
    "slug": "depo",
    "title": "Depo",
    "meta": "Typeface",
-   "soon": "Coming Soon",
    "year": 2026,
    "cw": 60,
    "d": [
     "type"
-   ]
+   ],
+   "desc": "Depo is a squared gothic in the line of Bank Gothic: wide, square-shouldered capitals with small caps, drawn across weight and contrast. It grew out of the lettering on the JRAY Drenched sleeve. The name reads in Latin and in Cyrillic, where Депо is a transport depot."
   },
   {
    "slug": "lotv",
@@ -129,7 +131,7 @@ window.WORKS = {
     "graphic-design",
     "identity"
    ],
-   "desc": "Sleeve for Drenched by JRAY."
+   "desc": "Sleeve for Drenched by JRAY: the wordmark, the tracklist and the JRAY mark. The tracklist sets each title with its Camelot key and tempo, in the typeface that later became Depo."
   },
   {
    "slug": "rada",
@@ -138,7 +140,7 @@ window.WORKS = {
    "d": [
     "graphic-design"
    ],
-   "desc": "Posters and social media for RADA club nights in south London.",
+   "desc": "Posters and social media for RADA, a trance, techno and hardcore night in south London: the Corsica Studios nights and the Birthday Bash. The posters were flyposted across south London, and the social posts announce each night's artists.",
    "cw": 90
   },
   {
@@ -158,7 +160,7 @@ window.WORKS = {
     "identity",
     "web"
    ],
-   "desc": "Identity and installation for a fictional AI company, shown at RCA2025."
+   "desc": "Sentra is a fictional AI company with no product except you. Visitors met it through adverts, office paperwork and a phone that asked one question: what is Sentra? It answered only in conversation, and told each visitor it had always specialised in exactly what they cared about. Shown at RCA2025, White City, July 2025."
   },
   {
    "slug": "aww90s",
@@ -167,7 +169,7 @@ window.WORKS = {
    "d": [
     "web"
    ],
-   "desc": "Site for an archive fashion store.",
+   "desc": "Website for AWW90s, a store selling archive fashion. The shop is browsed through a mono-set column of designers, categories and sizes, and each product page gives the piece, its season and its details.",
    "link": {
     "href": "https://www.aww90s.com",
     "text": "aww90s.com",
