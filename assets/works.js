@@ -56,6 +56,7 @@
 // preview of the main branch, as live (7603564; LOTV/web/captures/2026-10-31/home_desktop_main-7603564_solid-header.png, 1440 × 900 at 2×), with the header held solid (its see-through state over the hero turned off for the shot, Kirill), bare, no device frame, and full width on home (cw 100), as CD HQ shows websites (Kirill, 31 Oct; the grey box was tried and dropped).
 // Descriptions (31 Oct, Kirill: put the project descriptions in): Depo, JRAY, RADA, AWW90s and Sentra written from the Notion
 // catalogue, the Depo page and the Sentra case-study draft; Depo's Coming Soon is off (LOTV keeps it).
+// Filters cut to four (31 Oct, Kirill): LOTV and JRAY under Graphic Design, As Seen In Editorial only, Sentra Web only.
 window.WORKS = {
  "projects": [
   {
@@ -75,8 +76,7 @@ window.WORKS = {
    "meta": "Branding and identity",
    "year": 2026,
    "d": [
-    "identity",
-    "art-direction"
+    "graphic-design"
    ],
    "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter.",
    "wip": "Coming Soon",
@@ -108,8 +108,7 @@ window.WORKS = {
    "title": "As Seen In",
    "meta": "Publication, 2025",
    "d": [
-    "editorial",
-    "art-direction"
+    "editorial"
    ],
    "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction.",
    "cw": 90
@@ -128,8 +127,7 @@ window.WORKS = {
    "title": "JRAY",
    "meta": "Sleeve, 2026",
    "d": [
-    "graphic-design",
-    "identity"
+    "graphic-design"
    ],
    "desc": "Sleeve for Drenched by JRAY: the wordmark, the tracklist and the JRAY mark. The tracklist sets each title with its Camelot key and tempo, in the typeface that later became Depo."
   },
@@ -157,7 +155,6 @@ window.WORKS = {
    "title": "Sentra",
    "meta": "RCA2025 installation",
    "d": [
-    "identity",
     "web"
    ],
    "desc": "Sentra is a fictional AI company with no product except you. Visitors met it through adverts, office paperwork and a phone that asked one question: what is Sentra? It answered only in conversation, and told each visitor it had always specialised in exactly what they cared about. Shown at RCA2025, White City, July 2025."

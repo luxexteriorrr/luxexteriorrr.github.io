@@ -7,7 +7,7 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="description" content="Kirill Konstantinov is a graphic designer based in London, working in editorial, identity and type.">
+<meta name="description" content="Kirill Konstantinov is a graphic designer in London, working across editorial, type and web design.">
 <link rel="preload" href="assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/zerko.css">
 <!-- Theme chosen with the toggle, applied before first paint so the page does
@@ -451,12 +451,16 @@ body .rows.wallrows { padding-top: var(--pad); }
 }
 .plaque-body { width: var(--plq-open-w); max-height: calc(var(--plq-open-h) - var(--plq-h)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .plaque-body::-webkit-scrollbar { display: none; }
-.plaque-inner { padding: 0.85em 0.85em 1.1em; display: grid; gap: 1.3em; font-weight: 400; }
+.plaque-inner { padding: 0 0.85em 1.1em; display: grid; gap: 1.3em; font-weight: 400; text-align: center; }   /* centred, under the centred name, and straight under it like the next line (31 Oct, Kirill) */
 .plaque-inner section { margin: 0; }
 .plaque-inner h2 { font: inherit; text-transform: uppercase; letter-spacing: 0.09em; opacity: 0.38; margin: 0 0 0.35em; }
 .plaque-inner p { margin: 0; }
 .plaque-inner section:first-child p + p { margin-top: 0.65em; }
 .plaque-inner a { text-decoration: underline; text-underline-offset: 0.18em; }
+/* one block (31 Oct, after Maria Chiara Moro): bio, availability and contacts as consecutive lines, no gaps,
+   no headings, no underlines, not even on hover (Kirill) */
+.plaque-inner section:first-child p + p { margin-top: 0; }
+.plaque-inner a, .plaque-inner a:hover { text-decoration: none; }
 /* Content rises in behind the box, and leaves all at once. */
 .plaque-inner > * { opacity: 0; transform: translateY(8px); transition: opacity .22s var(--dock-ease), transform .22s var(--dock-ease); }
 .plaque.open .plaque-inner > * { opacity: 1; transform: none; }
@@ -615,8 +619,8 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     </section>
   </div>
   <div class="bio">
-    <p>Kirill Konstantinov [Moscow, 1999] is a graphic designer and art director based in London. His work is a dialogue between research and the object being made: books, identities, typefaces and websites. He holds an MA in <a href="https://www.rca.ac.uk/study/programme-finder/digital-narrative-arts-ma-mfa/" target="_blank" rel="noopener">Digital Direction</a> and an MRes in Communication Design, both from the Royal College of Art.</p>
-    <p class="avail">Available for editorial design and art direction roles in London.</p>
+    <p>Kirill Konstantinov is a graphic designer in London, working across editorial, type and web design. MA <a href="https://www.rca.ac.uk/study/programme-finder/digital-narrative-arts-ma-mfa/" target="_blank" rel="noopener">Digital Direction</a> and MRes Communication Design, Royal College of Art.</p>
+    <p class="avail">Available for editorial and graphic design roles in London.</p>
   </div>
 </section>
 
@@ -655,7 +659,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-31r"></script>
+<script src="assets/works.js?v=2026-10-31s"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -697,13 +701,13 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   })();
   const pieces = window.WORKS.pieces || {};
   const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
+  // Four, as the bio says it (31 Oct, Kirill): Art Direction and Identity are off, their projects under
+  // Graphic Design; an old ?d=identity link is ignored (selectedFilters) and shows all the work.
   const DISCIPLINES = [
     ['editorial', 'Editorial Design'],
-    ['art-direction', 'Art Direction'],
-    ['identity', 'Identity'],
     ['type', 'Type Design'],
     ['graphic-design', 'Graphic Design'],
-    ['web', 'Web'],
+    ['web', 'Web Design'],
   ];
   const discName = Object.fromEntries(DISCIPLINES);
   const EXPORT = 'export/';
@@ -946,10 +950,17 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     };
     const bio = [...document.querySelectorAll('.info .bio p')].map(n => n.cloneNode(true));
     const contactSrc = [...document.querySelectorAll('.info .stack section')].find(s => s.querySelector('h2')?.textContent === 'Contact');
-    const contact = contactSrc ? [...contactSrc.querySelectorAll('p')].map(n => n.cloneNode(true)) : [];
+    // the contacts run on one line, comma after comma, the request last and in lower case
+    // (31 Oct, Kirill, after Maria Chiara Moro's site: one centred block, no headings, no gaps)
+    const contact = document.createElement('p');
+    contact.className = 'pc';
+    const links = contactSrc ? [...contactSrc.querySelectorAll('a')].map(a => a.cloneNode(true)) : [];
+    const ask = links.find(a => /request/i.test(a.textContent));
+    if (ask) ask.textContent = ask.textContent[0].toLowerCase() + ask.textContent.slice(1);
+    links.forEach((a, k) => contact.append(...(k ? [', ', a] : [a])));
     const inner = document.createElement('div');
     inner.className = 'plaque-inner';
-    inner.append(sec(null, ...bio), sec('Contact', ...contact));
+    inner.append(sec(null, ...bio, contact));
     pBody.append(inner);
     pBar.addEventListener('click', () => setPlaque(!plaqueOpen));
   })();
