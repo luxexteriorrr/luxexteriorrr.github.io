@@ -49,6 +49,9 @@
 // Sentra scans (31 Oct, Kirill; scanned 20 Oct): the business cards 41 right after the cover, the question cards 38–40
 // after the phone screens. Masters in _export/sentra (p2026_sentra_scan-*), q90 with 1600 (and 3000 for 41) copies.
 // Sentra (31 Oct, Kirill): the billboards 01, 05 and the logo loop 24 are off for now (files stay); the billboards are to be recorded again.
+// LOTV's key plate is the WASTE shopfront (waste-05) since 31 Oct (Kirill), in place of the caps wordmark: the wall had enough type.
+// Its fixed width (cw 60, for the wordmark) is off, then held at 70 (Kirill: bigger than the 40 it drew), between Depo's 60 and the thesis's 80; the thesis is held at 80 (as before) so it is not 60 beside Zerko Grotesk's.
+// As Seen In's home plate is held at 90% (31 Oct, Kirill: a tiny bit smaller than its 100), and RADA's the same.
 window.WORKS = {
  "projects": [
   {
@@ -64,7 +67,6 @@ window.WORKS = {
   },
   {
    "slug": "lotv",
-   "cw": 60,
    "title": "Lilies of the Valley",
    "meta": "Branding and identity",
    "year": 2026,
@@ -73,7 +75,8 @@ window.WORKS = {
     "art-direction"
    ],
    "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter.",
-   "wip": "Coming Soon"
+   "wip": "Coming Soon",
+   "cw": 70
   },
   {
    "slug": "zerko-thesis",
@@ -83,7 +86,8 @@ window.WORKS = {
     "editorial",
     "type"
    ],
-   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other."
+   "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other.",
+   "cw": 80
   },
   {
    "slug": "zerko-grotesk",
@@ -103,7 +107,8 @@ window.WORKS = {
     "editorial",
     "art-direction"
    ],
-   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction."
+   "desc": "As Seen In is a printed visual essay, a trope designed to navigate and document the shifting terrain of generative AI. The work traces the tension between data, human intent and algorithmic interaction.",
+   "cw": 90
   },
   {
    "slug": "around-a-memory",
@@ -131,7 +136,8 @@ window.WORKS = {
    "d": [
     "graphic-design"
    ],
-   "desc": "Posters and social media for RADA club nights in south London."
+   "desc": "Posters and social media for RADA club nights in south London.",
+   "cw": 90
   },
   {
    "slug": "vestige",
@@ -217,7 +223,6 @@ window.WORKS = {
    "w": 1570,
    "h": 117,
    "alt": "LILIESOFTHEVALLEY set in capitals in a high-contrast grotesk.",
-   "key": 1,
    "mono": 1
   },
   {
@@ -253,7 +258,8 @@ window.WORKS = {
    "h": 2925,
    "alt": "The full shopfront with knitwear hung against the glass and the dates and web address set along the lower panes.",
    "piece": "lotv-waste",
-   "sm": 1
+   "sm": 1,
+   "key": 1
   },
   {
    "p": "lotv",

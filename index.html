@@ -655,7 +655,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-31h"></script>
+<script src="assets/works.js?v=2026-10-31k"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -987,12 +987,12 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 
   // Filter (30 Oct, Kirill: Work becomes a filter with the categories in
   // it, and All images sits inside it too). The pill opens a list under it:
-  // All work, All images, then each discipline in use. Any number can be on at once; a pick shuts
-  // the list (Kirill, 30 Oct), as do a click outside and Escape.
+  // All work, then each discipline in use. Any number can be on at once; a pick shuts
+  // the list (Kirill, 30 Oct), as do a click outside and Escape. All images is out of the
+  // list, the home foot and Info for now (31 Oct, Kirill); ?view=wall still opens it.
   let filterOpen = false;
   const fBtn = document.querySelector('#hfil > button'), fList = document.getElementById('hfil-list');
   fList.innerHTML = `<button type="button" class="hn" data-k=""><span>All work</span></button>` +
-    `<button type="button" class="hn" data-wall><span>All images</span></button>` +
     DISCIPLINES.filter(([k]) => projects.some(p => p.d.includes(k)))
       .map(([k, v]) => `<button type="button" class="hn" data-k="${k}"><span>${v}</span></button>`).join('');
   function setFilter(open) {
@@ -1016,7 +1016,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     const src = listSearch(), ds = selectedFilters(src);
     const wall = !ds.length && new URLSearchParams(src).get('view') === 'wall';
     fList.querySelectorAll('[data-k]').forEach(b => b.setAttribute('aria-pressed', b.dataset.k ? ds.includes(b.dataset.k) : !ds.length && !wall));
-    fList.querySelector('[data-wall]').setAttribute('aria-pressed', wall);
+    fList.querySelector('[data-wall]')?.setAttribute('aria-pressed', wall);
     fName.textContent = wall ? 'All images' : 'All work';
     fSel.innerHTML = ds.map(k => `<button type="button" class="hn" data-k="${k}" aria-pressed="true" aria-label="Remove the ${discName[k]} filter">${discName[k]}<i aria-hidden="true">×</i></button>`).join('');
   }
@@ -1397,16 +1397,6 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
         viewHref = '?view=wall';
       } else {
         renderColumn(ds.length ? list : projects);
-        if (!ds.length) {
-          const more = document.createElement('p');
-          more.className = 'ptitle allimages';
-          const a = document.createElement('a');
-          a.href = '?view=wall';
-          a.dataset.nav = '';
-          a.textContent = 'All images';
-          more.append(a);
-          main.append(more);
-        }
       }
       document.body.className = wallView ? 'mode-wall' : 'mode-wall mode-filter';
     }
@@ -1449,7 +1439,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   // Info lists: disciplines and projects, each a filter link.
   const li = (href, text) => `<li><a href="${href}" data-nav>${text}</a></li>`;
   document.getElementById('disciplines').innerHTML =
-    li('./', 'All') + li('?view=wall', 'All images') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
+    li('./', 'All') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
   document.getElementById('projects').innerHTML =
     projects.map(p => p.wip ? `<li>${p.title}${wip(p)}</li>` : li(`?p=${p.slug}`, p.title)).join('');
 
