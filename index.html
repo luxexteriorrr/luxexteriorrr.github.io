@@ -379,7 +379,7 @@ body .rows .cell.intro { display: flex; flex-direction: column; overflow: hidden
 }
 .gallery.back { cursor: w-resize; }
 .gallery.single { cursor: default; }
-.gallery.out { cursor: zoom-out; }   /* beside the plate: a click closes */
+.gallery.out { cursor: default; }   /* beside the plate: nothing (31 Oct; a click used to close) */
 .gallery img, .gallery video { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .gallery .mark { width: 100%; height: auto; max-height: 100%; }
 /* The swipe (11 Oct): the plate follows the finger and its neighbour waits
@@ -517,10 +517,10 @@ body .rows .cell.intro { display: flex; flex-direction: column; overflow: hidden
 /* Close, in the top right corner of the gallery, under Info. On a phone the
    plate starts a line lower, so a tall one does not run under the word. */
 .mode-gallery main { position: relative; }
-.gclose { position: absolute; top: 12px; right: var(--pad); z-index: 1; }
+.gctl { position: absolute; top: 12px; right: var(--pad); z-index: 1; display: flex; gap: 4px; }
 /* A pill since 30 Oct, black as the header's (white on the dark page). */
-.gclose { padding: 3px 12px; background: var(--fg); color: var(--bg); }
-.gclose:hover, .gclose:active { background: color-mix(in srgb, var(--fg) 78%, var(--bg)); }
+.gctl > * { padding: 3px 12px; background: var(--fg); color: var(--bg); }
+.gctl > :hover, .gctl > :active { background: color-mix(in srgb, var(--fg) 78%, var(--bg)); }
 @media (max-width: 700px) { .mode-gallery .gallery { padding-top: calc(12px + var(--lead) + 8px); } }
 .gcap a, .ptitle a.ext, .gdesc a.ext { text-decoration: underline; text-underline-offset: 0.18em; }
 .gdesc { display: none; }
@@ -701,6 +701,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // takes the 1600px copy for a tile and the full plate when it fills the
   // screen. Full-size plates decoded mid-scroll made the wall stutter.
   const srcOf = (file, hasSm) => hasSm ? `${EXPORT}1600/${file}` : EXPORT + file;
+  const hasLg = it => !it.video && it.sm && Math.max(it.w, it.h) > 3000;
   function media(it, { eager = false, still = false, sizes = '100vw' } = {}) {
     const p = bySlug[it.p];
     if (it.video && !still) {
@@ -715,9 +716,12 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const file = it.video ? it.poster : it.src, hasSm = it.video ? it.posterSm : it.sm;
     img.src = EXPORT + file;
     if (hasSm) {
-      // Each file's own pixel width: the copy is 1600 on its long edge.
+      // Each file's own pixel width: the copy is 1600 on its long edge, and
+      // a plate over 3000 has a 3000 copy too (31 Oct), so the gallery is not
+      // decoding a 24-40 MP original for a screen that shows 3000 at most.
       const smW = it.w >= it.h ? 1600 : Math.round(1600 * it.w / it.h);
-      img.srcset = `${EXPORT}1600/${file} ${smW}w, ${EXPORT}${file} ${it.w}w`;
+      const lgW = hasLg(it) ? (it.w >= it.h ? 3000 : Math.round(3000 * it.w / it.h)) : 0;
+      img.srcset = `${EXPORT}1600/${file} ${smW}w, ` + (lgW ? `${EXPORT}3000/${file} ${lgW}w, ` : '') + `${EXPORT}${file} ${it.w}w`;
       img.sizes = sizes;
     }
     img.alt = it.alt || p.title;
@@ -1056,26 +1060,72 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 
   }
 
+  // The gallery's plate (31 Oct: stepping and opening lagged). It shows the
+  // 1600 copy at once (the sheet has it already, and the zoom has a picture
+  // to land on), then the copy that suits the screen, swapped in only once
+  // it is decoded, so no step waits on a decode. The neighbours are fetched
+  // and decoded ahead; only the plate and its two neighbours are kept.
+  const sharpCopies = new Map();   // src -> { img, ready }
+  const plateSizes = it => {
+    const h = innerHeight - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--head-h')) || 40) - 90;
+    return Math.round(Math.min(innerWidth, h * it.w / it.h)) + 'px';
+  };
+  function warm(it) {
+    if (it.video || !it.sm || isMark(it)) return null;
+    let c = sharpCopies.get(it.src);
+    if (!c) {
+      const img = media(it, { eager: true, sizes: plateSizes(it) });
+      c = { img, ready: false };
+      img.decode().then(() => { c.ready = true; }, () => {});
+      sharpCopies.set(it.src, c);
+    }
+    return c;
+  }
+  function plateMedia(it) {
+    const c = warm(it);
+    if (!c) { const m = media(it, { eager: true }); if (isMark(it)) m.classList.add('mark'); return m; }
+    if (c.ready) return c.img.cloneNode();
+    const m = new Image(it.w, it.h);
+    m.src = srcOf(it.src, true);
+    m.alt = c.img.alt; m.draggable = false; m.decoding = 'async';
+    if (it.mono) m.classList.add('mono');
+    c.img.decode().then(() => { if (m.isConnected) { m.sizes = c.img.sizes; m.srcset = c.img.srcset; m.src = c.img.src; } }, () => {});
+    return m;
+  }
   function renderGallery(p, list, i) {
     const g = document.createElement('div');
     g.className = 'gallery' + (list.length < 2 ? ' single' : '');
     const it = list[i - 1];
     // After a slide the plate that came in is the very element already on
     // screen (carried over from .peek), so the change has no seam or reload.
-    const m = carried && carried.src === it.src ? carried.el : media(it, { eager: true });
+    const m = carried && carried.src === it.src ? carried.el : plateMedia(it);
     carried = null;
     if (isMark(it)) m.classList.add('mark');
     g.append(m);
     // Where Close goes: the contact sheet, or the wall for a one-plate
     // project (whose sheet would open the plate again). A click on the plate
-    // steps (left half back, right half on); a click beside it closes.
+    // steps (left half back, right half on); beside it, nothing (31 Oct,
+    // Kirill: it closed; Prev and Next pills sit by Close instead).
     const closeHref = list.length > 1 ? `?p=${p.slug}` : lastList;   // as Back
     const off = e => e.target !== m;
+    // The plate's box is set from its own proportions (31 Oct). Left to the
+    // browser it took the size of whichever copy had loaded, so it grew as
+    // the 1600 copy came in and again when the sharp one replaced it.
+    const fit = (el, item) => {
+      if (isMark(item) || !g.clientWidth) return;
+      const cs = getComputedStyle(g);
+      const W = g.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const H = g.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const r = item.w / item.h, w = Math.floor(Math.min(W, H * r));
+      el.style.width = w + 'px';
+      el.style.height = Math.floor(w / r) + 'px';
+    };
+    new ResizeObserver(() => { fit(m, it); const pk = g.querySelector('.peek > *'); if (pk && peekItem) fit(pk, peekItem); }).observe(g);
+    let peekItem = null;
     g.addEventListener('mousemove', e => {
       g.classList.toggle('out', off(e));
       g.classList.toggle('back', !off(e) && e.clientX < innerWidth / 2);
     });
-    g.addEventListener('click', e => { if (off(e)) go(closeHref); });
     if (list.length > 1) {
       const at = d => (i - 1 + d + list.length) % list.length;   // a neighbour's place in the list
       const step = d => go(`?p=${p.slug}&i=${at(d) + 1}`, true);
@@ -1084,7 +1134,9 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       // it, on a spring. A swipe tracks the finger 1:1 and hands its speed to
       // the spring; a click or an arrow key slides from rest, in the same
       // direction. With reduced motion asked for, the plate just changes.
-      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Since 31 Oct the plate just changes (Kirill: the gallery plain, no
+      // slide); ?motion=on brings the slide back with the page transitions.
+      const still = !pageMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
       let x = 0, peek = null, peekDir = 0, stop = null;
       const W = () => g.clientWidth;
       const place = () => {
@@ -1097,13 +1149,15 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
         if (peekDir === dir) return;
         if (peek) peek.remove();
         const n = list[at(dir)];
-        const pm = media(n, { eager: true });
+        const pm = plateMedia(n);
         if (isMark(n)) pm.classList.add('mark');
         peek = document.createElement('div');
         peek.className = 'peek';
         peek.append(pm);
         g.append(peek);
         peekDir = dir;
+        peekItem = n;
+        fit(pm, n);
       };
       const slide = (dir, v = 0) => {
         if (still) return step(dir);
@@ -1171,8 +1225,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       });
       g.addEventListener('touchcancel', () => { if (x0 !== null) { x0 = null; settle(0); } });
       gallerySteps = slide;
-      // Fetch the neighbours ahead of the click.
-      [list[i % list.length], list[(i - 2 + list.length) % list.length]].forEach(n => { if (!n.video) new Image().src = EXPORT + n.src; });
+      // Fetch and decode the neighbours ahead of the click; let go of the rest.
+      const keep = [it, list[at(1)], list[at(-1)]];
+      keep.forEach(warm);
+      for (const src of sharpCopies.keys()) if (!keep.some(k => k.src === src)) sharpCopies.delete(src);
     }
     main.append(g);
 
@@ -1204,13 +1260,24 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       cap.append(n);
     }
     main.append(cap);
-    // Close, outside the gallery element, so a click on it does not also step.
+    // Prev, Next and Close, top right, outside the gallery element so a click
+    // on them does not also step.
+    const ctl = document.createElement('div');
+    ctl.className = 'gctl';
+    if (list.length > 1) [['Prev', -1], ['Next', 1]].forEach(([t, d]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = t;
+      b.addEventListener('click', () => gallerySteps && gallerySteps(d));
+      ctl.append(b);
+    });
     const x = document.createElement('a');
     x.className = 'gclose';
     x.href = closeHref;
     x.dataset.nav = '';
     x.textContent = 'Close';
-    main.append(x);
+    ctl.append(x);
+    main.append(ctl);
     // The caption wraps on a desk; the plate's room is what it leaves.
     const fitCap = () => document.documentElement.style.setProperty('--gcap-real', cap.offsetHeight + 'px');
     fitCap();
@@ -1380,9 +1447,17 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // restoration on Back would land somewhere else first.
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
+  // Page motion is off since 31 Oct: Kirill's recording showed each page
+  // change freezing 100-280 ms before it began, the browser capturing the
+  // whole screen while the new page built. Views now switch at once.
+  // ?motion=on brings the transitions and the zoom back to compare
+  // (remembered in this browser), ?motion=off goes back.
+  let motion = new URLSearchParams(location.search).get('motion');
+  try { if (motion) localStorage.setItem('kk-motion', motion); motion = motion || localStorage.getItem('kk-motion'); } catch (e) {}
+  const pageMotion = motion === 'on';
   // `kind` picks a lighter treatment ('filter': a crossfade, see CSS).
   const transition = (swap, back = false, kind = null) => {
-    if (!document.startViewTransition || document.hidden) return swap();
+    if (!pageMotion || !document.startViewTransition || document.hidden) return swap();
     document.documentElement.classList.toggle('vt-back', back);
     document.documentElement.classList.toggle('vt-filter', kind === 'filter');
     const t = document.startViewTransition(swap);
@@ -1404,7 +1479,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // The thumbnail-to-plate morph. `from` is the element now on screen, `to`
   // finds its counterpart once the new view is rendered.
   function zoom(swap, from, to) {
-    if (!document.startViewTransition || document.hidden || !from) return swap();
+    if (!pageMotion || !document.startViewTransition || document.hidden || !from) return swap();
     from.style.viewTransitionName = 'plate';
     document.documentElement.classList.add('vt-zoom');
     const t = document.startViewTransition(() => {
@@ -1597,7 +1672,11 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // panel scrolls on its own (data-lenis-prevent).
   // Not for visitors who asked for reduced motion (11 Oct): they get the
   // browser's own scrolling, with no easing behind the wheel.
-  if (window.Lenis && !matchMedia('(prefers-reduced-motion: reduce)').matches) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
+  // 31 Oct, Kirill: try it without. Off by default now; ?smooth=on brings it
+  // back to compare (remembered in this browser), ?smooth=off goes back.
+  let smooth = new URLSearchParams(location.search).get('smooth');
+  try { if (smooth) localStorage.setItem('kk-smooth', smooth); smooth = smooth || localStorage.getItem('kk-smooth'); } catch (e) {}
+  if (window.Lenis && smooth === 'on' && !matchMedia('(prefers-reduced-motion: reduce)').matches) window.lenis = new Lenis({ lerp: 0.12, autoRaf: true, anchors: false });
   // iOS only shows :active (the pressed state) on a page that listens for
   // touches; this empty listener is the usual way to switch it on.
   document.addEventListener('touchstart', () => {}, { passive: true });
