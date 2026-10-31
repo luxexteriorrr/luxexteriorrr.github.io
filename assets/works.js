@@ -31,7 +31,7 @@
 // Sentra's key plate (home cover) is 19, the start screen with its proceed button through the five colours (23 Oct).
 // Depo (23 Oct): square gothic typeface in progress (working name was Brok); cover = depo-02, a 5 s DrawBot loop of NIGHT SERVICE ONLY moving
 // corner to corner through weight and contrast, blue on black; then the navy specimen still. First in Info and on home (Kirill, 23 Oct).
-// 30 Oct: cover is now depo-04, the kerned loop in periwinkle with a 6 px red keyline, bigger type and tighter leading (Kirill picked 6 px over 3 px).
+// 30 Oct: cover is now depo-06, the kerned loop in periwinkle with a red keyline that thickens with the weight, 8 px light to 16 px bold (Kirill picked it over 16 to 24, which fused letters at bold; was a flat 6 px, depo-04), bigger type and tighter leading.
 // cw: a fixed width (%) for the project's plate on home, in place of the varied one.
 // Zerko Grotesk's key plate is the character set (SVG, 23 Oct); then the weight loop (Zerko / Grotesk, Thin to Black
 // and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
@@ -190,11 +190,11 @@ window.WORKS = {
  "items": [
   {
    "p": "depo",
-   "src": "depo-04.mp4",
+   "src": "depo-06.mp4",
    "w": 3840,
    "h": 2160,
    "video": 1,
-   "poster": "depo-04-poster.webp",
+   "poster": "depo-06-poster.webp",
    "key": 1
   },
   {

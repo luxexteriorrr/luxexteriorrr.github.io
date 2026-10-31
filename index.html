@@ -611,7 +611,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-30h"></script>
+<script src="assets/works.js?v=2026-10-30j"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -944,8 +944,8 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 
   // Filter (30 Oct, Kirill: Work becomes a filter with the categories in
   // it, and All images sits inside it too). The pill opens a list under it:
-  // All work, All images, then each discipline in use. Any number can be on at once (the column, with its bar), and the
-  // list stays open while you pick. Click outside or Escape shuts it.
+  // All work, All images, then each discipline in use. Any number can be on at once; a pick shuts
+  // the list (Kirill, 30 Oct), as do a click outside and Escape.
   let filterOpen = false;
   const fBtn = document.querySelector('#hfil > button'), fList = document.getElementById('hfil-list');
   fList.innerHTML = `<button type="button" class="hn" data-k=""><span>All work</span></button>` +
@@ -978,9 +978,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   }
   fBtn.addEventListener('click', () => setFilter(!filterOpen));
   fList.addEventListener('click', e => {
-    if (e.target.closest('[data-wall]')) return go('?view=wall');
-    const b = e.target.closest('[data-k]');
+    const b = e.target.closest('[data-k], [data-wall]');
     if (!b) return;
+    setFilter(false);
+    if (b.dataset.wall !== undefined) return go('?view=wall');
     // From the address, not homeDs: a second pick made while the page is
     // still changing would otherwise drop the first.
     const k = b.dataset.k, on = selectedFilters(location.search);
