@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kirill Konstantinov</title>
-<link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <meta name="description" content="Kirill Konstantinov is a graphic designer in London, working across editorial, type and web design.">
 <link rel="preload" href="assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/zerko.css">
@@ -475,8 +475,14 @@ body .rows.wallrows { padding-top: var(--pad); }
   .plq-slot { grid-area: 1 / 1; justify-self: start; }
   .plaque { left: 0; transform: none; }
   .plaque-bar { margin: 0; max-width: calc(100vw - 2 * var(--pad) - 5em); text-align: left; }
+  /* open, the name moves to the middle, over the centred text (31 Oct, Kirill: off on the phone; keep it centred) */
+  /* the name slides to the middle as the box widens, and back as it closes; the bar keeps its own width,
+     so the closed size measured from it holds */
+  .plaque-bar { transition: transform var(--dock-w-dur) var(--dock-ease); }
+  .plaque.open .plaque-bar { transform: translateX(calc((var(--plq-open-w) - var(--plq-w)) / 2)); }
 }
 @media (prefers-reduced-motion: reduce) { .plaque, .plaque.open, .plaque-inner > * { transition: none; animation: none; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .plaque-bar { transition: none; } }
 
 .hpos { margin-right: 4px; font-variant-numeric: tabular-nums; }
 .hpos:empty { display: none; }
