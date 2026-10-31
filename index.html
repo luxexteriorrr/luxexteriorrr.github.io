@@ -580,8 +580,8 @@ body .rows .frame, body .cell .frame, body .cplate .frame { width: 100%; height:
 body .rows .frame { height: 100%; }
 /* The RCA2025 plaque (the School of Communication's sticker, 500 × 220, as
    given) small in the box's top right corner (31 Oct). */
-body .frame.plaque { container-type: inline-size; }
-body .frame.plaque::after { content: ""; position: absolute; top: 3cqw; right: 3cqw; width: 15cqw; aspect-ratio: 500 / 220; background: url(export/rca2025-plaque.png) center / contain no-repeat; pointer-events: none; }
+body .frame.rca { container-type: inline-size; }
+body .frame.rca::after { content: ""; position: absolute; top: 3cqw; right: 3cqw; width: 15cqw; aspect-ratio: 500 / 220; background: url(export/rca2025-plaque.png) center / contain no-repeat; pointer-events: none; }
 body .frame > :is(img, video) { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: var(--fh); width: auto; aspect-ratio: var(--sar); max-width: none; max-height: none; outline: 0; }
 /* All images: a wordmark sits on its row's foot, not in the middle (31 Oct, Kirill). */
 body .rows.wallrows .mark img { object-position: 50% 100%; }
@@ -655,7 +655,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-31d"></script>
+<script src="assets/works.js?v=2026-10-31h"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -750,7 +750,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   function media(it, opts = {}) {
     if (!it.frame) return bare(it, opts);
     const f = document.createElement('div');
-    f.className = 'frame' + (it.plaque ? ' plaque' : '');
+    f.className = 'frame' + (it.plaque ? ' rca' : '');   // not .plaque: that is the name box's class
     f.style.setProperty('--ar', it.w / it.h);
     f.style.setProperty('--sar', `${it.sw} / ${it.sh}`);
     f.style.setProperty('--fh', FRAME_H * 100 + '%');

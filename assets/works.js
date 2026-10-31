@@ -44,6 +44,11 @@
 // in the selection magenta. LOTV is spelt Lilies of the Valley in captions (was LILIESOFTHEVALLEY); the wordmark keeps its caps.
 // Sentra's lead image (19, the cover) carries `frame` (31 Oct, Kirill): it shows small in a grey box; the other screens stay bare for now.
 // …with `plaque` (31 Oct, Kirill): the RCA2025 sticker (export/rca2025-plaque.png), small, top right in the box.
+// Sentra (31 Oct, Kirill): the flats 25–27 are off; each printed piece (28 poster, 29 invoice, 30 dossier) is followed by its two
+// close-ups from the 29 Oct Instagram set (32–37, Sentra/exports/insta-2026-10-29, 1080–1400 px wide as made, no 1600 copies).
+// Sentra scans (31 Oct, Kirill; scanned 20 Oct): the business cards 41 right after the cover, the question cards 38–40
+// after the phone screens. Masters in _export/sentra (p2026_sentra_scan-*), q90 with 1600 (and 3000 for 41) copies.
+// Sentra (31 Oct, Kirill): the billboards 01, 05 and the logo loop 24 are off for now (files stay); the billboards are to be recorded again.
 window.WORKS = {
  "projects": [
   {
@@ -931,31 +936,6 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-24.mp4",
-   "w": 2412,
-   "h": 2436,
-   "video": 1,
-   "poster": "sentra-24-poster.webp"
-  },
-  {
-   "p": "sentra",
-   "src": "sentra-01.mp4",
-   "w": 1440,
-   "h": 2560,
-   "video": 1,
-   "poster": "sentra-01-poster.webp",
-   "posterSm": 1
-  },
-  {
-   "p": "sentra",
-   "src": "sentra-05.webp",
-   "w": 1620,
-   "h": 2880,
-   "alt": "The wall full. Nine colours stacked edge to edge, and Sentra explaining that it started out as a small collective of designers and writers passionate about small press and artist books — an origin invented to match what it had just been told.",
-   "sm": 1
-  },
-  {
-   "p": "sentra",
    "src": "sentra-15.png",
    "w": 1206,
    "h": 2436,
@@ -971,6 +951,14 @@ window.WORKS = {
    "key": 1,
    "frame": 1,
    "plaque": 1
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-41.webp",
+   "w": 3496,
+   "h": 4960,
+   "alt": "Two Sentra business cards in an open steel card case, scanned: Elijah Hart, Behavioural Optimisation Unit, and the Adaptive Linguistics Department under it.",
+   "sm": 1
   },
   {
    "p": "sentra",
@@ -1012,26 +1000,26 @@ window.WORKS = {
   },
   {
    "p": "sentra",
-   "src": "sentra-25.webp",
-   "w": 3955,
-   "h": 5600,
-   "alt": "The A1 explainer poster, flat: What is Sentra? set large in orange on pink, and blocks of text describing a system that turns conversation into campaign and your disclosures into design.",
+   "src": "sentra-38.webp",
+   "w": 1748,
+   "h": 2480,
+   "alt": "Sentra question card, scanned. Purple card: what version of yourself are you with me?",
    "sm": 1
   },
   {
    "p": "sentra",
-   "src": "sentra-26.webp",
-   "w": 3960,
-   "h": 5600,
-   "alt": "An invoice from Sentra Corp., flat. Session number, date and client code, usage terms set as an unreadable black block, and a subtotal and total with no figures against them.",
+   "src": "sentra-39.webp",
+   "w": 1748,
+   "h": 2480,
+   "alt": "Sentra question card, scanned. Pink card: have you been a good employee?",
    "sm": 1
   },
   {
    "p": "sentra",
-   "src": "sentra-27.webp",
-   "w": 3959,
-   "h": 5600,
-   "alt": "The session dossier, flat. The logged conversation runs down the left in colour-blocked type; the right-hand column is the system's reading of it — trust indicators, vulnerability markers, a data-extraction timeline, and an estimated lifetime value for the person who was talking.",
+   "src": "sentra-40.webp",
+   "w": 1748,
+   "h": 2480,
+   "alt": "Sentra question card, scanned. Orange card: would you only tell the truth when prompted?",
    "sm": 1
   },
   {
@@ -1044,6 +1032,20 @@ window.WORKS = {
   },
   {
    "p": "sentra",
+   "src": "sentra-32.webp",
+   "w": 1080,
+   "h": 1350,
+   "alt": "Sentra, the A1 poster printed and hung: close-up"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-33.webp",
+   "w": 1200,
+   "h": 1500,
+   "alt": "Sentra, the A1 poster printed and hung: close-up"
+  },
+  {
+   "p": "sentra",
    "src": "sentra-29.webp",
    "w": 3584,
    "h": 4480,
@@ -1052,11 +1054,39 @@ window.WORKS = {
   },
   {
    "p": "sentra",
+   "src": "sentra-34.webp",
+   "w": 1080,
+   "h": 1350,
+   "alt": "Sentra, the invoice printed and hung: close-up"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-35.webp",
+   "w": 1300,
+   "h": 1625,
+   "alt": "Sentra, the invoice printed and hung: close-up"
+  },
+  {
+   "p": "sentra",
    "src": "sentra-30.webp",
    "w": 3584,
    "h": 4480,
    "alt": "The session dossier printed as a poster and hung on a white wall: the session header in grey caps, the purple conversation down the left, the system's reading in black on the right, and black arrows at the foot.",
    "sm": 1
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-36.webp",
+   "w": 1080,
+   "h": 1350,
+   "alt": "Sentra, the dossier printed and hung: close-up"
+  },
+  {
+   "p": "sentra",
+   "src": "sentra-37.webp",
+   "w": 1400,
+   "h": 1750,
+   "alt": "Sentra, the dossier printed and hung: close-up"
   },
   {
    "p": "aww90s",
