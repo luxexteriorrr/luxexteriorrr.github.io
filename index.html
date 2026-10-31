@@ -362,11 +362,6 @@ body .rows img, body .rows video { width: 100%; height: 100%; max-width: none; m
 body .rows .mark img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; }
 /* The wall in the same rows (12 Oct), a margin under the header. */
 body .rows.wallrows { padding-top: var(--pad); }
-/* Each project on the wall opens with a cell the size of a plate (30 Oct):
-   its name and line, then its description, from the top left. */
-body .rows .cell.intro { display: flex; flex-direction: column; overflow: hidden; }
-.cell.intro .n { font-weight: 500; }
-.cell.intro .d { display: block; margin-top: 0.6em; max-width: 30em; }
 
 /* Gallery: one plate, as large as the screen allows under the header. Left
    half of the screen goes back, right half goes on. */
@@ -549,6 +544,27 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
 .foot { padding: 14em var(--pad) var(--pad); }
 .foot p { margin: 0; max-width: 44em; }
 .mode-gallery .foot { display: none; }
+/* Full view (31 Oct, Kirill: rethink the gallery, desk and phone). A plain
+   lightbox: no site header (Close goes back to where you were), Prev, Next
+   and Close top right, the caption at the foot as pills, and the plate
+   fitted whole (never cropped) in the room between them, clear of both.
+   The description stays on the sheet. */
+body.mode-gallery .gallery { position: fixed; inset: 0; height: auto; padding: 44px var(--pad); z-index: 1; }
+body.mode-gallery .head { display: none; }
+/* Leaving the gallery, the header's pills come back as the name box does
+   (31 Oct, Kirill liked its return): a beat, then each opens from its
+   centre, on the dock's curve and timings. */
+@keyframes pill-in { from { clip-path: inset(0 50%); } to { clip-path: inset(0); } }
+.head.pills-in :is(.hnav .hfil > .hn, .hnav .hsel .hn, .hnav .hback, .hthm button) { animation: pill-in var(--dock-w-dur) var(--dock-ease) var(--dock-h-dur) both; }
+@media (prefers-reduced-motion: reduce) { .head.pills-in * { animation: none !important; } }
+body.mode-gallery .gctl { position: fixed; top: 10px; right: var(--pad); z-index: 11; }
+body.mode-gallery .gcap { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; height: auto; padding: 10px var(--pad); align-items: center; pointer-events: none; }
+body.mode-gallery .gcap > * { pointer-events: auto; padding: 3px 12px; background: var(--fg); color: var(--bg); }
+body.mode-gallery .gcap a { text-decoration: none; }   /* the pill says it is a link (31 Oct) */
+body.mode-gallery .gcap .t { flex: 0 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.mode-gallery .gcap > :last-child { margin-left: auto; }
+body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
+@media (max-width: 700px) { body.mode-gallery .gctl { top: 8px; } }
 </style>
 </head>
 <body class="mode-wall">
@@ -803,16 +819,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const g = document.createElement('div');
     g.className = 'rows wallrows';
     // A wip project shows only its key plate here (30 Oct, Kirill: LOTV is
-    // its cover on All images until it opens). Each project opens with a
-    // cell the size of a plate: its name and line, then its description.
-    const seq = [];
-    list.filter(it => !bySlug[it.p].wip || it.key).forEach(it => {
-      if (!seq.length || seq[seq.length - 1].p !== it.p) seq.push({ p: it.p, src: '', w: 1, h: 1, intro: 1 });
-      seq.push(it);
-    });
-    list = seq;
+    // its cover on All images until it opens). The name and description
+    // cells before each project went on 31 Oct; the hover label stays.
+    list = list.filter(it => !bySlug[it.p].wip || it.key);
     list.forEach((it, n) => {
-      if (it.intro) return g.append(introCell(bySlug[it.p]));
       const a = document.createElement('a');
       a.className = 'cell';
       if (isMark(it)) a.classList.add('mark');
@@ -826,25 +836,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     main.append(g);
     layoutRows(g, list);
   }
-  function introCell(p) {
-    const a = document.createElement('a');
-    a.className = 'cell intro';
-    if (!p.wip) { a.href = `?p=${p.slug}`; a.dataset.nav = ''; }
-    a.dataset.caption = '';
-    const t = document.createElement('span');
-    const n = document.createElement('span');
-    n.className = 'n';
-    n.textContent = p.title;
-    t.append(n, p.meta ? `, ${p.meta} ` : ' ', soonEl(p));
-    a.append(t);
-    if (p.desc) {
-      const d = document.createElement('span');
-      d.className = 'd';
-      d.textContent = p.desc;
-      a.append(d);
-    }
-    return a;
-  }
+
 
   // A filter reads rather than shows: one column, flush left, one plate per
   // project (its key plate: the one marked `key`, or else its first), in the
@@ -899,7 +891,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // from the Info panel: it holds the bio and the contact lines, copied from
   // the Info markup so the words live in one place. (Its Practice chips moved
   // to the Filter pill, 30 Oct.)
-  let homeDs = [], plaqueOpen = false, lastList = './';
+  let homeDs = [], plaqueOpen = false, lastList = './', wasGallery = false;
   if (new URLSearchParams(location.search).get('plaque') === 'black') document.documentElement.classList.add('plq-black');
   const plaque = document.getElementById('plaque');
   const pBar = plaque.querySelector('.plaque-bar'), pBody = plaque.querySelector('.plaque-body');
@@ -1037,6 +1029,10 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     };
     let lastW = 0;
     new ResizeObserver(() => { if (grid.clientWidth !== lastW) { lastW = grid.clientWidth; requestAnimationFrame(run); } }).observe(grid);
+    // Sized at once too (31 Oct): closing the gallery measured a thumbnail
+    // still at its full 4K size, scrolled to centre it, and the rows then
+    // shrank, leaving the sheet scrolled down.
+    if (grid.isConnected) run();
   }
 
   function renderSheet(p, list) {
@@ -1067,8 +1063,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // and decoded ahead; only the plate and its two neighbours are kept.
   const sharpCopies = new Map();   // src -> { img, ready }
   const plateSizes = it => {
-    const h = innerHeight - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--head-h')) || 40) - 90;
-    return Math.round(Math.min(innerWidth, h * it.w / it.h)) + 'px';
+    return Math.round(Math.min(innerWidth, innerHeight * it.w / it.h)) + 'px';   // the full screen (31 Oct)
   };
   function warm(it) {
     if (it.video || !it.sm || isMark(it)) return null;
@@ -1390,6 +1385,13 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     });
     markPlaque();
     markFilter();
+    // Out of the gallery: the pills open back in (see .pills-in).
+    const inGallery = document.body.classList.contains('mode-gallery'), head = document.getElementById('head');
+    if (wasGallery && !inGallery) {
+      head.classList.remove('pills-in'); void head.offsetWidth; head.classList.add('pills-in');
+      setTimeout(() => head.classList.remove('pills-in'), 800);
+    }
+    wasGallery = inGallery;
     measureHead();
     // Back, on a project (30 Oct): from a plate to its sheet, from the sheet
     // to the view you came from (home if you came in from outside).
