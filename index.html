@@ -178,6 +178,10 @@ html:not(.no-blend) .head:has(.plaque.open) .hnav .hn:is([aria-current], [aria-p
 .hsel .hn i { font-style: normal; margin-left: 0.5em; }
 .hfil-list { position: absolute; top: calc(100% + 4px); left: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .hfil-list[hidden] { display: none; }
+/* The view you are on is already the pill's own label, so the list leaves
+   it out (30 Oct: All work showed twice). All work comes back while a
+   discipline is on, to clear them. */
+.hfil-list :is([data-k=""], [data-wall])[aria-pressed="true"] { display: none; }
 .head .slot { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); max-width: 40em; color: var(--mute); pointer-events: none; }
 .head .slot:empty { display: none; }
 .mode-wall .head .slot { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
