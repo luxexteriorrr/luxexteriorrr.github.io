@@ -175,6 +175,7 @@ html:not(.no-blend) .head:has(.plaque.open) .hnav .hn:is([aria-current], [aria-p
 /* The filters in force sit next to it, each a pill that takes itself off. */
 .hnav { flex-wrap: wrap; }
 .hsel { display: contents; }
+.hback[hidden] { display: none; }
 .hsel .hn i { font-style: normal; margin-left: 0.5em; }
 .hfil-list { position: absolute; top: calc(100% + 4px); left: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .hfil-list[hidden] { display: none; }
@@ -517,7 +518,9 @@ body .rows .cell.intro { display: flex; flex-direction: column; overflow: hidden
    plate starts a line lower, so a tall one does not run under the word. */
 .mode-gallery main { position: relative; }
 .gclose { position: absolute; top: 12px; right: var(--pad); z-index: 1; }
-.gclose:hover, .gclose:active { text-decoration: underline; text-underline-offset: 0.18em; }
+/* A pill since 30 Oct, black as the header's (white on the dark page). */
+.gclose { padding: 3px 12px; background: var(--fg); color: var(--bg); }
+.gclose:hover, .gclose:active { background: color-mix(in srgb, var(--fg) 78%, var(--bg)); }
 @media (max-width: 700px) { .mode-gallery .gallery { padding-top: calc(12px + var(--lead) + 8px); } }
 .gcap a, .ptitle a.ext, .gdesc a.ext { text-decoration: underline; text-underline-offset: 0.18em; }
 .gdesc { display: none; }
@@ -589,6 +592,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
       <div class="hfil-list" id="hfil-list" hidden></div>
     </div>
     <span class="hsel" id="hsel"></span>
+    <a href="./" class="hn hback" id="hback" data-nav hidden><span>Back</span></a>
   </nav>
   <div class="plq-slot">
     <div class="plaque" id="plaque" data-lenis-prevent>
@@ -891,7 +895,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // from the Info panel: it holds the bio and the contact lines, copied from
   // the Info markup so the words live in one place. (Its Practice chips moved
   // to the Filter pill, 30 Oct.)
-  let homeDs = [], plaqueOpen = false;
+  let homeDs = [], plaqueOpen = false, lastList = './';
   if (new URLSearchParams(location.search).get('plaque') === 'black') document.documentElement.classList.add('plq-black');
   const plaque = document.getElementById('plaque');
   const pBar = plaque.querySelector('.plaque-bar'), pBody = plaque.querySelector('.plaque-body');
@@ -965,20 +969,21 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
   // discipline while it is in force. The pill names the view (All images on
   // the wall, All work everywhere else), and the filters in force sit next
   // to it, each one a pill that takes itself off (30 Oct; they were a bar
-  // at the top of the page and a suffix to the name).
+  // at the top of the page and a suffix to the name). On a project they
+  // keep showing the view you came from (lastList), so a filter holds.
+  const listSearch = () => document.body.classList.contains('mode-project') ? lastList : location.search;
   const fName = document.getElementById('hfil-name'), fSel = document.getElementById('hsel');
   fSel.addEventListener('click', e => {
     const b = e.target.closest('[data-k]');
-    if (b) go(filterHref(selectedFilters(location.search).filter(o => o !== b.dataset.k)));
+    if (b) go(filterHref(selectedFilters(listSearch()).filter(o => o !== b.dataset.k)));
   });
   function markFilter() {
-    const cl = document.body.classList;
-    const all = !homeDs.length && cl.contains('mode-filter');
-    fList.querySelectorAll('[data-k]').forEach(b => b.setAttribute('aria-pressed', b.dataset.k ? homeDs.includes(b.dataset.k) : all));
-    const wall = cl.contains('mode-wall') && !cl.contains('mode-filter');
+    const src = listSearch(), ds = selectedFilters(src);
+    const wall = !ds.length && new URLSearchParams(src).get('view') === 'wall';
+    fList.querySelectorAll('[data-k]').forEach(b => b.setAttribute('aria-pressed', b.dataset.k ? ds.includes(b.dataset.k) : !ds.length && !wall));
     fList.querySelector('[data-wall]').setAttribute('aria-pressed', wall);
     fName.textContent = wall ? 'All images' : 'All work';
-    fSel.innerHTML = homeDs.map(k => `<button type="button" class="hn" data-k="${k}" aria-pressed="true" aria-label="Remove the ${discName[k]} filter">${discName[k]}<i aria-hidden="true">×</i></button>`).join('');
+    fSel.innerHTML = ds.map(k => `<button type="button" class="hn" data-k="${k}" aria-pressed="true" aria-label="Remove the ${discName[k]} filter">${discName[k]}<i aria-hidden="true">×</i></button>`).join('');
   }
   fBtn.addEventListener('click', () => setFilter(!filterOpen));
   fList.addEventListener('click', e => {
@@ -988,7 +993,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     if (b.dataset.wall !== undefined) return go('?view=wall');
     // From the address, not homeDs: a second pick made while the page is
     // still changing would otherwise drop the first.
-    const k = b.dataset.k, on = selectedFilters(location.search);
+    const k = b.dataset.k, on = selectedFilters(listSearch());
     go(filterHref(!k ? [] : on.includes(k) ? on.filter(o => o !== k) : [...on, k]));
   });
   document.addEventListener('click', e => {
@@ -1064,7 +1069,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     // Where Close goes: the contact sheet, or the wall for a one-plate
     // project (whose sheet would open the plate again). A click on the plate
     // steps (left half back, right half on); a click beside it closes.
-    const closeHref = list.length > 1 ? `?p=${p.slug}` : './';
+    const closeHref = list.length > 1 ? `?p=${p.slug}` : lastList;   // as Back
     const off = e => e.target !== m;
     g.addEventListener('mousemove', e => {
       g.classList.toggle('out', off(e));
@@ -1229,6 +1234,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     const pr = q.get('p');
     const ds = selectedFilters(location.search);
     const p = bySlug[pr] && !bySlug[pr].wip ? bySlug[pr] : undefined;   // a wip project's address shows home
+    if (!p) lastList = location.search || './';   // the view a project's Back and Filter remember
     // Home reads as an ordered column (19 Oct trial); the wall is one click away at ?view=wall.
     const wallView = !pr && !ds.length && q.get('view') === 'wall';
     main.replaceChildren();
@@ -1318,6 +1324,11 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
     markPlaque();
     markFilter();
     measureHead();
+    // Back, on a project (30 Oct): from a plate to its sheet, from the sheet
+    // to the view you came from (home if you came in from outside).
+    const back = document.getElementById('hback');
+    back.hidden = !p;
+    if (p) back.setAttribute('href', q.get('i') && items.filter(it => it.p === p.slug).length > 1 ? `?p=${p.slug}` : lastList);
     shownProject = p ? p.slug : null;
     shownIndex = p ? indexOf(location.search) && Math.min(indexOf(location.search), items.filter(it => it.p === p.slug).length) || (items.filter(it => it.p === p.slug).length === 1 ? 1 : 0) : 0;
   }
