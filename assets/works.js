@@ -42,6 +42,7 @@
 // No keyline (30 Oct): the thesis and As Seen In are photographs now, not white flats, so `edge` is off them.
 // Coming Soon (30 Oct): Depo (soon: it still opens) and Lilies of the Valley (wip: it does not) say Coming Soon after their line,
 // in the selection magenta. LOTV is spelt Lilies of the Valley in captions (was LILIESOFTHEVALLEY); the wordmark keeps its caps.
+// Sentra's lead image (19, the cover) carries `frame` (31 Oct, Kirill): it shows small in a grey box; the other screens stay bare for now.
 window.WORKS = {
  "projects": [
   {
@@ -966,7 +967,8 @@ window.WORKS = {
    "h": 2436,
    "video": 1,
    "poster": "sentra-19-poster.webp",
-   "key": 1
+   "key": 1,
+   "frame": 1
   },
   {
    "p": "sentra",

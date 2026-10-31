@@ -568,6 +568,19 @@ body.mode-gallery .gcap > * { padding: 3px 12px; background: var(--fg); color: v
 body.mode-gallery .gcap a { text-decoration: none; }   /* the pill says it is a link (31 Oct) */
 body.mode-gallery .gcap .t { flex: 0 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
+/* A phone screen in its grey box (31 Oct): media() wraps it in .frame, which
+   takes the plate's place and size in every view; the screen is centred in
+   it at --fh of its height. */
+body .frame { position: relative; display: block; aspect-ratio: var(--ar); background: #dcdcdc; }
+body .sheet .frame { width: min(100cqw, calc(100cqh * var(--ar))); }
+/* In the gallery the box is fitted like a plate before fit() sizes it. */
+body .gallery, body .gallery .peek { container-type: size; }
+body .gallery .frame { width: min(100cqw, calc(100cqh * var(--ar))); height: auto; flex: none; }
+body .rows .frame, body .cell .frame, body .cplate .frame { width: 100%; height: auto; }
+body .rows .frame { height: 100%; }
+body .frame > :is(img, video) { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: var(--fh); width: auto; aspect-ratio: var(--sar); max-width: none; max-height: none; outline: 0; }
+/* All images: a wordmark sits on its row's foot, not in the middle (31 Oct, Kirill). */
+body .rows.wallrows .mark img { object-position: 50% 100%; }
 </style>
 </head>
 <body class="mode-wall">
@@ -638,7 +651,7 @@ body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-10-30j"></script>
+<script src="assets/works.js?v=2026-10-31c"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -648,6 +661,15 @@ body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
   const shown = new Set(window.WORKS.projects.filter(p => !p.hidden).map(p => p.slug));
   const projects = window.WORKS.projects.filter(p => shown.has(p.slug));
   const items = window.WORKS.items.filter(it => shown.has(it.p));
+  // A phone screen (`frame`) sits small in a grey box, as Bänziger Hug show
+  // interfaces (31 Oct, Kirill). The box is the plate everywhere (rows,
+  // gallery); the screen keeps its own size as sw × sh and fills FRAME_H of
+  // the box's height. The files are untouched.
+  const FRAME_AR = 4 / 5, FRAME_H = 0.62;   // 0.55 first; slightly larger (31 Oct)
+  for (const it of items) if (it.frame) {
+    it.sw = it.w; it.sh = it.h;
+    it.h = Math.round(it.sh / FRAME_H); it.w = Math.round(it.h * FRAME_AR);
+  }
   // Contact sheets are justified rows since 12 Oct; ?grid=squares shows the
   // old square cells.
   const SHEET_ROWS = new URLSearchParams(location.search).get('grid') !== 'squares';
@@ -721,7 +743,17 @@ body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
   // screen. Full-size plates decoded mid-scroll made the wall stutter.
   const srcOf = (file, hasSm) => hasSm ? `${EXPORT}1600/${file}` : EXPORT + file;
   const hasLg = it => !it.video && it.sm && Math.max(it.w, it.h) > 3000;
-  function media(it, { eager = false, still = false, sizes = '100vw' } = {}) {
+  function media(it, opts = {}) {
+    if (!it.frame) return bare(it, opts);
+    const f = document.createElement('div');
+    f.className = 'frame';
+    f.style.setProperty('--ar', it.w / it.h);
+    f.style.setProperty('--sar', `${it.sw} / ${it.sh}`);
+    f.style.setProperty('--fh', FRAME_H * 100 + '%');
+    f.append(bare({ ...it, w: it.sw, h: it.sh }, opts));
+    return f;
+  }
+  function bare(it, { eager = false, still = false, sizes = '100vw' } = {}) {
     const p = bySlug[it.p];
     if (it.video && !still) {
       const v = document.createElement('video');
@@ -1105,7 +1137,7 @@ body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
     // steps (left half back, right half on); beside it, nothing (31 Oct,
     // Kirill: it closed; Prev and Next pills sit by Close instead).
     const closeHref = list.length > 1 ? `?p=${p.slug}` : lastList;   // as Back
-    const off = e => e.target !== m;
+    const off = e => !m.contains(e.target);
     // The plate's box is set from its own proportions (31 Oct). Left to the
     // browser it took the size of whichever copy had loaded, so it grew as
     // the 1600 copy came in and again when the sharp one replaced it.
