@@ -549,7 +549,7 @@ main { flex: 1; min-height: calc(100lvh - var(--head-h)); }
    and Close top right, the caption at the foot as pills, and the plate
    fitted whole (never cropped) in the room between them, clear of both.
    The description stays on the sheet. */
-body.mode-gallery .gallery { position: fixed; inset: 0; height: auto; padding: 44px var(--pad); z-index: 1; }
+body.mode-gallery .gallery { position: fixed; inset: 0; height: auto; padding: var(--pad) var(--pad) 44px; z-index: 1; }
 body.mode-gallery .head { display: none; }
 /* Leaving the gallery, the header's pills come back as the name box does
    (31 Oct, Kirill liked its return): a beat, then each opens from its
@@ -557,14 +557,17 @@ body.mode-gallery .head { display: none; }
 @keyframes pill-in { from { clip-path: inset(0 50%); } to { clip-path: inset(0); } }
 .head.pills-in :is(.hnav .hfil > .hn, .hnav .hsel .hn, .hnav .hback, .hthm button) { animation: pill-in var(--dock-w-dur) var(--dock-ease) var(--dock-h-dur) both; }
 @media (prefers-reduced-motion: reduce) { .head.pills-in * { animation: none !important; } }
-body.mode-gallery .gctl { position: fixed; top: 10px; right: var(--pad); z-index: 11; }
-body.mode-gallery .gcap { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; height: auto; padding: 10px var(--pad); align-items: center; pointer-events: none; }
-body.mode-gallery .gcap > * { pointer-events: auto; padding: 3px 12px; background: var(--fg); color: var(--bg); }
+/* One bar at the foot (31 Oct, Kirill: the corners bugged him): the
+   caption on the left; the counter, Prev, Next and Close on the right.
+   The plate starts at the top margin, the bar's sides on the same margin. */
+body.mode-gallery .gbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; align-items: center; gap: 4px; padding: 10px var(--pad); }
+body.mode-gallery .gctl { position: static; flex: none; }
+body.mode-gallery .gctl > span:hover { background: var(--fg); }   /* the counter is not a button */
+body.mode-gallery .gcap { flex: 1 1 auto; min-width: 0; height: auto; padding: 0; }
+body.mode-gallery .gcap > * { padding: 3px 12px; background: var(--fg); color: var(--bg); }
 body.mode-gallery .gcap a { text-decoration: none; }   /* the pill says it is a link (31 Oct) */
 body.mode-gallery .gcap .t { flex: 0 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-body.mode-gallery .gcap > :last-child { margin-left: auto; }
 body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
-@media (max-width: 700px) { body.mode-gallery .gctl { top: 8px; } }
 </style>
 </head>
 <body class="mode-wall">
@@ -1252,7 +1255,7 @@ body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
     if (list.length > 1) {
       const n = document.createElement('span');
       n.textContent = `${pad2(i)}/${pad2(list.length)}`;
-      cap.append(n);
+      cap.counter = n;
     }
     main.append(cap);
     // Prev, Next and Close, top right, outside the gallery element so a click
@@ -1272,7 +1275,12 @@ body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
     x.dataset.nav = '';
     x.textContent = 'Close';
     ctl.append(x);
-    main.append(ctl);
+    if (cap.counter) ctl.prepend(cap.counter);
+    // Caption and controls share one bar at the foot.
+    const bar = document.createElement('div');
+    bar.className = 'gbar';
+    bar.append(cap, ctl);
+    main.append(bar);
     // The caption wraps on a desk; the plate's room is what it leaves.
     const fitCap = () => document.documentElement.style.setProperty('--gcap-real', cap.offsetHeight + 'px');
     fitCap();
