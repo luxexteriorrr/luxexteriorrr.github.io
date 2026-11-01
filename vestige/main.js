@@ -37,7 +37,11 @@ if (layout === 'b') {
   document.querySelectorAll('.inline-img').forEach(el => {
     el.outerHTML = token(el.dataset.src, el.dataset.label, el.dataset.ratio);
   });
-  // the pondcam leaves the back of the page and sits in the text as well, live, at "a camera pointed at a pond"
+}
+// The pondcam leaves the back of the page and sits in the text, live, at "a camera pointed at a pond"
+// (from layout B; on the page itself since 1 Nov, when the media strip went).
+// Chosen over a fixed corner window (tried 1 Nov). It fades like a word.
+if (layout !== 'chunks') {
   const stream = document.querySelector('.media.stream iframe'), at = document.querySelector('.inline-embed');
   if (stream && at) {
     at.outerHTML = ` <span class="walk-token embed unit" role="button" tabindex="0" style="--r: ${(Math.random() * 16 - 8).toFixed(1)}deg;`
@@ -45,13 +49,55 @@ if (layout === 'b') {
       + ` title="${stream.title}" allow="autoplay; encrypted-media" tabindex="-1"></iframe></span>`;
     stream.closest('.scene').remove();
   }
-  // click (or tap) a token and its photo grows where it is, in the line, pushing the text apart; again to close
-  document.addEventListener('click', e => {
-    const t = e.target.closest('.walk-token');
-    if (!t) return;
-    e.preventDefault(); // a token inside a date doesn't follow the date's link
-    t.classList.toggle('open');
+}
+// click (or tap) a token and its photo grows where it is, in the line, pushing the text apart; again to close
+document.addEventListener('click', e => {
+  const t = e.target.closest('.walk-token');
+  if (!t) return;
+  e.preventDefault(); // a token inside a date doesn't follow the date's link
+  t.classList.toggle('open');
+});
+
+// Chunks (trying, 1 Nov, after Around A Memory 2025): ?layout=chunks. Each paragraph is a block of its
+// own, at its own width and indent, with space between.
+// The chunks hold still while you read. Left alone, they drift: from the moment the words start to fade,
+// each chunk on screen wanders to a new width and indent, then another, slowly, each on its own clock.
+// Any input brings them back to where they were. &breathe= sets the seconds per drift (default 8).
+// Still for anyone who has asked for reduced motion.
+if (layout === 'chunks') {
+  document.documentElement.classList.add('layout-chunks');
+  const phone = matchMedia('(max-width: 700px)').matches;
+  // Arketa is wide (0.65em a character), so at 24–32px the narrowest chunk is kept to ~25 characters a line
+  const [wMin, wMax, xMax, dMin, dMax] = phone ? [88, 100, 0, 70, 100] : [40, 65, 35, 35, 75];
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const step = Number(new URLSearchParams(location.search).get('breathe') ?? 8) * 1000;
+  const SETTLE = 1500; // ms to come back home on input
+  const chunks = [...document.querySelectorAll('main > section:not(#calendar):not(#bib) > p')];
+  const place = (p, w, x, ms) => {
+    p.style.setProperty('--t', ms + 'ms');
+    p.style.setProperty('--w', w.toFixed(1) + '%');
+    p.style.setProperty('--x', x.toFixed(1) + '%');
+  };
+  chunks.forEach(p => {
+    p.classList.add('chunk');
+    p.home = [rand(wMin, wMax), rand(0, xMax)];
+    place(p, ...p.home, 0);
   });
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let timers = [];
+    const visible = p => { const r = p.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+    const wander = p => {
+      const w = rand(dMin, dMax), ms = Math.round(step * rand(0.8, 1.2));
+      place(p, w, rand(0, 100 - w), ms);
+      timers.push(setTimeout(() => wander(p), ms));
+    };
+    document.addEventListener('vestige:idle', () => chunks.filter(visible).forEach(p =>
+      timers.push(setTimeout(() => wander(p), rand(0, 3000))))); // staggered, so they don't set off together
+    document.addEventListener('vestige:active', () => {
+      timers.forEach(clearTimeout); timers = [];
+      chunks.forEach(p => { if (p.style.getPropertyValue('--t') !== '0ms') place(p, ...p.home, SETTLE); });
+    });
+  }
 }
 
 const settings = { ...DEFAULTS };
@@ -110,6 +156,7 @@ let idleTimer, stepTimer, fading = false;
 
 function fadeOut() {
   fading = true;
+  document.dispatchEvent(new Event('vestige:idle'));
   const queue = shuffle([...document.querySelectorAll('.unit')].filter(u => u.style.opacity !== '0' && onScreen(u)));
   const next = () => {
     if (!fading || !queue.length) return;
@@ -124,6 +171,7 @@ function fadeOut() {
 function restore() {
   fading = false;
   clearTimeout(stepTimer);
+  document.dispatchEvent(new Event('vestige:active'));
   const faded = [...document.querySelectorAll('.unit')].filter(u => u.style.opacity === '0');
   if (settings.restore === 'all') {
     faded.forEach(u => { u.style.transition = `opacity ${settings.back}ms linear`; u.style.opacity = '1'; });
@@ -250,6 +298,7 @@ document.addEventListener('click', e => {
   }
   layout();
   addEventListener('resize', layout);
+  new ResizeObserver(layout).observe(document.querySelector('main')); // the text can change height on its own (chunks breathing)
   addEventListener('load', layout);
   document.fonts?.ready.then(layout);
 })();

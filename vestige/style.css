@@ -35,7 +35,7 @@ body {
   font-size: 2vw; /* scales with the window, like the container below */
   line-height: 1.1;
   text-align: center;
-  text-transform: uppercase; /* trying all caps; the source text stays mixed case */
+  text-transform: none; /* the text's own case (1 Nov); all caps was the 24 Sep version */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -195,6 +195,26 @@ p:hover > .cite, .cite[aria-expanded="true"] { background: #fff; color: #000; bo
   .type-big #bib { margin-left: -16px; }
 }
 
+/* chunks (trying, 1 Nov, after Around A Memory 2025): ?layout=chunks. The essay leaves the centred
+   column; each paragraph is its own block, flush left, at a random width (--w) and indent (--x) of
+   the page, with space between. main.js sets both and drifts --w when a paragraph reaches mid-screen. */
+/* sizes from personals.ho.ldin.gs: text 32px on a wide screen, 24px on a phone, line 1.3; the small
+   things (references, bibliography, the index and its dates) at their caption size, 19.2px */
+.layout-chunks body { font-size: clamp(24px, 2.22vw, 32px); line-height: 1.3; text-transform: none; }
+.layout-chunks .fn, .layout-chunks #bib, .layout-chunks #calendar { font-size: 19.2px; }
+/* text only for now (1 Nov): no pondcam, no walk photos, and none of the space kept for them */
+.layout-chunks .track, .layout-chunks .gap, .layout-chunks .drift, .layout-chunks #calendar { display: none; } /* and no index of walks */
+.layout-chunks main { padding-top: 25vh !important; }
+/* colours (trying, 1 Nov, after a font.wtf symposium post): pale grey text on sky blue, low contrast,
+   plain colours (no exclusion blend now there's nothing behind the text); the same in dark mode */
+.layout-chunks { --paper: #7ebcf4; --ink: #d9d9d9; --blend: normal; }
+.layout-chunks .index-head { background: var(--paper); }
+.layout-chunks p:hover > .cite, .layout-chunks .cite[aria-expanded="true"] { background: var(--ink); color: var(--paper); }
+.layout-chunks main { max-width: none; margin: 0; padding: 0 16px; text-align: left; }
+.layout-chunks section { display: block; }
+.layout-chunks p.chunk { display: block; width: var(--w); margin: 0 0 12vh var(--x);
+  transition: width var(--t, 0ms) ease-in-out, margin-left var(--t, 0ms) ease-in-out; }
+
 /* the fading pieces */
 .unit { opacity: 1; }
 
@@ -212,4 +232,14 @@ p:hover > .cite, .cite[aria-expanded="true"] { background: #fff; color: #000; bo
 #panel label { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 4px 0; }
 #panel input, #panel select { width: 90px; font: inherit; }
 #panel button { margin-top: 8px; font: inherit; width: 100%; }
+
+/* text only, on blue (trying, 1 Nov): no pondcam, no walk photos and none of the space kept for them.
+   Plain colours with no exclusion blend, the same in dark mode. Pale grey on sky blue (after a font.wtf post),
+   about 1.4:1. Tried and dropped (1 Nov): the photocopy palette, #262626 on the photos' pale blue #e5e9f2. */
+.track, .gap, #calendar { display: none; } /* and no index of walks */
+main { padding-top: 25vh !important; }
+:root { --paper: #7ebcf4; --ink: #d9d9d9; --blend: normal; }
+.index-head { background: var(--paper); }
+.drift .sq { background: var(--ink); } /* the squares in the type's grey */
+.walk-token iframe { filter: none; } /* no blend now, so the pond shows as it is, not pre-inverted */p:hover > .cite, .cite[aria-expanded="true"] { background: var(--ink); color: var(--paper); }
 
