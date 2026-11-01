@@ -709,6 +709,10 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   })();
   const pieces = window.WORKS.pieces || {};
   const bySlug = Object.fromEntries(projects.map(p => [p.slug, p]));
+  // Where a project opens: its own page if it has one (`page` in works.js: the typeface pages, 1 Nov), loaded
+  // as a normal page; otherwise its contact sheet here, through the site's own navigation (data-nav).
+  const openProject = (a, p) => { if (p.page) a.href = p.page; else { a.href = `?p=${p.slug}`; a.dataset.nav = ''; } };
+  const projectLink = p => p.page ? `<li><a href="${p.page}">${p.title}</a></li>` : li(`?p=${p.slug}`, p.title);
   // Four, as the bio says it (31 Oct, Kirill): Art Direction and Identity are off, their projects under
   // Graphic Design; an old ?d=identity link is ignored (selectedFilters) and shows all the work.
   const DISCIPLINES = [
@@ -881,7 +885,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
       a.className = 'cell';
       if (isMark(it)) a.classList.add('mark');
       // A project marked wip shows but opens nothing yet (no href: no link).
-      if (!bySlug[it.p].wip) { a.href = `?p=${it.p}`; a.dataset.nav = ''; }
+      if (!bySlug[it.p].wip) openProject(a, bySlug[it.p]);
       a.dataset.caption = wallCaption(it);
       a.dataset.title = bySlug[it.p].title;
       a.append(media(it, { eager: n < 8, sizes: '(max-width: 420px) 100vw, 40vw' }));
@@ -917,7 +921,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
       const f = document.createElement('figure');
       f.className = 'cplate';
       const a = document.createElement('a');
-      if (!p.wip) { a.href = `?p=${p.slug}`; a.dataset.nav = ''; }
+      if (!p.wip) openProject(a, p);
       const r = ar(it);
       const steps = STEPS(it);
       let k = seed(p.slug) % steps.length;
@@ -1463,7 +1467,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   document.getElementById('disciplines').innerHTML =
     li('./', 'All') + DISCIPLINES.map(([k, v]) => `<li><a href="?d=${k}" data-nav data-k="${k}">${v}</a></li>`).join('');
   document.getElementById('projects').innerHTML =
-    projects.map(p => p.wip ? `<li>${p.title}${wip(p)}</li>` : li(`?p=${p.slug}`, p.title)).join('');
+    projects.map(p => p.wip ? `<li>${p.title}${wip(p)}</li>` : projectLink(p)).join('');
 
   const toggle = document.querySelector('.info-toggle');
   const info = document.getElementById('info');

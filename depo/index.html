@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Depo | Kirill Konstantinov</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Depo, a squared gothic with small caps, in two weights and two contrasts, by Kirill Konstantinov. Work in progress.">
+<link rel="preload" href="../assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
+<script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<!-- Depo's own page (trying, 1 Nov 2026), the Zerko page's template (zerko/index.html). Its world is the
+     night depot: route blinds, last buses, not-in-service. The plates are live type in Depo, after Edito's
+     Katalog plates (a few words from the face's world, set huge and edge to edge, single flat colours, pairs
+     as squares). Web fonts in assets/fonts/depo, exported from Brok.glyphs (the four instances) on 1 Nov. -->
+<style>
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+/* Depo: low contrast and high contrast as two families, Regular and Bold in each */
+@font-face { font-family: 'Depo'; src: url('../assets/fonts/depo/depo-regular.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Depo'; src: url('../assets/fonts/depo/depo-bold.woff2') format('woff2'); font-weight: 700; font-display: block; }
+@font-face { font-family: 'Depo Contrast'; src: url('../assets/fonts/depo/depo-regular-highcontrast.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Depo Contrast'; src: url('../assets/fonts/depo/depo-boldcontrast.woff2') format('woff2'); font-weight: 700; font-display: block; }
+
+/* The site's own tokens and light / dark (from index.html) */
+:root { --fg: #111; --bg: #fff; --rule: #111; --size: 13px; --lead: 17px; --track: 0.022em; --pad: 14px;
+  /* Depo's colours, from its specimens on the site */
+  --navy: #2a2a5c; --cyan: #009ad2; --pale: #8ab4f2; --black: #000; --amber: #ffb000; }
+@media (max-width: 700px) { :root { --size: 12px; --lead: 15px; } }
+:root { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; --rule: #f7f7f7; } }
+:root[data-theme="dark"] { color-scheme: dark; --fg: #f7f7f7; --bg: #111; --rule: #f7f7f7; }
+:root[data-theme="light"] { color-scheme: light; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+body { font-family: 'Zerko', sans-serif; font-weight: 500; font-size: var(--size); line-height: var(--lead);
+  letter-spacing: var(--track); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+::selection { background: transparent; color: #e6007e; }
+.u, a.u { text-decoration: underline; text-underline-offset: 0.18em; }
+img, video { display: block; width: 100%; height: auto; }
+
+.head { position: sticky; top: 0; z-index: 10; min-height: 40px; display: flex; flex-wrap: wrap; align-items: baseline;
+  column-gap: 2em; padding: 12px var(--pad) 11px; background: var(--bg); border-bottom: 1px solid var(--rule); }
+.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .slot { flex: 1; min-width: 0; }
+
+.band { display: grid; grid-template-columns: 1fr 3fr; column-gap: var(--pad); padding: 0 var(--pad); }
+.band > .label { padding-top: 0.2em; margin: 0; }
+@media (max-width: 700px) { .band { grid-template-columns: 1fr; } .band > .label { margin-bottom: 0.8em; } }
+section { margin-top: 120px; }
+@media (max-width: 700px) { section { margin-top: 72px; } }
+
+.name { padding: 0 var(--pad); margin-top: 24px; }
+.name h1 { margin: 0; font-family: 'Depo', sans-serif; font-weight: 700; font-size: clamp(64px, 16vw, 300px); line-height: 0.85; letter-spacing: 0; }
+.name p { margin: 14px 0 0; }
+.intro p { margin: 0; max-width: 34em; font-size: clamp(18px, 1.7vw, 26px); line-height: 1.3; letter-spacing: 0; font-weight: 400; }
+
+/* Plates: live type in Depo. Full-width ones take the row; .sq ones pair up as squares. */
+.plates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--pad); padding: 0 var(--pad); }
+.plates > * { margin: 0; grid-column: span 2; }
+.plates > .sq { grid-column: span 1; aspect-ratio: 1; }
+@media (max-width: 700px) { .plates > .sq { grid-column: span 2; } }
+.plate { overflow: hidden; font-family: 'Depo', sans-serif; letter-spacing: 0; line-height: 0.9; display: flex; flex-direction: column; }
+.plate.contrast { font-family: 'Depo Contrast', sans-serif; }
+.plate.split { justify-content: space-between; padding: 3% 4%; }
+.plate.center { align-items: center; justify-content: center; text-align: center; padding: 6% 4%; }
+.plate.crop { justify-content: center; }
+.plate.crop span { white-space: nowrap; margin-left: -0.04em; }
+/* sizes are in container units, so a plate keeps its composition at any width */
+.plates > * { container-type: inline-size; }
+/* set so the longest line fills the plate, as Edito's do (Garage just bleeds off both sides) */
+.plate .xl { font-size: 20cqw; }
+.plate .l { font-size: 26cqw; }
+.plate .m { font-size: 22cqw; }
+.plate .s { font-size: 8cqw; line-height: 1.12; }
+.plate.crop { align-items: center; }
+
+.rows { border-top: 1px solid var(--rule); }
+.rows div { display: grid; grid-template-columns: 1fr 2fr; column-gap: var(--pad); padding: 9px 0 8px; border-bottom: 1px solid var(--rule); }
+
+.tester { border-top: 1px solid var(--rule); padding-top: 9px; }
+.tester + .tester { margin-top: 64px; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.6em; row-gap: 6px; }
+.controls .weights { display: flex; flex-wrap: wrap; column-gap: 1em; }
+.controls button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+.controls button:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.controls label { display: flex; align-items: center; gap: 0.6em; margin-left: auto; }
+.controls input[type=range] { width: 140px; accent-color: var(--fg); }
+.sample { margin-top: 18px; outline: none; letter-spacing: 0; overflow-wrap: anywhere; caret-color: #e6007e; font-family: 'Depo', sans-serif; }
+.sample.contrast { font-family: 'Depo Contrast', sans-serif; }
+.sample.big { line-height: 0.92; }
+.sample.mid { line-height: 1.05; }
+.sample.small { line-height: 1.3; max-width: 34em; }
+
+.strip { display: flex; align-items: center; gap: calc(var(--pad) * 3); overflow-x: auto; padding: 0 var(--pad); scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+.strip img { height: min(46vh, 420px); width: auto; flex: none; }
+.strip img.thin { height: auto; width: min(60vw, 560px); }
+:root[data-theme="dark"] .strip img.mono { filter: invert(1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .strip img.mono { filter: invert(1); } }
+.strip-cap { padding: 10px var(--pad) 0; }
+
+.chars { display: grid; grid-template-columns: 1fr 3fr; column-gap: var(--pad); padding: 0 var(--pad); }
+.chars aside { position: sticky; top: 56px; align-self: start; }
+.chars .preview { font-family: 'Depo', sans-serif; font-size: clamp(120px, 16vw, 260px); line-height: 1; letter-spacing: 0; margin: 18px 0 8px; height: 1.1em; }
+.chars .group { margin-bottom: 40px; }
+.chars .group h3 { margin: 0 0 8px; font: inherit; }
+.chars .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.chars .grid span { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: 'Depo', sans-serif; font-size: 26px; letter-spacing: 0;
+  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); cursor: default; }
+.chars .grid span:hover, .chars .grid span.on { background: var(--fg); color: var(--bg); }
+@media (max-width: 700px) {
+  .chars { grid-template-columns: 1fr; }
+  .chars aside { position: static; }
+  .chars .preview { font-size: 120px; }
+  .chars .grid { grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); }
+  .chars .grid span { font-size: 20px; }
+}
+
+footer { margin: 120px 0 0; padding: 12px var(--pad) 40px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <a href="../">Kirill Konstantinov</a>
+  <a href="../" class="view">Selected Works</a>
+  <span class="slot">Depo · Typeface, 2026 (work in progress)</span>
+</header>
+
+<div class="hero" id="hero"></div>
+
+<div class="name">
+  <h1>Depo</h1>
+  <p>Squared gothic with small caps · 2 weights, 2 contrasts · <span id="count"></span> characters · Work in progress</p>
+</div>
+
+<section class="band intro">
+  <p class="label">About</p>
+  <p id="desc"></p>
+</section>
+
+<!-- Plates, live in Depo. Night routes and depot signs. -->
+<section class="plates" aria-label="Specimen plates">
+  <div class="plate center" style="background: #fff; color: #000">
+    <span class="s">N29 Wood Green<br>N38 Clapton Pond<br>N73 Walthamstow<br>N207 Uxbridge</span>
+  </div>
+  <div class="plate center" style="background: var(--black); color: var(--pale); font-weight: 700">
+    <span class="l">Last Bus<br>00:47</span>
+  </div>
+  <div class="plate split sq" style="background: var(--navy); color: var(--cyan)">
+    <span class="m">Not in</span><span class="m">Service</span>
+  </div>
+  <div class="plate split sq contrast" style="background: var(--cyan); color: var(--navy); font-weight: 700">
+    <span class="m">Depot</span><span class="m">Only</span>
+  </div>
+  <div class="plate crop contrast" style="background: #fff; color: #000; font-weight: 700">
+    <span class="xl">Garage</span>
+  </div>
+  <div class="plate split sq" style="background: var(--amber); color: #000">
+    <span class="m">Shift</span><span class="m">Change</span>
+  </div>
+  <div class="plate split sq contrast" style="background: #000; color: var(--amber)">
+    <span class="m">Shift</span><span class="m">Change</span>
+  </div>
+  <figure id="specimen"></figure>
+</section>
+
+<section class="band">
+  <p class="label">Information</p>
+  <div class="rows">
+    <div><span>Type design</span><span>Kirill Konstantinov</span></div>
+    <div><span>Genre</span><span>Squared gothic, in the line of Bank Gothic</span></div>
+    <div><span>Origin</span><span>The lettering on the JRAY Drenched sleeve</span></div>
+    <div><span>Styles</span><span>Regular and Bold, each in low and high contrast</span></div>
+    <div><span>Characters</span><span id="count2"></span></div>
+    <div><span>OpenType</span><span>Small caps, from lowercase and from capitals</span></div>
+    <div><span>Status</span><span>In progress: Latin, small caps, figures and punctuation drawn; the full Latin S set to come</span></div>
+    <div><span>Year</span><span>2026</span></div>
+  </div>
+</section>
+
+<section class="band" aria-label="Type tester">
+  <p class="label">Try it</p>
+  <div id="testers"></div>
+</section>
+
+<section aria-label="Where it started">
+  <a class="strip" id="strip" href="../?p=jray" aria-label="JRAY, the sleeve Depo grew out of"></a>
+  <p class="strip-cap">Where it started: <a class="u" href="../?p=jray">JRAY, Drenched</a></p>
+</section>
+
+<section class="chars" aria-label="Character set">
+  <aside>
+    <p>Character set</p>
+    <div class="preview" id="preview" aria-hidden="true">D</div>
+    <p id="code">U+0044</p>
+  </aside>
+  <div id="groups"></div>
+</section>
+
+<footer>
+  <a class="u" href="../">Selected Works</a>
+  <a class="u" href="../zerko/">Zerko Grotesk</a>
+</footer>
+
+<script src="../assets/works.js"></script>
+<script src="charset.js"></script>
+<script>
+const W = window.WORKS;
+const proj = W.projects.find(p => p.slug === 'depo');
+document.getElementById('desc').textContent = proj.desc;
+
+// The site's Depo plates: the cover loop opens the page, the NIGHT SERVICE ONLY specimen closes the plates
+(() => {
+  const media = it => {
+    const alt = (it.alt || '').replace(/"/g, '&quot;'), full = '../export/' + it.src;
+    if (it.video) return `<video src="${full}" poster="../export/${it.poster}" width="${it.w}" height="${it.h}" autoplay muted loop playsinline aria-label="${alt}"></video>`;
+    return `<img src="${full}" width="${it.w}" height="${it.h}" loading="lazy" decoding="async" alt="${alt}">`;
+  };
+  const items = W.items.filter(it => it.p === 'depo' && !it.hidden);
+  const cover = items.find(it => it.video) || items[0];
+  document.getElementById('hero').innerHTML = media(cover);
+  const still = items.find(it => it !== cover);
+  if (still) document.getElementById('specimen').innerHTML = media(still); else document.getElementById('specimen').remove();
+})();
+
+(() => {
+  const n = window.CHARSET.reduce((s, g) => s + [...g.chars].length, 0);
+  document.getElementById('count').textContent = n;
+  document.getElementById('count2').textContent = n;
+})();
+
+// Testers: Regular / Bold, low / high contrast, size. Lowercase sets as small caps.
+const TESTERS = [
+  { cls: 'big', size: [40, 320, 180], weight: 700, contrast: false, text: 'Night Service Only' },
+  { cls: 'mid', size: [20, 120, 56], weight: 400, contrast: true, text: 'Route N29 · Night Bus · Every 12 Minutes' },
+  { cls: 'small', size: [12, 40, 22], weight: 400, contrast: false,
+    text: 'This bus terminates at the depot. Please take all your belongings with you. The last departures are from the stop opposite, at 00:47 and 01:12.' },
+];
+(() => {
+  const host = document.getElementById('testers');
+  const phone = matchMedia('(max-width: 700px)').matches;
+  TESTERS.forEach(t => {
+    const [min, max, start] = t.size;
+    const size = phone ? Math.round(start * (t.cls === 'small' ? 0.8 : 0.4)) : start;
+    const el = document.createElement('div');
+    el.className = 'tester';
+    el.innerHTML = `
+      <div class="controls">
+        <div class="weights"><button type="button" data-w="400" aria-pressed="${t.weight === 400}">Regular</button><button type="button" data-w="700" aria-pressed="${t.weight === 700}">Bold</button></div>
+        <div class="weights"><button type="button" data-c="0" aria-pressed="${!t.contrast}">Low contrast</button><button type="button" data-c="1" aria-pressed="${t.contrast}">High contrast</button></div>
+        <label>Size <input type="range" min="${min}" max="${max}" value="${size}" aria-label="Size"> <span class="px">${size}</span></label>
+      </div>
+      <div class="sample ${t.cls}${t.contrast ? ' contrast' : ''}" contenteditable="true" spellcheck="false" style="font-weight: ${t.weight}; font-size: ${size}px">${t.text}</div>`;
+    const sample = el.querySelector('.sample');
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+      if (b.dataset.w) sample.style.fontWeight = b.dataset.w;
+      if (b.dataset.c) sample.classList.toggle('contrast', b.dataset.c === '1');
+    });
+    el.querySelector('input').addEventListener('input', e => {
+      sample.style.fontSize = e.target.value + 'px';
+      el.querySelector('.px').textContent = e.target.value;
+    });
+    host.append(el);
+  });
+})();
+
+// Where it started: the JRAY plates, wordmarks in black (white in dark mode)
+(() => {
+  const strip = document.getElementById('strip');
+  W.items.filter(it => it.p === 'jray' && !it.hidden).forEach(it => {
+    const img = new Image();
+    img.src = '../export/' + (it.sm ? '1600/' : '') + it.src;
+    img.width = it.w; img.height = it.h; img.loading = 'lazy'; img.alt = it.alt || '';
+    if (it.mono) img.classList.add('mono');
+    if (it.w / it.h > 3) img.classList.add('thin');
+    strip.append(img);
+  });
+})();
+
+// Character set from the font; lowercase is small caps in Depo
+(() => {
+  const host = document.getElementById('groups'), preview = document.getElementById('preview'), code = document.getElementById('code');
+  window.CHARSET.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'group';
+    div.innerHTML = `<h3>${g.name === 'Latin lowercase' ? 'Small caps' : g.name === 'Latin uppercase' ? 'Capitals' : g.name}</h3><div class="grid">${[...g.chars].map(c => `<span>${c.replace('&', '&amp;').replace('<', '&lt;')}</span>`).join('')}</div>`;
+    host.append(div);
+  });
+  let on;
+  const show = span => {
+    on?.classList.remove('on'); on = span; span.classList.add('on');
+    preview.textContent = span.textContent;
+    code.textContent = 'U+' + span.textContent.codePointAt(0).toString(16).toUpperCase().padStart(4, '0');
+  };
+  host.addEventListener('pointerover', e => { const s = e.target.closest('.grid span'); if (s) show(s); });
+  host.addEventListener('click', e => { const s = e.target.closest('.grid span'); if (s) show(s); });
+})();
+</script>
+</body>
+</html>

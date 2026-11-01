@@ -9,6 +9,8 @@
 // Vestige walk photocopies (02–07, from the site's calendar) added 5 Oct.
 // AWW90s (5 Oct): Kirill's own Figma design replaces the July-rebuild plates (01 video, 02); shown again.
 // link: a live address shown after the description (AWW90s: the client has since edited the site).
+// page: the project has its own page (Zerko Grotesk, Depo: typeface pages, 1 Nov); the wall, home and Info open it
+// instead of the contact sheet, which stays at ?p=slug.
 // AWW90s entry page as a screen recording (17, 5 Oct), in place of the still entry (16).
 // AWW90s prototype recordings 18–21 (phone, 5 Oct): editorial scrolls, shop/filter flow, product photo swipe.
 // LOTV WASTE! hand-lettered announcement (lotv-waste-06) and the flat thesis cover (zerko-thesis-37) added 6 Oct.
@@ -61,6 +63,7 @@ window.WORKS = {
  "projects": [
   {
    "slug": "depo",
+   "page": "depo/",
    "title": "Depo",
    "meta": "Typeface",
    "year": 2026,
@@ -95,6 +98,7 @@ window.WORKS = {
   },
   {
    "slug": "zerko-grotesk",
+   "page": "zerko/",
    "cw": 60,
    "title": "Zerko Grotesk",
    "meta": "Typeface, 2026",

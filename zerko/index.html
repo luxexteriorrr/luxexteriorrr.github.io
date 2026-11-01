@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zerko Grotesk | Kirill Konstantinov</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Zerko Grotesk, a Latin and Cyrillic typeface in six weights by Kirill Konstantinov.">
+<link rel="preload" href="../assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
+<script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<!-- Zerko's own page (trying, 1 Nov 2026), after two foundry pages: Edito's Katalog (plates, information
+     columns, tester, character grid) and Wise Type's Holger (a world around the face: every tester is set in
+     the face's own subject matter, credits as rows, a sticky aside on the character set). Zerko's world is
+     the plates': the 1972 Fischer–Spassky match, in both scripts. -->
+<style>
+/* All six weights, mapped to CSS steps. The files call themselves separate families at 400 each,
+   so family and weight are set here (as in assets/fonts/zerko.css, which only brings in three). */
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-thin.woff2') format('woff2'); font-weight: 100; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-light.woff2') format('woff2'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-black.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+
+/* The site's own tokens and light / dark (from index.html) */
+:root { --fg: #111; --bg: #fff; --rule: #111; --quiet: #8a8a8a; --size: 13px; --lead: 17px; --track: 0.022em; --pad: 14px; }
+@media (max-width: 700px) { :root { --size: 12px; --lead: 15px; } }
+:root { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; --rule: #f7f7f7; } }
+:root[data-theme="dark"] { color-scheme: dark; --fg: #f7f7f7; --bg: #111; --rule: #f7f7f7; }
+:root[data-theme="light"] { color-scheme: light; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+body { font-family: 'Zerko', sans-serif; font-weight: 500; font-size: var(--size); line-height: var(--lead);
+  letter-spacing: var(--track); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+::selection { background: transparent; color: #e6007e; }
+.u, a.u { text-decoration: underline; text-underline-offset: 0.18em; }
+img, video { display: block; width: 100%; height: auto; }
+
+/* Header, as on the site */
+.head { position: sticky; top: 0; z-index: 10; min-height: 40px; display: flex; flex-wrap: wrap; align-items: baseline;
+  column-gap: 2em; padding: 12px var(--pad) 11px; background: var(--bg); border-bottom: 1px solid var(--rule); }
+.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
+.head .slot { flex: 1; min-width: 0; }
+
+/* A section: a small label in the left quarter, the content in the rest (one column on a phone) */
+.band { display: grid; grid-template-columns: 1fr 3fr; column-gap: var(--pad); padding: 0 var(--pad); }
+.band > .label { padding-top: 0.2em; }
+@media (max-width: 700px) { .band { grid-template-columns: 1fr; } .band > .label { margin-bottom: 0.8em; } }
+section { margin-top: 120px; }
+@media (max-width: 700px) { section { margin-top: 72px; } }
+
+/* Opener: plate 07 full width, then the name */
+.hero img { width: 100%; }
+.name { padding: 0 var(--pad); margin-top: 24px; }
+.name h1 { margin: 0; font-weight: 500; font-size: clamp(56px, 11.5vw, 220px); line-height: 0.9; letter-spacing: -0.02em; }
+.name p { margin: 14px 0 0; }
+
+.intro p { margin: 0; max-width: 34em; font-size: clamp(18px, 1.7vw, 26px); line-height: 1.3; letter-spacing: 0; font-weight: 400; }
+
+/* Plates: landscape plates one to a row; squares and portraits two to a row */
+.plates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--pad); padding: 0 var(--pad); }
+.plates figure { margin: 0; grid-column: span 2; }
+.plates figure.half { grid-column: span 1; }
+@media (max-width: 700px) { .plates figure.half { grid-column: span 2; } }
+
+/* Credits as rows */
+.rows { border-top: 1px solid var(--rule); }
+.rows div { display: grid; grid-template-columns: 1fr 2fr; column-gap: var(--pad); padding: 9px 0 8px; border-bottom: 1px solid var(--rule); }
+
+/* Testers: a row of controls over a line you can type into */
+.tester { border-top: 1px solid var(--rule); padding-top: 9px; }
+.tester + .tester { margin-top: 64px; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.6em; row-gap: 6px; }
+.controls .weights { display: flex; flex-wrap: wrap; column-gap: 1em; }
+.controls button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
+.controls button:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.controls label { display: flex; align-items: center; gap: 0.6em; margin-left: auto; }
+.controls input[type=range] { width: 140px; accent-color: var(--fg); }
+.sample { margin-top: 18px; outline: none; letter-spacing: 0; overflow-wrap: anywhere; caret-color: #e6007e; }
+.sample.big { line-height: 0.95; }
+.sample.mid { line-height: 1.1; }
+.sample.small { line-height: 1.35; max-width: 40em; }
+
+/* The thesis, as the object made with it: a strip you scroll sideways */
+.strip { display: flex; gap: var(--pad); overflow-x: auto; padding: 0 var(--pad); scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+.strip img { height: min(46vh, 420px); width: auto; flex: none; }
+.strip-cap { padding: 10px var(--pad) 0; }
+
+/* Character set: a sticky aside with the glyph under the pointer, the groups in a grid beside it */
+.chars { display: grid; grid-template-columns: 1fr 3fr; column-gap: var(--pad); padding: 0 var(--pad); }
+.chars aside { position: sticky; top: 56px; align-self: start; }
+.chars .preview { font-size: clamp(120px, 16vw, 260px); line-height: 1; letter-spacing: 0; margin: 18px 0 8px; height: 1.1em; }
+.chars .group { margin-bottom: 40px; }
+.chars .group h3 { margin: 0 0 8px; font: inherit; }
+.chars .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.chars .grid span { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 28px; letter-spacing: 0;
+  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); cursor: default; }
+.chars .grid span:hover, .chars .grid span.on { background: var(--fg); color: var(--bg); }
+@media (max-width: 700px) {
+  .chars { grid-template-columns: 1fr; }
+  .chars aside { position: static; }
+  .chars .preview { font-size: 120px; }
+  .chars .grid { grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); }
+  .chars .grid span { font-size: 22px; }
+}
+
+footer { margin: 120px 0 0; padding: 12px var(--pad) 40px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <a href="../">Kirill Konstantinov</a>
+  <a href="../" class="view">Selected Works</a>
+  <span class="slot">Zerko Grotesk · Typeface, 2026</span>
+</header>
+
+<div class="hero" id="hero"></div>
+
+<div class="name">
+  <h1>Zerko Grotesk</h1>
+  <p>6 weights with obliques · Latin and Cyrillic · <span id="count"></span> characters</p>
+</div>
+
+<section class="band intro">
+  <p class="label">About</p>
+  <p>Zerko Grotesk is a rationalist family spanning Latin and Cyrillic, made for prolonged reading and display in complex multilingual environments. It runs in six weights with corresponding obliques. Designed simultaneously across both scripts, Zerko balances structural difference while preserving the conventions internal to each script.</p>
+</section>
+
+<section class="plates" id="plates" aria-label="Specimen plates"></section>
+
+<section class="band">
+  <p class="label">Information</p>
+  <div class="rows">
+    <div><span>Type design</span><span>Kirill Konstantinov</span></div>
+    <div><span>Scripts</span><span>Latin, Cyrillic</span></div>
+    <div><span>Styles</span><span>Thin, Light, Regular, Medium, Bold, Black, each with an oblique</span></div>
+    <div><span>Characters</span><span id="count2"></span></div>
+    <div><span>OpenType</span><span>Case-sensitive forms, fractions, superiors and inferiors, numerators and denominators, ordinals, tabular and proportional figures, stylistic sets 1, 3 and 4, discretionary ligatures, localised forms</span></div>
+    <div><span>Made at</span><span>MRes Communication Design, Royal College of Art</span></div>
+    <div><span>Year</span><span>2026</span></div>
+  </div>
+</section>
+
+<!-- Testers, largest first (Holger). Each line is the match, in English or Russian; type over it. -->
+<section class="band" aria-label="Type tester">
+  <p class="label">Try it</p>
+  <div id="testers"></div>
+</section>
+
+<section aria-label="The thesis">
+  <a class="strip" id="strip" href="../?p=zerko-thesis" aria-label="Script Parity as Design Hypothesis, the thesis set in Zerko"></a>
+  <p class="strip-cap"><a class="u" href="../?p=zerko-thesis">Script Parity as Design Hypothesis</a>, the MRes thesis, set in Zerko</p>
+</section>
+
+<section class="chars" aria-label="Character set">
+  <aside>
+    <p>Character set</p>
+    <div class="preview" id="preview" aria-hidden="true">Ж</div>
+    <p id="code">U+0416</p>
+  </aside>
+  <div id="groups"></div>
+</section>
+
+<footer>
+  <a class="u" href="../">Selected Works</a>
+  <a class="u" href="../?p=zerko-grotesk">All plates</a>
+</footer>
+
+<script src="../assets/works.js"></script>
+<script src="charset.js"></script>
+<script>
+const W = window.WORKS;
+
+// Plates, in the site's own order (works.js): the first is the opener (the cover, the weight loop since
+// 31 Oct), the rest follow. Wide ones take the row; squares and portraits pair up. The alphabet wordmark
+// (`key`) is the wall's label, not a plate, so it stays out.
+(() => {
+  const media = (it, lazy) => {
+    const alt = (it.alt || '').replace(/"/g, '&quot;'), full = '../export/' + it.src;
+    if (it.video) return `<video src="${full}" poster="../export/${it.poster}" width="${it.w}" height="${it.h}" autoplay muted loop playsinline aria-label="${alt}"></video>`;
+    const srcset = it.sm ? ` srcset="../export/1600/${it.src} 1600w, ${full} ${it.w}w" sizes="100vw"` : '';
+    return `<img src="${full}"${srcset} width="${it.w}" height="${it.h}"${lazy ? ' loading="lazy"' : ''} decoding="async" alt="${alt}">`;
+  };
+  const [first, ...rest] = W.items.filter(it => it.p === 'zerko-grotesk' && !it.hidden && !it.key);
+  document.getElementById('hero').innerHTML = media(first, false);
+  const host = document.getElementById('plates');
+  rest.forEach(it => {
+    const fig = document.createElement('figure');
+    if (it.h && it.w / it.h < 1.2) fig.classList.add('half');
+    fig.innerHTML = media(it, true);
+    host.append(fig);
+  });
+})();
+
+// Character count, from the font (charset.js)
+(() => {
+  const n = window.CHARSET.reduce((s, g) => s + [...g.chars].length, 0);
+  document.getElementById('count').textContent = n;
+  document.getElementById('count2').textContent = n;
+})();
+
+// Testers
+const WEIGHTS = [['Thin', 100], ['Light', 300], ['Regular', 400], ['Medium', 500], ['Bold', 700], ['Black', 900]];
+const TESTERS = [
+  { cls: 'big', size: [40, 320, 200], weight: 900,
+    en: 'Reykjavík 1972',
+    ru: 'Рейкьявик 1972' },
+  { cls: 'mid', size: [20, 120, 56], weight: 500,
+    en: 'Fischer–Spassky, Game 3, 16 July 1972',
+    ru: 'Фишер–Спасский, партия 3, 16 июля 1972' },
+  { cls: 'small', size: [12, 40, 20], weight: 400,
+    en: 'Game three was played in a small back room, away from the cameras Fischer had objected to. It was his first win against Spassky in any game they had ever played, and the match turned there.',
+    ru: 'Третью партию сыграли в маленькой задней комнате, подальше от камер, против которых возражал Фишер. Это была его первая победа над Спасским за все их партии, и с неё матч переломился.' },
+];
+(() => {
+  const host = document.getElementById('testers');
+  const phone = matchMedia('(max-width: 700px)').matches;
+  TESTERS.forEach(t => {
+    const [min, max, start] = t.size;
+    const size = phone ? Math.round(start * (t.cls === 'small' ? 0.85 : 0.4)) : start;
+    const el = document.createElement('div');
+    el.className = 'tester';
+    el.innerHTML = `
+      <div class="controls">
+        <div class="weights">${WEIGHTS.map(([n, w]) => `<button type="button" data-w="${w}" aria-pressed="${w === t.weight}">${n}</button>`).join('')}</div>
+        <div class="weights"><button type="button" data-s="en" aria-pressed="true">Latin</button><button type="button" data-s="ru" aria-pressed="false">Cyrillic</button></div>
+        <label>Size <input type="range" min="${min}" max="${max}" value="${size}" aria-label="Size"> <span class="px">${size}</span></label>
+      </div>
+      <div class="sample ${t.cls}" contenteditable="true" spellcheck="false" style="font-weight: ${t.weight}; font-size: ${size}px">${t.en}</div>`;
+    const sample = el.querySelector('.sample');
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      const group = b.parentElement;
+      group.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+      if (b.dataset.w) sample.style.fontWeight = b.dataset.w;
+      if (b.dataset.s) sample.textContent = t[b.dataset.s];
+    });
+    el.querySelector('input').addEventListener('input', e => {
+      sample.style.fontSize = e.target.value + 'px';
+      el.querySelector('.px').textContent = e.target.value;
+    });
+    host.append(el);
+  });
+})();
+
+// The thesis strip
+(() => {
+  const strip = document.getElementById('strip');
+  W.items.filter(it => it.p === 'zerko-thesis' && !it.hidden).forEach(it => {
+    const img = new Image();
+    img.src = '../export/' + (it.sm ? '1600/' : '') + it.src;
+    img.width = it.w; img.height = it.h; img.loading = 'lazy'; img.alt = it.alt || '';
+    strip.append(img);
+  });
+})();
+
+// Character set: the grid from the font; the aside shows the glyph under the pointer (or the tapped one)
+(() => {
+  const host = document.getElementById('groups'), preview = document.getElementById('preview'), code = document.getElementById('code');
+  window.CHARSET.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'group';
+    div.innerHTML = `<h3>${g.name}</h3><div class="grid">${[...g.chars].map(c => `<span>${c.replace('&', '&amp;').replace('<', '&lt;')}</span>`).join('')}</div>`;
+    host.append(div);
+  });
+  let on;
+  const show = span => {
+    on?.classList.remove('on'); on = span; span.classList.add('on');
+    preview.textContent = span.textContent;
+    code.textContent = 'U+' + span.textContent.codePointAt(0).toString(16).toUpperCase().padStart(4, '0');
+  };
+  host.addEventListener('pointerover', e => { const s = e.target.closest('.grid span'); if (s) show(s); });
+  host.addEventListener('click', e => { const s = e.target.closest('.grid span'); if (s) show(s); });
+})();
+</script>
+</body>
+</html>
