@@ -78,6 +78,8 @@ img.edge { outline: 1px solid var(--edge); outline-offset: -1px; }
 html, body { scrollbar-width: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 html { overscroll-behavior-y: none; }
+/* No grey square on a tapped link or button on a phone (1 Nov, as on LOTV). */
+html { -webkit-tap-highlight-color: transparent; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
@@ -390,7 +392,7 @@ body .rows.wallrows { padding-top: var(--pad); }
    area would overlap the next line.) */
 @media (pointer: coarse) {
   .head .info-toggle, .ptitle .clear, .info .theme button { position: relative; }
-  .head .info-toggle::after, .gclose::after { content: ""; position: absolute; inset: -12px -14px -11px; }
+  .head .info-toggle::after { content: ""; position: absolute; inset: -12px -14px -11px; }
   .ptitle .clear::after { content: ""; position: absolute; inset: -12px -10px; }
   .info .theme button::after { content: ""; position: absolute; inset: -12px -0.3em; }
 }
