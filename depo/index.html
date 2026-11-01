@@ -92,12 +92,15 @@ section { margin-top: 120px; }
 .tester { border-top: 1px solid var(--rule); padding-top: 9px; }
 .tester + .tester { margin-top: 64px; }
 .controls { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.6em; row-gap: 6px; }
-.controls .weights { display: flex; flex-wrap: wrap; column-gap: 1em; }
-.controls button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.18em; }
-.controls button:hover { text-decoration: underline; text-underline-offset: 0.18em; }
-.controls label { display: flex; align-items: center; gap: 0.6em; margin-left: auto; }
+/* the controls are the site's pills: black, and pink when chosen (as in the header) */
+.controls .weights { display: flex; flex-wrap: wrap; gap: 4px; }
+.controls button { padding: 3px 12px; background: var(--fg); color: var(--bg); white-space: nowrap; }
+.controls button:hover { background: color-mix(in srgb, var(--fg) 78%, var(--bg)); }
+.controls button[aria-pressed="true"] { background: #e6007e; color: #fff; }
+.controls label { display: flex; align-items: center; gap: 0.6em; margin-left: auto; font-variant-numeric: tabular-nums; }
+.controls .px { min-width: 4.2em; }
 .controls input[type=range] { width: 140px; accent-color: var(--fg); }
-.sample { margin-top: 18px; outline: none; letter-spacing: 0; overflow-wrap: anywhere; caret-color: #e6007e; font-family: 'Depo', sans-serif; }
+.sample { margin-top: 18px; outline: none; letter-spacing: 0; overflow-wrap: break-word; caret-color: #e6007e; font-family: 'Depo', sans-serif; }
 .sample.contrast { font-family: 'Depo Contrast', sans-serif; }
 .sample.big { line-height: 0.92; }
 .sample.mid { line-height: 1.05; }
@@ -231,6 +234,7 @@ footer { margin: 120px 0 0; padding: 12px var(--pad) 40px; border-top: 1px solid
 </footer>
 
 <script src="../assets/subpage-head.js"></script>
+<script src="../assets/tester.js"></script>
 <script src="../assets/works.js?v=2026-11-01t"></script>
 <script src="charset.js"></script>
 <script src="languages.js"></script>
@@ -285,32 +289,29 @@ const TESTERS = [
 ];
 (() => {
   const host = document.getElementById('testers');
-  const phone = matchMedia('(max-width: 700px)').matches;
   TESTERS.forEach(t => {
     const [min, max, start] = t.size;
-    const size = phone ? Math.round(start * (t.cls === 'small' ? 0.8 : 0.4)) : start;
     const el = document.createElement('div');
     el.className = 'tester';
     el.innerHTML = `
       <div class="controls">
         <div class="weights"><button type="button" data-w="400" aria-pressed="${t.weight === 400}">Regular</button><button type="button" data-w="700" aria-pressed="${t.weight === 700}">Bold</button></div>
         <div class="weights"><button type="button" data-c="0" aria-pressed="${!t.contrast}">Low contrast</button><button type="button" data-c="1" aria-pressed="${t.contrast}">High contrast</button></div>
-        <label>Size <input type="range" min="${min}" max="${max}" value="${size}" aria-label="Size"> <span class="px">${size}</span></label>
+        <label>Size <input type="range" min="${min}" max="${max}" value="${start}" aria-label="Size"> <span class="px"></span></label>
       </div>
-      <div class="sample ${t.cls}${t.contrast ? ' contrast' : ''}" contenteditable="true" spellcheck="false" style="font-weight: ${t.weight}; font-size: ${size}px">${t.text}</div>`;
+      <div class="sample ${t.cls}${t.contrast ? ' contrast' : ''}" contenteditable="plaintext-only" spellcheck="false" style="font-weight: ${t.weight}">${t.text}</div>`;
     const sample = el.querySelector('.sample');
+    const tester = testerSizing(el, sample, min, max, start);
     el.addEventListener('click', e => {
       const b = e.target.closest('button');
       if (!b) return;
       b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
       if (b.dataset.w) sample.style.fontWeight = b.dataset.w;
       if (b.dataset.c) sample.classList.toggle('contrast', b.dataset.c === '1');
-    });
-    el.querySelector('input').addEventListener('input', e => {
-      sample.style.fontSize = e.target.value + 'px';
-      el.querySelector('.px').textContent = e.target.value;
+      tester.fit();
     });
     host.append(el);
+    tester.fit();
   });
 })();
 
