@@ -41,11 +41,6 @@ button { font: inherit; color: inherit; letter-spacing: inherit; background: non
 .u, a.u { text-decoration: underline; text-underline-offset: 0.18em; }
 img, video { display: block; width: 100%; height: auto; }
 
-/* Header, as on the site */
-.head { position: sticky; top: 0; z-index: 10; min-height: 40px; display: flex; flex-wrap: wrap; align-items: baseline;
-  column-gap: 2em; padding: 12px var(--pad) 11px; background: var(--bg); border-bottom: 1px solid var(--rule); }
-.head .view { text-decoration: underline; text-underline-offset: 0.18em; }
-.head .slot { flex: 1; min-width: 0; }
 
 /* A section: a small label in the left quarter, the content in the rest (one column on a phone) */
 .band { display: grid; grid-template-columns: 1fr 3fr; column-gap: var(--pad); padding: 0 var(--pad); }
@@ -113,13 +108,15 @@ section { margin-top: 120px; }
 
 footer { margin: 120px 0 0; padding: 12px var(--pad) 40px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; }
 </style>
+<link rel="stylesheet" href="../assets/subpage-head.css">
 </head>
 <body>
 
-<header class="head">
-  <a href="../">Kirill Konstantinov</a>
-  <a href="../" class="view">Selected Works</a>
-  <span class="slot">Zerko Grotesk · Typeface, 2026</span>
+<!-- The site's header (assets/subpage-head.css): All work and Back, the name box, Invert -->
+<header class="shead">
+  <nav class="l" aria-label="Site"><a class="pill pk" href="../">All work</a><a class="pill" href="../" data-back>Back</a></nav>
+  <a class="pill pk m" href="../">Kirill Konstantinov</a>
+  <p class="r" style="margin: 0"><button type="button" class="pill" data-theme-flip>Invert</button></p>
 </header>
 
 <div class="hero" id="hero"></div>
@@ -174,6 +171,7 @@ footer { margin: 120px 0 0; padding: 12px var(--pad) 40px; border-top: 1px solid
   <a class="u" href="../?p=zerko-grotesk">All plates</a>
 </footer>
 
+<script src="../assets/subpage-head.js"></script>
 <script src="../assets/works.js"></script>
 <script src="charset.js"></script>
 <script>
