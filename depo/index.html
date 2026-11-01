@@ -59,20 +59,17 @@ section { margin-top: 120px; }
 .plates > * { margin: 0; grid-column: span 2; }
 .plates > .sq { grid-column: span 1; aspect-ratio: 1; }
 @media (max-width: 700px) { .plates > .sq { grid-column: span 2; } }
-.plate { overflow: hidden; font-family: 'Depo', sans-serif; letter-spacing: 0; line-height: 0.9; display: flex; flex-direction: column; }
+/* One margin inside every plate, the same in a square as in a full-width plate (--pp), and the longest line
+   of each plate set to fill exactly to it (fitPlates() in the script), as Edito's do. Nothing bleeds. */
+.plates { --pp: max(16px, 2.4vw); }
+.plate { overflow: hidden; font-family: 'Depo', sans-serif; letter-spacing: 0; line-height: 0.9; display: flex; flex-direction: column;
+  padding: var(--pp); }
 .plate.contrast { font-family: 'Depo Contrast', sans-serif; }
-.plate.split { justify-content: space-between; padding: 3% 4%; }
-.plate.center { align-items: center; justify-content: center; text-align: center; padding: 6% 4%; }
+.plate.split { justify-content: space-between; }
+.plate.center { align-items: center; justify-content: center; text-align: center; }
 .plate.crop { justify-content: center; }
-.plate.crop span { white-space: nowrap; margin-left: -0.04em; }
-/* sizes are in container units, so a plate keeps its composition at any width */
-.plates > * { container-type: inline-size; }
-/* set so the longest line fills the plate, as Edito's do (Garage just bleeds off both sides) */
-.plate .xl { font-size: 20cqw; }
-.plate .l { font-size: 26cqw; }
-.plate .m { font-size: 22cqw; }
-.plate .s { font-size: 8cqw; line-height: 1.12; }
-.plate.crop { align-items: center; }
+.plate span { white-space: nowrap; }
+.plate .s { line-height: 1.12; }
 
 .rows { border-top: 1px solid var(--rule); }
 .rows div { display: grid; grid-template-columns: 1fr 2fr; column-gap: var(--pad); padding: 9px 0 8px; border-bottom: 1px solid var(--rule); }
@@ -211,6 +208,24 @@ footer { margin: 120px 0 0; padding: 12px var(--pad) 40px; border-top: 1px solid
 <script>
 const W = window.WORKS;
 const proj = W.projects.find(p => p.slug === 'depo');
+
+// Plates: the longest line of each plate fills its width inside the margin. Measured at 100px, then scaled;
+// again when the fonts land and when the window changes size.
+function fitPlates() {
+  document.querySelectorAll('.plate').forEach(plate => {
+    const spans = [...plate.querySelectorAll(':scope > span')];
+    spans.forEach(s => { s.style.fontSize = '100px'; });
+    const widest = Math.max(...spans.map(s => {
+      const r = document.createRange(); r.selectNodeContents(s);
+      return Math.max(...[...r.getClientRects()].map(c => c.width));
+    }));
+    const cs = getComputedStyle(plate);
+    const room = plate.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    spans.forEach(s => { s.style.fontSize = (100 * room / widest).toFixed(2) + 'px'; });
+  });
+}
+document.fonts.ready.then(fitPlates);
+addEventListener('resize', fitPlates);
 document.getElementById('desc').textContent = proj.desc;
 
 // The site's Depo plates: the cover loop opens the page, the NIGHT SERVICE ONLY specimen closes the plates
