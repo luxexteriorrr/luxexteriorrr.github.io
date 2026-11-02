@@ -76,7 +76,7 @@ window.WORKS = {
   {
    "slug": "lotv",
    "title": "Lilies of the Valley",
-   "meta": "Branding and identity",
+   "meta": "Branding and e-commerce",
    "year": 2026,
    "d": [
     "graphic-design"
@@ -167,7 +167,7 @@ window.WORKS = {
   {
    "slug": "aww90s",
    "title": "AWW90s",
-   "meta": "Website, 2024",
+   "meta": "E-commerce, 2024",
    "d": [
     "web"
    ],
