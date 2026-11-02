@@ -580,6 +580,17 @@ body.mode-gallery .gcap > * { padding: 3px 12px; background: var(--fg); color: v
 body.mode-gallery .gcap a { text-decoration: none; }   /* the pill says it is a link (31 Oct) */
 body.mode-gallery .gcap .t { flex: 0 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 body.mode-gallery .gcap .d, body.mode-gallery .gdesc { display: none; }
+/* Phone (2 Nov, Kirill): no project pill; the counter top left, Close top
+   right, Prev and Next bottom left and right, the plate between them. */
+@media (max-width: 700px) {
+  body.mode-gallery .gallery { padding: 44px var(--pad); }
+  body.mode-gallery .gcap { display: none; }
+  body.mode-gallery .gctl > * { position: fixed; }
+  body.mode-gallery .gctl > span { top: 10px; left: var(--pad); }
+  body.mode-gallery .gctl > .gclose { top: 10px; right: var(--pad); }
+  body.mode-gallery .gctl > button:first-of-type { bottom: 10px; left: var(--pad); }
+  body.mode-gallery .gctl > button:last-of-type { bottom: 10px; right: var(--pad); }
+}
 /* A phone screen in its grey box (31 Oct): media() wraps it in .frame, which
    takes the plate's place and size in every view; the screen is centred in
    it at --fh of its height. */
