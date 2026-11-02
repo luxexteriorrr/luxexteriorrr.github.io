@@ -209,11 +209,12 @@ window.WORKS = {
  "items": [
   {
    "p": "depo",
-   "src": "depo-06.mp4",
+   "src": "depo-07.mp4",
    "w": 3840,
    "h": 2160,
    "video": 1,
-   "poster": "depo-06-poster.webp",
+   "poster": "depo-07-poster.webp",
+   "alt": "Depo on black, a five-second loop through its four corners: light to bold, up to high contrast, then back to light.",
    "key": 1
   },
   {
