@@ -44,6 +44,7 @@ img, video { display: block; width: 100%; height: auto; }
 
 /* A section: a small label in the left quarter, the content in the rest (one column on a phone) */
 .band { display: grid; grid-template-columns: 1fr 3fr; column-gap: var(--pad); padding: 0 var(--pad); }
+[hidden] { display: none !important; }   /* .band sets display, which would beat the hidden attribute */
 .band > .label { padding-top: 0.2em; }
 @media (max-width: 700px) { .band { grid-template-columns: 1fr; } .band > .label { margin-bottom: 0.8em; } }
 section { margin-top: 120px; }
@@ -186,7 +187,8 @@ body { padding-bottom: 120px; } /* air under the last section; no footer, the pi
 </section>
 
 <!-- Testers, largest first (Holger). Each line is the match, in English or Russian; type over it. -->
-<section class="band" aria-label="Type tester">
+<!-- hidden for now (2 Nov, Kirill) -->
+<section class="band" aria-label="Type tester" hidden>
   <p class="label">Try it</p>
   <div id="testers"></div>
 </section>
@@ -209,7 +211,7 @@ body { padding-bottom: 120px; } /* air under the last section; no footer, the pi
 
 <script src="../assets/subpage-head.js"></script>
 <script src="../assets/tester.js"></script>
-<script src="../assets/works.js?v=2026-11-02b"></script>
+<script src="../assets/works.js?v=2026-11-02c"></script>
 <script src="charset.js"></script>
 <script src="languages.js"></script>
 <script>

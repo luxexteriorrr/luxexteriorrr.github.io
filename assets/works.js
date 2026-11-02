@@ -88,7 +88,7 @@ window.WORKS = {
   {
    "slug": "zerko-thesis",
    "title": "Script Parity as Design Hypothesis",
-   "meta": "Publication, 2026",
+   "meta": "Research publication, 2026",
    "d": [
     "editorial",
     "type"
