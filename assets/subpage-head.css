@@ -22,3 +22,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
   .shead .r { grid-area: 1 / 2; }
   .shead .l { grid-area: 2 / 1 / 3 / 3; }
 }
+
+/* No footer on these pages: the pills are the only navigation. An old one (Selected Works / All plates) came
+   across with the typeface pages' template on 1 Nov; removed 2 Nov, and hidden here in case one is copied in again. */
+body:has(.shead) > footer { display: none !important; }

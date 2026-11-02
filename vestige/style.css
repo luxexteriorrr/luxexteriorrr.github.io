@@ -237,7 +237,8 @@ p:hover > .cite, .cite[aria-expanded="true"] { background: #fff; color: #000; bo
    Plain colours with no exclusion blend, the same in dark mode. Pale grey on sky blue (after a font.wtf post),
    about 1.4:1. Tried and dropped (1 Nov): the photocopy palette, #262626 on the photos' pale blue #e5e9f2. */
 .track, .gap, #calendar { display: none; } /* and no index of walks */
-main { padding-top: 25vh !important; }
+main { padding-top: 4vw !important; } /* 2 Nov: was 25vh, too much air above the text */
+.title { font: inherit; margin: 0 0 1.1em; } /* the page's name, in the text's own size, on a line of its own */
 :root { --paper: #7ebcf4; --ink: #d9d9d9; --blend: normal; }
 .index-head { background: var(--paper); }
 .drift .sq { background: var(--ink); } /* the squares in the type's grey */
