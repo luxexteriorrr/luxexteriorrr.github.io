@@ -148,7 +148,7 @@ window.WORKS = {
   {
    "slug": "vestige",
    "title": "Vestige",
-   "meta": "Website, 2025",
+   "meta": "Web essay, 2025",
    "d": [
     "web"
    ],
