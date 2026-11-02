@@ -152,7 +152,8 @@ window.WORKS = {
    "d": [
     "web"
    ],
-   "desc": "An essay on ambience, Hampstead Heath and the decaying web, with a live pondcam from the Heath set in the text. The words fade when you stop moving. Open the page."
+   "desc": "An essay on ambience, Hampstead Heath and the decaying web, with a live pondcam from the Heath set in the text. The words fade when you stop moving. Open the page.",
+   "cw": 50
   },
   {
    "slug": "sentra",
