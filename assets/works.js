@@ -152,7 +152,7 @@ window.WORKS = {
    "d": [
     "web"
    ],
-   "desc": "An essay on ambience, Hampstead Heath and the decaying web, set over a live pondcam on the Heath. The words fade when you stop moving. Open the page."
+   "desc": "An essay on ambience, Hampstead Heath and the decaying web, with a live pondcam from the Heath set in the text. The words fade when you stop moving. Open the page."
   },
   {
    "slug": "sentra",
@@ -905,11 +905,41 @@ window.WORKS = {
   },
   {
    "p": "vestige",
-   "src": "vestige-01.webp",
-   "w": 2000,
-   "h": 1090,
-   "alt": "The Vestige page: a centred column of capitals running over a live video of a pond on Hampstead Heath, the letters inverted where they cross the water.",
-   "sm": 1
+   "src": "vestige-08.mp4",
+   "w": 2880,
+   "h": 1800,
+   "video": 1,
+   "poster": "vestige-08-poster.webp",
+   "key": 1,
+   "alt": "The Vestige page, pale grey text centred on sky blue, left alone for a minute: the words fade one by one, then all come back when the mouse moves."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-09.webp",
+   "w": 2880,
+   "h": 1800,
+   "alt": "The opening of the Vestige page a minute after the last input, with about a third of the words faded out."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-10.webp",
+   "w": 2880,
+   "h": 1800,
+   "alt": "The Intro of the Vestige page, with the live Hampstead Heath pondcam as a small tilted tile in the line of text."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-11.webp",
+   "w": 2880,
+   "h": 1800,
+   "alt": "The pondcam tile opened in the line, pushing the text apart around a live view of the pond."
+  },
+  {
+   "p": "vestige",
+   "src": "vestige-12.webp",
+   "w": 2880,
+   "h": 1800,
+   "alt": "A passage from the first walk on the Vestige page, 9 June 2020, pale grey on sky blue."
   },
   {
    "p": "vestige",
