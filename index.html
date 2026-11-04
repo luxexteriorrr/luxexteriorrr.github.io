@@ -707,6 +707,16 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     it.fh = it.sw > it.sh ? 0.86 : FRAME_H;
     it.h = Math.round(it.sh / it.fh); it.w = it.sw > it.sh ? Math.round(it.h * it.sw / it.sh) : Math.round(it.h * FRAME_AR);
   }
+  // Links from Instagram and the like arrive with tracking on the address
+  // (?utm_source=ig&fbclid=...). Taken off first, so they load as a plain visit:
+  // the phone's open name panel only runs on an address with no query (4 Nov).
+  (() => {
+    const q = new URLSearchParams(location.search);
+    const junk = [...q.keys()].filter(k => /^(utm_|fbclid$|gclid$|igsh|ttclid$|mc_)/.test(k));
+    if (!junk.length) return;
+    junk.forEach(k => q.delete(k));
+    history.replaceState(null, '', location.pathname + (q.size ? '?' + q : '') + location.hash);
+  })();
   // Contact sheets are justified rows since 12 Oct; ?grid=squares shows the
   // old square cells.
   const SHEET_ROWS = new URLSearchParams(location.search).get('grid') !== 'squares';
