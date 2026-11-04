@@ -7,7 +7,7 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="description" content="Depo, a squared gothic with small caps, in two weights and two contrasts, by Kirill Konstantinov. Work in progress.">
-<link rel="preload" href="../assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GaugeWebTest-Medium.woff2" as="font" type="font/woff2" crossorigin>
 <script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <!-- Depo's own page (trying, 1 Nov 2026), the Zerko page's template (zerko/index.html). Its world is the
      night depot: route blinds, last buses, not-in-service. The plates are live type in Depo, after Edito's
@@ -23,7 +23,7 @@
 @font-face { font-family: 'Depo Contrast'; src: url('../assets/fonts/depo/depo-boldcontrast.woff2') format('woff2'); font-weight: 700; font-display: block; }
 
 /* The site's own tokens and light / dark (from index.html) */
-:root { --fg: #111; --bg: #fff; --rule: #111; --size: 13px; --lead: 17px; --track: 0.022em; --pad: 14px;
+:root { --fg: #111; --bg: #fff; --rule: #111; --size: 13px; --lead: 17px; --track: 0; --pad: 10px;
   /* Depo's colours, from its specimens on the site */
   --navy: #2a2a5c; --cyan: #009ad2; --pale: #8ab4f2; --black: #000; --amber: #ffb000; }
 @media (max-width: 700px) { :root { --size: 12px; --lead: 15px; } }
@@ -34,7 +34,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--fg); }
-body { font-family: 'Zerko', sans-serif; font-weight: 500; font-size: var(--size); line-height: var(--lead);
+body { font-family: 'Gauge Web Test', 'Zerko', sans-serif; font-weight: 500; font-size: var(--size); line-height: var(--lead);
   letter-spacing: var(--track); -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; letter-spacing: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
@@ -233,7 +233,7 @@ body { padding-bottom: 120px; } /* air under the last section; no footer, the pi
 
 <script src="../assets/subpage-head.js"></script>
 <script src="../assets/tester.js"></script>
-<script src="../assets/works.js?v=2026-11-02f"></script>
+<script src="../assets/works.js?v=2026-11-04q"></script>
 <script src="charset.js"></script>
 <script src="languages.js"></script>
 <script>

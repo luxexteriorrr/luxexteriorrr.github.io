@@ -59,6 +59,10 @@
 // Descriptions (31 Oct, Kirill: put the project descriptions in): Depo, JRAY, RADA, AWW90s and Sentra written from the Notion
 // catalogue, the Depo page and the Sentra case-study draft; Depo's Coming Soon is off (LOTV keeps it).
 // Filters cut to four (31 Oct, Kirill): LOTV and JRAY under Graphic Design, As Seen In Editorial only, Sentra Web only.
+// RADA leads with the Corsica poster (03) and has it as cover (4 Nov, Kirill).
+// Sedlec Ossuary (4 Nov, Kirill; first called Berlin and Prague): Research entry, the three squares of KK_v1/04_PERSONAL/from-adobe-cloud/Germany and Prague/Germany_prague_patterns_v1-05.psd, lossless. Sits after the thesis; its year is only there to hold that place on the wall (4 Nov, Kirill).
+// LOTV cover (4 Nov, Kirill): hero 6433 with the caps wordmark in white LOTV Contrast, centred (LOTV/web/hero-images/lotv-cover_portrait_6433_2026-11-04.png).
+// Gauge (4 Nov, Kirill): typeface entry after Depo; gauge-01 is his scan of the printed quote plate with colour applied (~/Downloads/Applied Color-52.png), lossless.
 window.WORKS = {
  "projects": [
   {
@@ -74,6 +78,16 @@ window.WORKS = {
    "desc": "Depo is a squared gothic in the line of Bank Gothic: wide, square-shouldered capitals with small caps, drawn across weight and contrast. It grew out of the lettering on the JRAY Drenched sleeve. The name reads in Latin and in Cyrillic, where Депо is a transport depot."
   },
   {
+   "slug": "gauge",
+   "title": "Gauge",
+   "meta": "Typeface",
+   "year": 2026,
+   "d": [
+    "type"
+   ],
+   "desc": "Gauge is a sans serif with sharp contrast between thick stems and thin joins, in Medium and Heavy."
+  },
+  {
    "slug": "lotv",
    "title": "Lilies of the Valley",
    "meta": "Branding and e-commerce",
@@ -83,7 +97,7 @@ window.WORKS = {
    ],
    "desc": "Ongoing work for the knitwear label Lilies of the Valley: pop-ups in London and Paris, a newspaper campaign, tags and printed matter.",
    "wip": "Coming Soon",
-   "cw": 100
+   "cw": 60
   },
   {
    "slug": "zerko-thesis",
@@ -91,10 +105,21 @@ window.WORKS = {
    "meta": "Research publication, 2026",
    "d": [
     "editorial",
-    "type"
+    "type",
+    "research"
    ],
    "desc": "A practice-led thesis investigating Latin–Cyrillic script parity as a design condition through typographic making. Framed by Latinisation, the tendency for non-Latin scripts to inherit Latin structural logic, it asks what parity between the scripts looks like and where it can be pursued without reducing one script to the logic of the other.",
    "cw": 80
+  },
+  {
+   "slug": "sedlec-ossuary",
+   "title": "Sedlec Ossuary",
+   "meta": "Graphic study",
+   "year": 2026,
+   "d": [
+    "research"
+   ],
+   "desc": "Geometric patterns drawn from the vaulted roof of the Sedlec Ossuary in the Czech Republic, alongside studies in Berlin and Prague."
   },
   {
    "slug": "zerko-grotesk",
@@ -143,7 +168,10 @@ window.WORKS = {
     "graphic-design"
    ],
    "desc": "Posters and social media for RADA, a trance, techno and hardcore night in south London: the Corsica Studios nights and the Birthday Bash. The posters were flyposted across south London, and the social posts announce each night's artists.",
-   "cw": 90
+   "split": [
+    { "src": "rada-corsica-03.webp", "title": "RADA Sunburn", "meta": "Poster and social media", "cw": 60 },
+    { "src": "rada-birthday-bash-02.webp", "title": "RADA Birthday Bash", "meta": "Poster", "cw": 40, "before": "around-a-memory" }
+   ]
   },
   {
    "slug": "vestige",
@@ -201,7 +229,7 @@ window.WORKS = {
    "desc": "Poster for the RADA birthday party at Peckham Audio."
   },
   "rada-corsica": {
-   "title": "Corsica Studios",
+   "title": "Sunburn",
    "meta": "Poster and social media, 2025",
    "desc": "Poster and social media for a trance, techno and hardcore night at Corsica Studios, flyposted across south London."
   }
@@ -225,13 +253,30 @@ window.WORKS = {
    "alt": "Depo specimen: NIGHT SERVICE ONLY on three lines in wide square capitals with small caps, bright blue on deep navy."
   },
   {
+   "p": "gauge",
+   "src": "gauge-01.webp",
+   "w": 2100,
+   "h": 1500,
+   "sm": 1,
+   "alt": "Gauge specimen, a scanned print on pale paper: How thick, how thin, how far apart, how many to the inch? set in five lines of red, green and blue, slightly out of register.",
+   "key": 1
+  },
+  {
+   "p": "lotv",
+   "src": "lotv-cover-01.webp",
+   "w": 2560,
+   "h": 3840,
+   "sm": 1,
+   "alt": "Lilies of the Valley campaign portrait: a model in a knitted headband with feathers and a black sweater with large shoulders, against a white wall. LILIESOFTHEVALLEY runs across the middle in white, fading into the white wall on the left.",
+   "key": 1
+  },
+  {
    "p": "lotv",
    "src": "lotv-web-01.webp",
    "w": 2880,
    "h": 1800,
    "alt": "The Lilies of the Valley website, home page on a desktop: the autumn/winter campaign photograph full bleed, the caps wordmark across the top.",
-   "sm": 1,
-   "key": 1
+   "sm": 1
   },
   {
    "p": "lotv",
@@ -789,6 +834,16 @@ window.WORKS = {
   },
   {
    "p": "rada",
+   "src": "rada-corsica-03.webp",
+   "w": 4961,
+   "h": 7016,
+   "alt": "RADA Corsica poster.",
+   "piece": "rada-corsica",
+   "sm": 1,
+   "key": 1
+  },
+  {
+   "p": "rada",
    "src": "rada-birthday-bash-01.webp",
    "w": 4500,
    "h": 5625,
@@ -807,22 +862,12 @@ window.WORKS = {
   },
   {
    "p": "rada",
-   "src": "rada-corsica-03.webp",
-   "w": 4961,
-   "h": 7016,
-   "alt": "RADA Corsica poster.",
-   "piece": "rada-corsica",
-   "sm": 1
-  },
-  {
-   "p": "rada",
    "src": "rada-corsica-01.webp",
    "w": 4032,
    "h": 3024,
    "alt": "Three posters flyposted over a billboard.",
    "piece": "rada-corsica",
-   "sm": 1,
-   "key": 1
+   "sm": 1
   },
   {
    "p": "rada",
@@ -1274,6 +1319,31 @@ window.WORKS = {
    "h": 3351,
    "alt": "An editorial page: two women against a concrete wall from the KingKong AW23 issue, credits centred below.",
    "sm": 1
+  },
+  {
+   "p": "sedlec-ossuary",
+   "src": "sedlec-ossuary-01.webp",
+   "w": 2481,
+   "h": 2481,
+   "sm": 1,
+   "alt": "An eight-point star in dark blue and pale blue with four yellow petals on the diagonals, on a near-black square.",
+   "key": 1
+  },
+  {
+   "p": "sedlec-ossuary",
+   "src": "sedlec-ossuary-02.webp",
+   "w": 2481,
+   "h": 2481,
+   "sm": 1,
+   "alt": "A black eight-point star edged in pink on a grey square, with blue diagonals running to the corners."
+  },
+  {
+   "p": "sedlec-ossuary",
+   "src": "sedlec-ossuary-03.webp",
+   "w": 2481,
+   "h": 2481,
+   "sm": 1,
+   "alt": "The same construction as lines on white: thick blue diagonals, pink joins, thin blue star outlines and pale grey lines."
   }
  ]
 };

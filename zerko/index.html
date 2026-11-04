@@ -8,6 +8,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="description" content="Zerko Grotesk, a Latin and Cyrillic typeface in six weights by Kirill Konstantinov.">
 <link rel="preload" href="../assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GaugeWebTest-Medium.woff2" as="font" type="font/woff2" crossorigin>
 <script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <!-- Zerko's own page (trying, 1 Nov 2026), after two foundry pages: Edito's Katalog (plates, information
      columns, tester, character grid) and Wise Type's Holger (a world around the face: every tester is set in
@@ -24,7 +25,7 @@
 @font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-black.woff2') format('woff2'); font-weight: 900; font-display: swap; }
 
 /* The site's own tokens and light / dark (from index.html) */
-:root { --fg: #111; --bg: #fff; --rule: #111; --quiet: #8a8a8a; --size: 13px; --lead: 17px; --track: 0.022em; --pad: 14px; }
+:root { --fg: #111; --bg: #fff; --rule: #111; --quiet: #8a8a8a; --size: 13px; --lead: 17px; --track: 0.022em; --pad: 10px; }
 @media (max-width: 700px) { :root { --size: 12px; --lead: 15px; } }
 :root { color-scheme: light dark; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg: #f7f7f7; --bg: #111; --rule: #f7f7f7; } }
@@ -211,7 +212,7 @@ body { padding-bottom: 120px; } /* air under the last section; no footer, the pi
 
 <script src="../assets/subpage-head.js"></script>
 <script src="../assets/tester.js"></script>
-<script src="../assets/works.js?v=2026-11-02f"></script>
+<script src="../assets/works.js?v=2026-11-04q"></script>
 <script src="charset.js"></script>
 <script src="languages.js"></script>
 <script>

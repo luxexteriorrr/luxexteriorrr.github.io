@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kirill Konstantinov</title>
+<link rel="preload" href="assets/fonts/GaugeWebTest-Medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
@@ -31,8 +32,8 @@
   --size: 13px;
   --lead: 17px;             /* whole pixels: 1.28 × 13 gave a 40.63px header,
                                and every plate under it started mid-pixel */
-  --track: 0.022em;
-  --pad: 14px;
+  --track: 0;   /* TRIAL with Gauge Web Test (4 Nov); Zerko was 0.022em */
+  --pad: 10px;              /* TRIAL (4 Nov); was 14px. Now the same as the gaps between plates */
   --cols: 4;
   --sheet-cols: 4;
   --head-h: 40px;           /* measured from the header in the script */
@@ -86,8 +87,11 @@ html { -webkit-tap-highlight-color: transparent; }
 ::selection { background: transparent; color: #e6007e; }
 .soon { color: #e6007e; }   /* Coming Soon, in the selection's magenta (30 Oct) */
 html, body { margin: 0; background: var(--bg); color: var(--fg); }
+/* TRIAL (4 Nov, local only): Gauge Web Test for all the site's text. Medium up to 600, Heavy above, so nothing is faux bold. */
+@font-face { font-family: 'Gauge Web Test'; src: url('assets/fonts/GaugeWebTest-Medium.woff2') format('woff2'); font-weight: 100 600; font-display: swap; }
+@font-face { font-family: 'Gauge Web Test'; src: url('assets/fonts/GaugeWebTest-Heavy.woff2') format('woff2'); font-weight: 601 900; font-display: swap; }
 body {
-  font-family: 'Zerko', sans-serif;
+  font-family: 'Gauge Web Test', 'Zerko', sans-serif;
   font-weight: 500;
   font-size: var(--size);
   line-height: var(--lead);
@@ -410,7 +414,7 @@ body .rows.wallrows { padding-top: var(--pad); }
 /* Home (the column with no filter bar above it): a small gap under the
    header before the first plate (23 Oct; the third-of-a-screen gap was too much). */
 .col:first-child { padding-top: var(--pad); }
-.cplate { margin: 0 0 5em; }
+.cplate { margin: 0 0 3em; }   /* TRIAL (4 Nov, Kirill: tighter between projects); was 5em */
 .cplate a { display: block; width: min(var(--w), calc(150svh * var(--ar))); }   /* tall plates may run past the screen, as on CD HQ */
 .cplate img, .cplate video { display: block; width: 100%; height: auto; }
 .cplate figcaption { margin-top: 0.5em; max-width: 44em; font-weight: 400; }
@@ -449,11 +453,11 @@ body .rows.wallrows { padding-top: var(--pad); }
 .plaque-bar {
   display: block; width: max-content; margin: 0 auto;
   max-width: min(44em, calc(100vw - 2 * 15em));
-  padding: 3px 12px; text-align: center; font-weight: 500; letter-spacing: 0.02em;
+  padding: 3px 12px; text-align: center; font-weight: 500;
 }
 .plaque-body { width: var(--plq-open-w); max-height: calc(var(--plq-open-h) - var(--plq-h)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .plaque-body::-webkit-scrollbar { display: none; }
-.plaque-inner { padding: 0 0.85em 1.1em; display: grid; gap: 1.3em; font-weight: 400; text-align: center; }   /* centred, under the centred name, and straight under it like the next line (31 Oct, Kirill) */
+.plaque-inner { padding: 0 0.85em 7px; display: grid; gap: 1.3em; font-weight: 400; text-align: center; }   /* centred, under the centred name, and straight under it like the next line (31 Oct, Kirill) */
 .plaque-inner section { margin: 0; }
 .plaque-inner h2 { font: inherit; text-transform: uppercase; letter-spacing: 0.09em; opacity: 0.38; margin: 0 0 0.35em; }
 .plaque-inner p { margin: 0; }
@@ -474,17 +478,20 @@ body .rows.wallrows { padding-top: var(--pad); }
 .chip:hover { box-shadow: inset 0 0 0 1px var(--plq-ink); }
 .chip[aria-pressed="true"] { background: var(--plq-ink); color: var(--plq-on); box-shadow: none; }
 @media (max-width: 700px) {
-  .plq-slot { grid-area: 1 / 1; justify-self: start; }
-  .plaque { left: 0; transform: none; }
-  .plaque-bar { margin: 0; max-width: calc(100vw - 2 * var(--pad) - 5em); text-align: left; }
-  /* open, the name moves to the middle, over the centred text (31 Oct, Kirill: off on the phone; keep it centred) */
-  /* the name slides to the middle as the box widens, and back as it closes; the bar keeps its own width,
-     so the closed size measured from it holds */
-  .plaque-bar { transition: transform var(--dock-w-dur) var(--dock-ease); }
-  .plaque.open .plaque-bar { transform: translateX(calc((var(--plq-open-w) - var(--plq-w)) / 2)); }
+  /* TRIAL (4 Nov, Kirill: name in the middle): one line on a phone as on a desk, All work, the name, Invert.
+     The name stays centred as the box opens, so it no longer slides. Was: the name top left, the pages on a second line. */
+  .head { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); column-gap: 8px; }
+  .head .hthm { grid-area: 1 / 3; }
+  .hnav { grid-area: 1 / 1; max-width: calc(50vw - var(--pad) - 70px); }   /* stops short of the name (about 131px wide), so Back wraps under All work */
+  .plaque-bar { max-width: calc(100vw - 2 * var(--pad) - 5em); }
 }
 @media (prefers-reduced-motion: reduce) { .plaque, .plaque.open, .plaque-inner > * { transition: none; animation: none; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .plaque-bar { transition: none; } }
+/* Phone, home, on load (4 Nov, Kirill): the name panel starts open with the column pushed down under it,
+   and both go back on the first scroll. A transform, so the page height and the native scroll are untouched. */
+.content.plq-push { transform: translateY(var(--plq-push, 0px)); transition: none; }
+.content.plq-ease { transition: transform var(--dock-h-dur) var(--dock-ease); }
+.plaque.plq-instant, .plaque.plq-instant .plaque-inner > * { transition: none !important; }
 
 .hpos { margin-right: 4px; font-variant-numeric: tabular-nums; }
 .hpos:empty { display: none; }
@@ -678,7 +685,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 <!-- The ?v= changes whenever works.js does, so a cached old copy is never
      paired with a new page (5 Oct: phones kept the old file and the lettering
      did not flip in dark mode). -->
-<script src="assets/works.js?v=2026-11-02f"></script>
+<script src="assets/works.js?v=2026-11-04q"></script>
 <script>
 (() => {
   // A project can be a client (LOTV, RADA) holding several pieces; a plate
@@ -731,6 +738,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     ['type', 'Type Design'],
     ['graphic-design', 'Graphic Design'],
     ['web', 'Web Design'],
+    ['research', 'Research'],   // 4 Nov, Kirill
   ];
   const discName = Object.fromEntries(DISCIPLINES);
   const EXPORT = 'export/';
@@ -744,6 +752,9 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
   const chrono = projects.map((p, k) => [p, k])
     .sort(([a, i], [b, j]) => lastYear(b) - lastYear(a) || i - j)
     .flatMap(([p]) => items.filter(it => it.p === p.slug));
+  // No years shown anywhere on the site (4 Nov, Kirill). works.js keeps them and
+  // the order above has read them; from here the lines run without.
+  for (const p of [...projects, ...Object.values(pieces)]) if (p.meta) p.meta = p.meta.replace(/, (?:19|20)\d\d$/, '');
 
   const ar = it => it.w / it.h;
   // An SVG is a mark (wordmark, lettering) unless flagged as a plate: the
@@ -925,9 +936,18 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     let prev = 0;
     const col = document.createElement('div');
     col.className = 'col';
-    for (const p of list) {
+    // `split` on a project (RADA, 4 Nov, Kirill): several entries in the column, each its own plate
+    // and line, all opening the one project. `before` moves an entry ahead of another project, when
+    // that project is in the list.
+    const entries = list.flatMap(p => (p.split || [{}]).map(e => [p, e]));
+    for (const x of entries.filter(([, e]) => e.before)) {
+      if (!entries.some(([p]) => p.slug === x[1].before)) continue;
+      entries.splice(entries.indexOf(x), 1);
+      entries.splice(entries.findIndex(([p]) => p.slug === x[1].before), 0, x);
+    }
+    for (const [p, e] of entries) {
       const own = items.filter(i => i.p === p.slug);
-      const it = own.find(i => i.key) || own[0];
+      const it = own.find(i => i.src === e.src) || own.find(i => i.key) || own[0];
       if (!it) continue;
       const f = document.createElement('figure');
       f.className = 'cplate';
@@ -937,7 +957,7 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
       const steps = STEPS(it);
       let k = seed(p.slug) % steps.length;
       if (steps[k] === prev) k = (k + 1) % steps.length;
-      const w = prev = p.cw || steps[k];
+      const w = prev = e.cw || p.cw || steps[k];
       a.style.setProperty('--w', w + '%');
       a.style.setProperty('--ar', r);
       a.append(media(it, { sizes: `${w}vw` }));
@@ -945,8 +965,9 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
       // The name in Medium, what it is in Regular.
       const n = document.createElement('span');
       n.className = 'n';
-      n.textContent = p.title;
-      c.append(n, p.meta ? `, ${p.meta} ` : ' ', soonEl(p));
+      n.textContent = e.title || p.title;
+      const line = e.meta || p.meta;
+      c.append(n, line ? `, ${line} ` : ' ', soonEl(p));
       f.append(a, c);
       col.append(f);
     }
@@ -1005,17 +1026,38 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     plaque.style.setProperty('--plq-open-w', openW + 'px');
     plaque.style.setProperty('--plq-w', Math.ceil(b.width) + 'px');
     plaque.style.setProperty('--plq-h', Math.ceil(b.height) + 'px');
+    // offsetHeight, not scrollHeight: the lines sit 8px low until they fade in, which read 5px too tall on load (4 Nov).
     const top = plaque.getBoundingClientRect().top;
-    plaque.style.setProperty('--plq-open-h', Math.min(Math.ceil(b.height) + pBody.firstElementChild.scrollHeight, innerHeight - top - pad) + 'px');
+    plaque.style.setProperty('--plq-open-h', Math.min(Math.ceil(b.height) + pBody.firstElementChild.offsetHeight, innerHeight - top - pad) + 'px');
   }
   function setPlaque(open) {
+    // The close always animates, and a font arriving meanwhile waits until it has finished.
+    plaqueMoving = performance.now() + 700;
+    if (!open) { plaque.classList.remove('plq-instant'); void plaque.offsetWidth; }
     plaqueOpen = open;
     markPlaque();
     plaque.classList.toggle('open', open);
+    const c = document.getElementById('content');
+    if (!open && c.classList.contains('plq-push')) { c.classList.add('plq-ease'); c.classList.remove('plq-push'); }
     pBar.setAttribute('aria-expanded', open);
     pBody.inert = !open;
   }
-  document.fonts && document.fonts.ready.then(sizePlaque);
+  // The first measure can come before the font has arrived. The real size then goes on at once:
+  // eased, the closed pill visibly grew by a few pixels a moment after load (4 Nov, Kirill).
+  let onPlaqueSized = null, plaqueMoving = 0;
+  function settlePlaque() {
+    const wait = plaqueMoving - performance.now();
+    if (wait > 0) { setTimeout(settlePlaque, wait); return; }
+    plaque.classList.add('plq-instant');
+    sizePlaque();
+    if (onPlaqueSized) onPlaqueSized();
+    void plaque.offsetWidth;
+    requestAnimationFrame(() => requestAnimationFrame(() => plaque.classList.remove('plq-instant')));
+  }
+  if (document.fonts) {
+    document.fonts.ready.then(settlePlaque);
+    document.fonts.addEventListener('loadingdone', settlePlaque);
+  }
   addEventListener('resize', sizePlaque);
   // Click outside the open plaque closes it.
   document.addEventListener('click', e => {
@@ -1729,6 +1771,34 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
 
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
+
+  // Phone, home, on load: the name panel starts open, the column under it, until the first scroll.
+  if (matchMedia('(max-width: 700px)').matches && !location.search && scrollY <= 0) {
+    const head = document.getElementById('head');
+    const push = () => {
+      if (!plaqueOpen) return;
+      const h = parseFloat(plaque.style.getPropertyValue('--plq-open-h'));
+      content.style.setProperty('--plq-push', plaque.getBoundingClientRect().top + h - head.offsetHeight + 'px');
+    };
+    plaque.classList.add('plq-instant');
+    setPlaque(true);
+    plaqueMoving = 0;   // this open is instant, so the font can settle it straight away
+    content.classList.add('plq-push');
+    push();
+    onPlaqueSized = push;
+    addEventListener('resize', push);
+    const onScroll = () => {
+      if (scrollY <= 0) return;
+      removeEventListener('scroll', onScroll);
+      if (plaqueOpen) setPlaque(false);
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    content.addEventListener('transitionend', function ended(e) {
+      if (e.target !== content || content.classList.contains('plq-push')) return;
+      content.classList.remove('plq-ease');
+      content.removeEventListener('transitionend', ended);
+    });
+  }
 
   // Filter bar: away while scrolling down, back while scrolling up. A few
   // pixels of slack so a trackpad's jitter does not flick it.
