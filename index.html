@@ -455,7 +455,9 @@ body .rows.wallrows { padding-top: var(--pad); }
   max-width: min(44em, calc(100vw - 2 * 15em));
   padding: 3px 12px; text-align: center; font-weight: 500;
 }
-.plaque-body { width: var(--plq-open-w); max-height: calc(var(--plq-open-h) - var(--plq-h)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+/* Tucked up over the bar's bottom padding, so the name steps to the text like one more line (4 Nov). */
+.plaque { --plq-tuck: 3px; }
+.plaque-body { margin-top: calc(-1 * var(--plq-tuck)); width: var(--plq-open-w); max-height: calc(var(--plq-open-h) - var(--plq-h) + var(--plq-tuck)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .plaque-body::-webkit-scrollbar { display: none; }
 .plaque-inner { padding: 0 0.85em 7px; display: grid; gap: 1.3em; font-weight: 400; text-align: center; }   /* centred, under the centred name, and straight under it like the next line (31 Oct, Kirill) */
 .plaque-inner section { margin: 0; }
@@ -1038,7 +1040,8 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     plaque.style.setProperty('--plq-h', Math.ceil(b.height) + 'px');
     // offsetHeight, not scrollHeight: the lines sit 8px low until they fade in, which read 5px too tall on load (4 Nov).
     const top = plaque.getBoundingClientRect().top;
-    plaque.style.setProperty('--plq-open-h', Math.min(Math.ceil(b.height) + pBody.firstElementChild.offsetHeight, innerHeight - top - pad) + 'px');
+    const tuck = parseFloat(getComputedStyle(plaque).getPropertyValue('--plq-tuck'));
+    plaque.style.setProperty('--plq-open-h', Math.min(Math.ceil(b.height) + pBody.firstElementChild.offsetHeight - tuck, innerHeight - top - pad) + 'px');
   }
   function setPlaque(open) {
     // The close always animates, and a font arriving meanwhile waits until it has finished.
