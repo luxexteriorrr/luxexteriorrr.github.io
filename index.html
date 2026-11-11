@@ -419,7 +419,11 @@ body .rows.wallrows { padding-top: var(--pad); }
 .cplate img, .cplate video { display: block; width: 100%; height: auto; }
 .cplate figcaption { margin-top: 0.5em; max-width: 44em; font-weight: 400; }
 .cplate figcaption .n { font-weight: 500; }
-@media (max-width: 700px) { .cplate a { width: min(100%, calc(70svh * var(--ar))); } }
+/* Phone: the plate's width follows the screen height. Instagram's in-app
+   browser resizes its page as its bars collapse on scroll, so svh moved and
+   the LOTV cover jumped widths (11 Nov). --ph is the height set once by JS,
+   refreshed only when the width changes (a turn of the phone). */
+@media (max-width: 700px) { .cplate a { width: min(100%, calc(0.7 * var(--ph, 100svh) * var(--ar))); } }
 
 /* The plaque, in the header in the name's place: the dock of floating-nav
    as it was styled there (its "pill" mode): square, no border, the 40%
@@ -1779,8 +1783,18 @@ body .rows.wallrows .mark img { object-position: 50% 100%; }
     });
   }
 
+  // The height the phone's plates are sized by (--ph): taken on load, and
+  // again only when the width changes. A resize that moves the height alone
+  // is a browser bar coming or going (Instagram, Safari), not a new screen.
+  let phW = innerWidth;
+  const setPH = () => document.documentElement.style.setProperty('--ph', innerHeight + 'px');
+  setPH();
+
   let snapTimer;
-  addEventListener('resize', () => { clearTimeout(snapTimer); snapTimer = setTimeout(sizeSheet, 100); });
+  addEventListener('resize', () => {
+    if (innerWidth !== phW) { phW = innerWidth; setPH(); }
+    clearTimeout(snapTimer); snapTimer = setTimeout(sizeSheet, 100);
+  });
 
   matchMedia('(max-width: 700px)').addEventListener('change', render);
   render();
