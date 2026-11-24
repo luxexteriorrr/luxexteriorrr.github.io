@@ -35,7 +35,7 @@
 // corner to corner through weight and contrast, blue on black; then the navy specimen still. First in Info and on home (Kirill, 23 Oct).
 // 30 Oct: cover is now depo-06, the kerned loop in periwinkle with a red keyline that thickens with the weight, 8 px light to 16 px bold (Kirill picked it over 16 to 24, which fused letters at bold; was a flat 6 px, depo-04), bigger type and tighter leading.
 // cw: a fixed width (%) for the project's plate on home, in place of the varied one.
-// Zerko Grotesk's key plate is the character set (SVG, 23 Oct); then the weight loop (Zerko / Grotesk, Thin to Black
+// Zerko Grotesk's key plate is the character set (SVG, 23 Oct; redrawn 24 Nov from Zerko_September_v3 Regular, with its kerning); then the weight loop (Zerko / Grotesk, Thin to Black
 // and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
 // As Seen In (30 Oct): photographs of the printed book (as-seen-in-photo-01–15, Lightroom-graded, WebP q96)
 // replace the 11 flat spreads on the site; the flat files stay in export/.
@@ -505,8 +505,8 @@ window.WORKS = {
   },
   {
    "p": "zerko-grotesk",
-   "src": "zerko-grotesk-alphabet.svg",
-   "w": 1474,
+   "src": "zerko-grotesk-alphabet-v3.svg",
+   "w": 1437,
    "h": 238,
    "alt": "Zerko Grotesk character set: ABCDEFGHIJKLMNOPQRSTUVWXYZ, abcdefghijklmnopqrstuvwxyz and 0123456789 on three lines.",
    "key": 1,
