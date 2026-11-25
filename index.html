@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kirill Konstantinov</title>
-<link rel="preload" href="assets/fonts/GaugeWebTest-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <meta name="description" content="Kirill Konstantinov is a graphic designer in London, working across editorial, type and web design.">
-<link rel="preload" href="assets/fonts/zerko-medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/zerko.css">
 <!-- Theme chosen with the toggle, applied before first paint so the page does
      not flash the other colours. No choice stored = follow the system. -->
@@ -32,7 +32,7 @@
   --size: 13px;
   --lead: 17px;             /* whole pixels: 1.28 × 13 gave a 40.63px header,
                                and every plate under it started mid-pixel */
-  --track: 0;   /* TRIAL with Gauge Web Test (4 Nov); Zerko was 0.022em */
+  --track: 0.012em;   /* TRIAL Zerko Regular 25 Nov; was 0 with Gauge Web Test (4 Nov); Zerko was 0.022em */
   --pad: 10px;              /* TRIAL (4 Nov); was 14px. Now the same as the gaps between plates */
   --cols: 4;
   --sheet-cols: 4;
@@ -88,10 +88,11 @@ html { -webkit-tap-highlight-color: transparent; }
 .soon { color: #e6007e; }   /* Coming Soon, in the selection's magenta (30 Oct) */
 html, body { margin: 0; background: var(--bg); color: var(--fg); }
 /* TRIAL (4 Nov, local only): Gauge Web Test for all the site's text. Medium up to 600, Heavy above, so nothing is faux bold. */
-@font-face { font-family: 'Gauge Web Test'; src: url('assets/fonts/GaugeWebTest-Medium.woff2') format('woff2'); font-weight: 100 600; font-display: swap; }
-@font-face { font-family: 'Gauge Web Test'; src: url('assets/fonts/GaugeWebTest-Heavy.woff2') format('woff2'); font-weight: 601 900; font-display: swap; }
+/* TRIAL (25 Nov): new Zerko v3 (re-kerned) for the site's text, Regular up to 600, Black above, tracking 0.012em. */
+@font-face { font-family: 'Site Zerko'; src: url('assets/fonts/zerko-regular.woff2') format('woff2'); font-weight: 100 600; font-display: swap; }
+@font-face { font-family: 'Site Zerko'; src: url('assets/fonts/zerko-black.woff2') format('woff2'); font-weight: 601 900; font-display: swap; }
 body {
-  font-family: 'Gauge Web Test', 'Zerko', sans-serif;
+  font-family: 'Site Zerko', 'Zerko', sans-serif;
   font-weight: 500;
   font-size: var(--size);
   line-height: var(--lead);

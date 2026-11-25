@@ -3,9 +3,9 @@
    pink in the middle, Invert in black on the right. No rule, no ground: the pills sit over the page.
    Here All work and the name box go home rather than opening the filter list and the Info panel. */
 /* The site's type for the header (TRIAL with index.html, 4 Nov): Gauge Web Test, no tracking. */
-@font-face { font-family: 'Gauge Web Test'; src: url('fonts/GaugeWebTest-Medium.woff2') format('woff2'); font-weight: 100 600; font-display: swap; }
-@font-face { font-family: 'Gauge Web Test'; src: url('fonts/GaugeWebTest-Heavy.woff2') format('woff2'); font-weight: 601 900; font-display: swap; }
-.shead { font-family: 'Gauge Web Test', 'Zerko', sans-serif; letter-spacing: 0; }
+@font-face { font-family: 'Site Zerko'; src: url('fonts/zerko-regular.woff2') format('woff2'); font-weight: 100 600; font-display: swap; }
+@font-face { font-family: 'Site Zerko'; src: url('fonts/zerko-black.woff2') format('woff2'); font-weight: 601 900; font-display: swap; }
+.shead { font-family: 'Site Zerko', 'Zerko', sans-serif; letter-spacing: 0.012em; }
 /* no scrollbar, as on the site */
 html, body { scrollbar-width: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
