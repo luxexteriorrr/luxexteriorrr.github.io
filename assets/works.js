@@ -39,6 +39,8 @@
 // and back, 4 s, DrawBot, grey and cream from the thesis spreads), then the acrylic light panel 117.
 // As Seen In (30 Oct): photographs of the printed book (as-seen-in-photo-01–15, Lightroom-graded, WebP q96)
 // replace the 11 flat spreads on the site; the flat files stay in export/.
+// As Seen In (25 Nov, Kirill): whole-spread scans on black (as-seen-in-spread-NN, 2880 × 2070, spread at 92% width, from the 300 ppi
+// scans via As-Seen-In/scans/_tools/make_posts.py, in the final-24nov carousel order) replace the photographs; the photo files stay in export/.
 // Zerko thesis (30 Oct): photographs of the printed thesis (zerko-thesis-photo-NN, Lightroom-graded, WebP q96)
 // replace the 12 flat spreads on the site; the flat files stay in export/.
 // No keyline (30 Oct): the thesis and As Seen In are photographs now, not white flats, so `edge` is off them.
@@ -642,122 +644,130 @@ window.WORKS = {
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-13.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "As Seen In open at pages 52–53 on a steel table, seen at an angle: two tall strips of a grey and ochre landscape facing two short columns of text.",
+   "src": "as-seen-in-spread-08.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 08 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-15.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Spread 8–9 laid flat on dark steel: three columns of text crossed by INTERFACE in pink outline capitals.",
+   "src": "as-seen-in-spread-15.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 15 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-14.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Spread 16–17 laid flat on dark steel: a carved stone relief washed white on blue, facing the same relief in ochre on white.",
+   "src": "as-seen-in-spread-16.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 16 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-12.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "A spread open at an angle on dark steel, rows of distorted black INTERACTION and INTERFACE lettering running through the text.",
+   "src": "as-seen-in-spread-02.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 02 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-09.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Pages 54–55 at an angle on steel: text on the left, a sand-coloured hexagonal relief on the right.",
+   "src": "as-seen-in-spread-04.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 04 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-05.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of a page: a grey striped hexagon carved into stone.",
+   "src": "as-seen-in-spread-12.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 12 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-11.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "A row of small square stone reliefs running across the gutter of an open spread.",
+   "src": "as-seen-in-spread-13.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 13 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-07.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of large black percentages, 84, 96, 64 and 89, with blue capital captions over faint grey line drawings.",
+   "src": "as-seen-in-spread-26.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 26 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-03.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of a spread: a layered grey, white and ochre landscape facing the same forms washed out on pale blue.",
+   "src": "as-seen-in-spread-20.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 20 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-04.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of the layered landscape in colour, below the same forms washed into pale blue.",
+   "src": "as-seen-in-spread-22.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 22 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-02.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of a spread of photographs of a whitewashed church interior: a red-leaded window, a niche with a small crucifix.",
+   "src": "as-seen-in-spread-34.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 34 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-08.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of a page: a woven OCCULT bracelet set round a silver coin on a wrist, beside a short paragraph.",
+   "src": "as-seen-in-spread-33.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 33 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-10.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of a full page of grey layered stone, the edge of the book and the steel table at the corner.",
+   "src": "as-seen-in-spread-39.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 39 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-01.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "A spread with two photographs side by side: bare trees at the edge of a field, and a tangle of coloured wires.",
+   "src": "as-seen-in-spread-44.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 44 on black.",
    "sm": 1
   },
   {
    "p": "as-seen-in",
-   "src": "as-seen-in-photo-06.webp",
-   "w": 5712,
-   "h": 4284,
-   "alt": "Close view of a page edge with a meadow of pink and white flowers.",
+   "src": "as-seen-in-spread-45.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 45 on black.",
+   "sm": 1
+  },
+  {
+   "p": "as-seen-in",
+   "src": "as-seen-in-spread-01.webp",
+   "w": 2880,
+   "h": 2070,
+   "alt": "As Seen In, scan of spread 01 on black.",
    "sm": 1
   },
   {
