@@ -188,6 +188,18 @@ body .cover img, body .texts .frag img { max-height: calc(100svh - 72px); width:
 .pstrip::-webkit-scrollbar { display: none; }
 .pstrip img { height: 100%; width: auto; flex: none; scroll-snap-align: start; }
 @media (max-width: 700px) { .pstrip { height: 72svh; } }
+.texts figure { margin-left: 0; margin-right: 0; margin-bottom: 0; }
+/* Phone: tighter rhythm between blocks, shorter clamped texts */
+@media (max-width: 700px) {
+  .texts { margin-top: 64px; }
+  .texts > * + *, .texts .quote, .cover.end { margin-top: 64px; }
+  .texts .names { margin: 64px 0 0; }
+  .texts .cascade .c52 { --lines: 6; } .texts .cascade .c32 { --lines: 6; } .texts .cascade .c24 { --lines: 8; }
+  .texts .cascade .c18 { --lines: 9; } .texts .cascade .c14 { --lines: 10; } .texts .cascade .c11 { --lines: 12; }
+  .texts .four p { --lines: 8; }
+  .texts .cascade .row2, .texts .cascade .row3 { margin-top: 32px; }
+  .facts { margin-top: 64px; }
+}
 </style>
 <link rel="stylesheet" href="../assets/subpage-head.css">
 </head>
