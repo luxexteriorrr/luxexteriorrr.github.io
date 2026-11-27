@@ -7,8 +7,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="description" content="Zerko Grotesk, a Latin and Cyrillic typeface in six weights by Kirill Konstantinov.">
-<link rel="preload" href="../assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/zerko-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/zerko-v3-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/zerko-v3-regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <!-- Zerko's own page (trying, 1 Nov 2026), after two foundry pages: Edito's Katalog (plates, information
      columns, tester, character grid) and Wise Type's Holger (a world around the face: every tester is set in
@@ -17,12 +17,12 @@
 <style>
 /* All six weights, mapped to CSS steps. The files call themselves separate families at 400 each,
    so family and weight are set here (as in assets/fonts/zerko.css, which only brings in three). */
-@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-thin.woff2') format('woff2'); font-weight: 100; font-display: swap; }
-@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-light.woff2') format('woff2'); font-weight: 300; font-display: swap; }
-@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
-@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'Zerko'; src: url('../assets/fonts/zerko-black.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('fonts/zerko-v3-thin.woff2') format('woff2'); font-weight: 100; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('fonts/zerko-v3-light.woff2') format('woff2'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('fonts/zerko-v3-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('fonts/zerko-v3-medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('fonts/zerko-v3-bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Zerko'; src: url('fonts/zerko-v3-black.woff2') format('woff2'); font-weight: 900; font-display: swap; }
 
 /* The site's own tokens and light / dark (from index.html) */
 :root { --fg: #111; --bg: #fff; --rule: #111; --quiet: #8a8a8a; --size: 13px; --lead: 17px; --track: 0.022em; --pad: 10px; }
@@ -53,7 +53,7 @@ section { margin-top: 120px; }
 
 /* Opener: plate 07 full width, then the name */
 .hero img { width: 100%; }
-.name { padding: 0 var(--pad); margin-top: 24px; }
+.name { padding: 0 var(--pad); margin-top: 40px; }
 .name h1 { margin: 0; font-weight: 500; font-size: clamp(56px, 11.5vw, 220px); line-height: 0.9; letter-spacing: -0.02em; }
 .name p { margin: 14px 0 0; }
 
@@ -127,6 +127,67 @@ section { margin-top: 120px; }
 }
 
 body { padding-bottom: 120px; } /* air under the last section; no footer, the pills are the navigation (2 Nov) */
+/* Text specimens (after Lineto): one long text in four weights, then the extremes large */
+.texts { margin-top: 120px; padding: 0 var(--pad); }
+.texts p { margin: 0; hyphens: auto; -webkit-hyphens: auto; }
+.texts .four { display: grid; align-items: start; grid-template-columns: repeat(4, 1fr); column-gap: calc(var(--pad) * 3);
+  font-size: 15px; line-height: 1.33; letter-spacing: 0.004em; }
+.texts .four p { --lines: 32; }
+.texts .names { margin: 120px 0; text-align: center; font-size: clamp(72px, 14vw, 260px); line-height: 0.95; letter-spacing: -0.02em; }
+.texts .two { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(var(--pad) * 3);
+  font-size: clamp(20px, 2.2vw, 32px); line-height: 1.2; letter-spacing: -0.003em; }
+.texts .quote { margin-top: 120px; padding: 0; }
+.texts > * + * { margin-top: 120px; }
+.texts .names { margin: 120px 0 0; }
+.texts .headline p { text-align: center; font-weight: 900; font-size: clamp(44px, 7vw, 132px); line-height: 0.98; letter-spacing: -0.02em; max-width: 11em; margin: 0 auto; hyphens: manual; }
+/* Clamped blocks are cut to --lines by script (whole words + ellipsis), so nothing is clipped and descenders show */
+.texts .cascade .c52 { font-size: clamp(30px, 3.6vw, 56px); line-height: 1.12; letter-spacing: -0.01em; --lines: 7; }
+.texts .cascade .row2, .texts .cascade .row3 { display: grid; column-gap: calc(var(--pad) * 3); margin-top: 48px; align-items: start; }
+.texts .cascade .row2 { grid-template-columns: 1fr 1fr; }
+.texts .cascade .row3 { grid-template-columns: 1fr 1fr 1fr; }
+.texts .cascade .row2 > p + p, .texts .cascade .row3 > p + p { border-left: 1px solid var(--rule); padding-left: calc(var(--pad) * 1.5); margin-left: calc(var(--pad) * -1.5); }
+.texts .cascade .c32 { font-size: clamp(22px, 2.2vw, 34px); line-height: 1.2; --lines: 12; }
+.texts .cascade .c24 { font-size: clamp(17px, 1.65vw, 25px); line-height: 1.28; --lines: 16; }
+.texts .cascade .c18 { font-size: 18px; line-height: 1.33; --lines: 18; }
+.texts .cascade .c14 { font-size: 14px; line-height: 1.4; --lines: 23; }
+.texts .cascade .c11 { font-size: 11px; line-height: 1.45; --lines: 29; }
+.texts .wave { font-size: clamp(12px, 1.25vw, 19px); line-height: 1.25; white-space: nowrap; overflow: hidden; }
+.texts .wave div { display: flex; justify-content: space-between; }
+@media (max-width: 700px) { .texts .cascade .row2, .texts .cascade .row3 { grid-template-columns: 1fr; row-gap: 32px; }
+  .texts .cascade .row2 > p + p, .texts .cascade .row3 > p + p { border-left: 0; padding-left: 0; margin-left: 0; } }
+.texts .headline.thin p { font-weight: 100; }
+.texts .games { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: calc(var(--pad) * 3); font-size: 15px; line-height: 1.38; }
+.texts .games p { hyphens: auto; }
+.texts .games .num { font-size: clamp(80px, 11vw, 200px); line-height: 0.85; letter-spacing: -0.03em; margin-bottom: 20px; }
+.texts .mid p { font-size: clamp(22px, 2.6vw, 40px); line-height: 1.16; letter-spacing: -0.005em; max-width: 28em; }
+.texts .mid.two-w { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(var(--pad) * 3); }
+.texts .mid.two-w p { font-size: clamp(18px, 1.7vw, 26px); line-height: 1.24; }
+.texts .score p { column-count: 4; column-gap: calc(var(--pad) * 3); font-size: 13px; line-height: 1.5; font-variant-numeric: tabular-nums; hyphens: none; }
+@media (max-width: 1000px) { .texts .games { grid-template-columns: 1fr 1fr; row-gap: 48px; } .texts .score p { column-count: 2; } }
+@media (max-width: 700px) { .texts .games, .texts .mid.two-w { grid-template-columns: 1fr; row-gap: 32px; } .texts .score p { column-count: 1; } }
+.frag.pair.even { grid-template-columns: 1fr 1fr; }
+.cover.end { margin-top: 120px; }
+body .cover img, body .texts .frag img { max-height: calc(100svh - 72px); width: auto; max-width: 100%; margin: 0 auto; } /* a plate never taller than the screen */
+.frag img { width: 100%; height: auto; display: block; }
+.frag.pair { display: grid; grid-template-columns: 2fr 1fr; column-gap: var(--pad); align-items: end; }
+.frag.pair.rev { grid-template-columns: 1fr 2fr; align-items: start; }
+.texts .big p { font-size: clamp(26px, 3.4vw, 52px); line-height: 1.12; letter-spacing: -0.01em; max-width: 22em; hyphens: manual; }
+.texts .six { display: grid; grid-template-columns: repeat(6, 1fr); column-gap: calc(var(--pad) * 2); font-size: 12px; line-height: 1.35; }
+@media (max-width: 1000px) { .texts .six { grid-template-columns: repeat(3, 1fr); row-gap: 32px; } }
+@media (max-width: 700px) { .frag.pair, .frag.pair.rev { grid-template-columns: 1fr; row-gap: var(--pad); } .texts .six { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 1000px) { .texts .four { grid-template-columns: 1fr 1fr; row-gap: 40px; } }
+@media (max-width: 700px) { .texts .four, .texts .two { grid-template-columns: 1fr; row-gap: 32px; } .texts .four p { --lines: 14; } }
+.quote blockquote { margin: 0; font-size: clamp(28px, 4vw, 56px); line-height: 1.05; letter-spacing: -0.01em; max-width: 16em; }
+.quote figcaption { margin-top: 14px; color: var(--quiet); }
+/* Cover: plate G turned on its side, with a paper texture */
+.cover { padding: 0 var(--pad); margin-bottom: var(--pad); }
+.cover img { width: 100%; height: auto; display: block; }
+/* Plate strip (after Edito's Moca): portrait plates in one row at screen height, scrolled sideways */
+.pstrip { display: flex; gap: var(--pad); overflow-x: auto; scroll-snap-type: x proximity; padding: 0 var(--pad);
+  height: calc(100svh - 64px); scrollbar-width: none; }
+.pstrip::-webkit-scrollbar { display: none; }
+.pstrip img { height: 100%; width: auto; flex: none; scroll-snap-align: start; }
+@media (max-width: 700px) { .pstrip { height: 72svh; } }
 </style>
 <link rel="stylesheet" href="../assets/subpage-head.css">
 </head>
@@ -139,14 +200,70 @@ body { padding-bottom: 120px; } /* air under the last section; no footer, the pi
   <p class="r" style="margin: 0"><button type="button" class="pill" data-theme-flip>Invert</button></p>
 </header>
 
-<div class="hero" id="hero"></div>
+
+<div class="cover"><img src="../export/zerko-chess/cover-G.webp" width="2880" height="2036" decoding="async" fetchpriority="high" alt="Fischer’s running score through the match, as rows of his repeated name"></div>
 
 <div class="name">
   <h1>Zerko Grotesk</h1>
   <p>6 weights with obliques · Latin and Cyrillic · <span id="count"></span> characters</p>
 </div>
 
-<section class="plates" id="plates" aria-label="Specimen plates"></section>
+
+
+
+
+<section class="texts" aria-label="Text specimens" lang="en">
+  <div class="frag"><img src="../export/zerko-chess/frag-A.webp" loading="lazy" decoding="async" alt="Fragment of a plate: Fischer–Spassky, Reykjavík 1972"></div>
+  <div class="headline"><p>He was two points down before he had won a game</p></div>
+  <div class="cascade">
+    <p class="c52">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p>
+    <div class="row2"><p class="c32">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p><p class="c24">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p></div>
+    <div class="row3"><p class="c18">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p><p class="c14">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p><p class="c11">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p></div>
+  </div>
+
+  <div class="four">
+    <p style="font-weight:300">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p>
+    <p style="font-weight:400">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p>
+    <p style="font-weight:500">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p>
+    <p style="font-weight:700">In the summer of 1972 the world chess championship was played in Reykjavík, at the Laugardalshöll sports hall, between Boris Spassky of the Soviet Union, who held the title, and Bobby Fischer of the United States, who had come through the Candidates matches by beating Mark Taimanov and Bent Larsen six games to none each, and Tigran Petrosian after them. The match was set at twenty-four games; twelve and a half points would win it, and a tie would leave the title with the champion. It almost did not begin. Fischer stayed away from the opening ceremony and sent his conditions by telegram, about the cameras in the hall and a share of the ticket money, and the start was put back while the organisers, the federations and a British banker, Jim Slater, who doubled the prize fund to two hundred and fifty thousand dollars, found a way through. When play began on 11 July, Fischer lost the first game, taking a pawn with his bishop that could not be saved, and did not come to the hall for the second, which was given to Spassky. He was two points down before he had won a game. The third was played in a small room behind the stage, away from the audience, and Fischer won it, his first win against Spassky in any game they had played. From there the match turned. He won the fifth, the sixth with an opening he had hardly ever played, the eighth and the tenth, and by the middle of August the champion was chasing him. Seven draws in a row followed, from the fourteenth game to the twentieth. The twenty-first was adjourned after forty moves, and the next day Spassky resigned it by telephone.</p>
+  </div>
+  <div class="frag pair"><img src="../export/zerko-chess/frag-J.webp" loading="lazy" decoding="async" alt="Fragment: FISCHER SPASSKY, ink after the square"><img src="../export/zerko-chess/frag-F.webp" loading="lazy" decoding="async" alt="Fragment: the character set on the board"></div>
+  <div class="names"><p style="font-weight:100">Thin</p><p style="font-weight:900">Black</p></div>
+  <div class="frag"><img src="../export/zerko-chess/frag-D.webp" loading="lazy" decoding="async" alt="Fragment: the score of game 6"></div>
+  <div class="wave" id="wave" aria-label="The opening of game 6, repeated, the weight moving through it"></div>
+
+  <div class="two">
+    <p style="font-weight:100">Game six, 23 July. Fischer, who had opened with the king’s pawn for almost his whole career, moved the c-pawn two squares. The Soviet team had talked about the chance before the match, and Spassky had waved it away; he answered with the Tartakower defence he had prepared, and the game went into a Queen’s Gambit Declined. Fischer pressed on the queenside, broke in the centre with e4 and f4, and drove his rooks down the f-file. Spassky resigned after the forty-first move.</p>
+    <p style="font-weight:900">Game six, 23 July. Fischer, who had opened with the king’s pawn for almost his whole career, moved the c-pawn two squares. The Soviet team had talked about the chance before the match, and Spassky had waved it away; he answered with the Tartakower defence he had prepared, and the game went into a Queen’s Gambit Declined. Fischer pressed on the queenside, broke in the centre with e4 and f4, and drove his rooks down the f-file. Spassky resigned after the forty-first move.</p>
+  </div>
+  <div class="frag pair rev"><img src="../export/zerko-chess/frag-K.webp" loading="lazy" decoding="async" alt="Fragment: game 6 on a turned board"><img src="../export/zerko-chess/frag-E.webp" loading="lazy" decoding="async" alt="Fragment: the opening position, Thin against Black"></div>
+  <div class="games"><div><p class="num" style="font-weight:900">05</p><p>Game five was decided by one move. After twenty-six moves Spassky put his queen on c2, and Fischer took a pawn on a4 with his bishop. Spassky resigned at once: whichever way he took back, Black’s queen would come in on e4.</p></div><div><p class="num" style="font-weight:100">11</p><p>In game eleven Spassky found an answer. Fischer played his favourite line of the Sicilian, the Poisoned Pawn, and on the fourteenth move Spassky sent his knight back to its starting square. Fischer had not prepared for it, his queen was trapped, and he resigned. It was the only time in his career that he lost a serious game with that line.</p></div><div><p class="num" style="font-weight:900">13</p><p>Game thirteen was adjourned at the forty-second move in a sharp position that neither side could win by force. The Soviet team decided it was a draw. Fischer stayed up until eight in the morning analysing it; play resumed at half past two. Twenty-seven moves later he won an ending of pawns against a rook, after Spassky missed a simple draw, and Spassky sat on at the board for a long time, unable to believe it.</p></div><div><p class="num" style="font-weight:100">21</p><p>For the last game Fischer chose a line of the Sicilian he had never played with Black. It was level after fourteen moves, but Spassky played the ending badly and it was adjourned with Fischer far ahead. Fischer’s fortieth move was not the best, and a different sealed move might have given Spassky drawing chances. He sealed another. On 1 September, the day set for the resumption, the arbiter Lothar Schmid told Fischer and the audience that Spassky had resigned by telephone.</p></div></div>
+  <div class="frag pair rev"><img src="../export/zerko-chess/frag-A2.webp" loading="lazy" decoding="async" alt="Fragment: two board squares on grey"><img src="../export/zerko-chess/frag-G2.webp" loading="lazy" decoding="async" alt="Fragment: FISCHER in rising columns"></div>
+  <div class="frag"><img src="../export/zerko-chess/frag-F2.webp" loading="lazy" decoding="async" alt="Fragment: the first rows of the character board"></div>
+  <div class="frag pair even"><img src="../export/zerko-chess/plate-M.webp" loading="lazy" decoding="async" alt="The match, one row per game, the result as the word"><img src="../export/zerko-chess/plate-W.webp" loading="lazy" decoding="async" alt="ADJOURNED in rows from Thin to Black and back"></div>
+  <div class="headline thin"><p>Fischer stayed up until eight in the morning</p></div>
+  <div class="mid"><p style="font-weight:500">Game thirteen was adjourned at the forty-second move in a sharp position that neither side could win by force. The Soviet team decided it was a draw. Fischer stayed up until eight in the morning analysing it; play resumed at half past two. Twenty-seven moves later he won an ending of pawns against a rook, after Spassky missed a simple draw, and Spassky sat on at the board for a long time, unable to believe it.</p></div>
+  <div class="frag pair"><img src="../export/zerko-chess/frag-D2.webp" loading="lazy" decoding="async" alt="Fragment: the end of game 6"><img src="../export/zerko-chess/frag-I2.webp" loading="lazy" decoding="async" alt="Fragment: games 18 to 21"></div>
+  <div class="score"><p>1. e4 Nf6 2. e5 Nd5 3. d4 d6 4. Nf3 g6 5. Bc4 Nb6 6. Bb3 Bg7 7. Nbd2 0-0 8. h3 a5 9. a4 dxe5 10. dxe5 Na6 11. 0-0 Nc5 12. Qe2 Qe8 13. Ne4 Nbxa4 14. Bxa4 Nxa4 15. Re1 Nb6 16. Bd2 a4 17. Bg5 h6 18. Bh4 Bf5 19. g4 Be6 20. Nd4 Bc4 21. Qd2 Qd7 22. Rad1 Rfe8 23. f4 Bd5 24. Nc5 Qc8 25. Qc3 e6 26. Kh2 Nd7 27. Nd3 c5 28. Nb5 Qc6 29. Nd6 Qxd6 30. exd6 Bxc3 31. bxc3 f6 32. g5 hxg5 33. fxg5 f5 34. Bg3 Kf7 35. Ne5+ Nxe5 36. Bxe5 b5 37. Rf1 Rh8 38. Bf6 a3 39. Rf4 a2 40. c4 Bxc4 41. d7 Bd5 42. Kg3 Ra3+ 43. c3 Rha8 44. Rh4 e5 45. Rh7+ Ke6 46. Re7+ Kd6 47. Rxe5 Rxc3+ 48. Kf2 Rc2+ 49. Ke1 Kxd7 50. Rexd5+ Kc6 51. Rd6+ Kb7 52. Rd7+ Ka6 53. R7d2 Rxd2 54. Kxd2 b4 55. h4 Kb5 56. h5 c4 57. Ra1 gxh5 58. g6 h4 59. g7 h3 60. Be7 Rg8 61. Bf8 h2 62. Kc2 Kc6 63. Rd1 b3+ 64. Kc3 h1=Q 65. Rxh1 Kd5 66. Kb2 f4 67. Rd1+ Ke4 68. Rc1 Kd3 69. Rd1+ Ke2 70. Rc1 f3 71. Bc5 Rxg7 72. Rxc4 Rd7 73. Re4+ Kf1 74. Bd4 f2 0–1</p></div>
+  <div class="frag pair rev"><img src="../export/zerko-chess/frag-K2.webp" loading="lazy" decoding="async" alt="Fragment: marks on the turned board"><img src="../export/zerko-chess/frag-J2.webp" loading="lazy" decoding="async" alt="Fragment: REYKJAV, ink after the square"></div>
+  <div class="mid two-w"><p style="font-weight:300">For the last game Fischer chose a line of the Sicilian he had never played with Black. It was level after fourteen moves, but Spassky played the ending badly and it was adjourned with Fischer far ahead. Fischer’s fortieth move was not the best, and a different sealed move might have given Spassky drawing chances. He sealed another. On 1 September, the day set for the resumption, the arbiter Lothar Schmid told Fischer and the audience that Spassky had resigned by telephone.</p><p style="font-weight:700">In game eleven Spassky found an answer. Fischer played his favourite line of the Sicilian, the Poisoned Pawn, and on the fourteenth move Spassky sent his knight back to its starting square. Fischer had not prepared for it, his queen was trapped, and he resigned. It was the only time in his career that he lost a serious game with that line.</p></div>
+  <div class="frag"><img src="../export/zerko-chess/frag-H2.webp" loading="lazy" decoding="async" alt="Fragment: the board in diagonal lines and the final score"></div>
+  <div class="big"><p style="font-weight:300">The twenty-first game began on 31 August with Spassky as White. It was adjourned after the fortieth move with Fischer well ahead, and in the morning Spassky did not return to the board. He resigned by telephone. Fischer was champion of the world, the eleventh, and the first American to hold the title. The score was seven wins, eleven draws and three losses: twelve and a half points to eight and a half.</p></div>
+  <div class="frag pair"><img src="../export/zerko-chess/frag-I.webp" loading="lazy" decoding="async" alt="Fragment: the games, weight by who won"><img src="../export/zerko-chess/frag-L.webp" loading="lazy" decoding="async" alt="Fragment: the names in both scripts"></div>
+  <figure class="band quote">
+    <p class="label">Quote</p>
+    <div>
+      <blockquote>“Let’s not bother with such nonsense – I’ll play the Tartakower.”</blockquote>
+      <figcaption>Boris Spassky, before the match, on whether Fischer might open 1.&nbsp;c4. Quoted in Plisetsky and Voronkov, <i>Russians versus Fischer</i>, 2005.</figcaption>
+    </div>
+  </figure>
+  <div class="frag"><img src="../export/zerko-chess/frag-C.webp" loading="lazy" decoding="async" alt="Fragment: the match as 24 squares"></div>
+  <div class="six"><p style="font-weight:100">From the fourteenth game to the twentieth, seven games in a row, the result was the same: a draw. Fischer led by three points, and Spassky needed wins that did not come. The fourteenth was a Queen’s Gambit; the fifteenth a Najdorf Sicilian; the sixteenth a Ruy Lopez, exchanged early; the seventeenth Fischer’s first Pirc Defence; the eighteenth and the twentieth Richter–Rauzer attacks; the nineteenth an Alekhine. Each one was half a point, and each half point brought Fischer closer to the twelve and a half he needed.</p><p style="font-weight:300">From the fourteenth game to the twentieth, seven games in a row, the result was the same: a draw. Fischer led by three points, and Spassky needed wins that did not come. The fourteenth was a Queen’s Gambit; the fifteenth a Najdorf Sicilian; the sixteenth a Ruy Lopez, exchanged early; the seventeenth Fischer’s first Pirc Defence; the eighteenth and the twentieth Richter–Rauzer attacks; the nineteenth an Alekhine. Each one was half a point, and each half point brought Fischer closer to the twelve and a half he needed.</p><p style="font-weight:400">From the fourteenth game to the twentieth, seven games in a row, the result was the same: a draw. Fischer led by three points, and Spassky needed wins that did not come. The fourteenth was a Queen’s Gambit; the fifteenth a Najdorf Sicilian; the sixteenth a Ruy Lopez, exchanged early; the seventeenth Fischer’s first Pirc Defence; the eighteenth and the twentieth Richter–Rauzer attacks; the nineteenth an Alekhine. Each one was half a point, and each half point brought Fischer closer to the twelve and a half he needed.</p><p style="font-weight:500">From the fourteenth game to the twentieth, seven games in a row, the result was the same: a draw. Fischer led by three points, and Spassky needed wins that did not come. The fourteenth was a Queen’s Gambit; the fifteenth a Najdorf Sicilian; the sixteenth a Ruy Lopez, exchanged early; the seventeenth Fischer’s first Pirc Defence; the eighteenth and the twentieth Richter–Rauzer attacks; the nineteenth an Alekhine. Each one was half a point, and each half point brought Fischer closer to the twelve and a half he needed.</p><p style="font-weight:700">From the fourteenth game to the twentieth, seven games in a row, the result was the same: a draw. Fischer led by three points, and Spassky needed wins that did not come. The fourteenth was a Queen’s Gambit; the fifteenth a Najdorf Sicilian; the sixteenth a Ruy Lopez, exchanged early; the seventeenth Fischer’s first Pirc Defence; the eighteenth and the twentieth Richter–Rauzer attacks; the nineteenth an Alekhine. Each one was half a point, and each half point brought Fischer closer to the twelve and a half he needed.</p><p style="font-weight:900">From the fourteenth game to the twentieth, seven games in a row, the result was the same: a draw. Fischer led by three points, and Spassky needed wins that did not come. The fourteenth was a Queen’s Gambit; the fifteenth a Najdorf Sicilian; the sixteenth a Ruy Lopez, exchanged early; the seventeenth Fischer’s first Pirc Defence; the eighteenth and the twentieth Richter–Rauzer attacks; the nineteenth an Alekhine. Each one was half a point, and each half point brought Fischer closer to the twelve and a half he needed.</p></div>
+  <div class="frag pair"><img src="../export/zerko-chess/frag-E2.webp" loading="lazy" decoding="async" alt="Fragment: White’s pieces in Thin"><img src="../export/zerko-chess/frag-L2.webp" loading="lazy" decoding="async" alt="Fragment: REYKJAVÍK 1972 with the Russian spelling"></div>
+  <div class="frag"><img src="../export/zerko-chess/frag-C2.webp" loading="lazy" decoding="async" alt="Fragment: the last squares, games 22 to 24 never played"></div>
+</section>
+
+<div class="cover end"><img src="../export/zerko-chess/cover-GS-blue.webp" width="2880" height="2036" loading="lazy" decoding="async" alt="Spassky’s running score through the match, as rows of his repeated name"></div>
 
 <section class="facts" aria-label="About Zerko Grotesk">
   <div class="desc">
@@ -218,25 +335,40 @@ body { padding-bottom: 120px; } /* air under the last section; no footer, the pi
 <script>
 const W = window.WORKS;
 
-// Plates, in the site's own order (works.js): the first is the opener (the cover, the weight loop since
-// 31 Oct), the rest follow. Wide ones take the row; squares and portraits pair up. The alphabet wordmark
-// (`key`) is the wall's label, not a plate, so it stays out.
+// Weight wave: the first moves of game 6, repeated; each move's weight follows a slow wave
 (() => {
-  const media = (it, lazy) => {
-    const alt = (it.alt || '').replace(/"/g, '&quot;'), full = '../export/' + it.src;
-    if (it.video) return `<video src="${full}" poster="../export/${it.poster}" width="${it.w}" height="${it.h}" autoplay muted loop playsinline aria-label="${alt}"></video>`;
-    const srcset = it.sm ? ` srcset="../export/1600/${it.src} 1600w, ${full} ${it.w}w" sizes="100vw"` : '';
-    return `<img src="${full}"${srcset} width="${it.w}" height="${it.h}"${lazy ? ' loading="lazy"' : ''} decoding="async" alt="${alt}">`;
-  };
-  const [first, ...rest] = W.items.filter(it => it.p === 'zerko-grotesk' && !it.hidden && !it.key);
-  document.getElementById('hero').innerHTML = media(first, false);
-  const host = document.getElementById('plates');
-  rest.forEach(it => {
-    const fig = document.createElement('figure');
-    if (it.h && it.w / it.h < 1.2) fig.classList.add('half');
-    fig.innerHTML = media(it, true);
-    host.append(fig);
+  const host = document.getElementById('wave'); if (!host) return;
+  const moves = '1. c4 e6 2. Nf3 d5 3. d4 Nf6 4. Nc3 Be7 5. Bg5 0-0 6. e3 h6'.split(/ (?=\d+\.)/).flatMap(s => { const [n, ...r] = s.split(' '); return [n + ' ' + r[0], r[1]]; });
+  const W = [100, 300, 400, 500, 700, 900], rows = 24;
+  for (let i = 0; i < rows; i++) {
+    const line = document.createElement('div');
+    moves.forEach((m, j) => {
+      const v = (Math.sin((j - i * 0.55) / 1.6) + 1) / 2;
+      const s = document.createElement('span'); s.textContent = m; s.style.fontWeight = W[Math.round(v * 5)];
+      line.append(s);
+    });
+    host.append(line);
+  }
+})();
+
+// Cut long specimen texts to a number of lines (--lines in the CSS): whole words, then an ellipsis.
+// Done in script rather than line-clamp so the last line's descenders aren't clipped.
+(() => {
+  const els = [...document.querySelectorAll('.texts .cascade p, .texts .four p')];
+  els.forEach(el => el.dataset.full = el.textContent);
+  const fit = () => els.forEach(el => {
+    const n = parseInt(getComputedStyle(el).getPropertyValue('--lines')) || 0;
+    const words = el.dataset.full.split(' ');
+    el.textContent = el.dataset.full;
+    if (!n) return;
+    const max = n * parseFloat(getComputedStyle(el).lineHeight) + 1;
+    if (el.offsetHeight <= max) return;
+    let lo = 1, hi = words.length;
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; el.textContent = words.slice(0, mid).join(' ') + '…'; if (el.offsetHeight <= max) lo = mid; else hi = mid - 1; }
+    el.textContent = words.slice(0, lo).join(' ').replace(/[,;:.]$/, '') + '…';
   });
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 120); });
+  document.fonts.ready.then(fit); fit();
 })();
 
 // Character count, from the font (charset.js)
